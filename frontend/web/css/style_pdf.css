@@ -1,0 +1,10 @@
+html, body {font-family: 'freesans', sans-serif;}
+.center {text-align: center}
+.right {text-align: right}
+.uppercase {text-transform: uppercase;}
+.times {font-family: 'freeserif', serif;}
+h3 {font-weight: 900; font-size: 14pt;}
+table {vertical-align: top;}
+table, th, td {/*border: 1px solid #777;*/}
+table.homepage {width: 100%; border: 1px solid #000}
+td {padding: 20px; }
