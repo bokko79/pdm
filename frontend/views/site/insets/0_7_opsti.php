@@ -122,3 +122,5 @@ nalazi priključak na javnu saobraćajnicu</small></td>
 
 	<div class="pagebreaker"></div>
 	<h3 class="uppercase bold">Osnovni podaci o objektu i lokaciji</h3>
+
+	<?= Html::img('@web/images/legal_files/licences/'.$model->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>

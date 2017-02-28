@@ -92,7 +92,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <p>spratovi/celine/prostorije objekta</p>
             <p>tehnički opis objekta</p>
             <p>postojeći objekti</p>
-            
+
         </div>
         <div class="col-sm-7">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
@@ -152,7 +152,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     } */ ?>
                     <?php if($volumes = $model->projectVolumes);
                     foreach($volumes as $volume){
-                        echo c($volume->name).'<br>';
+                        echo Html::a(c($volume->name), Url::to(['/project-volumes/view', 'id'=>$volume->id]), ['class' => '']).'<br>';
                     } ?>
                 </div>
             </div>

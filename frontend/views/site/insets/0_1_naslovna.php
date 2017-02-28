@@ -13,6 +13,14 @@ $formatter->locale = 'sr-Latn';
 			<td class="content">
 				<h3><b><?= $model->client->name ?></b></h3>
 				<p>ul. <?= $model->client->location->street. ' br. ' . $model->client->location->number . ', ' .$model->client->location->city->town; ?></p>
+				<?php if($projectClients = $model->projectClients){
+					foreach($projectClients as $projectClient){
+						$client = $projectClient->client; ?>
+						<h3><b><?= $client->name ?></b></h3>
+						<p>ul. <?= $client->location->street. ' br. ' . $client->location->number . ', ' .$client->location->city->town; ?></p>
+						<?php
+					}
+				}?>
 			</td>
 		</tr>
 		<tr>
@@ -20,7 +28,16 @@ $formatter->locale = 'sr-Latn';
 			<td class="content">
 				<h3><?= $model->name ?></h3>
 				<p>ul. <?= $model->location->street. ' br. ' . $model->location->number . ' ' .$model->location->city->town ?></p>
-				<p><?= 'K.O. '.$model->location->county0->name; ?></p>
+				<p>kat.parc.br. 
+				<?php if($lots = $model->location->locationLots){
+					foreach($lots as $lot){
+						
+						echo $lot->lot.', ';
+					}
+				}?>
+					<?= 'K.O. '.$model->location->county0->name; ?>
+						
+					</p>
 			</td>
 		</tr>
 		<tr>
@@ -49,13 +66,13 @@ $formatter->locale = 'sr-Latn';
 			<td class="right" style="padding:5px 20px;">
 				<small>Pečat projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/'.$model->practice->stamp, ['style'=>'width:120px; margin-top:10px;']) ?>
+					<?= Html::img('@web/images/legal_files/stamps/'.$model->practice->stamp, ['style'=>'width:120px; margin-top:10px;']) ?>
 				</div>
 			</td>
 			<td class="content" style="padding:5px 20px;">
 				<small>Potpis odgovornog lica projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/'.$model->practice->signature, ['style'=>'width:160px;']) ?>
+					<?= Html::img('@web/images/legal_files/signatures/'.$model->practice->signature, ['style'=>'width:160px;']) ?>
 				</div>
 			</td>			
 		</tr>
@@ -63,20 +80,20 @@ $formatter->locale = 'sr-Latn';
 			<td class="right" style="padding-bottom: 5px;">Glavni projektant</td>
 			<td class="content" style="padding-bottom: 5px;">
 				<p><?= $model->engineer->name .', '. $model->engineer->title ?></p>
-				<p>Broj licence: <?= $model->engineer->licenceNumber ?></p>
+				<p>Broj licence: <?= $model->engineer->engineerLicences[0]->no ?></p>
 			</td>			
 		</tr>
 		<tr>
 			<td class="right" style="padding:5px 20px 20px;">
 				<small>Lični pečat glavnog projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/'.$model->practice->stamp, ['style'=>'width:120px; margin-top:10px;']) ?>
+					<?= Html::img('@web/images/legal_files/licences/'.$model->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
 				</div>
 			</td>
 			<td class="content" style="padding:5px 20px 20px;">
 				<small>Potpis glavnog projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/'.$model->practice->signature, ['style'=>'width:160px;']) ?>
+					<?= Html::img('@web/images/legal_files/signatures/'.$model->engineer->signature, ['style'=>'width:160px;']) ?>
 				</div>
 			</td>				
 		</tr>
@@ -86,6 +103,6 @@ $formatter->locale = 'sr-Latn';
 		</tr>
 		<tr>
 			<td class="right">Mesto i datum</td>
-			<td class="content"><p><?= $model->place->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
+			<td class="content"><p><?= $model->location->city->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
 		</tr>
 	</table>

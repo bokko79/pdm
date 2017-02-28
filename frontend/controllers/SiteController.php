@@ -273,25 +273,23 @@ class SiteController extends Controller
         //$mpdf->AddPage($this->renderPartial('_reportView', ['model'=>$model], true), 0); 
         
         $mpdf->SetImportUse();
-        $pagecount = $mpdf->SetSourceFile('images/legal_files/projektni.pdf');
+        /*$pagecount = $mpdf->SetSourceFile('images/legal_files/projektni.pdf');
         for ($i=1; $i<=$pagecount; $i++) {
+            $mpdf->AddPage();
             $import_page = $mpdf->ImportPage($i);
             $mpdf->UseTemplate($import_page);
-
-            if ($i < $pagecount)
-                {$mpdf->AddPage();}
-        }
+        }*/
         $mpdf->SetHeader(Html::img('@web/images/legal_files/'.$model->practice->memo, ['style'=>'margin-bottom:20px;']));
+        //$mpdf->AddPage();
         $mpdf->WriteHTML($this->renderPartial('volumes/_glavnaSveska', ['model'=>$model], true), 0);
-        $mpdf->WriteHTML($this->renderPartial('volumes/_glavnaSveska', ['model'=>$model], true), 0);
+        //$mpdf->SetWatermarkText('eee');
         $mpdf->SetHeader();
-        $pagecount1 = $mpdf->SetSourceFile('images/legal_files/projektni.pdf');
+        $pagecount1 = $mpdf->SetSourceFile('images/legal_files/docs/'.$model->practice->apr);
         for ($i=1; $i<=$pagecount1; $i++) {
+            $mpdf->AddPage();
             $import_page1 = $mpdf->ImportPage($i);
             $mpdf->UseTemplate($import_page1);
 
-            if ($i < $pagecount1)
-                $mpdf->AddPage();
         }
         $mpdf->Output($model->code . ': 0 - Glavna sveska.pdf', 'I');
         exit;

@@ -29,14 +29,14 @@ $formatter->locale = 'sr-Latn';
 					<tr>
 						<td class="">Broj licence</td>
 						<td class="content">
-							<?= $model->engineer->licenceNumber ?>
+							<?= $model->engineer->engineerLicences[0]->no ?>
 						</td>					
 					</tr>
 					<tr>
 						<td class="">
 							Lični pečat
 							<div>
-								<?= Html::img('@web/images/legal_files/'.$model->practice->stamp, ['style'=>'width:120px; margin-top:10px;']) ?>
+								<?= Html::img('@web/images/legal_files/licences/'.$model->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
 							</div>
 						</td>
 						<td class="content">
@@ -76,14 +76,14 @@ $formatter->locale = 'sr-Latn';
 					<tr>
 						<td class="">Broj ovlašćenja</td>
 						<td class="content">
-							<?= $model->engineer->licenceNumber ?>
+							<?= $model->engineer->engineerLicences[0]->no ?>
 						</td>					
 					</tr>
 					<tr>
 						<td class="">
 							Lični pečat
 							<div>
-								<?= Html::img('@web/images/legal_files/'.$model->practice->stamp, ['style'=>'width:120px; margin-top:10px;']) ?>
+								<?= Html::img('@web/images/legal_files/licences/'.$model->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
 							</div>
 						</td>
 						<td class="content">

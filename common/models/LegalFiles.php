@@ -65,8 +65,11 @@ class LegalFiles extends \yii\db\ActiveRecord
         if ($this->validate()) {
            
             $fileName = $this->id . '_' . time();            
-
-            $this->docFile->saveAs('images/legal_files/' .$this->folder.'/'. $fileName . '1.' . $this->docFile->extension);         
+            if($this->docFile->extension!='pdf'){
+                $this->docFile->saveAs('images/legal_files/' .$this->folder.'/'. $fileName . '1.' . $this->docFile->extension); 
+            } else {
+                $this->docFile->saveAs('images/legal_files/' .$this->folder.'/'. $fileName . '.' . $this->docFile->extension);
+            }        
             
             $image = new \common\models\Files();
             $image->name = $fileName . '.' . $this->docFile->extension;
