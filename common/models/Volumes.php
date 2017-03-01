@@ -9,10 +9,13 @@ use Yii;
  *
  * @property string $id
  * @property string $name
- * @property integer $no
+ * @property string $type
+ * @property string $no
+ * @property string $info
+ * @property string $file_id
  *
+ * @property PhaseVolumes[] $phaseVolumes
  * @property ProjectVolumes[] $projectVolumes
- * @property VolumeInsets[] $volumeInsets
  */
 class Volumes extends \yii\db\ActiveRecord
 {
@@ -31,9 +34,10 @@ class Volumes extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
+            [['type', 'info'], 'string'],
             [['file_id'], 'integer'],
-            [['no', 'type', 'info'], 'string'],
             [['name'], 'string', 'max' => 64],
+            [['no'], 'string', 'max' => 4],
         ];
     }
 
@@ -44,10 +48,20 @@ class Volumes extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Naziv'),
-            'no' => Yii::t('app', 'Broj'),
-            'type' => Yii::t('app', 'Vrsta'),
+            'name' => Yii::t('app', 'Name'),
+            'type' => Yii::t('app', 'Type'),
+            'no' => Yii::t('app', 'No'),
+            'info' => Yii::t('app', 'Info'),
+            'file_id' => Yii::t('app', 'File ID'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPhaseVolumes()
+    {
+        return $this->hasMany(PhaseVolumes::className(), ['volume_id' => 'id']);
     }
 
     /**
@@ -56,21 +70,5 @@ class Volumes extends \yii\db\ActiveRecord
     public function getProjectVolumes()
     {
         return $this->hasMany(ProjectVolumes::className(), ['volume_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getVolumeInsets()
-    {
-        return $this->hasMany(VolumeInsets::className(), ['volume_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getFile()
-    {
-        return $this->hasOne(VolumeInsets::className(), ['id' => 'file_id']);
     }
 }

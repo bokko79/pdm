@@ -18,7 +18,7 @@ class ProjectVolumesSearch extends ProjectVolumes
     public function rules()
     {
         return [
-            [['id', 'project_id', 'volume_id', 'practice_id', 'engineer_id', 'contol_practice_id', 'contol_engineer_id'], 'integer'],
+            [['id', 'project_id', 'volume_id', 'practice_id', 'engineer_id', 'control_practice_id', 'control_engineer_id'], 'integer'],
             [['number', 'name','code'], 'safe'],
         ];
     }

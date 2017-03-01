@@ -8,12 +8,11 @@ use Yii;
  * This is the model class for table "project_building_heights".
  *
  * @property string $id
- * @property string $project_building_id
+ * @property string $project_id
  * @property string $part
- * @property string $type
- * @property string $value
+ * @property string $level
  *
- * @property ProjectBuilding $projectBuilding
+ * @property Projects $project
  */
 class ProjectBuildingHeights extends \yii\db\ActiveRecord
 {
@@ -31,11 +30,11 @@ class ProjectBuildingHeights extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_building_id'], 'required'],
-            [['project_building_id'], 'integer'],
-            [['part', 'type'], 'string'],
-            [['value'], 'number'],
-            [['project_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuilding::className(), 'targetAttribute' => ['project_building_id' => 'id']],
+            [['project_id','part', 'level'], 'required'],
+            [['project_id'], 'integer'],
+            [['part'], 'string'],
+            [['level'], 'number'],
+            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
         ];
     }
 
@@ -46,18 +45,17 @@ class ProjectBuildingHeights extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_building_id' => Yii::t('app', 'Project Building ID'),
-            'part' => Yii::t('app', 'Part'),
-            'type' => Yii::t('app', 'Type'),
-            'value' => Yii::t('app', 'Value'),
+            'project_id' => Yii::t('app', 'Projekat'),
+            'part' => Yii::t('app', 'Deo objekta'),
+            'level' => Yii::t('app', 'Visinska kota'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProjectBuilding()
+    public function getProject()
     {
-        return $this->hasOne(ProjectBuilding::className(), ['id' => 'project_building_id']);
+        return $this->hasOne(Projects::className(), ['id' => 'project_id']);
     }
 }

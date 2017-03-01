@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
+use yii\web\UploadedFile;
 
 /**
  * ProjectBuildingController implements the CRUD actions for ProjectBuilding model.
@@ -55,7 +56,7 @@ class ProjectBuildingController extends Controller
         $model = $this->findModel($id);
         $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_id' => $model->project_id]);
         $query_st = \common\models\ProjectBuildingStoreys::find()->where(['project_id' => $model->project_id]);
-        $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_building_id' => $id]);
+        $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_id' => $id]);
         $query_ch = \common\models\ProjectBuildingCharacteristics::find()->where(['project_id' => $id]);
         return $this->render('view', [
             'model' => $model,
@@ -75,33 +76,6 @@ class ProjectBuildingController extends Controller
     }
 
     /**
-     * Creates a new ProjectBuilding model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new ProjectBuilding();
-        if($pb = Yii::$app->request->get('ProjectBuilding')){
-            $model->project_id = !empty($pb['project_id']) ? $pb['project_id'] : null;
-            $model->building_id = !empty($pb['building_id']) ? $pb['building_id'] : null;
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $projectBuildingClasses = new \common\models\ProjectBuildingClasses();
-            $projectBuildingClasses->project_id = $model->project_id;
-            $projectBuildingClasses->building_id = $model->building_id;
-            $projectBuildingClasses->percent = 100;
-            $projectBuildingClasses->save();
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
      * Updates an existing ProjectBuilding model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
@@ -111,8 +85,21 @@ class ProjectBuildingController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->buildFile = UploadedFile::getInstance($model, 'buildFile');
+            if($model->save()){
+                $projectBuildingClasses = new \common\models\ProjectBuildingClasses();
+                $projectBuildingClasses->project_id = $model->project_id;
+                $projectBuildingClasses->building_id = $model->building_id;
+                $projectBuildingClasses->percent = 100;
+                $projectBuildingClasses->save();
+                if ($model->buildFile) {
+                    $image = $model->uploadFiles();
+                    $model->file_id = $image;
+                    $model->save();
+                }
+                return $this->redirect(['view', 'id' => $model->project_id]);
+            } 
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -151,6 +138,8 @@ class ProjectBuildingController extends Controller
                     $projectBuildingStoreys->save();
                 }
                 $storey .= 'Po+';
+            } else {
+                // obriši sve ako je update
             }
             if($request['suteren']!=0){                    
                 $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
@@ -159,25 +148,12 @@ class ProjectBuildingController extends Controller
                 $projectBuildingStoreys->save(); 
                 $storey .= 'Su+';                   
             }
+            // prizemlje
             $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
             $projectBuildingStoreys->project_id = $model->project_id;
             $projectBuildingStoreys->storey = 'prizemlje';
             $projectBuildingStoreys->save();
             $storey .= 'P+';
-            if($request['visokoprizemlje']!=0){                    
-                $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
-                $projectBuildingStoreys->project_id = $model->project_id;
-                $projectBuildingStoreys->storey = 'visokoprizemlje';
-                $projectBuildingStoreys->save();
-                $storey .= 'VP+';
-            }
-            if($request['mezanin']!=0){                    
-                $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
-                $projectBuildingStoreys->project_id = $model->project_id;
-                $projectBuildingStoreys->storey = 'mezanin';
-                $projectBuildingStoreys->save();  
-                $storey .= 'MZ+';                  
-            }
             if($request['galerija']!=0){                    
                 $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
                 $projectBuildingStoreys->project_id = $model->project_id;

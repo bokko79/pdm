@@ -6,37 +6,47 @@ use Yii;
 
 /**
  * This is the model class for table "projects".
+ *
  * @property string $id
  * @property string $user_id
- * @property string $name
- * @property string $code
  * @property string $client_id
  * @property string $building_id
  * @property string $location_id
- * @property string $phase
- * @property string $work
  * @property string $practice_id
  * @property string $engineer_id
  * @property string $control_practice_id
  * @property string $control_engineer_id
+ * @property string $name
+ * @property string $code
+ * @property string $phase
+ * @property string $work
  * @property string $status
  * @property string $time
  *
  * @property ProjectBuilding $projectBuilding
- * @property ProjectBuildingCharacteristics[] $projectBuildingCharacteristics
+ * @property ProjectBuildingCharacteristics $projectBuildingCharacteristics
  * @property ProjectBuildingClasses[] $projectBuildingClasses
+ * @property ProjectBuildingHeights[] $projectBuildingHeights
+ * @property ProjectBuildingInsulations $projectBuildingInsulations
+ * @property ProjectBuildingMaterials $projectBuildingMaterials
  * @property ProjectBuildingParts[] $projectBuildingParts
- * @property ProjectBuildingServices[] $projectBuildingServices
+ * @property ProjectBuildingServices $projectBuildingServices
  * @property ProjectBuildingStoreys[] $projectBuildingStoreys
+ * @property ProjectBuildingStructure $projectBuildingStructure
  * @property ProjectClients[] $projectClients
  * @property ProjectFiles[] $projectFiles
+ * @property ProjectLot $projectLot
+ * @property ProjectLotExistingBuildings[] $projectLotExistingBuildings
+ * @property ProjectLotFutureDevelopments[] $projectLotFutureDevelopments
  * @property ProjectVolumes[] $projectVolumes
- * @property User $user
  * @property Clients $client
+ * @property Practices $controlPractice
+ * @property Engineers $controlEngineer
  * @property Locations $location
  * @property Buildings $building
  * @property Practices $practice
  * @property Engineers $engineer
+ * @property User $user
  */
 class Projects extends \yii\db\ActiveRecord
 {
@@ -106,7 +116,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getProjectBuildingCharacteristics()
     {
-        return $this->hasMany(ProjectBuildingCharacteristics::className(), ['project_id' => 'id']);
+        return $this->hasOne(ProjectBuildingCharacteristics::className(), ['project_id' => 'id']);
     }
 
     /**
@@ -115,6 +125,30 @@ class Projects extends \yii\db\ActiveRecord
     public function getProjectBuildingClasses()
     {
         return $this->hasMany(ProjectBuildingClasses::className(), ['project_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectBuildingHeights()
+    {
+        return $this->hasMany(ProjectBuildingHeights::className(), ['project_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectBuildingInsulations()
+    {
+        return $this->hasOne(ProjectBuildingInsulations::className(), ['project_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectBuildingMaterials()
+    {
+        return $this->hasOne(ProjectBuildingMaterials::className(), ['project_id' => 'id']);
     }
 
     /**
@@ -130,7 +164,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getProjectBuildingServices()
     {
-        return $this->hasMany(ProjectBuildingServices::className(), ['project_id' => 'id']);
+        return $this->hasOne(ProjectBuildingServices::className(), ['project_id' => 'id']);
     }
 
     /**
@@ -139,6 +173,14 @@ class Projects extends \yii\db\ActiveRecord
     public function getProjectBuildingStoreys()
     {
         return $this->hasMany(ProjectBuildingStoreys::className(), ['project_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectBuildingStructure()
+    {
+        return $this->hasOne(ProjectBuildingStructure::className(), ['project_id' => 'id']);
     }
 
     /**
@@ -155,6 +197,30 @@ class Projects extends \yii\db\ActiveRecord
     public function getProjectFiles()
     {
         return $this->hasMany(ProjectFiles::className(), ['project_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectLot()
+    {
+        return $this->hasOne(ProjectLot::className(), ['project_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectLotExistingBuildings()
+    {
+        return $this->hasMany(ProjectLotExistingBuildings::className(), ['project_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectLotFutureDevelopments()
+    {
+        return $this->hasMany(ProjectLotFutureDevelopments::className(), ['project_id' => 'id']);
     }
 
     /**

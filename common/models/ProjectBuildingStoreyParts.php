@@ -12,6 +12,9 @@ use Yii;
  * @property string $type
  * @property string $name
  * @property string $mark
+ * @property string $structure
+ * @property string $area
+ * @property string $description
  *
  * @property ProjectBuildingStoreyPartRooms[] $projectBuildingStoreyPartRooms
  * @property ProjectBuildingStoreys $projectBuildingStorey
@@ -34,7 +37,8 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
         return [
             [['project_building_storey_id', 'type'], 'required'],
             [['project_building_storey_id'], 'integer'],
-            [['type'], 'string'],
+            [['type', 'structure', 'description'], 'string'],
+            [['area'], 'number'],
             [['name'], 'string', 'max' => 64],
             [['mark'], 'string', 'max' => 12],
             [['project_building_storey_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuildingStoreys::className(), 'targetAttribute' => ['project_building_storey_id' => 'id']],
@@ -52,6 +56,9 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
             'type' => Yii::t('app', 'Type'),
             'name' => Yii::t('app', 'Name'),
             'mark' => Yii::t('app', 'Mark'),
+            'structure' => Yii::t('app', 'Structure'),
+            'area' => Yii::t('app', 'Area'),
+            'description' => Yii::t('app', 'Description'),
         ];
     }
 

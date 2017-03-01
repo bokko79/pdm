@@ -23,12 +23,35 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'project_id',
-            'volume_id',
-            'practice_id',
-            'engineer_id',
+            [
+               'attribute'=>'volume_id',
+               'format' => 'raw',
+               'value'=>function ($data) {
+                    return Html::a($data->volume->name, ['view', 'id'=>$data->id]);
+                },
+            ],
+            [
+               'attribute'=>'project_id',
+               'format' => 'raw',
+               'value'=>function ($data) {
+                    return Html::a($data->project->name, ['/projects/view', 'id'=>$data->project_id]);
+                },
+            ],
+            [
+               'attribute'=>'practice_id',
+               'format' => 'raw',
+               'value'=>function ($data) {
+                    return Html::a($data->practice->name, ['/practices/view', 'id'=>$data->practice_id]);
+                },
+            ],
+            [
+               'attribute'=>'engineer_id',
+               'format' => 'raw',
+               'value'=>function ($data) {
+                    return Html::a($data->engineer->name, ['/engineers/view', 'id'=>$data->engineer_id]);
+                },
+            ],
+            
             // 'number',
 
             ['class' => 'yii\grid\ActionColumn'],

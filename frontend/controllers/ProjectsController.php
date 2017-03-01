@@ -92,23 +92,19 @@ class ProjectsController extends Controller
             $model->status = 'active';
             $model->time = time();
             if($model->save()){
-                $projectVolume =  new \common\models\ProjectVolumes();
-                $projectVolume->project_id = $model->id;
-                $projectVolume->volume_id = 1;
-                $projectVolume->practice_id = $model->practice_id;
-                $projectVolume->engineer_id = $model->engineer_id;
-                $projectVolume->number = 0;
-                $projectVolume->name = 'glavna sveska';
-                $projectVolume->code = $model->code;
-                $projectVolume->control_practice_id = $model->control_practice_id;
-                $projectVolume->control_engineer_id = $model->control_engineer_id;
-                $projectVolume->save();
+                // initialize project
+                $this->createProjectBuilding($model);
+                $this->createProjectBuildingClasses($model);
+                $this->createProjectBuildingCharacteristics($model);
+                $this->createProjectBuildingInsulations($model);
+                $this->createProjectBuildingMaterials($model);
+                $this->createProjectBuildingServices($model);
+                $this->createProjectBuildingStructure($model);
+                $this->createProjectClient($model);
+                $this->createProjectLot($model);
+                $this->createProjectVolume($model);                
                 if($location->lot){
-                    $location_lot = new \common\models\LocationLots();
-                    $location_lot->location_id = $location->id;
-                    $location_lot->lot = $location->lot;
-                    $location_lot->type = 'object';
-                    $location_lot->save();
+                    $this->createLocationLot($location);                    
                 } 
                 return $this->redirect(['view', 'id' => $model->id]);
             }
@@ -171,5 +167,99 @@ class ProjectsController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    protected function createProjectBuilding($model)
+    {
+        $new =  new \common\models\ProjectBuilding();
+        $new->project_id = $model->id;
+        $new->building_id = $model->building_id;
+        $new->save();
+    }
+
+    protected function createProjectBuildingClasses($model)
+    {
+        $projectBuildingClasses = new \common\models\ProjectBuildingClasses();
+        $projectBuildingClasses->project_id = $model->project_id;
+        $projectBuildingClasses->building_id = $model->building_id;
+        $projectBuildingClasses->percent = 100;
+        $projectBuildingClasses->save();
+    }
+
+    protected function createProjectBuildingCharacteristics($model)
+    {
+        $new =  new \common\models\ProjectBuildingCharacteristics();
+        $new->project_id = $model->id;
+        $new->save();
+    }
+
+    protected function createProjectBuildingInsulations($model)
+    {
+        $new =  new \common\models\ProjectBuildingInsulations();
+        $new->project_id = $model->id;
+        $new->save();
+    }
+
+    protected function createProjectBuildingMaterials($model)
+    {
+        $new =  new \common\models\ProjectBuildingMaterials();
+        $new->project_id = $model->id;
+        $new->save();
+    }
+
+    protected function createProjectBuildingServices($model)
+    {
+        $new =  new \common\models\ProjectBuildingServices();
+        $new->project_id = $model->id;
+        $new->save();
+    }
+
+    protected function createProjectBuildingStructure($model)
+    {
+        $new =  new \common\models\ProjectBuildingStructure();
+        $new->project_id = $model->id;
+        $new->save();
+    }
+
+    protected function createProjectClient($model)
+    {
+        $new =  new \common\models\ProjectClients();
+        $new->project_id = $model->id;
+        $new->client_id = $model->client_id;
+        $new->status = 1;
+        $new->save();
+    }
+
+    protected function createProjectLot($model)
+    {
+        $new =  new \common\models\ProjectLot();
+        $new->project_id = $model->id;
+        $new->conditions = 1;
+        $new->type = 'gradjevinska';
+        $new->save();
+    }
+
+    protected function createProjectVolume($model)
+    {
+        $projectVolume =  new \common\models\ProjectVolumes();
+        $projectVolume->project_id = $model->id;
+        $projectVolume->volume_id = 1;
+        $projectVolume->practice_id = $model->practice_id;
+        $projectVolume->engineer_id = $model->engineer_id;
+        $projectVolume->number = 0;
+        $projectVolume->name = 'glavna sveska';
+        $projectVolume->code = $model->code;
+        $projectVolume->control_practice_id = $model->control_practice_id;
+        $projectVolume->control_engineer_id = $model->control_engineer_id;
+        $projectVolume->save();
+    }
+
+    protected function createLocationLot($location)
+    {
+        $location_lot = new \common\models\LocationLots();
+        $location_lot->location_id = $location->id;
+        $location_lot->lot = $location->lot;
+        $location_lot->type = 'object';
+        $location_lot->save();
     }
 }

@@ -58,7 +58,7 @@ odgovaraju sadržini projekta i da su u projektu priloženi odgovarajući elabor
 	<tr>
 		<td class="right">Broj licence</td>
 		<td class="content">				
-			<p><?= $model->engineer->licenceNumber ?></p>
+			<p><?= $model->engineer->engineerLicences[0]->no ?></p>
 		</td>
 	</tr>
 	<tr>
@@ -79,6 +79,6 @@ odgovaraju sadržini projekta i da su u projektu priloženi odgovarajući elabor
 	</tr>
 	<tr>
 		<td class="right">Mesto i datum</td>
-		<td class="content"><p><?= $model->place->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
+		<td class="content"><p><?= $model->location->city->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
 	</tr>
 </table>

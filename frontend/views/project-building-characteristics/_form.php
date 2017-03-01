@@ -27,13 +27,12 @@ use dosamigos\tinymce\TinyMce;
             'data' => ArrayHelper::map(\common\models\Projects::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
-            'changeOnReset' => false,           
+            'changeOnReset' => false, 
+            'disabled' => true,          
         ]) ?>
 
-    <?= $form->field($model, 'type')->dropDownList([ 'konstrukcija' => 'Konstrukcija', 'temelji' => 'Temelji', 'fasada' => 'Fasada', 'krov' => 'Krov', 'mk' => 'Mk', 'zidovi' => 'Zidovi', 'vrata' => 'Vrata', 'prozori' => 'Prozori', 'stepeniste' => 'Stepeniste', 'oluk' => 'Oluk', 'kanali' => 'Kanali', 'stub' => 'Stub', 'greda' => 'Greda', 'osvetljenje' => 'Osvetljenje', 'provetravanje' => 'Provetravanje', 'polozaj' => 'Polozaj', 'orjentacija' => 'Orjentacija', 'odnos_sused' => 'Odnos sused', 'ulaz' => 'Ulaz', 'prilaz' => 'Prilaz', 'termoizolacija' => 'Termoizolacija', 'hidroizolacija' => 'Hidroizolacija', 'zvukoizolacija' => 'Zvukoizolacija', 'protivpozarno' => 'Protivpozarno', 'arhitektura' => 'Arhitektura', 'materijali' => 'Materijali', 'stil' => 'Stil', ], ['prompt' => '']) ?>
-
-    <?= $form->field($model, 'text')->widget(TinyMce::className(), [
-		    'options' => ['rows' => 10],
+    <?= $form->field($model, 'function')->widget(TinyMce::className(), [
+		    'options' => ['rows' => 6],
 		    'language' => 'sr',
 		    'clientOptions' => [
 		        'plugins' => [
@@ -46,6 +45,186 @@ use dosamigos\tinymce\TinyMce;
 		        'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
 		    ]
 		]) ?>
+
+    <?= $form->field($model, 'access')->widget(TinyMce::className(), [
+            'options' => ['rows' => 6],
+            'language' => 'sr',
+            'clientOptions' => [
+                'plugins' => [
+                   "insertdatetime media table contextmenu paste" 
+                ],
+                'convert_fonts_to_spans' => true,
+                'paste_as_text' => true,
+                'menubar' => false,
+                'statusbar' => false,
+                'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+            ]
+        ]) ?>
+
+    <?= $form->field($model, 'entrance')->widget(TinyMce::className(), [
+            'options' => ['rows' => 6],
+            'language' => 'sr',
+            'clientOptions' => [
+                'plugins' => [
+                   "insertdatetime media table contextmenu paste" 
+                ],
+                'convert_fonts_to_spans' => true,
+                'paste_as_text' => true,
+                'menubar' => false,
+                'statusbar' => false,
+                'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+            ]
+        ]) ?>
+
+    <?= $form->field($model, 'position')->widget(TinyMce::className(), [
+            'options' => ['rows' => 6],
+            'language' => 'sr',
+            'clientOptions' => [
+                'plugins' => [
+                   "insertdatetime media table contextmenu paste" 
+                ],
+                'convert_fonts_to_spans' => true,
+                'paste_as_text' => true,
+                'menubar' => false,
+                'statusbar' => false,
+                'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+            ]
+        ]) ?>
+
+    <?= $form->field($model, 'shape')->widget(TinyMce::className(), [
+            'options' => ['rows' => 6],
+            'language' => 'sr',
+            'clientOptions' => [
+                'plugins' => [
+                   "insertdatetime media table contextmenu paste" 
+                ],
+                'convert_fonts_to_spans' => true,
+                'paste_as_text' => true,
+                'menubar' => false,
+                'statusbar' => false,
+                'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+            ]
+        ]) ?>
+
+    <?= $form->field($model, 'architecture')->widget(TinyMce::className(), [
+            'options' => ['rows' => 6],
+            'language' => 'sr',
+            'clientOptions' => [
+                'plugins' => [
+                   "insertdatetime media table contextmenu paste" 
+                ],
+                'convert_fonts_to_spans' => true,
+                'paste_as_text' => true,
+                'menubar' => false,
+                'statusbar' => false,
+                'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+            ]
+        ]) ?>
+
+    <?= $form->field($model, 'style')->widget(TinyMce::className(), [
+            'options' => ['rows' => 6],
+            'language' => 'sr',
+            'clientOptions' => [
+                'plugins' => [
+                   "insertdatetime media table contextmenu paste" 
+                ],
+                'convert_fonts_to_spans' => true,
+                'paste_as_text' => true,
+                'menubar' => false,
+                'statusbar' => false,
+                'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+            ]
+        ]) ?>
+
+    <?= $form->field($model, 'context')->widget(TinyMce::className(), [
+            'options' => ['rows' => 6],
+            'language' => 'sr',
+            'clientOptions' => [
+                'plugins' => [
+                   "insertdatetime media table contextmenu paste" 
+                ],
+                'convert_fonts_to_spans' => true,
+                'paste_as_text' => true,
+                'menubar' => false,
+                'statusbar' => false,
+                'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+            ]
+        ]) ?>
+
+    <?= $form->field($model, 'ventilation')->widget(TinyMce::className(), [
+            'options' => ['rows' => 6],
+            'language' => 'sr',
+            'clientOptions' => [
+                'plugins' => [
+                   "insertdatetime media table contextmenu paste" 
+                ],
+                'convert_fonts_to_spans' => true,
+                'paste_as_text' => true,
+                'menubar' => false,
+                'statusbar' => false,
+                'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+            ]
+        ]) ?>
+
+    <?= $form->field($model, 'lights')->widget(TinyMce::className(), [
+            'options' => ['rows' => 6],
+            'language' => 'sr',
+            'clientOptions' => [
+                'plugins' => [
+                   "insertdatetime media table contextmenu paste" 
+                ],
+                'convert_fonts_to_spans' => true,
+                'paste_as_text' => true,
+                'menubar' => false,
+                'statusbar' => false,
+                'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+            ]
+        ]) ?>
+
+    <?= $form->field($model, 'orientation')->widget(TinyMce::className(), [
+            'options' => ['rows' => 6],
+            'language' => 'sr',
+            'clientOptions' => [
+                'plugins' => [
+                   "insertdatetime media table contextmenu paste" 
+                ],
+                'convert_fonts_to_spans' => true,
+                'paste_as_text' => true,
+                'menubar' => false,
+                'statusbar' => false,
+                'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+            ]
+        ]) ?>
+
+    <?= $form->field($model, 'adjacent')->widget(TinyMce::className(), [
+            'options' => ['rows' => 6],
+            'language' => 'sr',
+            'clientOptions' => [
+                'plugins' => [
+                   "insertdatetime media table contextmenu paste" 
+                ],
+                'convert_fonts_to_spans' => true,
+                'paste_as_text' => true,
+                'menubar' => false,
+                'statusbar' => false,
+                'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+            ]
+        ]) ?>
+
+    <?= $form->field($model, 'environment')->widget(TinyMce::className(), [
+            'options' => ['rows' => 6],
+            'language' => 'sr',
+            'clientOptions' => [
+                'plugins' => [
+                   "insertdatetime media table contextmenu paste" 
+                ],
+                'convert_fonts_to_spans' => true,
+                'paste_as_text' => true,
+                'menubar' => false,
+                'statusbar' => false,
+                'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+            ]
+        ]) ?>
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

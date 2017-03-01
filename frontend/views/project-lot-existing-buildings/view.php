@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\ProjectClients */
+/* @var $model common\models\ProjectLotExistingBuildings */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Project Clients'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Project Lot Existing Buildings'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="project-clients-view">
+<div class="project-lot-existing-buildings-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -30,8 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'project_id',
-            'client_id',
-            'status',
+            'building_type_id',
+            'conditions:ntext',
+            'gross_area',
+            'removal',
+            'file_id',
+            'storeys',
+            'description:ntext',
+            'note:ntext',
         ],
     ]) ?>
 

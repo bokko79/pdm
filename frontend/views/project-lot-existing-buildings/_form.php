@@ -23,13 +23,29 @@ use dosamigos\tinymce\TinyMce;
 <hr>
 <h3>Osnovni podaci</h3>
 
-    <?= $form->field($model, 'project_building_storey_id')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'project_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\Projects::find()->all(), 'id', 'name'),
+            'options' => ['placeholder' => 'Izaberite...'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false, 
+            'disabled' => true,         
+        ]) ?>
 
-    <?= $form->field($model, 'type')->dropDownList([ 'stan' => 'Stan', 'apartman' => 'Apartman', 'poslovni prostor' => 'Poslovni prostor', 'tehničke prostoije' => 'Tehničke prostoije', 'zajedničke prostorije' => 'Zajedničke prostorije', 'garaža' => 'Garaža', 'spoljašnje prostorije' => 'Spoljašnje prostorije', 'sprat' => 'Sprat', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'building_type_id')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'conditions')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'mark')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'gross_area')->textInput() ?>
+
+    <?= $form->field($model, 'removal')->textInput() ?>
+
+    <?= $form->field($model, 'file_id')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'storeys')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+
+    <?= $form->field($model, 'note')->textarea(['rows' => 6]) ?>
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

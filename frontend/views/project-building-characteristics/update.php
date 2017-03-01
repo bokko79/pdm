@@ -6,10 +6,9 @@ use yii\helpers\Html;
 /* @var $model common\models\ProjectBuildingCharacteristics */
 
 $this->title = Yii::t('app', 'Izmeni {modelClass}: ', [
-    'modelClass' => 'karakteristiku objekta',
-]) . $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Karakteristike objekta'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+    'modelClass' => 'karakteristike objekta',
+]) . $model->project_id;
+$this->params['breadcrumbs'][] = ['label' => $model->project->name, 'url' => ['/project-building/view', 'id' => $model->project_id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Izmeni');
 ?>
 <div class="project-building-characteristics-update">

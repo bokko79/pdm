@@ -20,8 +20,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'project_id',
+            [
+               'attribute'=>'project_id',
+               'format' => 'raw',
+               'value'=>function ($data) {
+                    return Html::a($data->project->name, ['/projects/view', 'id'=>$data->project_id]);
+                },
+            ],
             'building_id',
             'name',
             'type',

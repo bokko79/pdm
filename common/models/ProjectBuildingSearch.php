@@ -18,9 +18,9 @@ class ProjectBuildingSearch extends ProjectBuilding
     public function rules()
     {
         return [
-            [['project_id', 'building_id', 'units_total', 'parking_total'], 'integer'],
-            [['name', 'type', 'storey', 'facade_material', 'ridge_orientation', 'roof_material', 'characteristics'], 'safe'],
-            [['building_line_dist', 'lot_area', 'green_area_reg', 'green_area', 'gross_area_part', 'gross_area', 'gross_area_above', 'gross_area_below', 'gross_built_area', 'net_area', 'ground_floor_area', 'occupancy_area', 'occupancy_reg', 'occupancy', 'built_index_reg', 'built_index', 'storey_height', 'roof_pitch', 'cost'], 'number'],
+            [['project_id', 'building_id', 'units_total'], 'integer'],
+            [['name', 'type', 'storey', 'ridge_orientation', 'characteristics'], 'safe'],
+            [['building_line_dist', 'gross_area_part', 'gross_area', 'gross_area_above', 'gross_area_below', 'gross_built_area', 'net_area', 'ground_floor_area', 'occupancy_area', 'storey_height', 'roof_pitch', 'cost'], 'number'],
         ];
     }
 
@@ -63,9 +63,6 @@ class ProjectBuildingSearch extends ProjectBuilding
             'project_id' => $this->project_id,
             'building_id' => $this->building_id,
             'building_line_dist' => $this->building_line_dist,
-            'lot_area' => $this->lot_area,
-            'green_area_reg' => $this->green_area_reg,
-            'green_area' => $this->green_area,
             'gross_area_part' => $this->gross_area_part,
             'gross_area' => $this->gross_area,
             'gross_area_above' => $this->gross_area_above,
@@ -74,13 +71,8 @@ class ProjectBuildingSearch extends ProjectBuilding
             'net_area' => $this->net_area,
             'ground_floor_area' => $this->ground_floor_area,
             'occupancy_area' => $this->occupancy_area,
-            'occupancy_reg' => $this->occupancy_reg,
-            'occupancy' => $this->occupancy,
-            'built_index_reg' => $this->built_index_reg,
-            'built_index' => $this->built_index,
             'storey_height' => $this->storey_height,
             'units_total' => $this->units_total,
-            'parking_total' => $this->parking_total,
             'roof_pitch' => $this->roof_pitch,
             'cost' => $this->cost,
         ]);
@@ -88,9 +80,7 @@ class ProjectBuildingSearch extends ProjectBuilding
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'storey', $this->storey])
-            ->andFilterWhere(['like', 'facade_material', $this->facade_material])
-            ->andFilterWhere(['like', 'ridge_orientation', $this->ridge_orientation])
-            ->andFilterWhere(['like', 'roof_material', $this->roof_material])
+            ->andFilterWhere(['like', 'ridge_orientation', $this->ridge_orientation])   
             ->andFilterWhere(['like', 'characteristics', $this->characteristics]);
 
         return $dataProvider;

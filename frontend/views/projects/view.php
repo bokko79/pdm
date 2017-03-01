@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                        'attribute'=>'client_id',
                        'format' => 'raw',
                        'value'=>function ($data) {
-                            return Html::a($data->name, ['/clients/view', 'id'=>$data->client]);
+                            return Html::a($data->client->name, ['/clients/view', 'id'=>$data->client_id]);
                         },
                     ],
                     'building.name',
@@ -85,12 +85,56 @@ $this->params['breadcrumbs'][] = $this->title;
                     
                 ],
             ]) ?>
+         
+            
+            <div class="card_container record-full grid-item fadeInUp animated" id="">
+                <div class="primary-context gray normal">
+                    <div class="head">Investitori
+                    <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj investitora', Url::to(['/project-clients/create', 'ProjectClients[project_id]'=>$model->id]), ['class' => 'btn btn-success btn-sm']) ?>
+                        </div>
+                    </div>
+                    <div class="subhead">Lista investitora projekta.
 
-            <p>Investitori - project clients</p>
+                    </div>
+                </div>
+                <div class="secondary-context">
+                    <?php if($projectClients = $model->projectClients){
+                        foreach($projectClients as $projectClient){
+                            echo Html::a('<i class="fa fa-building"></i> '.$projectClient->client->name, Url::to(['/project-clients/update', 'id'=>$projectClient->id]), ['class' => 'btn btn-default btn-sm']).'<br>';
+                        }
+                    } ?>
+                </div>                
+            </div>
+            <div class="card_container record-full grid-item fadeInUp animated" id="">
+                <div class="primary-context gray normal">
+                    <div class="head">Dokumenti
+                    <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj dokument', Url::to(['/project-files/create', 'ProjectFiles[project_id]'=>$model->id]), ['class' => 'btn btn-success btn-sm']) ?>
+                        </div>
+                    </div>
+                    <div class="subhead">Lista dokumenata projekta.
+
+                    </div>
+                </div>
+                <div class="secondary-context">
+                    <?php if($projectFiles = $model->projectFiles){
+                        foreach($projectFiles as $projectFile){
+                            echo Html::a('<i class="fa fa-file"></i> '.$projectFile->name, Url::to(['/project-files/update', 'id'=>$projectFile->id]), ['class' => 'btn btn-default btn-sm']).'<br>';
+                        }
+                    } ?>
+                </div>                
+            </div>
+            <div class="card_container record-full grid-item fadeInUp animated" id="">
+                <div class="primary-context gray normal">
+                    <div class="head"><?= Html::a('<i class="fa fa-plus-circle"></i> Parcela', Url::to(['/project-lot/view', 'id'=>$model->id]), ['class' => '']) ?>
+                    <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Uredi predmetnu parcelu', Url::to(['/project-lot/update', 'id'=>$model->id]), ['class' => 'btn btn-success btn-sm']) ?>
+                        </div>
+                    </div>
+                    <div class="subhead">Predmetna parcela projekta.</div>
+                </div>              
+            </div>
             <p>Licenca glavnog projektanta</p>
-            <p>delovi/klase objekta</p>
+            <p>delovi objekta</p>
             <p>spratovi/celine/prostorije objekta</p>
-            <p>tehnički opis objekta</p>
             <p>postojeći objekti</p>
 
         </div>

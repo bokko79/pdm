@@ -5,14 +5,12 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectClients */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Project Clients',
-]) . $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Project Clients'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+$this->title = Yii::t('app', 'Izmeni/ukloni {modelClass}: ', [
+    'modelClass' => 'investitora',
+]) . $model->client->name;
+$this->params['breadcrumbs'][] = ['label' => $model->project->name, 'url' => ['/projects/view', 'id' => $model->project_id]];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Izmeni');
 ?>
-<div class="project-clients-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -20,4 +18,3 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
         'model' => $model,
     ]) ?>
 
-</div>

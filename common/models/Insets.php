@@ -9,9 +9,11 @@ use Yii;
  *
  * @property string $id
  * @property string $name
+ * @property string $info
+ * @property string $file_id
  *
- * @property ProjectVolumeInsets[] $projectVolumeInsets
- * @property VolumeInsets[] $volumeInsets
+ * @property Files $file
+ * @property PhaseVolumeInsets[] $phaseVolumeInsets
  */
 class Insets extends \yii\db\ActiveRecord
 {
@@ -30,7 +32,10 @@ class Insets extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
+            [['info'], 'string'],
+            [['file_id'], 'integer'],
             [['name'], 'string', 'max' => 128],
+            [['file_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['file_id' => 'id']],
         ];
     }
 
@@ -42,22 +47,24 @@ class Insets extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
+            'info' => Yii::t('app', 'Info'),
+            'file_id' => Yii::t('app', 'File ID'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProjectVolumeInsets()
+    public function getFile()
     {
-        return $this->hasMany(ProjectVolumeInsets::className(), ['inset_id' => 'id']);
+        return $this->hasOne(Files::className(), ['id' => 'file_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getVolumeInsets()
+    public function getPhaseVolumeInsets()
     {
-        return $this->hasMany(VolumeInsets::className(), ['inset_id' => 'id']);
+        return $this->hasMany(PhaseVolumeInsets::className(), ['inset_id' => 'id']);
     }
 }

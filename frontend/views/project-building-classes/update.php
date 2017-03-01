@@ -5,12 +5,11 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectBuildingClasses */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Project Building Classes',
+$this->title = Yii::t('app', 'Izmeni {modelClass}: ', [
+    'modelClass' => 'klasu objekta',
 ]) . $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Project Building Classes'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+$this->params['breadcrumbs'][] = ['label' => $model->project->name, 'url' => ['/project-building/view', 'id' => $model->project_id]];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Izmeni');
 ?>
 <div class="project-building-classes-update">
 

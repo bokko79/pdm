@@ -45,8 +45,8 @@ class ProjectClients extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_id' => Yii::t('app', 'Project ID'),
-            'client_id' => Yii::t('app', 'Client ID'),
+            'project_id' => Yii::t('app', 'Projekat'),
+            'client_id' => Yii::t('app', 'Investitor'),
             'status' => Yii::t('app', 'Status'),
         ];
     }
@@ -65,5 +65,13 @@ class ProjectClients extends \yii\db\ActiveRecord
     public function getClient()
     {
         return $this->hasOne(Clients::className(), ['id' => 'client_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintClient()
+    {
+        return 'Investitor nije na listi? ' .\yii\helpers\Html::a('Dodaj novog investitora', \yii\helpers\Url::to(['/clients/create']));
     }
 }

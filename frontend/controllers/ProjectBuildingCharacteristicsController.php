@@ -30,55 +30,6 @@ class ProjectBuildingCharacteristicsController extends Controller
     }
 
     /**
-     * Lists all ProjectBuildingCharacteristics models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new ProjectBuildingCharacteristicsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single ProjectBuildingCharacteristics model.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new ProjectBuildingCharacteristics model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new ProjectBuildingCharacteristics();
-        if($pbc = Yii::$app->request->get('ProjectBuildingCharacteristics')){
-            $model->project_id = !empty($pbc['project_id']) ? $pbc['project_id'] : null;
-            $model->type = !empty($pbc['type']) ? $pbc['type'] : null;
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
      * Updates an existing ProjectBuildingCharacteristics model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
@@ -89,25 +40,12 @@ class ProjectBuildingCharacteristicsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/project-building/view', 'id' => $model->project_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
             ]);
         }
-    }
-
-    /**
-     * Deletes an existing ProjectBuildingCharacteristics model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     /**

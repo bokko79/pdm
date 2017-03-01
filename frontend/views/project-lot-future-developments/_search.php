@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\ProjectBuildingServicesSearch */
+/* @var $model common\models\ProjectLotFutureDevelopmentsSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="project-building-services-search">
+<div class="project-lot-future-developments-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -19,9 +19,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'project_id') ?>
 
-    <?= $form->field($model, 'type') ?>
+    <?= $form->field($model, 'building_type_id') ?>
 
-    <?= $form->field($model, 'text') ?>
+    <?= $form->field($model, 'name') ?>
+
+    <?= $form->field($model, 'description') ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>

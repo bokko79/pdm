@@ -64,9 +64,12 @@ class ProjectBuildingHeightsController extends Controller
     public function actionCreate()
     {
         $model = new ProjectBuildingHeights();
+        if($p = Yii::$app->request->get('ProjectBuildingHeights')){
+            $model->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/project-building/view', 'id' => $model->project_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -85,7 +88,7 @@ class ProjectBuildingHeightsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/project-building/view', 'id' => $model->project_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -101,9 +104,10 @@ class ProjectBuildingHeightsController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/project-building/view', 'id' => $model->project_id]);
     }
 
     /**

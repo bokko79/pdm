@@ -71,14 +71,6 @@ class ProjectVolumes extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProjectVolumeInsets()
-    {
-        return $this->hasMany(ProjectVolumeInsets::className(), ['project_volume_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getProject()
     {
         return $this->hasOne(Projects::className(), ['id' => 'project_id']);

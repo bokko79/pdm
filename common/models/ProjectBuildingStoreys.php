@@ -10,10 +10,15 @@ use Yii;
  * @property string $id
  * @property string $project_id
  * @property string $storey
- * @property string $order_no
+ * @property integer $order_no
  * @property string $sub_net_area
  * @property string $net_area
  * @property string $gross_area
+ * @property string $name
+ * @property string $level
+ * @property string $height
+ * @property integer $units_total
+ * @property string $description
  *
  * @property ProjectBuildingStoreyParts[] $projectBuildingStoreyParts
  * @property Projects $project
@@ -35,9 +40,10 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     {
         return [
             [['project_id', 'storey'], 'required'],
-            [['project_id', 'order_no'], 'integer'],
-            [['storey'], 'string'],
-            [['sub_net_area', 'net_area', 'gross_area'], 'number'],
+            [['project_id', 'order_no', 'units_total'], 'integer'],
+            [['storey', 'description'], 'string'],
+            [['sub_net_area', 'net_area', 'gross_area', 'level', 'height'], 'number'],
+            [['name'], 'string', 'max' => 64],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
         ];
     }
@@ -55,6 +61,11 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
             'sub_net_area' => Yii::t('app', 'Redukovana neto površina'),
             'net_area' => Yii::t('app', 'Neto Površina'),
             'gross_area' => Yii::t('app', 'Bruto Površina'),
+            'name' => Yii::t('app', 'Naziv etaže'),
+            'level' => Yii::t('app', 'Relativna visinska kota'),
+            'height' => Yii::t('app', 'Spratna visina'),
+            'units_total' => Yii::t('app', 'Broj jedinica'),
+            'description' => Yii::t('app', 'Opis etaže'),
         ];
     }
 
