@@ -7,17 +7,22 @@ use yii\widgets\Pjax;
 /* @var $searchModel common\models\ProjectsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Spisak projekata');
+$this->title = Yii::t('app', 'Lista projekata');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="projects-index">
 
-    <h1><i class="fa fa-file"></i> <?= Html::encode($this->title) ?></h1>
+    
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a(Yii::t('app', 'Kreiraj novi projekat'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+<div class="card_container record-full grid-item fadeInUp animated" id="">
+    <div class="primary-context gray normal">
+        <div class="head"><i class="fa fa-file"></i> <?= Html::encode($this->title) ?>
+        <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Kreiraj novi projekat'), ['create'], ['class' => 'btn btn-primary']) ?>
+            </div>
+        </div>
+        <div class="subhead">Lista Vaših projekata.</div>
+    </div>              
+</div>
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -76,13 +81,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::a($data->practice->name, ['/practices/view', 'id'=>$data->practice_id]);
                 },
             ],
-            [
+            /*[
                'attribute'=>'engineer_id',
                'format' => 'raw',
                'value'=>function ($data) {
                     return Html::a($data->engineer->name, ['/engineers/view', 'id'=>$data->engineer_id]);
                 },
-            ],
+            ],*/
             // 'location_access_id',
             // 'location_services_id',
             // 'city',

@@ -241,7 +241,7 @@ class ProjectsController extends Controller
 
     protected function createProjectVolume($model)
     {
-        $projectVolume =  new \common\models\ProjectVolumes();
+        $projectVolume = new \common\models\ProjectVolumes();
         $projectVolume->project_id = $model->id;
         $projectVolume->volume_id = 1;
         $projectVolume->practice_id = $model->practice_id;

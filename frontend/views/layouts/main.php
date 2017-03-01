@@ -40,10 +40,15 @@ AppAsset::register($this);
     $menuItems = [
         ['label' => '<i class="fa fa-home"></i> Home', 'url' => ['/site/index']],
         ['label' => '<i class="fa fa-file"></i> Projekti', 'url' => ['/projects']],
-        ['label' => '<i class="fa fa-shield"></i> Firme', 'url' => ['/practices']],
-        ['label' => '<i class="fa fa-user-circle-o"></i> Inženjeri', 'url' => ['/engineers']],
-        ['label' => '<i class="fa fa-building"></i> Investitori', 'url' => ['/clients']],
-        ['label' => 'Help', 'url' => ['/site/contact']],
+        
+        //['label' => 'Help', 'url' => ['/site/contact']],
+        ['label' => '<i class="fa fa-users"></i> Učesnici', 
+            'items' => [
+                ['label' => '<i class="fa fa-shield"></i> Firme', 'url' => ['/practices']],
+                ['label' => '<i class="fa fa-user-circle-o"></i> Inženjeri', 'url' => ['/engineers']],
+                ['label' => '<i class="fa fa-building"></i> Investitori', 'url' => ['/clients']],
+            ],
+        ],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];

@@ -284,13 +284,13 @@ class SiteController extends Controller
         $mpdf->WriteHTML($this->renderPartial('volumes/_glavnaSveska', ['model'=>$model], true), 0);
         //$mpdf->SetWatermarkText('eee');
         $mpdf->SetHeader();
-        $pagecount1 = $mpdf->SetSourceFile('images/legal_files/docs/'.$model->practice->apr);
+        /*$pagecount1 = $mpdf->SetSourceFile('images/legal_files/docs/'.$model->practice->apr);
         for ($i=1; $i<=$pagecount1; $i++) {
             $mpdf->AddPage();
             $import_page1 = $mpdf->ImportPage($i);
             $mpdf->UseTemplate($import_page1);
 
-        }
+        }*/
         $mpdf->Output($model->code . ': 0 - Glavna sveska.pdf', 'I');
         exit;
     }
