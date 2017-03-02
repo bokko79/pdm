@@ -12,13 +12,22 @@ use Yii;
  * @property string $volume_id
  * @property string $practice_id
  * @property string $engineer_id
+ * @property string $engineer_licence_id
  * @property string $number
+ * @property string $name
+ * @property string $code
+ * @property string $control_practice_id
+ * @property string $control_engineer_id
+ * @property string $control_engineer_licence_id
  *
- * @property ProjectVolumeInsets[] $projectVolumeInsets
  * @property Projects $project
  * @property Volumes $volume
  * @property Practices $practice
  * @property Engineers $engineer
+ * @property Practices $controlPractice
+ * @property Engineers $controlEngineer
+ * @property EngineerLicences $engineerLicence
+ * @property EngineerLicences $controlEngineerLicence
  */
 class ProjectVolumes extends \yii\db\ActiveRecord
 {
@@ -36,16 +45,19 @@ class ProjectVolumes extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id', 'volume_id', 'practice_id', 'engineer_id'], 'required'],
-            [['project_id', 'volume_id', 'practice_id', 'engineer_id', 'control_practice_id', 'control_engineer_id'], 'integer'],
-            [['number', 'code'], 'string', 'max' => 20],
+            [['project_id', 'volume_id', 'practice_id', 'engineer_id', 'engineer_licence_id', 'name', 'code'], 'required'],
+            [['project_id', 'volume_id', 'practice_id', 'engineer_id', 'engineer_licence_id', 'control_practice_id', 'control_engineer_id', 'control_engineer_licence_id'], 'integer'],
+            [['number'], 'string', 'max' => 20],
             [['name'], 'string', 'max' => 64],
+            [['code'], 'string', 'max' => 20],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
             [['volume_id'], 'exist', 'skipOnError' => true, 'targetClass' => Volumes::className(), 'targetAttribute' => ['volume_id' => 'id']],
             [['practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['practice_id' => 'id']],
             [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'id']],
             [['control_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['control_practice_id' => 'id']],
             [['control_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['control_engineer_id' => 'id']],
+            [['engineer_licence_id'], 'exist', 'skipOnError' => true, 'targetClass' => EngineerLicences::className(), 'targetAttribute' => ['engineer_licence_id' => 'id']],
+            [['control_engineer_licence_id'], 'exist', 'skipOnError' => true, 'targetClass' => EngineerLicences::className(), 'targetAttribute' => ['control_engineer_licence_id' => 'id']],
         ];
     }
 
@@ -60,11 +72,13 @@ class ProjectVolumes extends \yii\db\ActiveRecord
             'volume_id' => Yii::t('app', 'Deo projekta'),
             'practice_id' => Yii::t('app', 'Projektant'),
             'engineer_id' => Yii::t('app', 'Odgovorni/glavni projektant'),
+            'engineer_licence_id' => Yii::t('app', 'Licenca odgovornog projektanta'),
             'number' => Yii::t('app', 'Redni broj projekta'),
             'name' => Yii::t('app', 'Naziv projekta'),
             'code' => Yii::t('app', 'Broj projektne dokumentacije dela projekta'),
             'control_practice_id' => Yii::t('app', 'Vršilac tehničke kontrole'),
             'control_engineer_id' => Yii::t('app', 'Odgovorno lice vršioca tehničke kontrole'),
+            'control_engineer_licence_id' => Yii::t('app', 'Licenca vršioca tehničke kontrole'),
         ];
     }
 
@@ -114,6 +128,22 @@ class ProjectVolumes extends \yii\db\ActiveRecord
     public function getControlEngineer()
     {
         return $this->hasOne(Engineers::className(), ['id' => 'control_engineer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEngineerLicence()
+    {
+        return $this->hasOne(EngineerLicences::className(), ['id' => 'engineer_licence_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getControlEngineerLicence()
+    {
+        return $this->hasOne(EngineerLicences::className(), ['id' => 'control_engineer_licence_id']);
     }
 
     /**

@@ -46,7 +46,7 @@ class ProjectsSearch extends Projects
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $query->orderBy('id DESC'),
         ]);
 
         $this->load($params);

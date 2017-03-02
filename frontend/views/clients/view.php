@@ -13,34 +13,19 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Investitori'), 'url'
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-    <h1><i class="fa fa-building"></i> <?= Html::encode($this->title) ?></h1>
+    <h1><i class="fa fa-building"></i> <?= Html::encode($this->title) ?>
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Izmeni'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Obriši'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+        <?= Html::a(Yii::t('app', 'Izmeni'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary btn-sm']) ?>
+    </h1>
 
 <div class="container">
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-7">
             <?= DetailView::widget([
                 'model' => $model,
                 'attributes' => [
                     'id',
                     'name',
-                    [
-                       'attribute'=>'name',
-                       'format' => 'raw',
-                       'value'=>function ($data) {
-                            return Html::a($data->name, ['/clients/view', 'id'=>$data->id]);
-                        },
-                    ],
                     'location.street',
                     'location.number',
                     'location.city.town',
@@ -48,10 +33,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     'email:email',
                     'type',
                     'contact_person',
+                    'tax_no',
+                    'company_no',
+                    'account_no',
+                    'bank',
                 ],
             ]) ?>
         </div>
-        <div class="col-sm-4">             
+        <div class="col-sm-5">             
            
         </div>
         <div class="col-sm-4">

@@ -40,7 +40,7 @@ class ProjectLotExistingBuildings extends \yii\db\ActiveRecord
             [['project_id'], 'required'],
             [['project_id', 'building_type_id', 'gross_area', 'removal', 'file_id'], 'integer'],
             [['conditions', 'description', 'note'], 'string'],
-            [['storeys'], 'string', 'max' => 32],
+            [['storeys', 'mark'], 'string', 'max' => 32],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
             [['building_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => BuildingTypes::className(), 'targetAttribute' => ['building_type_id' => 'id']],
         ];
@@ -53,15 +53,16 @@ class ProjectLotExistingBuildings extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_id' => Yii::t('app', 'Project ID'),
-            'building_type_id' => Yii::t('app', 'Building Type ID'),
-            'conditions' => Yii::t('app', 'Conditions'),
-            'gross_area' => Yii::t('app', 'Gross Area'),
-            'removal' => Yii::t('app', 'Removal'),
+            'project_id' => Yii::t('app', 'Projekat'),
+            'building_type_id' => Yii::t('app', 'Namena objekta'),
+            'conditions' => Yii::t('app', 'Stanje objekta'),
+            'gross_area' => Yii::t('app', 'Bruto površina objekta'),
+            'removal' => Yii::t('app', 'Objekat se ruši?'),
             'file_id' => Yii::t('app', 'File ID'),
-            'storeys' => Yii::t('app', 'Storeys'),
-            'description' => Yii::t('app', 'Description'),
-            'note' => Yii::t('app', 'Note'),
+            'storeys' => Yii::t('app', 'Spratnost objekta'),
+            'description' => Yii::t('app', 'Opis objekta'),
+            'note' => Yii::t('app', 'Napomena'),
+            'mark' => Yii::t('app', 'Oznaka'),
         ];
     }
 

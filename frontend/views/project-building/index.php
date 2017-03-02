@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel common\models\ProjectBuildingSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Objekat projekta');
+$this->title = Yii::t('app', 'Objekti projekata');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="project-building-index">

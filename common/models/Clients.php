@@ -14,6 +14,10 @@ use Yii;
  * @property string $email
  * @property string $type
  * @property string $contact_person
+ * @property string $tax_no
+ * @property string $company_no
+ * @property string $account_no
+ * @property string $bank
  *
  * @property Locations $location
  * @property ProjectClients[] $projectClients
@@ -35,9 +39,10 @@ class Clients extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'location_id'], 'required'],
-            [['location_id'], 'integer'],
+            [['location_id', 'tax_no', 'company_no'], 'integer'],
             [['type'], 'string'],
             [['name'], 'string', 'max' => 128],
+            [['account_no', 'bank'], 'string', 'max' => 32],
             [['phone'], 'string', 'max' => 25],
             [['email', 'contact_person'], 'string', 'max' => 64],
             [['location_id'], 'exist', 'skipOnError' => true, 'targetClass' => Locations::className(), 'targetAttribute' => ['location_id' => 'id']],
@@ -51,12 +56,16 @@ class Clients extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Naziv investitora'),
+            'name' => Yii::t('app', 'Naziv/ime investitora'),
             'location_id' => Yii::t('app', 'Adresa'),
             'phone' => Yii::t('app', 'Telefon'),
             'email' => Yii::t('app', 'Email'),
-            'type' => Yii::t('app', 'Vrsta'),
+            'type' => Yii::t('app', 'Pravni oblik'),
             'contact_person' => Yii::t('app', 'Odgovorno lice/zastupnik'),
+            'tax_no' => Yii::t('app', 'PIB'),
+            'company_no' => Yii::t('app', 'Matični broj'),
+            'account_no' => Yii::t('app', 'Broj računa'),
+            'bank' => Yii::t('app', 'Banka'),
         ];
     }
 

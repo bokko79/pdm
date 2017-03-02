@@ -64,6 +64,13 @@ $model->control_engineer_id = $model->project->control_engineer_id;
             'changeOnReset' => false,           
         ])->hint($model->hintEngineer) ?>
 
+    <?= $form->field($model, 'engineer_licence_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\EngineerLicences::find()->all(), 'id', 'no'),
+            'options' => ['placeholder' => 'Izaberite...'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,           
+        ])->hint($model->hintEngineer) ?>
+
 <hr>
 <h3>Tehnička kontrola</h3>
 
@@ -79,7 +86,14 @@ $model->control_engineer_id = $model->project->control_engineer_id;
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           
-        ])->hint($model->hintControlEngineer) ?>    
+        ])->hint($model->hintControlEngineer) ?>  
+
+    <?= $form->field($model, 'control_engineer_licence_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\EngineerLicences::find()->all(), 'id', 'no'),
+            'options' => ['placeholder' => 'Izaberite...'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,           
+        ])->hint($model->hintEngineer) ?>  
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

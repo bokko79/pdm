@@ -6,11 +6,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectLotExistingBuildings */
 
-$this->title = Yii::t('app', 'Create Project Lot Existing Buildings');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Project Lot Existing Buildings'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Dodaj postojeći objekat na parceli');
+$this->params['breadcrumbs'][] = ['label' => $model->project->code. ': Parcela', 'url' => ['/project-lot/view', 'id' => $model->project_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="project-lot-existing-buildings-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -18,4 +17,3 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
     ]) ?>
 
-</div>

@@ -8,6 +8,7 @@ use common\models\ProjectBuildingStoreyPartsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 
 /**
  * ProjectBuildingStoreyPartsController implements the CRUD actions for ProjectBuildingStoreyParts model.
@@ -51,8 +52,13 @@ class ProjectBuildingStoreyPartsController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $query_cl = \common\models\ProjectBuildingStoreyPartRooms::find()->where(['project_building_storey_part_id' => $id]);
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'projectBuildingStoreyPartRooms' => new ActiveDataProvider([
+                'query' => $query_cl,
+            ]),
         ]);
     }
 

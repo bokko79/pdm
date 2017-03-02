@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectFiles */
 
-$this->title = Yii::t('app', 'Create Project Files');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Project Files'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Dodavanje dokumenta projekta');
+$this->params['breadcrumbs'][] = ['label' => 'Projekat: '.$model->project->name, 'url' => ['/projects/view', 'id' => $model->project_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="project-files-create">

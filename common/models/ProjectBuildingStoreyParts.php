@@ -52,13 +52,13 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_building_storey_id' => Yii::t('app', 'Project Building Storey ID'),
-            'type' => Yii::t('app', 'Type'),
-            'name' => Yii::t('app', 'Name'),
-            'mark' => Yii::t('app', 'Mark'),
-            'structure' => Yii::t('app', 'Structure'),
-            'area' => Yii::t('app', 'Area'),
-            'description' => Yii::t('app', 'Description'),
+            'project_building_storey_id' => Yii::t('app', 'Etaža'),
+            'type' => Yii::t('app', 'Vrsta'),
+            'name' => Yii::t('app', 'Naziv'),
+            'mark' => Yii::t('app', 'Oznaka'),
+            'structure' => Yii::t('app', 'Struktura'),
+            'area' => Yii::t('app', 'Površina'),
+            'description' => Yii::t('app', 'Opis'),
         ];
     }
 
@@ -76,5 +76,27 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
     public function getProjectBuildingStorey()
     {
         return $this->hasOne(ProjectBuildingStoreys::className(), ['id' => 'project_building_storey_id']);
+    }
+
+    public function getNetArea()
+    {
+        $total = 0;
+        if($rooms = $this->projectBuildingStoreyPartRooms){
+            foreach($rooms as $room){
+                $total += $room->net_area;
+            }
+        }
+        return $total;
+    }
+
+    public function getSubNetArea()
+    {
+        $total = 0;
+        if($rooms = $this->projectBuildingStoreyPartRooms){
+            foreach($rooms as $room){
+                $total += $room->sub_net_area;
+            }
+        }
+        return $total;
     }
 }

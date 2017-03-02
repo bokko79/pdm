@@ -54,14 +54,14 @@ class ProjectBuildingParts extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_id' => Yii::t('app', 'Project ID'),
-            'name' => Yii::t('app', 'Name'),
-            'building_type_id' => Yii::t('app', 'Building Type ID'),
-            'gross_area' => Yii::t('app', 'Gross Area'),
-            'net_area' => Yii::t('app', 'Net Area'),
-            'height' => Yii::t('app', 'Height'),
-            'storeys' => Yii::t('app', 'Storeys'),
-            'description' => Yii::t('app', 'Description'),
+            'project_id' => Yii::t('app', 'Projekat'),
+            'name' => Yii::t('app', 'Naziv dela/celine objekta'),
+            'building_type_id' => Yii::t('app', 'Namena objekta'),
+            'gross_area' => Yii::t('app', 'Bruto površina dela objekta'),
+            'net_area' => Yii::t('app', 'Neto površina dela objekta'),
+            'height' => Yii::t('app', 'Visina dela objekta'),
+            'storeys' => Yii::t('app', 'Spratnost dela objekta'),
+            'description' => Yii::t('app', 'Opis dela objekta'),
         ];
     }
 

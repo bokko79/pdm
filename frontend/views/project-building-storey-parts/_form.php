@@ -23,13 +23,19 @@ use dosamigos\tinymce\TinyMce;
 <hr>
 <h3>Osnovni podaci</h3>
 
-    <?= $form->field($model, 'project_building_storey_id')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'type')->dropDownList([ 'stan' => 'Stan', 'apartman' => 'Apartman', 'poslovni prostor' => 'Poslovni prostor', 'tehničke prostoije' => 'Tehničke prostoije', 'zajedničke prostorije' => 'Zajedničke prostorije', 'garaža' => 'Garaža', 'spoljašnje prostorije' => 'Spoljašnje prostorije', 'sprat' => 'Sprat', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'type')->dropDownList([ 'stan' => 'Stan', 'biz' => 'Biz', 'tech' => 'Tech', 'common' => 'Common', 'garage' => 'Garage', 'external' => 'External', 'whole' => 'Whole', ], ['prompt' => '']) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'mark')->textInput(['maxlength' => true]) ?>
+
+<?php if($model->type=='stan'): ?>
+    <?= $form->field($model, 'structure')->dropDownList([ 'garsonjera' => 'Garsonjera', 'jednosoban' => 'Jednosoban', 'jednoiposoban' => 'Jednoiposoban', 'dvosoban' => 'Dvosoban', 'dvoiposoban' => 'Dvoiposoban', 'trosoban' => 'Trosoban', 'troiposoban' => 'Troiposoban', 'četvorosoban' => 'četvorosoban', 'četvoroiposoban' => 'četvoroiposoban', 'petosoban' => 'Petosoban', 'visesoban' => 'Visesoban', ], ['prompt' => '']) ?>
+<?php endif; ?>
+
+    <?= $form->field($model, 'area')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

@@ -5,12 +5,11 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectLot */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Project Lot',
-]) . $model->project_id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Project Lots'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->project_id, 'url' => ['view', 'id' => $model->project_id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+$this->title = Yii::t('app', 'Podešavanje {modelClass}: ', [
+    'modelClass' => 'parcele projekta',
+]) . $model->project->code;
+$this->params['breadcrumbs'][] = ['label' => $model->project->name, 'url' => ['/project-lot/view', 'id' => $model->project_id]];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Podešavanje');
 ?>
 <div class="project-lot-update">
 

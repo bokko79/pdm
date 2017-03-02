@@ -54,10 +54,10 @@ class ProjectBuildingController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_id' => $model->project_id]);
-        $query_st = \common\models\ProjectBuildingStoreys::find()->where(['project_id' => $model->project_id]);
+        $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_id' => $id]);
+        $query_st = \common\models\ProjectBuildingStoreys::find()->where(['project_id' => $id]);
         $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_id' => $id]);
-        $query_ch = \common\models\ProjectBuildingCharacteristics::find()->where(['project_id' => $id]);
+        $query_pa = \common\models\ProjectBuildingParts::find()->where(['project_id' => $id]);
         return $this->render('view', [
             'model' => $model,
             'projectBuildingClasses' => new ActiveDataProvider([
@@ -69,9 +69,41 @@ class ProjectBuildingController extends Controller
             'projectBuildingHeights' => new ActiveDataProvider([
                 'query' => $query_he,
             ]),
-            'projectBuildingCharacteristics' => new ActiveDataProvider([
-                'query' => $query_ch,
+            'projectBuildingParts' => new ActiveDataProvider([
+                'query' => $query_pa,
             ]),
+        ]);
+    }
+
+    /**
+     * Displays a single ProjectBuilding model.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionStoreys($id, $add_storey=null, $remove_storey=null)
+    {
+        $model = $this->findModel($id);
+        $storeys = $model->project->projectBuildingStoreys;
+        
+        if($add_storey){
+            // do something
+            $new =  new \common\models\ProjectBuildingStoreys();
+            $new->project_id = $model->project_id;
+            $new->storey = $add_storey;
+            $new->order_no = 1;
+            $new->save(); 
+            return $this->redirect(['storeys', 'id' => $id]);
+        }
+
+        if($remove_storey){
+            // do something
+            $this->findStoreyById($remove_storey)->delete();    
+            return $this->redirect(['storeys', 'id' => $id]);     
+        }
+        
+        return $this->render('storeys', [
+            'model' => $model,
+            'storeys' => $storeys,
         ]);
     }
 
@@ -88,11 +120,6 @@ class ProjectBuildingController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->buildFile = UploadedFile::getInstance($model, 'buildFile');
             if($model->save()){
-                $projectBuildingClasses = new \common\models\ProjectBuildingClasses();
-                $projectBuildingClasses->project_id = $model->project_id;
-                $projectBuildingClasses->building_id = $model->building_id;
-                $projectBuildingClasses->percent = 100;
-                $projectBuildingClasses->save();
                 if ($model->buildFile) {
                     $image = $model->uploadFiles();
                     $model->file_id = $image;
@@ -242,6 +269,22 @@ class ProjectBuildingController extends Controller
     protected function findModel($id)
     {
         if (($model = ProjectBuilding::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectBuilding model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectBuilding the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findStoreyById($id)
+    {
+        if (($model = \common\models\ProjectBuildingStoreys::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

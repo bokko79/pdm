@@ -68,7 +68,7 @@ class ProjectClientsController extends Controller
             $model->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {            
             return $this->redirect(['/projects/view', 'id' => $model->project_id]);
         } else {
             return $this->render('create', [
@@ -104,9 +104,10 @@ class ProjectClientsController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/projects/view', 'id' => $model->project_id]);
     }
 
     /**

@@ -47,10 +47,10 @@ class ProjectBuildingClasses extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_id' => Yii::t('app', 'Project ID'),
-            'building_id' => Yii::t('app', 'Building ID'),
-            'percent' => Yii::t('app', 'Percent'),
-            'area' => Yii::t('app', 'Area'),
+            'project_id' => Yii::t('app', 'Projekat'),
+            'building_id' => Yii::t('app', 'Klasa objekta'),
+            'percent' => Yii::t('app', 'Procenat'),
+            'area' => Yii::t('app', 'Površina'),
         ];
     }
 

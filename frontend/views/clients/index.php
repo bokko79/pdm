@@ -13,8 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="clients-index">
 
     <h1><i class="fa fa-building"></i> <?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
         <?= Html::a(Yii::t('app', 'Dodaj investitora'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
@@ -34,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'phone',
             'email:email',
             // 'type',
-            // 'contact_person',
+            'contact_person',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

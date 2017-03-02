@@ -10,6 +10,7 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\FileInput;
 use dosamigos\tinymce\TinyMce;
+use kartik\checkbox\CheckboxX;
 ?>
 
 <?php $form = kartik\widgets\ActiveForm::begin([
@@ -31,53 +32,199 @@ use dosamigos\tinymce\TinyMce;
             'disabled' => true,         
         ]) ?>
 
-    <?= $form->field($model, 'conditions')->textInput() ?>
-
-    <?= $form->field($model, 'width')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'length')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'disposition')->textarea(['rows' => 6]) ?>
-
     <?= $form->field($model, 'type')->dropDownList([ 'gradjevinska' => 'Gradjevinska', 'javna' => 'Javna', 'poljoprivredna' => 'Poljoprivredna', ], ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'area')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'conditions')->widget(CheckboxX::classname(), ['pluginOptions'=>['size'=>'sm']]) ?>
 
-    <?= $form->field($model, 'ground_level')->textInput(['maxlength' => true]) ?>
+<hr>
+<h4>Dimenzije parcele</h4>
+    <?= $form->field($model, 'width', [
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'road_level')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'length', [
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'underwater_level')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'area', [
+                'addon' => ['prepend' => ['content'=>'m<sup>2</sup>']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'ground')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'green_area_reg', [
+                'addon' => ['prepend' => ['content'=>'%']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
+    <?= $form->field($model, 'green_area', [
+                'addon' => ['prepend' => ['content'=>'m<sup>2</sup>']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'access')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'occupancy_reg', [
+                'addon' => ['prepend' => ['content'=>'%']]])->input('number', ['max'=>100, 'min'=>0, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'ownership')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'built_index_reg')->input('number', ['step'=>0.01, 'max'=>1, 'min'=>0, 'style'=>'width:40%']) ?>    
 
-    <?= $form->field($model, 'adjacent_border')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'parking_spaces')->input('number', ['min'=>0, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'services')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'parking_disabled')->input('number', ['min'=>0, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+<hr>
+<h4>Visinske kote</h4>    
 
-    <?= $form->field($model, 'note')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'ground_level', [
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'legal')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'road_level', [
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'green_area_reg')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'underwater_level', [
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'green_area')->textInput(['maxlength' => true]) ?>
+<hr>
+<h4>Opis parcele</h4> 
+    
+    <?= $form->field($model, 'description')->widget(TinyMce::className(), [
+        'options' => ['rows' => 6],
+        'language' => 'sr',
+        'clientOptions' => [
+            'plugins' => [
+               "insertdatetime media table contextmenu paste" 
+            ],
+            'convert_fonts_to_spans' => true,
+            'paste_as_text' => true,
+            'menubar' => false,
+            'statusbar' => false,
+            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+        ]
+    ]) ?>
+    
+    <?= $form->field($model, 'disposition')->widget(TinyMce::className(), [
+        'options' => ['rows' => 6],
+        'language' => 'sr',
+        'clientOptions' => [
+            'plugins' => [
+               "insertdatetime media table contextmenu paste" 
+            ],
+            'convert_fonts_to_spans' => true,
+            'paste_as_text' => true,
+            'menubar' => false,
+            'statusbar' => false,
+            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+        ]
+    ]) ?>
 
-    <?= $form->field($model, 'occupancy_reg')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'ownership')->widget(TinyMce::className(), [
+        'options' => ['rows' => 6],
+        'language' => 'sr',
+        'clientOptions' => [
+            'plugins' => [
+               "insertdatetime media table contextmenu paste" 
+            ],
+            'convert_fonts_to_spans' => true,
+            'paste_as_text' => true,
+            'menubar' => false,
+            'statusbar' => false,
+            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+        ]
+    ]) ?>
 
-    <?= $form->field($model, 'built_index_reg')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'ground')->widget(TinyMce::className(), [
+        'options' => ['rows' => 6],
+        'language' => 'sr',
+        'clientOptions' => [
+            'plugins' => [
+               "insertdatetime media table contextmenu paste" 
+            ],
+            'convert_fonts_to_spans' => true,
+            'paste_as_text' => true,
+            'menubar' => false,
+            'statusbar' => false,
+            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+        ]
+    ]) ?>
 
-    <?= $form->field($model, 'parking')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'access')->widget(TinyMce::className(), [
+        'options' => ['rows' => 6],
+        'language' => 'sr',
+        'clientOptions' => [
+            'plugins' => [
+               "insertdatetime media table contextmenu paste" 
+            ],
+            'convert_fonts_to_spans' => true,
+            'paste_as_text' => true,
+            'menubar' => false,
+            'statusbar' => false,
+            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+        ]
+    ]) ?>
 
-    <?= $form->field($model, 'parking_spaces')->textInput() ?>
+    <?= $form->field($model, 'parking')->widget(TinyMce::className(), [
+        'options' => ['rows' => 6],
+        'language' => 'sr',
+        'clientOptions' => [
+            'plugins' => [
+               "insertdatetime media table contextmenu paste" 
+            ],
+            'convert_fonts_to_spans' => true,
+            'paste_as_text' => true,
+            'menubar' => false,
+            'statusbar' => false,
+            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+        ]
+    ]) ?>    
 
-    <?= $form->field($model, 'parking_disabled')->textInput() ?>
+    <?= $form->field($model, 'adjacent_border')->widget(TinyMce::className(), [
+        'options' => ['rows' => 6],
+        'language' => 'sr',
+        'clientOptions' => [
+            'plugins' => [
+               "insertdatetime media table contextmenu paste" 
+            ],
+            'convert_fonts_to_spans' => true,
+            'paste_as_text' => true,
+            'menubar' => false,
+            'statusbar' => false,
+            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+        ]
+    ]) ?>
+
+    <?= $form->field($model, 'services')->widget(TinyMce::className(), [
+        'options' => ['rows' => 6],
+        'language' => 'sr',
+        'clientOptions' => [
+            'plugins' => [
+               "insertdatetime media table contextmenu paste" 
+            ],
+            'convert_fonts_to_spans' => true,
+            'paste_as_text' => true,
+            'menubar' => false,
+            'statusbar' => false,
+            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+        ]
+    ]) ?>    
+
+    <?= $form->field($model, 'note')->widget(TinyMce::className(), [
+        'options' => ['rows' => 6],
+        'language' => 'sr',
+        'clientOptions' => [
+            'plugins' => [
+               "insertdatetime media table contextmenu paste" 
+            ],
+            'convert_fonts_to_spans' => true,
+            'paste_as_text' => true,
+            'menubar' => false,
+            'statusbar' => false,
+            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+        ]
+    ]) ?>
+
+    <?= $form->field($model, 'legal')->widget(TinyMce::className(), [
+        'options' => ['rows' => 6],
+        'language' => 'sr',
+        'clientOptions' => [
+            'plugins' => [
+               "insertdatetime media table contextmenu paste" 
+            ],
+            'convert_fonts_to_spans' => true,
+            'paste_as_text' => true,
+            'menubar' => false,
+            'statusbar' => false,
+            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+        ]
+    ]) ?>    
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

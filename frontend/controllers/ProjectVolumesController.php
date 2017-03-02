@@ -68,8 +68,14 @@ class ProjectVolumesController extends Controller
             $model->project_id = $p['project_id'] ? $p['project_id'] : null;
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            if($model->save()){
+                $model->engineer_licence_id = $model->engineer->engineerLicences ? $model->engineer->engineerLicences[0]->id : null;
+                if($model->control_engineer_id){
+                    $model->control_engineer_licence_id = $model->controlEngineer->engineerLicences ? $model->controlEngineer->engineerLicences[0]->id : null;
+                }
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         } else {
             return $this->render('create', [
                 'model' => $model,

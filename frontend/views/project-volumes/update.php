@@ -8,8 +8,7 @@ use yii\helpers\Html;
 $this->title = Yii::t('app', 'Izmeni {modelClass}: ', [
     'modelClass' => 'deo projekta',
 ]) . $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Delovi projekta'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->project->code. ': Projekat', 'url' => ['/projects/view', 'id' => $model->project_id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Izmeni');
 ?>
 <div class="project-volumes-update">

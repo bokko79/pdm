@@ -11,8 +11,17 @@ use yii\imagine\Image;
  * @property string $id
  * @property string $engineer_id
  * @property integer $type
+ * @property string $no
+ * @property string $copy_id
+ * @property string $conf_id
+ * @property string $stamp_id
  *
  * @property Engineers $engineer
+ * @property Files $copy
+ * @property Files $conf
+ * @property Files $stamp
+ * @property ProjectVolumes[] $projectVolumes
+ * @property ProjectVolumes[] $projectVolumes0
  */
 class EngineerLicences extends \yii\db\ActiveRecord
 {
@@ -53,6 +62,10 @@ class EngineerLicences extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'engineer_id' => Yii::t('app', 'Engineer ID'),
             'type' => Yii::t('app', 'Type'),
+            'no' => Yii::t('app', 'No'),
+            'copy_id' => Yii::t('app', 'Copy ID'),
+            'conf_id' => Yii::t('app', 'Conf ID'),
+            'stamp_id' => Yii::t('app', 'Stamp ID'),
         ];
     }
 
@@ -174,4 +187,20 @@ class EngineerLicences extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Files::className(), ['id' => 'stamp_id']);
     }    
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectVolumes()
+    {
+        return $this->hasMany(ProjectVolumes::className(), ['engineer_licence_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectVolumes0()
+    {
+        return $this->hasMany(ProjectVolumes::className(), ['control_engineer_licence_id' => 'id']);
+    }
 }

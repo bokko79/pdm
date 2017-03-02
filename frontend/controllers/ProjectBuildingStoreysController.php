@@ -7,6 +7,7 @@ use common\models\ProjectBuildingStoreys;
 use common\models\ProjectBuildingStoreysSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 
 /**
@@ -51,8 +52,13 @@ class ProjectBuildingStoreysController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $query_cl = \common\models\ProjectBuildingStoreyParts::find()->where(['project_building_storey_id' => $id]);
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'projectBuildingStoreyParts' => new ActiveDataProvider([
+                'query' => $query_cl,
+            ]),
         ]);
     }
 
@@ -64,9 +70,12 @@ class ProjectBuildingStoreysController extends Controller
     public function actionCreate()
     {
         $model = new ProjectBuildingStoreys();
+        if($p = Yii::$app->request->get('ProjectBuildingStoreys')){
+            $model->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/project-building/storeys', 'id' => $model->project_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -85,12 +94,43 @@ class ProjectBuildingStoreysController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/project-building/storeys', 'id' => $model->project_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
             ]);
         }
+    }
+
+    /**
+     * Displays a single ProjectBuilding model.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionParts($id, $add_part=null, $remove_part=null)
+    {
+        $model = $this->findModel($id);
+        $parts = $model->projectBuildingStoreyParts;
+        
+        if($add_part){
+            // do something
+            $new =  new \common\models\ProjectBuildingStoreyParts();
+            $new->project_building_storey_id = $model->id;
+            $new->type = $add_part;
+            $new->save(); 
+            return $this->redirect(['parts', 'id' => $id]);
+        }
+
+        if($remove_part){
+            // do something
+            $this->findPartById($remove_part)->delete();    
+            return $this->redirect(['parts', 'id' => $id]);     
+        }
+        
+        return $this->render('parts', [
+            'model' => $model,
+            'parts' => $parts,
+        ]);
     }
 
     /**
@@ -101,9 +141,10 @@ class ProjectBuildingStoreysController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/project-building/storeys', 'id' => $model->project_id]);
     }
 
     /**
@@ -116,6 +157,22 @@ class ProjectBuildingStoreysController extends Controller
     protected function findModel($id)
     {
         if (($model = ProjectBuildingStoreys::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectBuildingStoreys model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectBuildingStoreys the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findPartById($id)
+    {
+        if (($model = \common\models\ProjectBuildingStoreyParts::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

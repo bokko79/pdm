@@ -59,7 +59,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
             'storey' => Yii::t('app', 'Etaža'),
             'order_no' => Yii::t('app', 'Redni broj'),
             'sub_net_area' => Yii::t('app', 'Redukovana neto površina'),
-            'net_area' => Yii::t('app', 'Neto Površina'),
+            'net_area' => Yii::t('app', 'Neto površina'),
             'gross_area' => Yii::t('app', 'Bruto Površina'),
             'name' => Yii::t('app', 'Naziv etaže'),
             'level' => Yii::t('app', 'Relativna visinska kota'),
@@ -83,5 +83,83 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     public function getProject()
     {
         return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSt()
+    {
+        return \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id. ' and type="stan"')->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getT()
+    {
+        return \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id. ' and type="tech"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getB()
+    {
+        return \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id. ' and type="biz"')->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getG()
+    {
+        return \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id. ' and type="garage"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getC()
+    {
+        return \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id. ' and type="common"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getW()
+    {
+        return \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id. ' and type="whole"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getE()
+    {
+        return \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id. ' and type="external"')->one();
+    }
+
+    public function getNetArea()
+    {
+        $total = 0;
+        if($parts = $this->projectBuildingStoreyParts){
+            foreach($parts as $part){
+                $total += $part->netArea;
+            }
+        }
+        return $total;
+    }
+
+    public function getSubNetArea()
+    {
+        $total = 0;
+        if($parts = $this->projectBuildingStoreyParts){
+            foreach($parts as $part){
+                $total += $part->subNetArea;
+            }
+        }
+        return $total;
     }
 }

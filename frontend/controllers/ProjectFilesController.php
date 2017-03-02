@@ -8,6 +8,7 @@ use common\models\ProjectFilesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ProjectFilesController implements the CRUD actions for ProjectFiles model.
@@ -68,8 +69,16 @@ class ProjectFilesController extends Controller
             $model->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
         }
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/projects/view', 'id' => $model->project_id]);
+        if ($model->load(Yii::$app->request->post())) {
+             $model->docFile = UploadedFile::getInstance($model, 'docFile');
+            if($model->save()){
+                if ($model->docFile) {
+                    $image = $model->uploadFiles();
+                    $model->file_id = $image;
+                    $model->save();
+                }                    
+                return $this->redirect(['/projects/view', 'id' => $model->project_id]);
+            }             
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -87,8 +96,16 @@ class ProjectFilesController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/projects/view', 'id' => $model->project_id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->docFile = UploadedFile::getInstance($model, 'docFile');
+            if($model->save()){
+                if ($model->docFile) {
+                    $image = $model->uploadFiles();
+                    $model->file_id = $image;
+                    $model->save();
+                } 
+                return $this->redirect(['/projects/view', 'id' => $model->project_id]);
+            }                    
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -104,9 +121,10 @@ class ProjectFilesController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/projects/view', 'id' => $model->project_id]);
     }
 
     /**

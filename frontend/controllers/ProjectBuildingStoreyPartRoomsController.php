@@ -8,6 +8,7 @@ use common\models\ProjectBuildingStoreyPartRoomsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 
 /**
  * ProjectBuildingStoreyPartRoomsController implements the CRUD actions for ProjectBuildingStoreyPartRooms model.
@@ -64,9 +65,12 @@ class ProjectBuildingStoreyPartRoomsController extends Controller
     public function actionCreate()
     {
         $model = new ProjectBuildingStoreyPartRooms();
+        if($p = Yii::$app->request->get('ProjectBuildingStoreyPartRooms')){
+            $model->project_building_storey_part_id = !empty($p['project_building_storey_part_id']) ? $p['project_building_storey_part_id'] : null;
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/project-building-storey-parts/view', 'id' => $model->project_building_storey_part_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,

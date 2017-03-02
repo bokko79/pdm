@@ -5,16 +5,17 @@ use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 
-$this->title = 'My Yii Application';
+$this->title = 'Project Documentation Manager';
 ?>
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Aplikacija PDM</h1>
+        <h1>PDM</h1>
 
-        <p class="lead">Kreiranje i upravljanje projektno-tehničkom dokumentacijom u građevinarstvu.</p>
+        <p class="lead">Upravljanje građevinskom<br> projektno-tehničkom dokumentacijom.</p>
 
         <p><?= Html::a(Yii::t('app', 'Projekti'), ['/projects'], ['class' => 'btn btn-lg btn-success']) ?></p>
+    
     </div>
 
     <div class="body-content">
@@ -41,14 +42,11 @@ $this->title = 'My Yii Application';
                 <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
             </div>
             <div class="col-lg-4">
-                <h2>Heading</h2>
+                <h2>Po propisima</h2>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+                <p>PDM je izrađen po važećoj stručnoj i pravnoj regulativi i propisima, koji važe na teritoriji Republike Srbije.</p>
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+                <p><?= Html::a(Yii::t('app', 'Regulativa'), ['/regulations'], ['class' => 'btn btn-default']) ?></p>
             </div>
         </div>
 

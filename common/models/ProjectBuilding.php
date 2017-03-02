@@ -119,8 +119,8 @@ class ProjectBuilding extends \yii\db\ActiveRecord
     {
         if ($this->validate()) {
            
-            $fileName = $this->id . '_' . time(); 
-            $this->buildFile->saveAs('images/projects/'. $fileName . '.' . $this->buildFile->extension);
+            $fileName = $this->project_id . '_' . time(); 
+            $this->buildFile->saveAs('images/projects/'.date('Y').'/'.$this->project_id.'/'.$fileName . '1.' . $this->buildFile->extension);
                
             
             $image = new \common\models\Files();
@@ -128,8 +128,8 @@ class ProjectBuilding extends \yii\db\ActiveRecord
             $image->type = 'jpg';
             $image->time = time();
             
-            $thumb = 'images/projects/'.$fileName.'1.'.$this->buildFile->extension;
-            Image::thumbnail($thumb, 800, 640)->save(\Yii::getAlias('images/projects/'.$fileName.'.'.$this->buildFile->extension), ['quality' => 80]); 
+            $thumb = 'images/projects/'.date('Y').'/'.$this->project_id.'/'.$fileName.'1.'.$this->buildFile->extension;
+            Image::thumbnail($thumb, 800, 640)->save(\Yii::getAlias('images/projects/'.date('Y').'/'.$this->project_id.'/'.$fileName.'.'.$this->buildFile->extension), ['quality' => 80]); 
             unlink(\Yii::getAlias($thumb));
         
             $image->save();
@@ -173,6 +173,14 @@ class ProjectBuilding extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getFile()
+    {
+        return $this->hasOne(Files::className(), ['id' => 'file_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getPo()
     {
         return \common\models\ProjectBuildingStoreys::find()->where('project_id='.$this->project_id. ' and storey="podrum"')->all();
@@ -184,6 +192,14 @@ class ProjectBuilding extends \yii\db\ActiveRecord
     public function getS()
     {
         return \common\models\ProjectBuildingStoreys::find()->where('project_id='.$this->project_id. ' and storey="suteren"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPr()
+    {
+        return \common\models\ProjectBuildingStoreys::find()->where('project_id='.$this->project_id. ' and storey="prizemlje"')->one();
     }
 
     /**
@@ -263,4 +279,107 @@ class ProjectBuilding extends \yii\db\ActiveRecord
         }
         return $total;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSpratnost()
+    {
+        $storey = '';
+        if(count($this->po)>0){
+            if(count($this->po)==1){
+                $storey .= 'Po+';
+            } else {
+                for ($x = 0; $x < count($this->po); $x++) {
+                    $storey .= 'Po'.($x+1).'+';
+                }
+            }
+        }
+        if($this->s){              
+            $storey .= 'Su+';
+        }
+        // prizemlje
+        $storey .= 'P+';
+        if($this->g){        
+            $storey .= 'G+';                   
+        }
+        if(count($this->sp)>0){            
+            $storey .= count($this->sp).'+';
+        }
+        if(count($this->ps)>0){
+            if(count($this->ps)==1){
+                $storey .= 'Ps+';
+            } else {
+                for ($x = 0; $x < count($this->ps); $x++) {
+                    $storey .= 'Ps'.($x+1).'+';
+                }
+            }
+        }
+        if(count($this->pk)>0){
+            if(count($this->pk)==1){
+                $storey .= 'Pk+';
+            } else {
+                for ($x = 0; $x < count($this->pk); $x++) {
+                    $storey .= 'Pk'.($x+1).'+';
+                }
+            }
+        }
+        if(count($this->m)>0){
+            if(count($this->m)==1){
+                $storey .= 'M+';
+            } else {
+                for ($x = 0; $x < count($this->m); $x++) {
+                    $storey .= 'M'.($x+1).'+';
+                }
+            }
+        }
+        if($this->t){
+            $storey .= 'T';                   
+        }
+        if(substr($storey, -1)=='+'){$storey = substr($storey, 0, -1);}
+        
+        return $storey;
+    }  
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGrossArea()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                $total += $storey->gross_area;
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNetArea()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                $total += $storey->netArea;
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubNetArea()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                $total += $storey->SubNetArea;
+            }
+        }        
+        return $total;
+    }      
 }

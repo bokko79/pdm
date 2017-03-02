@@ -31,15 +31,40 @@ use dosamigos\tinymce\TinyMce;
             'disabled' => true,         
         ]) ?>
 
-    <?= $form->field($model, 'building_type_id')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'building_type_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\BuildingTypes::find()->all(), 'id', 'name'),
+            'options' => ['placeholder' => 'Izaberite...'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,           
+        ]) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'description')->widget(TinyMce::className(), [
+        'options' => ['rows' => 6],
+        'language' => 'sr',
+        'clientOptions' => [
+            'plugins' => [
+               "insertdatetime media table contextmenu paste" 
+            ],
+            'convert_fonts_to_spans' => true,
+            'paste_as_text' => true,
+            'menubar' => false,
+            'statusbar' => false,
+            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
+        ]
+    ]) ?>
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">
             <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= (!$model->isNewRecord) ? Html::a(Yii::t('app', 'Ukloni'), ['delete', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                    'method' => 'post',
+                ],
+            ]) : null ?>
         </div>        
     </div>
 

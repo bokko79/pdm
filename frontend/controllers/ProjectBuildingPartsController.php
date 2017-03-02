@@ -69,7 +69,7 @@ class ProjectBuildingPartsController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/project-building/view', 'id' => $model->project_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -88,7 +88,7 @@ class ProjectBuildingPartsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/project-building/view', 'id' => $model->project_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -104,9 +104,10 @@ class ProjectBuildingPartsController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/project-building/view', 'id' => $model->project_id]);
     }
 
     /**

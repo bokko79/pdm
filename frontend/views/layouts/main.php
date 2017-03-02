@@ -31,33 +31,35 @@ AppAsset::register($this);
 
     <?php
     NavBar::begin([
-        'brandLabel' => 'Masterplan',
+        'brandLabel' => Html::img('/images/logo2-small.png', ['style'=>'width:150px;']),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-default navbar-fixed-top',
         ],
     ]);
     $menuItems = [
-        ['label' => '<i class="fa fa-home"></i> Home', 'url' => ['/site/index']],
-        ['label' => '<i class="fa fa-file"></i> Projekti', 'url' => ['/projects']],
+        ['label' => '<i class="fa fa-file"></i> Projekti', 'url' => ['/projects'], 'visible'=>!Yii::$app->user->isGuest],
         
         //['label' => 'Help', 'url' => ['/site/contact']],
-        ['label' => '<i class="fa fa-users"></i> Učesnici', 
+        ['label' => '<i class="fa fa-database"></i> Baza podataka', 'visible'=>!Yii::$app->user->isGuest,
             'items' => [
                 ['label' => '<i class="fa fa-shield"></i> Firme', 'url' => ['/practices']],
                 ['label' => '<i class="fa fa-user-circle-o"></i> Inženjeri', 'url' => ['/engineers']],
                 ['label' => '<i class="fa fa-building"></i> Investitori', 'url' => ['/clients']],
+                '<hr>',
+                ['label' => '<i class="fa fa-file"></i> Dokumenti projekata', 'url' => ['/project-files']],
+                ['label' => '<i class="fa fa-file-o"></i> Ostali dokumenti', 'url' => ['/legal-files']],
             ],
         ],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
+        //$menuItems[] = ['label' => 'Registracija', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                'Odjava (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
@@ -82,7 +84,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; Masterplan ARC d.o.o. Novi Sad <?= date('Y') ?></p>
+        <p class="pull-left"><?= Html::img('/images/logo2-small.png', ['style'=>'width:100px; margin-right:20px;']) ?>Masterplan ARC d.o.o. &copy; <?= date('Y') ?></p>
     </div>
 </footer>
 

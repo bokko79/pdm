@@ -9,7 +9,7 @@ use yii\grid\GridView;
 /* @var $model common\models\ProjectVolumes */
 
 $this->title = c($model->name) . ' projekta ';
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Delovi projekta'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->project->name, 'url' => ['/projects/view', 'id' => $model->project_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="project-volumes-view">
@@ -55,6 +55,13 @@ $this->params['breadcrumbs'][] = $this->title;
                       },
                   ],
                   [
+                     'attribute'=>'engineer_licence_id',
+                     'format' => 'raw',
+                     'value'=>function ($data) {
+                          return Html::a($data->engineerLicence->no, ['/engineer-licences/update', 'id'=>$data->engineer_licence_id]);
+                      },
+                  ],
+                  [
                      'attribute'=>'control_practice_id',
                      'format' => 'raw',
                      'value'=>function ($data) {
@@ -68,6 +75,13 @@ $this->params['breadcrumbs'][] = $this->title;
                           return Html::a($data->controlEngineer->name, ['/engineers/view', 'id'=>$data->control_engineer_id]);
                       },
                   ],
+                  [
+                     'attribute'=>'control_engineer_licence_id',
+                     'format' => 'raw',
+                     'value'=>function ($data) {
+                          return $data->controlEngineerLicence ? Html::a($data->controlEngineerLicence->no, ['/engineer-licences/update', 'id'=>$data->control_engineer_licence_id]) : null;
+                      },
+                  ],
                   'number',
                   'name',
                   'code',
@@ -77,7 +91,15 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
 
         <div class="col-sm-7">
-        <?= Html::a('Generiši deo projekta', Url::to(['/site/glavna-sveska', 'id'=>$model->project_id]), ['class' => 'btn btn-success', 'target'=>'_blank']) ?>
+          <div class="card_container record-full grid-item fadeInUp animated" id="">
+                <div class="primary-context gray normal">
+                    <div class="head"><?= $model->number ?>. <?= $model->name ?>
+                        <div class="action-area normal-case"><?= Html::a('Generiši deo projekta', Url::to(['/site/glavna-sveska', 'id'=>$model->project_id]), ['class' => 'btn btn-primary', 'target'=>'_blank']) ?></div>
+                    </div>
+                    
+                </div>               
+            </div>
+        
         </div>
     </div>
 </div>

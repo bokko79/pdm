@@ -14,6 +14,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>Popunite sledeće podatke da bi se prijavili:</p>
+    <p style="color:#999;margin:1em 0">Nemate nalog? <?= Html::a(Yii::t('app', 'Registrujte se.'), ['/site/signup'], ['class' => '']) ?></p>
+    
 
     <div class="row">
         <div class="col-lg-5">

@@ -64,9 +64,12 @@ class ProjectLotExistingBuildingsController extends Controller
     public function actionCreate()
     {
         $model = new ProjectLotExistingBuildings();
+        if($p = Yii::$app->request->get('ProjectLotExistingBuildings')){
+            $model->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/project-lot/view', 'id' => $model->project_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -85,7 +88,7 @@ class ProjectLotExistingBuildingsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/project-lot/view', 'id' => $model->project_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,

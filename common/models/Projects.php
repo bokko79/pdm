@@ -22,6 +22,7 @@ use Yii;
  * @property string $work
  * @property string $status
  * @property string $time
+ * @property string $year
  *
  * @property ProjectBuilding $projectBuilding
  * @property ProjectBuildingCharacteristics $projectBuildingCharacteristics
@@ -65,10 +66,11 @@ class Projects extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'code', 'user_id', 'client_id', 'building_id', 'practice_id', 'engineer_id'], 'required'],
-            [['client_id', 'building_id', 'location_id', 'practice_id', 'engineer_id', 'control_practice_id', 'control_engineer_id', 'time'], 'integer'],
+            [['client_id', 'building_id', 'location_id', 'practice_id', 'engineer_id', 'control_practice_id', 'control_engineer_id', 'time', 'year'], 'integer'],
+            [['code'], 'unique'],
             [['phase', 'work', 'status'], 'string'],
             [['name'], 'string', 'max' => 128],
-            [['code'], 'string', 'max' => 11],
+            [['code'], 'string', 'max' => 20],
             [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::className(), 'targetAttribute' => ['client_id' => 'id']],
             [['location_id'], 'exist', 'skipOnError' => true, 'targetClass' => Locations::className(), 'targetAttribute' => ['location_id' => 'id']],
             [['building_id'], 'exist', 'skipOnError' => true, 'targetClass' => Buildings::className(), 'targetAttribute' => ['building_id' => 'id']],

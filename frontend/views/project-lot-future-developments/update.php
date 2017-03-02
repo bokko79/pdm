@@ -5,14 +5,12 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectLotFutureDevelopments */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Project Lot Future Developments',
-]) . $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Project Lot Future Developments'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+$this->title = Yii::t('app', 'Podešavanje {modelClass}: ', [
+    'modelClass' => 'predviđenog objekta na parceli',
+]) . $model->id;
+$this->params['breadcrumbs'][] = ['label' => $model->project->code.': Parcela', 'url' => ['/project-lot/view', 'id' => $model->project_id]];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Podešavanje');
 ?>
-<div class="project-lot-future-developments-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -20,4 +18,3 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
         'model' => $model,
     ]) ?>
 
-</div>

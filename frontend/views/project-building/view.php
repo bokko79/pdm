@@ -8,13 +8,13 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectBuilding */
 
-$this->title = $model->project->name;
+$this->title = $model->project->name . ' ('. $model->spratnost . ')';
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Projekat'), 'url' => ['/projects/view', 'id'=>$model->project_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="project-building-view">
 
-    <h1><i class="fa fa-home"></i> <?= Html::encode($this->title) ?></h1>
+    <h1><?= Html::a('<i class="fa fa-home"></i>'.Html::encode($this->title), Url::to(['/projects/view', 'id'=>$model->project_id]), ['class' => '']) ?></h1>
 
 <hr>
 <div class="container">
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog"></i> Uredi objekat', Url::to(['/project-building/update', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?>
                         </div>
                     </div>
-                    <div class="subhead">Predmetni objekat projekta.</div>
+                    <div class="subhead">Predmetni objekat projekta. Ukupna bruto površina: <?= $model->grossArea ?> m<sup>2</sup></div>
                 </div>
                 <div class="secondary-context">  
                     <?= DetailView::widget([
@@ -60,32 +60,29 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
         <div class="col-sm-5">
+            <?= $model->file ? Html::img('/images/projects/'.date('Y').'/'.$model->project_id.'/'.$model->file->name, ['style'=>'max-height:100%;']) : null ?>
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Spratovi objekta
-                        <div class="action-area normal-case"><?= Html::a('Generiši spratove', Url::to(['/project-building/generate-storeys', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+                    <div class="head">Etaže objekta
+                        <div class="action-area normal-case"><?= Html::a('Upravljanje etažama', Url::to(['/project-building/storeys', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
                     </div>
-                    
+                    <div class="subhead">Ukupna bruto površina objekta: <?= $model->grossArea ?> m<sup>2</sup>. Ukupna neto površina objekta: <?= $model->netArea ?> m<sup>2</sup>. Ukupna redukovana neto površina objekta: <?= $model->subNetArea ?> m<sup>2</sup></div>
                 </div>
                 <div class="secondary-context">
                     <?= GridView::widget([
                         'dataProvider' => $projectBuildingStoreys,
                         'columns' => [
                             [
-                                'label'=>'ID',
-                                'format' => 'raw',
-                                'value'=>function ($data) {
-                                    return Html::a($data->id, ['project-building-storeys/view', 'id' => $data->id]);
-                                },
-                            ],
-                            [
-                                'label'=>'Building',
+                                'label'=>'Etaža',
                                 'format' => 'raw',
                                 'value'=>function ($data) {
                                     return Html::a($data->storey, ['project-building-storeys/view', 'id' => $data->id]);
                                 },
                             ],
+                            'level',
+                            'gross_area',
                         ],
+                        'summary' => false,
                     ]); ?>
                 </div>
             </div> 
@@ -99,24 +96,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="secondary-context">
                     <?= GridView::widget([
                         'dataProvider' => $projectBuildingClasses,
-                        'columns' => [
+                        'columns' => [                            
                             [
-                                'label'=>'ID',
+                                'label'=>'Klasa',
                                 'format' => 'raw',
                                 'value'=>function ($data) {
-                                    return Html::a($data->id, ['project-building-classes/update', 'id' => $data->id]);
-                                },
-                            ],
-                            [
-                                'label'=>'Building',
-                                'format' => 'raw',
-                                'value'=>function ($data) {
-                                    return Html::a($data->building->name, ['project-building-classes/update', 'id' => $data->id]);
+                                    return Html::a($data->building->class, ['project-building-classes/update', 'id' => $data->id]);
                                 },
                             ],
                             'percent',
                             'area',
                         ],
+                        'summary' => false,
                     ]); ?>
                     <?= ($model->getClassPercentageTotal()!=100) ? '<p class="red">Zbir procenata svih delova objekta mora biti jednak 100!. Trenutno je '.$model->getClassPercentageTotal().'</p>' : null ?>
                 </div>
@@ -141,6 +132,34 @@ $this->params['breadcrumbs'][] = $this->title;
                                 },
                             ],
                         ],
+                        'summary' => false,
+                    ]); ?>
+                </div>
+            </div>
+            <div class="card_container record-full grid-item fadeInUp animated" id="">
+                <div class="primary-context gray normal">
+                    <div class="head">Delovi i celine objekta
+                        <div class="action-area normal-case"><?= Html::a('Dodaj deo objekta', Url::to(['/project-building-parts/create', 'ProjectBuildingParts[project_id]'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+                    </div>
+                    
+                </div>
+                <div class="secondary-context">
+                    <?= GridView::widget([
+                        'dataProvider' => $projectBuildingParts,
+                        'columns' => [
+                            
+                            [
+                                'attribute'=>'name',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return Html::a($data->name, ['project-building-parts/update', 'id' => $data->id]);
+                                },
+                            ],
+                            'gross_area',
+                            'net_area',
+                            'storeys',
+                        ],
+                        'summary' => false,
                     ]); ?>
                 </div>
             </div>

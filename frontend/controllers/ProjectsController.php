@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
+use yii\helpers\FileHelper;
 
 /**
  * ProjectsController implements the CRUD actions for Projects model.
@@ -90,6 +91,7 @@ class ProjectsController extends Controller
             $model->user_id = Yii::$app->user->id;
             $model->location_id = $location->id;
             $model->status = 'active';
+            $model->year = date('Y');
             $model->time = time();
             if($model->save()){
                 // initialize project
@@ -99,6 +101,7 @@ class ProjectsController extends Controller
                 $this->createProjectBuildingInsulations($model);
                 $this->createProjectBuildingMaterials($model);
                 $this->createProjectBuildingServices($model);
+                $this->createProjectBuildingStoreys($model);
                 $this->createProjectBuildingStructure($model);
                 $this->createProjectClient($model);
                 $this->createProjectLot($model);
@@ -106,6 +109,7 @@ class ProjectsController extends Controller
                 if($location->lot){
                     $this->createLocationLot($location);                    
                 } 
+                \yii\helpers\FileHelper::createDirectory('images/projects/'.$model->year.'/'.$model->id);
                 return $this->redirect(['view', 'id' => $model->id]);
             }
                 
@@ -180,7 +184,7 @@ class ProjectsController extends Controller
     protected function createProjectBuildingClasses($model)
     {
         $projectBuildingClasses = new \common\models\ProjectBuildingClasses();
-        $projectBuildingClasses->project_id = $model->project_id;
+        $projectBuildingClasses->project_id = $model->id;
         $projectBuildingClasses->building_id = $model->building_id;
         $projectBuildingClasses->percent = 100;
         $projectBuildingClasses->save();
@@ -214,6 +218,16 @@ class ProjectsController extends Controller
         $new->save();
     }
 
+    protected function createProjectBuildingStoreys($model)
+    {
+        $new =  new \common\models\ProjectBuildingStoreys();
+        $new->project_id = $model->id;
+        $new->storey = 'prizemlje';
+        $new->level = 0.00;
+        $new->order_no = 1;
+        $new->save();
+    }
+
     protected function createProjectBuildingStructure($model)
     {
         $new =  new \common\models\ProjectBuildingStructure();
@@ -239,18 +253,20 @@ class ProjectsController extends Controller
         $new->save();
     }
 
-    protected function createProjectVolume($model)
+    public function createProjectVolume($model)
     {
         $projectVolume = new \common\models\ProjectVolumes();
         $projectVolume->project_id = $model->id;
         $projectVolume->volume_id = 1;
         $projectVolume->practice_id = $model->practice_id;
         $projectVolume->engineer_id = $model->engineer_id;
+        $projectVolume->engineer_licence_id = ($model->engineer->engineerLicences) ? $model->engineer->engineerLicences[0]->id : 4;
         $projectVolume->number = 0;
         $projectVolume->name = 'glavna sveska';
         $projectVolume->code = $model->code;
         $projectVolume->control_practice_id = $model->control_practice_id;
         $projectVolume->control_engineer_id = $model->control_engineer_id;
+        $projectVolume->control_engineer_licence_id = ($model->controlEngineer->engineerLicences) ? $model->controlEngineer->engineerLicences[0]->id : 4;
         $projectVolume->save();
     }
 

@@ -48,10 +48,10 @@ class ProjectLotFutureDevelopments extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_id' => Yii::t('app', 'Project ID'),
-            'building_type_id' => Yii::t('app', 'Building Type ID'),
-            'name' => Yii::t('app', 'Name'),
-            'description' => Yii::t('app', 'Description'),
+            'project_id' => Yii::t('app', 'Projekat'),
+            'building_type_id' => Yii::t('app', 'Namena objekta'),
+            'name' => Yii::t('app', 'Naziv objekta'),
+            'description' => Yii::t('app', 'Opis objekta'),
         ];
     }
 

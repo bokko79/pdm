@@ -7,30 +7,36 @@ use yii\widgets\Pjax;
 /* @var $searchModel common\models\ProjectFilesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Project Files');
+$this->title = Yii::t('app', 'Dokumenti projekata');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="project-files-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <h1><i class="fa fa-file"></i> <?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Project Files'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'project_id',
-            'type',
+            [
+               'attribute'=>'name',
+               'format' => 'raw',
+               'value'=>function ($data) {
+                    return Html::a($data->name, ['/project-files/view', 'id'=>$data->id]);
+                },
+            ],
+            [
+               'attribute'=>'project_id',
+               'format' => 'raw',
+               'value'=>function ($data) {
+                    return Html::a($data->project->name, ['/projects/view', 'id'=>$data->project_id]);
+                },
+            ],
+            'project.code',
             'number',
             'date',
-            // 'file_id',
-            // 'name',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
