@@ -33,6 +33,8 @@ use dosamigos\tinymce\TinyMce;
 
     <?= $form->field($model, 'part')->dropDownList([ 'venac' => 'Venac', 'sleme' => 'Sleme', 'psprat' => 'Psprat', 'drugo' => 'Drugo', ], ['prompt' => '']) ?>
 
+     <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder'=>'npr. venac objekta prema ulici...'])->hint('Pun naziv dela objekta za koji se unosi visinska kota. Npr. ako objekat ima više nivo na kojima se nalazi krovni venac ili sleme, navesti opisno na koji venac ili sleme se misli.') ?>
+
     <?= $form->field($model, 'level', [
                 'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%']) ?>
 

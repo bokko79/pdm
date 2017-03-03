@@ -99,4 +99,12 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
         }
         return $total;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFullname()
+    {
+        return $this->mark. ' '.$this->type;
+    }
 }

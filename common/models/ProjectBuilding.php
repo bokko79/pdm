@@ -38,20 +38,6 @@ use yii\imagine\Image;
  */
 class ProjectBuilding extends \yii\db\ActiveRecord
 {
-    public $podrum;
-    public $suteren;
-    public $prizemlje;
-    public $visokoprizemlje;
-    public $mezanin;
-    public $galerija;
-    public $sprat;
-    public $povucenisprat;
-    public $potkrovlje;
-    public $mansarda;
-    public $tavan;
-    public $krov;
-    public $duplex;
-
     public $buildFile;
 
     /**
@@ -95,7 +81,7 @@ class ProjectBuilding extends \yii\db\ActiveRecord
             'type' => Yii::t('app', 'Tip objekta'),
             'ground_floor_level' => Yii::t('app', 'Apsolutna kota prizemlja'),
             'building_type_id' => Yii::t('app', 'Namena objekta'),
-            'building_line_dist' => Yii::t('app', 'Rastojanje građ linije'),
+            'building_line_dist' => Yii::t('app', 'Rastojanje građ. od reg. linije'),
             'gross_area_part' => Yii::t('app', 'BRGP dela objekta'),
             'gross_area' => Yii::t('app', 'BRGP'),
             'gross_area_above' => Yii::t('app', 'BRGP nadzemno'),
@@ -358,6 +344,38 @@ class ProjectBuilding extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getGrossAboveArea()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($storey->storey!='podrum' and $storey->storey!='suteren'){
+                    $total += $storey->gross_area;
+                }                
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGrossBelowArea()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($storey->storey=='podrum' or $storey->storey=='suteren'){
+                    $total += $storey->gross_area;
+                }                
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getNetArea()
     {
         $total = 0;
@@ -381,5 +399,103 @@ class ProjectBuilding extends \yii\db\ActiveRecord
             }
         }        
         return $total;
-    }      
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBrStanova()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type='stan'){
+                            $total++;
+                        }
+                    }
+                }
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBrPoslProstora()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type='biz'){
+                            $total++;
+                        }
+                    }
+                }
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBuiltAreaReg()
+    {                
+        return ($this->project->projectLot->area) ? $this->project->projectLot->built_index_reg*$this->project->projectLot->area : null;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOccupancyAreaReg()
+    {                
+        return ($this->project->projectLot->area) ? $this->project->projectLot->occupancy_reg*$this->project->projectLot->area/100 : null;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOccupancy()
+    {                
+        return ($this->project->projectLot->area) ? $this->pr->gross_area/$this->project->projectLot->area : null;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBuiltIndex()
+    {                
+        return ($this->project->projectLot->area) ? $this->grossAboveArea/$this->project->projectLot->area : null;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getObjectType()
+    {
+        $type = 0;
+        switch ($this->type) {
+           case 'slobodno':
+               $type = 'slobodnostojeći objekat';
+               break;
+            case 'niz':
+               $type = 'objekat u neprekinutom nizu';
+               break;
+            case 'dvojna':
+               $type = 'deo dvojnog objekta';
+               break;
+            case 'ugaona':
+               $type = 'ugaoni objekat';
+               break;           
+           default:
+               $type = 'ostali objekti';
+               break;
+       }       
+        return $type;
+    }
 }

@@ -33,7 +33,7 @@ use dosamigos\tinymce\TinyMce;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'storey')->dropDownList([ 'podrum' => 'Podrum', 'suteren' => 'Suteren', 'galerija' => 'Galerija', 'sprat' => 'Sprat', 'povucenisprat' => 'Povucenisprat', 'potkrovlje' => 'Potkrovlje', 'mansarda' => 'Mansarda', 'tavan' => 'Tavan', 'krov' => 'Krov', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'storey')->dropDownList([ 'podrum' => 'Podrum', 'suteren' => 'Suteren', 'galerija' => 'Galerija', 'prizemlje' => 'Prizemlje', 'sprat' => 'Sprat', 'povucenisprat' => 'Povucenisprat', 'potkrovlje' => 'Potkrovlje', 'mansarda' => 'Mansarda', 'tavan' => 'Tavan', 'krov' => 'Krov', ], ['prompt' => '']) ?>
 
     <?= $form->field($model, 'order_no')->input('number', ['min'=>0, 'style'=>'width:40%']) ?>
 
@@ -52,7 +52,7 @@ use dosamigos\tinymce\TinyMce;
     <?= $form->field($model, 'level', [
                 'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'units_total')->input('number', ['min'=>0, 'style'=>'width:40%']) ?>
+    <?php // $form->field($model, 'units_total')->input('number', ['min'=>0, 'style'=>'width:40%']) ?>
 
     <?= $form->field($model, 'description')->widget(TinyMce::className(), [
         'options' => ['rows' => 6],

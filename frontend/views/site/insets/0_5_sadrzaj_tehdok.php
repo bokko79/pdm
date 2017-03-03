@@ -12,12 +12,12 @@ $formatter->locale = 'sr-Latn';
 	<?php if($volumes = $model->projectVolumes){
 		foreach ($volumes as $volume){ ?>
 			<tr>
-				<td class=""><?= $volume->volume->no ?>.</td>
+				<td class=""><?= $volume->number ?>.</td>
 				<td class="content uppercase">
-					<p><?= c($volume->volume->name) ?></p>
+					<p><?= c($volume->name) ?></p>
 				</td>
 				<td>
-					br. <?= ($volume->number) ? ($volume->number) : $model->code ?>
+					br. <?= $volume->code ?>
 				</td>					
 			</tr>
 	<?php

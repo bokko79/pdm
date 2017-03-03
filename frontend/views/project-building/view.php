@@ -3,7 +3,9 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
-use yii\grid\GridView;
+//use yii\grid\GridView;
+use kartik\grid\GridView;
+use kartik\editable\Editable;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectBuilding */
@@ -16,10 +18,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::a('<i class="fa fa-home"></i>'.Html::encode($this->title), Url::to(['/projects/view', 'id'=>$model->project_id]), ['class' => '']) ?></h1>
 
+
 <hr>
 <div class="container">
     <div class="row">
-        <div class="col-sm-7">
+        <div class="col-sm-5">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
                     <div class="head"><i class="fa fa-plus-circle"></i> Osnovni podaci objekta
@@ -33,23 +36,84 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $model,
                         'attributes' => [
                             'project.name',
-                            'building.fullname',
+                            'building.class',
                             'name',
                             'type',
                             'buildingType.name',
                             'ground_floor_level',
                             'building_line_dist',                    
                             'gross_area_part',
-                            'gross_area',
-                            'gross_area_above',
-                            'gross_area_below',
-                            'gross_built_area',
-                            'net_area',
-                            'ground_floor_area',
-                            'occupancy_area',
-                            'storey',
+                            [
+                                'attribute'=>'gross_area',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->grossArea;
+                                },
+                            ],
+                            [
+                                'attribute'=>'gross_area_above',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->grossAboveArea;
+                                },
+                            ],
+                            [
+                                'attribute'=>'gross_area_below',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->grossBelowArea;
+                                },
+                            ],
+                            [
+                                'attribute'=>'net_area',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->netArea;
+                                },
+                            ],
+                            [
+                                'attribute'=>'net_area',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->subNetArea;
+                                },
+                            ],
+                            [
+                                'attribute'=>'ground_floor_area',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->pr->gross_area;
+                                },
+                            ],
+                            [
+                                'attribute'=>'occupancy_area',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->pr->gross_area;
+                                },
+                            ],
+                            [
+                                'attribute'=>'units_total',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->spratnost;
+                                },
+                            ],
                             'storey_height',
-                            'units_total',
+                            [
+                                'attribute'=>'units_total',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->brStanova;
+                                },
+                            ],
+                            [
+                                'attribute'=>'units_total',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->brPoslProstora;
+                                },
+                            ],
                             'ridge_orientation',
                             'roof_pitch',
                             'characteristics:ntext',
@@ -59,7 +123,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
         </div>
-        <div class="col-sm-5">
+        <div class="col-sm-7">
             <?= $model->file ? Html::img('/images/projects/'.date('Y').'/'.$model->project_id.'/'.$model->file->name, ['style'=>'max-height:100%;']) : null ?>
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
@@ -131,6 +195,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return Html::a($data->level, ['project-building-heights/update', 'id' => $data->id]);
                                 },
                             ],
+                            'name',
                         ],
                         'summary' => false,
                     ]); ?>

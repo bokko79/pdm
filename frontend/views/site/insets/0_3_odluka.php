@@ -47,12 +47,12 @@ $formatter->locale = 'sr-Latn';
 	<tr>
 		<td class="right">Pečat
 			<div>
-				<?= Html::img('@web/images/legal_files/'.$model->client->stamp, ['style'=>'width:120px; margin-top:20px;']) ?>
+				<?= ($model->client->stamp) ? Html::img('@web/images/legal_files/stamps/'.$model->client->stamp, ['style'=>'width:120px; margin-top:20px;']) : null ?>
 			</div>
 		</td>
 		<td class="content">Potpis
 			<div>
-				<?= Html::img('@web/images/legal_files/'.$model->client->signature, ['style'=>'width:180px; margin-top:20px;']) ?>
+				<?= ($model->client->stamp) ? Html::img('@web/images/legal_files/signatures/'.$model->client->signature, ['style'=>'width:180px; margin-top:20px;']) : null ?>
 			</div>
 		</td>
 	</tr>
@@ -62,6 +62,6 @@ $formatter->locale = 'sr-Latn';
 	</tr>
 	<tr>
 		<td class="right">Mesto i datum</td>
-		<td class="content"><p><?= $model->location->city->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
+		<td class="content"><p><?= $model->client->location->city->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
 	</tr>
 </table>

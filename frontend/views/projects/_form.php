@@ -8,6 +8,8 @@ use kartik\widgets\DatePicker;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\FileInput;
+
+$location->lot = ($model->location) ? $model->location->locationLots[0]->lot : null;
 ?>
 
 <?php $form = kartik\widgets\ActiveForm::begin([

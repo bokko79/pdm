@@ -75,7 +75,7 @@ class ProjectBuildingStoreysController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/project-building/storeys', 'id' => $model->project_id]);
+            return $this->redirect(['/project-building-storeys/view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -94,7 +94,7 @@ class ProjectBuildingStoreysController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/project-building/storeys', 'id' => $model->project_id]);
+            return $this->redirect(['/project-building-storeys/view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,

@@ -48,7 +48,13 @@ return [
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 'contact-us' => 'site/contact',*/
             ],
-        ],      
+        ],   
+        'formatter' => [
+            'dateFormat' => 'j.n.yyyy',
+            'decimalSeparator' => ',',
+            'thousandSeparator' => '.',
+            'currencyCode' => 'RSD',
+       ],   
     ],
     'modules' => [
         'datecontrol' =>  [
@@ -93,6 +99,9 @@ return [
             // following line will restrict access to admin controller from frontend application
             'as frontend' => 'dektrium\user\filters\FrontendFilter',
         ],*/
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module'
+        ]
     ],
     'params' => $params,
 ];

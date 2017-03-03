@@ -81,4 +81,12 @@ class Buildings extends \yii\db\ActiveRecord
     {
         return $this->name. ': '. $this->title. ' -- '.$this->criteria. ' // '.$this->category. '-'.$this->class;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFullClass()
+    {
+        return $this->class . ' (' .$this->category. '): '.$this->name. ': '. $this->title. ' -- '.$this->criteria;
+    }
 }

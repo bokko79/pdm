@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						<?php 
 							if($model->st){
 								foreach($model->st as $st){
-									echo Html::a($st->name ? c($st->name) : c($st->type), Url::to(['/project-building-storey-parts/view', 'id'=>$st->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storey-parts/update', 'id'=>$st->id]), ['class' => 'btn btn-success btn-sm']). ' ' .Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building-storeys/parts', 'id' => $model->id, 'remove_part'=>$st->id]), ['class' => 'btn btn-danger btn-sm']) . '<br><br>';
+									echo Html::a($st->mark ? c($st->mark) : c($st->type), Url::to(['/project-building-storey-parts/view', 'id'=>$st->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storey-parts/update', 'id'=>$st->id]), ['class' => 'btn btn-success btn-sm']). ' ' .Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building-storeys/parts', 'id' => $model->id, 'remove_part'=>$st->id]), ['class' => 'btn btn-danger btn-sm']) . '<br><br>';
 								}								 
 							} else {
 									echo '<span class="hint">Etaža nema stanove.</span>';
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						<?php 
 							if($model->b){
 								foreach($model->b as $b){
-									echo Html::a($b->name ? c($b->name) : c($b->type), Url::to(['/project-building-storey-parts/view', 'id'=>$b->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storey-parts/update', 'id'=>$b->id]), ['class' => 'btn btn-success btn-sm']). ' ' .Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building-storeys/parts', 'id' => $model->id, 'remove_part'=>$b->id]), ['class' => 'btn btn-danger btn-sm']) . '<br><br>';
+									echo Html::a($b->mark ? c($b->mark) : c($b->type), Url::to(['/project-building-storey-parts/view', 'id'=>$b->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storey-parts/update', 'id'=>$b->id]), ['class' => 'btn btn-success btn-sm']). ' ' .Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building-storeys/parts', 'id' => $model->id, 'remove_part'=>$b->id]), ['class' => 'btn btn-danger btn-sm']) . '<br><br>';
 								}								 
 							} else {
 									echo '<span class="hint">Etaža nema poslovni prostor.</span>';

@@ -94,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
           <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
                     <div class="head"><?= $model->number ?>. <?= $model->name ?>
-                        <div class="action-area normal-case"><?= Html::a('Generiši deo projekta', Url::to(['/site/glavna-sveska', 'id'=>$model->project_id]), ['class' => 'btn btn-primary', 'target'=>'_blank']) ?></div>
+                        <div class="action-area normal-case"><?= Html::a('Generiši deo projekta', Url::to(['/site/glavna-sveska', 'id'=>$model->project_id, 'volume'=>$model->id]), ['class' => 'btn btn-primary', 'target'=>'_blank']) ?></div>
                     </div>
                     
                 </div>               

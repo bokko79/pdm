@@ -11,8 +11,6 @@ $formatter->locale = 'sr-Latn';
 		<tr>
 			<td class="right titler">Investitor</td>
 			<td class="content">
-				<h3><b><?= $model->client->name ?></b></h3>
-				<p>ul. <?= $model->client->location->street. ' br. ' . $model->client->location->number . ', ' .$model->client->location->city->town; ?></p>
 				<?php if($projectClients = $model->projectClients){
 					foreach($projectClients as $projectClient){
 						$client = $projectClient->client; ?>
@@ -26,7 +24,7 @@ $formatter->locale = 'sr-Latn';
 		<tr>
 			<td class="right">Objekat</td>
 			<td class="content">
-				<h3><?= $model->name ?></h3>
+				<h3><b><?= $model->name ?></b></h3>
 				<p>ul. <?= $model->location->street. ' br. ' . $model->location->number . ' ' .$model->location->city->town ?></p>
 				<p>kat.parc.br. 
 				<?php if($lots = $model->location->locationLots){
@@ -60,7 +58,7 @@ $formatter->locale = 'sr-Latn';
 		</tr>
 		<tr>
 			<td class="right" style="padding:5px 20px;">Odgovorno lice projektanta</td>
-			<td class="content" style="padding:5px 20px;"><?= $model->engineer->name .', '. $model->engineer->title ?></td>			
+			<td class="content" style="padding:5px 20px;"><?= $model->practice->practiceEngineers[0]->engineer->name . ($model->practice->practiceEngineers[0] ? ', '. $model->practice->practiceEngineers[0]->engineer->title : null) ?></td>			
 		</tr>
 		<tr>
 			<td class="right" style="padding:5px 20px;">
@@ -103,6 +101,6 @@ $formatter->locale = 'sr-Latn';
 		</tr>
 		<tr>
 			<td class="right">Mesto i datum</td>
-			<td class="content"><p><?= $model->location->city->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
+			<td class="content"><p><?= $model->practice->location->city->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
 		</tr>
 	</table>

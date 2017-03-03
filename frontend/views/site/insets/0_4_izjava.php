@@ -39,7 +39,7 @@ odgovaraju sadržini projekta i da su u projektu priloženi odgovarajući elabor
 					<p><?= c($volume->volume->name) ?></p>
 				</td>
 				<td>
-					br. <?= ($volume->number) ? ($volume->number) : $model->code ?>
+					br. <?= $volume->code ?>
 				</td>					
 			</tr>
 	<?php
@@ -64,12 +64,12 @@ odgovaraju sadržini projekta i da su u projektu priloženi odgovarajući elabor
 	<tr>
 		<td class="right">Lični pečat
 			<div style="border:1px solid #777; padding:10px; width:140px;">
-				<?= Html::img('@web/images/legal_files/'.$model->practice->stamp, ['style'=>'width:120px; margin-top:20px;']) ?>
+				<?= Html::img('@web/images/legal_files/licences/'.$model->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:120px; margin-top:20px;']) ?>
 			</div>
 		</td>
 		<td class="content">Potpis
 			<div>
-				<?= Html::img('@web/images/legal_files/'.$model->client->signature, ['style'=>'width:180px; margin-top:20px;']) ?>
+				<?= Html::img('@web/images/legal_files/signatures/'.$model->engineer->signature, ['style'=>'width:180px; margin-top:20px;']) ?>
 			</div>
 		</td>
 	</tr>

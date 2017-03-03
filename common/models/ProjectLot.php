@@ -71,7 +71,7 @@ class ProjectLot extends \yii\db\ActiveRecord
             'length' => Yii::t('app', 'Prosečna dužina parcele'),
             'disposition' => Yii::t('app', 'Pozicija i položaj parcele'),
             'type' => Yii::t('app', 'Vrsta parcele'),
-            'area' => Yii::t('app', 'Porvšina parcele'),
+            'area' => Yii::t('app', 'Površina parcele'),
             'ground_level' => Yii::t('app', 'Kota terena'),
             'road_level' => Yii::t('app', 'Kota nivelete'),
             'underwater_level' => Yii::t('app', 'Kota maksimalnih podzemnih voda'),

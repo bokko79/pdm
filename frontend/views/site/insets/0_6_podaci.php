@@ -11,38 +11,38 @@ $formatter->locale = 'sr-Latn';
 	<?php if($volumes = $model->projectVolumes){
 		foreach ($volumes as $volume){ 
 			if($volume->volume->type!='elaborat'){ // ako su projekti ?>
-				<h3 class="bold uppercase"><?= $volume->volume->no ?>. <?= c($volume->volume->name) ?>:</h3>
+				<h3 class="bold uppercase"><?= $volume->number ?>. <?= c($volume->name) ?>:</h3>
 				<table class="clear nopadd bottom">
 					<tr>
 						<td class="shorttitler">Projektant</td>
 						<td class="content">
-							<p><?= $model->practice->name ?></p>
-							<p>ul. <?= $model->practice->location->street. ' br. ' . $model->practice->location->number . ' ' .$model->practice->location->city->town; ?></p>
+							<p><?= $volume->practice->name ?></p>
+							<p>ul. <?= $volume->practice->location->street. ' br. ' . $volume->practice->location->number . ' ' .$volume->practice->location->city->town; ?></p>
 						</td>					
 					</tr>
 					<tr>
 						<td class="">Glavni projektant</td>
 						<td class="content">
-							<?= $model->engineer->name .', '. $model->engineer->title ?>
+							<?= $volume->engineer->name .', '. $volume->engineer->title ?>
 						</td>					
 					</tr>
 					<tr>
 						<td class="">Broj licence</td>
 						<td class="content">
-							<?= $model->engineer->engineerLicences[0]->no ?>
+							<?= $volume->engineer->engineerLicences[0]->no ?>
 						</td>					
 					</tr>
 					<tr>
 						<td class="">
 							Lični pečat
 							<div>
-								<?= Html::img('@web/images/legal_files/licences/'.$model->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
+								<?= Html::img('@web/images/legal_files/licences/'.$volume->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
 							</div>
 						</td>
 						<td class="content">
 							Potpis
 							<div>
-								<?= Html::img('@web/images/legal_files/'.$model->practice->signature, ['style'=>'width:160px;']) ?>
+								<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px;']) ?>
 							</div>
 						</td>				
 					</tr>
@@ -58,38 +58,38 @@ $formatter->locale = 'sr-Latn';
 	<?php if($volumes = $model->projectVolumes){
 		foreach ($volumes as $volume){ 
 			if($volume->volume->type=='elaborat'){ // ako su projekti ?>
-				<h3 class="bold uppercase"><?= c($volume->volume->name) ?>:</h3>
+				<h3 class="bold uppercase"><?= $volume->number ?>. <?= c($volume->name) ?>:</h3>
 				<table class="clear nopadd bottom">
 					<tr>
 						<td class="shorttitler">Izrađivač</td>
 						<td class="content">
-							<p><?= $model->practice->name ?></p>
-							<p>ul. <?= $model->practice->location->street. ' br. ' . $model->practice->location->number . ' ' .$model->practice->location->city->town; ?></p>
+							<p><?= $volume->practice->name ?></p>
+							<p>ul. <?= $volume->practice->location->street. ' br. ' . $volume->practice->location->number . ' ' .$volume->practice->location->city->town; ?></p>
 						</td>					
 					</tr>
 					<tr>
 						<td class="">Ovlašćeno lice</td>
 						<td class="content">
-							<?= $model->engineer->name .', '. $model->engineer->title ?>
+							<?= $volume->engineer->name .', '. $volume->engineer->title ?>
 						</td>					
 					</tr>
 					<tr>
 						<td class="">Broj ovlašćenja</td>
 						<td class="content">
-							<?= $model->engineer->engineerLicences[0]->no ?>
+							<?= $volume->engineer->engineerLicences[0]->no ?>
 						</td>					
 					</tr>
 					<tr>
 						<td class="">
 							Lični pečat
 							<div>
-								<?= Html::img('@web/images/legal_files/licences/'.$model->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
+								<?= Html::img('@web/images/legal_files/licences/'.$volume->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
 							</div>
 						</td>
 						<td class="content">
 							Potpis
 							<div>
-								<?= Html::img('@web/images/legal_files/'.$model->practice->signature, ['style'=>'width:160px;']) ?>
+								<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px;']) ?>
 							</div>
 						</td>				
 					</tr>

@@ -53,9 +53,9 @@ use kartik\checkbox\CheckboxX;
                 'addon' => ['prepend' => ['content'=>'m<sup>2</sup>']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
 
     <?= $form->field($model, 'occupancy_reg', [
-                'addon' => ['prepend' => ['content'=>'%']]])->input('number', ['max'=>100, 'min'=>0, 'style'=>'width:40%']) ?>
+                'addon' => ['prepend' => ['content'=>'%']]])->input('number', ['max'=>100, 'min'=>0, 'step'=>0.01, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'built_index_reg')->input('number', ['step'=>0.01, 'max'=>1, 'min'=>0, 'style'=>'width:40%']) ?>    
+    <?= $form->field($model, 'built_index_reg')->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>    
 
     <?= $form->field($model, 'parking_spaces')->input('number', ['min'=>0, 'style'=>'width:40%']) ?>
 

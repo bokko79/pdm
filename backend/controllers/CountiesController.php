@@ -1,18 +1,18 @@
 <?php
 
-namespace frontend\controllers;
+namespace backend\controllers;
 
 use Yii;
-use common\models\LocationLots;
-use common\models\LocationLotsSearch;
+use common\models\Counties;
+use common\models\CountiesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * LocationLotsController implements the CRUD actions for LocationLots model.
+ * CountiesController implements the CRUD actions for Counties model.
  */
-class LocationLotsController extends Controller
+class CountiesController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class LocationLotsController extends Controller
     }
 
     /**
-     * Lists all LocationLots models.
+     * Lists all Counties models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new LocationLotsSearch();
+        $searchModel = new CountiesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class LocationLotsController extends Controller
     }
 
     /**
-     * Displays a single LocationLots model.
+     * Displays a single Counties model.
      * @param string $id
      * @return mixed
      */
@@ -57,21 +57,16 @@ class LocationLotsController extends Controller
     }
 
     /**
-     * Creates a new LocationLots model.
+     * Creates a new Counties model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new LocationLots();
-        if($ll = Yii::$app->request->get('LocationLots')){
-            $model->location_id = $ll['location_id'] ? $ll['location_id'] : null;
-            $model->type = $ll['type'] ? $ll['type'] : null;
-        }
+        $model = new Counties();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $project = $model->location->project;
-            return $this->redirect(['project-lot/view', 'id' => $project->id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -80,7 +75,7 @@ class LocationLotsController extends Controller
     }
 
     /**
-     * Updates an existing LocationLots model.
+     * Updates an existing Counties model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -88,9 +83,9 @@ class LocationLotsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $project = $model->location->project;
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['projects/view', 'id' => $project->id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -99,28 +94,28 @@ class LocationLotsController extends Controller
     }
 
     /**
-     * Deletes an existing LocationLots model.
+     * Deletes an existing Counties model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
      */
     public function actionDelete($id)
     {
-        $model = $this->findModel($id);
-        $model->delete();
-        return $this->redirect(['project-lot/view', 'id' => $model->location->project->id]);
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
     }
 
     /**
-     * Finds the LocationLots model based on its primary key value.
+     * Finds the Counties model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return LocationLots the loaded model
+     * @return Counties the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = LocationLots::findOne($id)) !== null) {
+        if (($model = Counties::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

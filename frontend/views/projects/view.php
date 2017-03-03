@@ -147,7 +147,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php if($projectFiles = $model->projectFiles){
                         foreach($projectFiles as $projectFile){
                             $thumb = ($projectFile->file and $projectFile->file->type!='pdf') ? Html::img('/images/projects/files/'.$projectFile->file->name, ['style'=>'max-height:30px;']) : null;
-                            echo Html::a('<i class="fa fa-file"></i> '.$projectFile->name. ' '.$thumb, Url::to(['/project-files/update', 'id'=>$projectFile->id]), ['class' => 'btn btn-default btn-sm']).'<br>';
+                            echo Html::a('<i class="fa fa-file"></i> '.substr($projectFile->name,0,50). '... '.$thumb, Url::to(['/project-files/update', 'id'=>$projectFile->id]), ['class' => 'btn btn-default btn-sm']).'<br><br>';
 
                         }
                     } ?>
@@ -166,7 +166,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="secondary-context">
                     <?php if($projectClients = $model->projectClients){
                         foreach($projectClients as $projectClient){
-                            echo Html::a('<i class="fa fa-building"></i> '.$projectClient->client->name, Url::to(['/project-clients/update', 'id'=>$projectClient->id]), ['class' => 'btn btn-default btn-sm']).'<br>';
+                            echo Html::a('<i class="fa fa-building"></i> '.$projectClient->client->name, Url::to(['/project-clients/update', 'id'=>$projectClient->id]), ['class' => 'btn btn-default btn-sm']).'<br><br>';
                         }
                     } ?>
                 </div>                

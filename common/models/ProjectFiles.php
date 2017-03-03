@@ -42,7 +42,7 @@ class ProjectFiles extends \yii\db\ActiveRecord
             [['type'], 'string'],
             [['date'], 'safe'],
             [['number'], 'string', 'max' => 64],
-            [['name'], 'string', 'max' => 128],
+            [['name'], 'string', 'max' => 256],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
             [['file_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['file_id' => 'id']],
             [['docFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif, pdf'],
@@ -124,5 +124,5 @@ class ProjectFiles extends \yii\db\ActiveRecord
     public function getFile()
     {
         return $this->hasOne(Files::className(), ['id' => 'file_id']);
-    }
+    }    
 }

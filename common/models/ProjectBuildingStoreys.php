@@ -162,4 +162,52 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
         }
         return $total;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAbsoluteLevel()
+    {
+        return $this->level+$this->project->projectBuilding->ground_floor_level;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAbsoluteHeight()
+    {
+        return $this->level+$this->project->projectLot->ground_level;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBrStanova()
+    {
+        $total = 0;
+        if($parts = $this->projectBuildingStoreyParts){
+            foreach($parts as $part){
+                if($part->type='stan'){
+                    $total++;
+                }
+            }
+        }
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBrPoslProstora()
+    {
+        $total = 0;
+        if($parts = $this->projectBuildingStoreyParts){
+            foreach($parts as $part){
+                if($part->type='biz'){
+                    $total++;
+                }
+            }
+        }
+        return $total;
+    }
 }

@@ -58,6 +58,54 @@ class ProjectBuildingController extends Controller
         $query_st = \common\models\ProjectBuildingStoreys::find()->where(['project_id' => $id]);
         $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_id' => $id]);
         $query_pa = \common\models\ProjectBuildingParts::find()->where(['project_id' => $id]);
+        $searchModel = new \common\models\ProjectBuildingStoreyPartRoomsSearch();
+        $rooms = $searchModel->search(Yii::$app->request->queryParams);
+        
+        // validate if there is a editable input saved via AJAX
+        if (Yii::$app->request->post('hasEditable')) {
+            // instantiate your book model for saving
+            $roomId = Yii::$app->request->post('editableKey');
+            $model = \common\models\ProjectBuildingStoreyPartRooms::findOne($roomId);
+
+            // store a default json response as desired by editable
+            $out = \yii\helpers\Json::encode(['output'=>'', 'message'=>'']);
+
+            // fetch the first entry in posted data (there should only be one entry 
+            // anyway in this array for an editable submission)
+            // - $posted is the posted data for Book without any indexes
+            // - $post is the converted array for single model validation
+            $posted = current($_POST['ProjectBuildingStoreyPartRooms']);
+            $post = ['ProjectBuildingStoreyPartRooms' => $posted];
+
+            // load model like any single model validation
+            if ($model->load($post)) {
+                // can save model or do something before saving model
+                $model->save();
+
+                // custom output to return to be displayed as the editable grid cell
+                // data. Normally this is empty - whereby whatever value is edited by
+                // in the input by user is updated automatically.
+                $output = '';
+
+                // specific use case where you need to validate a specific
+                // editable column posted when you have more than one
+                // EditableColumn in the grid view. We evaluate here a
+                // check to see if buy_amount was posted for the Book model
+                /*if (isset($posted['buy_amount'])) {
+                    $output = Yii::$app->formatter->asDecimal($model->buy_amount, 2);
+                }*/
+
+                // similarly you can check if the name attribute was posted as well
+                // if (isset($posted['name'])) {
+                // $output = ''; // process as you need
+                // }
+                $out = \yii\helpers\Json::encode(['output'=>$output, 'message'=>'']);
+            }
+            // return ajax json encoded response and exit
+            echo $out;
+            return;
+        }
+
         return $this->render('view', [
             'model' => $model,
             'projectBuildingClasses' => new ActiveDataProvider([
@@ -72,6 +120,11 @@ class ProjectBuildingController extends Controller
             'projectBuildingParts' => new ActiveDataProvider([
                 'query' => $query_pa,
             ]),
+           /*'rooms' => new ActiveDataProvider([
+                'query' => $rooms,
+            ]),*/
+            'rooms' => $rooms,
+            'searchModel' => $searchModel,
         ]);
     }
 
@@ -80,27 +133,23 @@ class ProjectBuildingController extends Controller
      * @param string $id
      * @return mixed
      */
-    public function actionStoreys($id, $add_storey=null, $remove_storey=null)
+    public function actionStoreys($id, $add_storey=null, $remove_storey=null, $copy_storey=null)
     {
         $model = $this->findModel($id);
         $storeys = $model->project->projectBuildingStoreys;
         
         if($add_storey){
-            // do something
-            $new =  new \common\models\ProjectBuildingStoreys();
-            $new->project_id = $model->project_id;
-            $new->storey = $add_storey;
-            $new->order_no = 1;
-            $new->save(); 
+            $this->addStorey($model, $add_storey);             
             return $this->redirect(['storeys', 'id' => $id]);
         }
-
-        if($remove_storey){
-            // do something
-            $this->findStoreyById($remove_storey)->delete();    
-            return $this->redirect(['storeys', 'id' => $id]);     
+        if($copy_storey){
+            $this->copyStorey($copy_storey);  
+            return $this->redirect(['storeys', 'id' => $id]);
         }
-        
+        if($remove_storey){
+            $this->removeStorey($remove_storey);              
+            return $this->redirect(['storeys', 'id' => $id]);     
+        }        
         return $this->render('storeys', [
             'model' => $model,
             'storeys' => $storeys,
@@ -134,117 +183,82 @@ class ProjectBuildingController extends Controller
         }
     }
 
-    /**
-     * Generates ProjectBuildingStoreys model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionGenerateStoreys($id)
+    public function addStorey($model, $add_storey)
     {
-        $model = $this->findModel($id);
-        $model->podrum = $model->po ? count($model->po) : 0;
-        $model->suteren = $model->s ? 1 : 0;
-        $model->visokoprizemlje = $model->vp ? 1 : 0;
-        $model->mezanin = $model->mz ? 1 : 0;
-        $model->galerija = $model->g ? 1 : 0;
-        $model->sprat = $model->sp ? count($model->sp) : 0;
-        $model->povucenisprat = $model->ps ? count($model->ps) : 0;
-        $model->potkrovlje = $model->pk ? count($model->pk) : 0;
-        $model->mansarda = $model->m ? count($model->m) : 0;
-        $model->tavan = $model->t ? 1 : 0;
-
-        if ($request = Yii::$app->request->post('ProjectBuilding')) {
-            //print_r($request); die();
-            $storey = '';
-            if($request['podrum']>0){
-                for ($x = 0; $x < $request['podrum']; $x++) {
-                    $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
-                    $projectBuildingStoreys->project_id = $model->project_id;
-                    $projectBuildingStoreys->storey = 'podrum';
-                    $projectBuildingStoreys->order_no = $x+1;
-                    $projectBuildingStoreys->save();
-                }
-                $storey .= 'Po+';
-            } else {
-                // obriši sve ako je update
-            }
-            if($request['suteren']!=0){                    
-                $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
-                $projectBuildingStoreys->project_id = $model->project_id;
-                $projectBuildingStoreys->storey = 'suteren';
-                $projectBuildingStoreys->save(); 
-                $storey .= 'Su+';                   
-            }
-            // prizemlje
-            $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
-            $projectBuildingStoreys->project_id = $model->project_id;
-            $projectBuildingStoreys->storey = 'prizemlje';
-            $projectBuildingStoreys->save();
-            $storey .= 'P+';
-            if($request['galerija']!=0){                    
-                $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
-                $projectBuildingStoreys->project_id = $model->project_id;
-                $projectBuildingStoreys->storey = 'galerija';
-                $projectBuildingStoreys->save(); 
-                $storey .= 'G+';                   
-            }
-            if($request['sprat']>0){
-                for ($x = 0; $x < $request['sprat']; $x++) {
-                    $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
-                    $projectBuildingStoreys->project_id = $model->project_id;
-                    $projectBuildingStoreys->storey = 'sprat';
-                    $projectBuildingStoreys->order_no = $x+1;
-                    $projectBuildingStoreys->save();
-                }
-                $storey .= $request['sprat'].'+';
-            }
-            if($request['povucenisprat']>0){
-                for ($x = 0; $x < $request['povucenisprat']; $x++) {
-                    $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
-                    $projectBuildingStoreys->project_id = $model->project_id;
-                    $projectBuildingStoreys->storey = 'povucenisprat';
-                    $projectBuildingStoreys->order_no = $x+1;
-                    $projectBuildingStoreys->save();
-                }
-                $storey .= 'Ps+';
-            }
-            if($request['potkrovlje']>0){
-                for ($x = 0; $x < $request['potkrovlje']; $x++) {
-                    $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
-                    $projectBuildingStoreys->project_id = $model->project_id;
-                    $projectBuildingStoreys->storey = 'potkrovlje';
-                    $projectBuildingStoreys->order_no = $x+1;
-                    $projectBuildingStoreys->save();
-                }
-                $storey .= 'Pk+';
-            }
-            if($request['mansarda']>0){
-                for ($x = 0; $x < $request['mansarda']; $x++) {
-                    $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
-                    $projectBuildingStoreys->project_id = $model->project_id;
-                    $projectBuildingStoreys->storey = 'mansarda';
-                    $projectBuildingStoreys->order_no = $x+1;
-                    $projectBuildingStoreys->save();
-                }
-                $storey .= 'M+';
-            }
-            if($request['tavan']!=0){                    
-                $projectBuildingStoreys = new \common\models\ProjectBuildingStoreys();
-                $projectBuildingStoreys->project_id = $model->project_id;
-                $projectBuildingStoreys->storey = 'tavan';
-                $projectBuildingStoreys->save(); 
-                $storey .= 'T';                   
-            }
-            if(substr($storey, -1)=='+'){substr($storey, 0, -1);}
-            $model->storey = $storey;
-            $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('generate-storeys', [
-                'model' => $model,
-            ]);
-        }
+        $new =  new \common\models\ProjectBuildingStoreys();
+        $new->project_id = $model->project_id;
+        $new->storey = $add_storey;
+        $new->order_no = 1;
+        $new->save();
     }
+
+    public function copyStorey($copy_storey)
+    {
+        if($storey_to_copy = $this->findStoreyById($copy_storey)){
+            $new = new \common\models\ProjectBuildingStoreys();
+            $new->project_id = $storey_to_copy->project_id;
+            $new->storey = $storey_to_copy->storey;
+            $new->order_no = $storey_to_copy->order_no;
+            $new->name = $storey_to_copy->name.'_kopija';
+            $new->gross_area = $storey_to_copy->gross_area;
+            $new->level = $storey_to_copy->level+$storey_to_copy->height;
+            $new->height = $storey_to_copy->height;
+            $new->description = $storey_to_copy->description;
+            $new->save();
+            if($parts = $storey_to_copy->projectBuildingStoreyParts){
+                foreach($parts as $key=>$part){
+                    $new_part[$key] = new \common\models\ProjectBuildingStoreyParts();
+                    $new_part[$key]->project_building_storey_id = $new->id;
+                    $new_part[$key]->type = $part->type;
+                    $new_part[$key]->name = $part->name;
+                    $new_part[$key]->mark = $part->mark;
+                    $new_part[$key]->structure = $part->structure;
+                    $new_part[$key]->area = $part->area;
+                    $new_part[$key]->description = $part->description;
+                    $new_part[$key]->save();
+                    //check if part has rooms
+                    if($rooms = $part->projectBuildingStoreyPartRooms){
+                        foreach($rooms as $r=>$room){                        
+                            $new_room[$r] = new \common\models\ProjectBuildingStoreyPartRooms();
+                            $new_room[$r]->project_building_storey_part_id = $new_part[$key]->id;
+                            $new_room[$r]->type = $room->type;
+                            $new_room[$r]->name = $room->name;
+                            $new_room[$r]->mark = $room->mark;
+                            $new_room[$r]->circumference = $room->circumference;
+                            $new_room[$r]->flooring = $room->flooring;
+                            $new_room[$r]->height = $room->height;
+                            $new_room[$r]->width = $room->width;
+                            $new_room[$r]->length = $room->length;
+                            $new_room[$r]->sub_net_area = $room->sub_net_area;
+                            $new_room[$r]->net_area = $room->net_area;
+                            $new_room[$r]->save();
+                        }
+                    }
+                }
+            }  
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }                 
+    }
+
+    public function removeStorey($remove_storey)
+    {
+        $st_to_remove = $this->findStoreyById($remove_storey);    
+        //check if any parts and rooms, and delete them
+        if($parts = $st_to_remove->projectBuildingStoreyParts){
+            foreach($parts as $part){
+                //check if part has rooms
+                if($rooms = $part->projectBuildingStoreyPartRooms){
+                    foreach($rooms as $room){
+                        $room->delete();
+                    }
+                }
+                $part->delete();
+            }
+        }
+        $st_to_remove->delete();
+    }
+
 
     /**
      * Deletes an existing ProjectBuilding model.

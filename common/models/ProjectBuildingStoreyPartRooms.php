@@ -39,11 +39,11 @@ class ProjectBuildingStoreyPartRooms extends \yii\db\ActiveRecord
     {
         return [
             [['project_building_storey_part_id', 'type'], 'required'],
-            [['project_building_storey_part_id'], 'integer'],
+            [['project_building_storey_part_id', 'mark'], 'integer'],
             [['type', 'flooring'], 'string'],
             [['circumference', 'length', 'width', 'height', 'sub_net_area', 'net_area'], 'number'],
             [['name'], 'string', 'max' => 32],
-            [['mark'], 'string', 'max' => 12],
+           // [['mark'], 'string', 'max' => 12],
             [['project_building_storey_part_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuildingStoreyParts::className(), 'targetAttribute' => ['project_building_storey_part_id' => 'id']],
         ];
     }
@@ -55,17 +55,17 @@ class ProjectBuildingStoreyPartRooms extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_building_storey_part_id' => Yii::t('app', 'Project Building Storey Part ID'),
-            'type' => Yii::t('app', 'Type'),
-            'name' => Yii::t('app', 'Name'),
-            'mark' => Yii::t('app', 'Mark'),
-            'circumference' => Yii::t('app', 'Circumference'),
-            'flooring' => Yii::t('app', 'Flooring'),
-            'length' => Yii::t('app', 'Length'),
-            'width' => Yii::t('app', 'Width'),
-            'height' => Yii::t('app', 'Height'),
-            'sub_net_area' => Yii::t('app', 'Sub Net Area'),
-            'net_area' => Yii::t('app', 'Net Area'),
+            'project_building_storey_part_id' => Yii::t('app', 'Jedinica etaže'),
+            'type' => Yii::t('app', 'Vrsta prostorije'),
+            'name' => Yii::t('app', 'Naziv prostorije'),
+            'mark' => Yii::t('app', 'Oznaka'),
+            'circumference' => Yii::t('app', 'Obim'),
+            'flooring' => Yii::t('app', 'Obrada poda'),
+            'length' => Yii::t('app', 'Dužina'),
+            'width' => Yii::t('app', 'Širina'),
+            'height' => Yii::t('app', 'Visina'),
+            'sub_net_area' => Yii::t('app', 'Redukovana podna površina'),
+            'net_area' => Yii::t('app', 'Ukupna podna površina'),
         ];
     }
 
@@ -75,5 +75,13 @@ class ProjectBuildingStoreyPartRooms extends \yii\db\ActiveRecord
     public function getProjectBuildingStoreyPart()
     {
         return $this->hasOne(ProjectBuildingStoreyParts::className(), ['id' => 'project_building_storey_part_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFullname()
+    {
+        return $this->mark. ' ' .$this->name. ' '.$this->type;
     }
 }

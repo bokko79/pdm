@@ -43,9 +43,42 @@ $this->params['breadcrumbs'][] = $this->title;
                             'project.name',
                             'storey',
                             'order_no',
-                            'sub_net_area',
-                            'net_area',
+                            [
+                                'attribute'=>'sub_net_area',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->subNetArea;
+                                },
+                            ],
+                            [
+                                'attribute'=>'net_area',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->netArea;
+                                },
+                            ],                            
                             'gross_area',
+                            [
+                                'label'=>'Apsolutna kota',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->absoluteLevel;
+                                },
+                            ],
+                            [
+                                'label'=>'Broj stanova',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->brStanova;
+                                },
+                            ],
+                            [
+                                'label'=>'Broj poslovnih prostora',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return $data->brPoslProstora;
+                                },
+                            ],
                         ],
                     ]) ?>
                 </div>
@@ -80,6 +113,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return Html::a($data->netArea, ['project-building-storey-parts/view', 'id' => $data->id]);
                                 },
                             ],
+                           // ['class' => 'yii\grid\ActionColumn'],
                         ],
                         'summary' => false,
                     ]); ?>

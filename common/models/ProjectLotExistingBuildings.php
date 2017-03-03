@@ -38,7 +38,8 @@ class ProjectLotExistingBuildings extends \yii\db\ActiveRecord
     {
         return [
             [['project_id'], 'required'],
-            [['project_id', 'building_type_id', 'gross_area', 'removal', 'file_id'], 'integer'],
+            [['project_id', 'building_type_id', 'removal', 'file_id'], 'integer'],
+            [['gross_area'], 'number'],
             [['conditions', 'description', 'note'], 'string'],
             [['storeys', 'mark'], 'string', 'max' => 32],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],

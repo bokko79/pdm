@@ -1,18 +1,18 @@
 <?php
 
-namespace frontend\controllers;
+namespace backend\controllers;
 
 use Yii;
-use common\models\LocationLots;
-use common\models\LocationLotsSearch;
+use common\models\Volumes;
+use common\models\VolumesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * LocationLotsController implements the CRUD actions for LocationLots model.
+ * VolumesController implements the CRUD actions for Volumes model.
  */
-class LocationLotsController extends Controller
+class VolumesController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class LocationLotsController extends Controller
     }
 
     /**
-     * Lists all LocationLots models.
+     * Lists all Volumes models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new LocationLotsSearch();
+        $searchModel = new VolumesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class LocationLotsController extends Controller
     }
 
     /**
-     * Displays a single LocationLots model.
+     * Displays a single Volumes model.
      * @param string $id
      * @return mixed
      */
@@ -57,21 +57,16 @@ class LocationLotsController extends Controller
     }
 
     /**
-     * Creates a new LocationLots model.
+     * Creates a new Volumes model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new LocationLots();
-        if($ll = Yii::$app->request->get('LocationLots')){
-            $model->location_id = $ll['location_id'] ? $ll['location_id'] : null;
-            $model->type = $ll['type'] ? $ll['type'] : null;
-        }
+        $model = new Volumes();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $project = $model->location->project;
-            return $this->redirect(['project-lot/view', 'id' => $project->id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -80,7 +75,7 @@ class LocationLotsController extends Controller
     }
 
     /**
-     * Updates an existing LocationLots model.
+     * Updates an existing Volumes model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -88,9 +83,9 @@ class LocationLotsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $project = $model->location->project;
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['projects/view', 'id' => $project->id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -99,28 +94,28 @@ class LocationLotsController extends Controller
     }
 
     /**
-     * Deletes an existing LocationLots model.
+     * Deletes an existing Volumes model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
      */
     public function actionDelete($id)
     {
-        $model = $this->findModel($id);
-        $model->delete();
-        return $this->redirect(['project-lot/view', 'id' => $model->location->project->id]);
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
     }
 
     /**
-     * Finds the LocationLots model based on its primary key value.
+     * Finds the Volumes model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return LocationLots the loaded model
+     * @return Volumes the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = LocationLots::findOne($id)) !== null) {
+        if (($model = Volumes::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

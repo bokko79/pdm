@@ -5,12 +5,12 @@ namespace common\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\ProjectBuildingHeights;
+use common\models\ProjectBuildingStoreyParts;
 
 /**
- * ProjectBuildingHeightsSearch represents the model behind the search form about `common\models\ProjectBuildingHeights`.
+ * ProjectBuildingStoreyPartsSearch represents the model behind the search form about `common\models\ProjectBuildingStoreyParts`.
  */
-class ProjectBuildingHeightsSearch extends ProjectBuildingHeights
+class ProjectBuildingStoreyPartsSearch extends ProjectBuildingStoreyParts
 {
     /**
      * @inheritdoc
@@ -18,9 +18,9 @@ class ProjectBuildingHeightsSearch extends ProjectBuildingHeights
     public function rules()
     {
         return [
-            [['id', 'project_building_id'], 'integer'],
-            [['part', 'type', 'name'], 'safe'],
-            [['value'], 'number'],
+            [['id', 'project_building_storey_id'], 'integer'],
+            [['type', 'name', 'mark', 'structure', 'description'], 'safe'],
+            [['area'], 'number'],
         ];
     }
 
@@ -42,7 +42,7 @@ class ProjectBuildingHeightsSearch extends ProjectBuildingHeights
      */
     public function search($params)
     {
-        $query = ProjectBuildingHeights::find();
+        $query = ProjectBuildingStoreyParts::find();
 
         // add conditions that should always apply here
 
@@ -61,12 +61,15 @@ class ProjectBuildingHeightsSearch extends ProjectBuildingHeights
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'project_building_id' => $this->project_building_id,
-            'value' => $this->value,
+            'project_building_storey_id' => $this->project_building_storey_id,
+            'area' => $this->area,
         ]);
 
-        $query->andFilterWhere(['like', 'part', $this->part])
-            ->andFilterWhere(['like', 'type', $this->type]);
+        $query->andFilterWhere(['like', 'type', $this->type])
+            ->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'mark', $this->mark])
+            ->andFilterWhere(['like', 'structure', $this->structure])
+            ->andFilterWhere(['like', 'description', $this->description]);
 
         return $dataProvider;
     }

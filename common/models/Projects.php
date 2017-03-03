@@ -89,7 +89,7 @@ class Projects extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Naziv projekta'),
-            'code' => Yii::t('app', 'Br tehničke dokumentacije'),
+            'code' => Yii::t('app', 'Broj tehničke dokumentacije'),
             'client_id' => Yii::t('app', 'Investitor'),
             'building_id' => Yii::t('app', 'Klasa objekta'),
             'location_id' => Yii::t('app', 'Adresa'),
@@ -174,7 +174,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getProjectBuildingStoreys()
     {
-        return $this->hasMany(ProjectBuildingStoreys::className(), ['project_id' => 'id']);
+        return $this->hasMany(ProjectBuildingStoreys::className(), ['project_id' => 'id'])->orderBy('level ASC');
     }
 
     /**
@@ -516,5 +516,29 @@ class Projects extends \yii\db\ActiveRecord
             }
         }
         return false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProstorniplan()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="prostorniplan"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLokacijskiUslovi()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="uslovi"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSaglasnosti()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="saglasnost"')->one();
     }
 }

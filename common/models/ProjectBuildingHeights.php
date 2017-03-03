@@ -32,7 +32,7 @@ class ProjectBuildingHeights extends \yii\db\ActiveRecord
         return [
             [['project_id','part', 'level'], 'required'],
             [['project_id'], 'integer'],
-            [['part'], 'string'],
+            [['part', 'name'], 'string'],
             [['level'], 'number'],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
         ];
@@ -57,5 +57,21 @@ class ProjectBuildingHeights extends \yii\db\ActiveRecord
     public function getProject()
     {
         return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAbsoluteLevel()
+    {
+        return $this->level+$this->project->projectBuilding->ground_floor_level;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAbsoluteHeight()
+    {
+        return $this->level+$this->project->projectLot->ground_level;
     }
 }

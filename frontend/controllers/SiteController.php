@@ -261,9 +261,10 @@ class SiteController extends Controller
         return $pdf->render(); 
     }
 
-    public function actionGlavnaSveska($id)
+    public function actionGlavnaSveska($id, $volume=null)
     {
         $model = \common\models\Projects::findOne($id);
+        $volume = \common\models\ProjectVolumes::findOne($volume);
         $mpdf = new mpdf();  
         $mpdf->tMargin = 35;            
         $mpdf->backupSubsFont = array('arial', 'serif'); 
@@ -279,11 +280,46 @@ class SiteController extends Controller
             $import_page = $mpdf->ImportPage($i);
             $mpdf->UseTemplate($import_page);
         }*/
-        $mpdf->SetHeader(Html::img('@web/images/legal_files/'.$model->practice->memo, ['style'=>'margin-bottom:20px;']));
+        $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$model->practice->memo, ['style'=>'margin-bottom:20px;']));
         //$mpdf->AddPage();
-        $mpdf->WriteHTML($this->renderPartial('volumes/_glavnaSveska', ['model'=>$model], true), 0);
+        $mpdf->WriteHTML($this->renderPartial('volumes/_glavnaSveska', ['model'=>$model, 'volume'=>$volume], true), 0);
         //$mpdf->SetWatermarkText('eee');
         $mpdf->SetHeader();
+        /*$pagecount1 = $mpdf->SetSourceFile('images/legal_files/docs/'.$model->practice->apr);
+        for ($i=1; $i<=$pagecount1; $i++) {
+            $mpdf->AddPage();
+            $import_page1 = $mpdf->ImportPage($i);
+            $mpdf->UseTemplate($import_page1);
+
+        }*/
+        $mpdf->Output($model->code . ': 0 - Glavna sveska.pdf', 'I');
+        exit;
+    }
+
+    public function actionPovrsine($id, $volume=null)
+    {
+        $model = \common\models\Projects::findOne($id);
+        $volume = \common\models\ProjectVolumes::findOne($volume);
+        $mpdf = new mpdf('utf-8', 'A2-L');  
+        //$mpdf->tMargin = 35;            
+        $mpdf->backupSubsFont = array('arial', 'serif'); 
+        $mpdf->defaultheaderline = 0; 
+        $mpdf->title = $model->code . ': 0 - Glavna sveska';  
+        
+        //$mpdf->AddPage($this->renderPartial('_reportView', ['model'=>$model], true), 0); 
+        
+        //$mpdf->SetImportUse();
+        /*$pagecount = $mpdf->SetSourceFile('images/legal_files/projektni.pdf');
+        for ($i=1; $i<=$pagecount; $i++) {
+            $mpdf->AddPage();
+            $import_page = $mpdf->ImportPage($i);
+            $mpdf->UseTemplate($import_page);
+        }*/
+        //$mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$model->practice->memo, ['style'=>'margin-bottom:20px;']));
+        //$mpdf->AddPage();
+        $mpdf->WriteHTML($this->renderPartial('volumes/_glavnaSveska', ['model'=>$model, 'volume'=>$volume], true), 0);
+        //$mpdf->SetWatermarkText('eee');
+        //$mpdf->SetHeader();
         /*$pagecount1 = $mpdf->SetSourceFile('images/legal_files/docs/'.$model->practice->apr);
         for ($i=1; $i<=$pagecount1; $i++) {
             $mpdf->AddPage();

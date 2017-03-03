@@ -10,6 +10,9 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\FileInput;
 use dosamigos\tinymce\TinyMce;
+
+if($model->flooring==null)
+$model->flooring='parket';
 ?>
 
 <?php $form = kartik\widgets\ActiveForm::begin([
@@ -27,27 +30,37 @@ use dosamigos\tinymce\TinyMce;
 
     <?= $form->field($model, 'type')->dropDownList([ 'soba' => 'Soba', 'terasa' => 'Terasa', 'kupatilo' => 'Kupatilo', 'sanitarni' => 'Sanitarni', 'kuhinja' => 'Kuhinja', 'trpezarija' => 'Trpezarija', 'dnevna' => 'Dnevna', 'radna' => 'Radna', 'spavaca' => 'Spavaca', 'tehnicka' => 'Tehnicka', 'balkon' => 'Balkon', 'hodnik' => 'Hodnik', 'predprostor' => 'Predprostor', 'degazman' => 'Degazman', 'ulaz' => 'Ulaz', 'trem' => 'Trem', 'laboratorija' => 'Laboratorija', 'studio' => 'Studio', 'igraonica' => 'Igraonica', 'radionica' => 'Radionica', 'stepeniste' => 'Stepeniste', 'vesernica' => 'Vesernica', 'kotlarnica' => 'Kotlarnica', 'lift' => 'Lift', 'dnevna_kuhinja' => 'Dnevna kuhinja', ], ['prompt' => '']) ?>
 
+    <?= $form->field($model, 'net_area')->input('number', ['min'=>0, 'step'=>0.01, 'style'=>'width:40%']) ?>
+
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'mark')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'mark')->input('number', ['min'=>0, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'circumference')->textInput(['maxlength' => true]) ?>
+   
 
     <?= $form->field($model, 'flooring')->dropDownList([ 'parket' => 'Parket', 'keramika' => 'Keramika', 'estrih' => 'Estrih', 'tarkett' => 'Tarkett', 'beton' => 'Beton', 'opeka' => 'Opeka', 'kamen' => 'Kamen', 'teraco' => 'Teraco', 'zemlja' => 'Zemlja', 'tepih' => 'Tepih', 'drugo' => 'Drugo', ], ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'length')->textInput(['maxlength' => true]) ?>
+    <?php /* $form->field($model, 'length')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'width')->textInput(['maxlength' => true]) ?>
+     <?= $form->field($model, 'circumference')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'height')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'height')->textInput(['maxlength' => true]) */ ?>
 
     <?= $form->field($model, 'sub_net_area')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'net_area')->textInput(['maxlength' => true]) ?>
+    
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">
             <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= (!$model->isNewRecord) ? Html::a(Yii::t('app', 'Ukloni'), ['delete', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                    'method' => 'post',
+                ],
+            ]) : null ?>
         </div>        
     </div>
 

@@ -46,7 +46,7 @@ td.container table, td.container table td {padding:0; margin:0; border:none;}
 		// 0.1. Naslovna strana glavne sveske
 		// Obavezno u svim slučajevima
 	 ?>
-			<?php echo $this->render('../insets/0_1_naslovna', ['model'=>$model]) ?>
+			<?php /* echo $this->render('../insets/0_1_naslovna', ['model'=>$model]) ?>
 
 	<div class="pagebreaker"></div>
 
@@ -79,17 +79,17 @@ td.container table, td.container table td {padding:0; margin:0; border:none;}
 
 	<div class="pagebreaker"></div>
 
-	<?php // 0.6. Podaci o projektantima ?>
+	<?php  // 0.6. Podaci o projektantima ?>
 			<?= $this->render('../insets/0_6_podaci', ['model'=>$model]) ?>
 
 	<div class="pagebreaker"></div>
 
 	<?php // 0.7. Opšti podaci o objektu ?>
-			<?= $this->render('../insets/0_7_opsti', ['model'=>$model]) ?>
+			<?= $this->render('../insets/0_7_opsti', ['model'=>$model, 'volume'=>$volume]) ?>
 
 	
 
-	<?php 
+	<?php
 		// 0.8. Sažeti tehnički opis 
 		// Samo u IDP, PGD i PIO 
 		if($model->phase=='idp' or $model->phase=='pgd' or $model->phase=='pio'): ?>
@@ -125,7 +125,9 @@ td.container table, td.container table td {padding:0; margin:0; border:none;}
 		if($model->phase=='pio'): ?>
 		<div class="pagebreaker"></div>
 			<?= $this->render('../insets/0_11_investitor', ['model'=>$model]) ?>
-		<?php endif; ?>
+		<?php endif; */ ?>
+
+		<?= $this->render('../insets/povrsine', ['model'=>$model, 'volume'=>$volume]) ?>
 
 </body>
 </html>

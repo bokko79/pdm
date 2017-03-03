@@ -27,7 +27,9 @@
         "kartik-v/yii2-mpdf": "*",
         "2amigos/yii2-tinymce-widget": "~1.1",
         "kartik-v/yii2-datecontrol": "@dev",
-        "dektrium/yii2-user": "^0.9.12"
+        "dektrium/yii2-user": "^0.9.12",
+        "kartik-v/yii2-grid": "@dev",
+        "kartik-v/yii2-editable": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

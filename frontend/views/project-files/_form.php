@@ -32,9 +32,9 @@ use kartik\datecontrol\DateControl;
             'disabled' => true,         
         ]) ?>
 
-    <?= $form->field($model, 'type')->dropDownList([ 'informacija' => 'Informacija o lokaciji', 'uslovi' => 'Lokacijski uslovi', 'plan' => 'Kopija plana ili KT plan', 'saglasnost' => 'Saglasnost', 'svojina' => 'Izvod iz lista nepokretnosti', 'geodetski' => 'Geodetski snimak', 'punomoc' => 'Punomoc', 'ugovor' => 'Ugovor', 'zalba' => 'Žalba', 'resenje' => 'Rešenje', 'odobrenje' => 'Odobrenje', 'dozvola' => 'Dozvola', 'uplatnica' => 'Uplatnica', 'drugo' => 'Drugo', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'type')->dropDownList([ 'informacija' => 'Informacija o lokaciji', 'prostorniplan' => 'Prostorni plan (GUP, PDR ili sl.)', 'uslovi' => 'Lokacijski uslovi', 'plan' => 'Kopija plana ili KT plan', 'saglasnost' => 'Saglasnost', 'svojina' => 'Izvod iz lista nepokretnosti', 'geodetski' => 'Geodetski snimak', 'punomoc' => 'Punomoc', 'ugovor' => 'Ugovor', 'zalba' => 'Žalba', 'resenje' => 'Rešenje', 'odobrenje' => 'Odobrenje', 'dozvola' => 'Dozvola', 'uplatnica' => 'Uplatnica', 'drugo' => 'Drugo', ], ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder'=>'npr. Rešenje o lokacijskim uslovima']) ?>
+    <?= $form->field($model, 'name')->textArea(['maxlength' => true, 'placeholder'=>'npr. Rešenje o lokacijskim uslovima']) ?>
 
     <?= $form->field($model, 'number')->textInput(['maxlength' => true, 'placeholder'=>'npr. 9031/2016']) ?>
 
