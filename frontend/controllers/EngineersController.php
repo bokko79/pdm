@@ -67,12 +67,16 @@ class EngineersController extends Controller
     {
         $model = $this->findModel($id);
         $query_files = \common\models\LegalFiles::find()->where(['entity_id' => $id, 'entity' => 'engineer']);
+        $query_lic = \common\models\EngineerLicences::find()->where(['engineer_id' => $id]);
         $query = \common\models\Projects::find()->where(['engineer_id' => $id]);
 
         return $this->render('view', [
             'model' => $model,
             'engineerFiles' => new ActiveDataProvider([
                 'query' => $query_files,
+            ]),
+            'engineerLicences' => new ActiveDataProvider([
+                'query' => $query_lic,
             ]),
             'projects' => new ActiveDataProvider([
                 'query' => $query,

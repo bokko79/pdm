@@ -10,7 +10,6 @@ $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Licencni paketi inženjera'), 'url' => ['engineers/view', 'id'=>$model->engineer_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="engineer-licences-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -34,4 +33,3 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
-</div>

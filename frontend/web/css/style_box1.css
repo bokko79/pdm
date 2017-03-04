@@ -151,7 +151,7 @@ tr.strikeout td.line.right:before { left: -5px; }
 .action-area {padding:8px; height: 48px;}
 .action-area.free {padding:0; height: auto;}
 .action-area a, .action-area button, .action a, .action button {font-weight: 700; text-transform: uppercase; font-size: 13px;}
-.action-area.normal-case {padding: 4px 8px 0; background: #f6f7f8; height: 36px;}
+.action-area.normal-case {padding: 4px 8px 0; /*background: #f6f7f8; */height: 36px;}
 .action-area.normal-case a, .action-area.normal-case button {text-transform: none;}
 .action-area.right a, .action-area.right button {margin-left: 4px;}
 .card_container .gray {background: #f6f7f8;}

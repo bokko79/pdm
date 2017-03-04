@@ -60,12 +60,16 @@ class EngineerLicences extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'engineer_id' => Yii::t('app', 'Engineer ID'),
-            'type' => Yii::t('app', 'Type'),
-            'no' => Yii::t('app', 'No'),
-            'copy_id' => Yii::t('app', 'Copy ID'),
-            'conf_id' => Yii::t('app', 'Conf ID'),
-            'stamp_id' => Yii::t('app', 'Stamp ID'),
+            'engineer_id' => Yii::t('app', 'Inženjer'),
+            'type' => Yii::t('app', 'Vrsta licence'),
+            'no' => Yii::t('app', 'Broj licence'),
+            'copy_id' => Yii::t('app', 'Kopija licence'),
+            'conf_id' => Yii::t('app', 'Potvrda licence'),
+            'stamp_id' => Yii::t('app', 'Lični pečat inženjera'),
+            'copyFile' => Yii::t('app', 'Kopija licence'),
+            'confFile' => Yii::t('app', 'Potvrda licence'),
+            'stampFile' => Yii::t('app', 'Lični pečat inženjera'),
+
         ];
     }
 

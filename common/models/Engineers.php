@@ -111,4 +111,22 @@ class Engineers extends \yii\db\ActiveRecord
         $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'engineer', 'type' => 'signature'])->one();
         return $doc ? $doc : false;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOther()
+    {
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'engineer', 'type' => 'other'])->one();
+        return $doc ? $doc->file->name : false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOtherID()
+    {
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'engineer', 'type' => 'other'])->one();
+        return $doc ? $doc : false;
+    }
 }

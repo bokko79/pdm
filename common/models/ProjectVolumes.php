@@ -186,5 +186,5 @@ class ProjectVolumes extends \yii\db\ActiveRecord
     public function getHintControlEngineer()
     {
         return 'Ovaj podatak je obavezan samo za Izvod iz projekta u fazi PGD. Odgovorno lice vršioca tehničke kontrole nije na listi? ' .\yii\helpers\Html::a('Dodaj novog projektanta', \yii\helpers\Url::to(['/engineers/create']));
-    }
+    }    
 }

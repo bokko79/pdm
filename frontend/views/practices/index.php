@@ -12,12 +12,17 @@ $this->title = Yii::t('app', 'Firme');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-    <h1><i class="fa fa-shield"></i>  <?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<div class="card_container record-full transparent no-shadow grid-item fadeInUp animated" id="">
+    <div class="primary-context  normal">
+        <div class="head"><h1 style="display: inline;"><i class="fa fa-shield"></i> <?= Html::encode($this->title) ?></h1>
+        <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Nova firma'), ['create'], ['class' => 'btn btn-success' ]) ?>
+            </div>
+        </div>
+        <div class="subhead">Lista registrovanih preduzeća.</div>
+    </div>              
+</div>
+<hr>
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Kreiraj novu firmu'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

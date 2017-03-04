@@ -41,7 +41,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             'type',
                             'buildingType.name',
                             'ground_floor_level',
-                            'building_line_dist',                    
+                            'building_line_dist',
+                            'width',    
+                            'length',                        
                             'gross_area_part',
                             [
                                 'attribute'=>'gross_area',

@@ -13,6 +13,7 @@ use dosamigos\tinymce\TinyMce;
 
 if($model->flooring==null)
 $model->flooring='parket';
+
 ?>
 
 <?php $form = kartik\widgets\ActiveForm::begin([
@@ -28,8 +29,14 @@ $model->flooring='parket';
 
     <?= $form->field($model, 'project_building_storey_part_id')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'type')->dropDownList([ 'soba' => 'Soba', 'terasa' => 'Terasa', 'kupatilo' => 'Kupatilo', 'sanitarni' => 'Sanitarni', 'kuhinja' => 'Kuhinja', 'trpezarija' => 'Trpezarija', 'dnevna' => 'Dnevna', 'radna' => 'Radna', 'spavaca' => 'Spavaca', 'tehnicka' => 'Tehnicka', 'balkon' => 'Balkon', 'hodnik' => 'Hodnik', 'predprostor' => 'Predprostor', 'degazman' => 'Degazman', 'ulaz' => 'Ulaz', 'trem' => 'Trem', 'laboratorija' => 'Laboratorija', 'studio' => 'Studio', 'igraonica' => 'Igraonica', 'radionica' => 'Radionica', 'stepeniste' => 'Stepeniste', 'vesernica' => 'Vesernica', 'kotlarnica' => 'Kotlarnica', 'lift' => 'Lift', 'dnevna_kuhinja' => 'Dnevna kuhinja', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'type')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map($model->getTypesofRooms(),'type','text','group'),
+            'options' => ['placeholder' => 'Izaberite...'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,           
+        ])->hint('') ?>
 
+ 
     <?= $form->field($model, 'net_area')->input('number', ['min'=>0, 'step'=>0.01, 'style'=>'width:40%']) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>

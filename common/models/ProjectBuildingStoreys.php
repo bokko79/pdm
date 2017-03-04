@@ -377,7 +377,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
             }
         }
         return $total;
-    }    
+    }  
 
     /**
      * @return \yii\db\ActiveQuery

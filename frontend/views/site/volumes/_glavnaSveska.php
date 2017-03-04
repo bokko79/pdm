@@ -46,7 +46,7 @@ td.container table, td.container table td {padding:0; margin:0; border:none;}
 }
 </head>
 <body>
-	<?php
+	<?php /*
 		// 0.1. Naslovna strana glavne sveske
 		// Obavezno u svim slučajevima
 	 ?>
@@ -93,28 +93,31 @@ td.container table, td.container table td {padding:0; margin:0; border:none;}
 
 	
 
-	<?php
+	<?php */
 		// 0.8. Sažeti tehnički opis 
 		// Samo u IDP, PGD i PIO 
 		if($model->phase=='idp' or $model->phase=='pgd' or $model->phase=='pio'): ?>
 
 		<!--<div class="pagebreaker"></div>-->
-
+			<?= $this->render('../insets/1_7_graficka_naslovna', ['model'=>$model, 'volume'=>$volume]) ?>
+			<div class="pagebreaker"></div>
 			<?= $this->render('../insets/0_8_tehopis', ['model'=>$model, 'volume'=>$volume]) ?>
+
+
 
 		
 		<?php endif; ?>
 
-	<?php
+	<?php /*
 		// 0.9. Izjave ovlašćenih lica o merama za ispunjenje osnovnih zahteva za objekat 
 		// Samo u IDP i PGD 
-		if($model->phase=='idp' or $model->phase=='pgd'): ?>
+		if($model->checkIfElaborat and ($model->phase=='idp' or $model->phase=='pgd')): ?>
 
 		<div class="pagebreaker"></div>
 			<?= $this->render('../insets/0_9_ovl_lica', ['model'=>$model]) ?>	
-		<?php endif; ?>
+		<?php endif;  ?>
 
-	<?php 
+	<?php
 		// 0.10. Kopije dobijenih saglasnosti 
 		// Samo u PGD i PIO 
 		if($model->phase=='pio' or $model->phase=='pgd'): ?>
@@ -123,7 +126,7 @@ td.container table, td.container table td {padding:0; margin:0; border:none;}
 			<?= $this->render('../insets/0_10_saglasnosti', ['model'=>$model]) ?>
 		<?php endif; ?>
 
-	<?php /*
+	<?php 
 		// 0.11. Izjava investitora, vršioca stručnog nadzora i izvođača radova
 		// Samo u PIO
 		if($model->phase=='pio'): ?>
@@ -131,7 +134,7 @@ td.container table, td.container table td {padding:0; margin:0; border:none;}
 			<?= $this->render('../insets/0_11_investitor', ['model'=>$model]) ?>
 		<?php endif;  ?>
 
-		<?= $this->render('../insets/povrsine', ['model'=>$model, 'volume'=>$volume])*/ ?>
+		<?php echo $this->render('../insets/povrsine', ['model'=>$model, 'volume'=>$volume]) */ ?>
 
 </body>
 </html>

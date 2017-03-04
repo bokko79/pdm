@@ -34,14 +34,17 @@ class EngineerLicencesController extends Controller
      * Lists all EngineerLicences models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($engineer_id)
     {
+        $engineer = $this->findEngineer($engineer_id);
         $searchModel = new EngineerLicencesSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel->engineer_id = $engineer_id;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);        
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'engineer' => $engineer,
         ]);
     }
 
@@ -87,7 +90,7 @@ class EngineerLicencesController extends Controller
                     $model->stamp_id = $imagestampFile;
                 }                
                 $model->save();
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index', 'engineer_id' => $model->engineer_id]);
             } 
         } else {
             return $this->render('create', [
@@ -156,6 +159,22 @@ class EngineerLicencesController extends Controller
     protected function findModel($id)
     {
         if (($model = EngineerLicences::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the EngineerLicences model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return EngineerLicences the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findEngineer($id)
+    {
+        if (($model = \common\models\Engineers::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

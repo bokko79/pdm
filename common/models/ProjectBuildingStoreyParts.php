@@ -107,4 +107,34 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
     {
         return $this->mark. ' '.$this->type;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFullType()
+    {
+        $type;
+        switch ($this->type) {
+            case 'stan':
+                $type = 'stan';
+                break;
+            case 'biz':
+                $type = 'poslovni prostor';
+                break;
+            case 'common':
+                $type = 'zajedničke prostorije';
+                break;
+            case 'garage':
+                $type = 'garažne prostorije';
+                break;
+            case 'tech':
+                $type = 'tehničke prostorije';
+                break;
+            
+            default:
+                $type = 'drugo';
+                break;
+        }
+        return $type;
+    }
 }

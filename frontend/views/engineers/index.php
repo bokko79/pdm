@@ -7,17 +7,21 @@ use yii\widgets\Pjax;
 /* @var $searchModel common\models\EngineersSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Inženjeri');
+$this->title = Yii::t('app', 'Projektanti');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="engineers-index">
 
-    <h1><i class="fa fa-user-circle-o"></i> <?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<div class="card_container record-full transparent no-shadow grid-item fadeInUp animated" id="">
+    <div class="primary-context  normal">
+        <div class="head"><h1 style="display: inline;"><i class="fa fa-user-circle-o"></i> <?= Html::encode($this->title) ?></h1>
+        <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Novi projektant'), ['create'], ['class' => 'btn btn-success' ]) ?>
+            </div>
+        </div>
+        <div class="subhead">Lista registrovanih inženjera i projektanata.</div>
+    </div>              
+</div>
+<hr>
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Kreiraj inženjera'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -39,4 +43,4 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-<?php Pjax::end(); ?></div>
+<?php Pjax::end(); ?>

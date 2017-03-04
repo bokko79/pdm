@@ -6,11 +6,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\EngineerLicences */
 
-$this->title = Yii::t('app', 'Kreiraj licencni paket inženjera: '. $model->engineer->name);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Licencni paketi inženjera'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Novi licencni paket inženjera');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Inženjer'). $model->engineer->name, 'url' => ['engineers/view', 'id'=>$model->engineer_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="engineer-licences-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -18,4 +17,3 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
     ]) ?>
 
-</div>

@@ -5,14 +5,12 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\EngineerLicences */
 
-$this->title = Yii::t('app', 'Izmeni {modelClass}: ', [
-    'modelClass' => 'licencni paket inženjera',
+$this->title = Yii::t('app', 'Podešavanje {modelClass}: ', [
+    'modelClass' => 'licencnog paketa inženjera',
 ]) . $model->engineer->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Licencni paketi inženjera'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Izmeni');
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['/engineers/view', 'id' => $model->engineer_id]];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Podešavanje');
 ?>
-<div class="engineer-licences-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -20,4 +18,3 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Izmeni');
         'model' => $model,
     ]) ?>
 
-</div>

@@ -66,7 +66,7 @@ class Projects extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'code', 'user_id', 'client_id', 'building_id', 'practice_id', 'engineer_id'], 'required'],
-            [['client_id', 'building_id', 'location_id', 'practice_id', 'engineer_id', 'control_practice_id', 'control_engineer_id', 'time', 'year'], 'integer'],
+            [['client_id', 'building_id', 'location_id', 'practice_id', 'engineer_id', 'control_practice_id', 'control_engineer_id', 'builder_practice_id', 'builder_engineer_id', 'supervision_practice_id', 'supervision_engineer_id', 'time', 'year'], 'integer'],
             [['code'], 'unique'],
             [['phase', 'work', 'status'], 'string'],
             [['name'], 'string', 'max' => 128],
@@ -78,6 +78,10 @@ class Projects extends \yii\db\ActiveRecord
             [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'id']],
             [['control_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['control_practice_id' => 'id']],
             [['control_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['control_engineer_id' => 'id']],
+            [['builder_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['builder_practice_id' => 'id']],
+            [['builder_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['builder_engineer_id' => 'id']],
+            [['supervision_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['supervision_practice_id' => 'id']],
+            [['supervision_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['supervision_engineer_id' => 'id']],
         ];
     }
 
@@ -101,6 +105,10 @@ class Projects extends \yii\db\ActiveRecord
             'engineer_id' => Yii::t('app', 'Glavni projektant'),
             'control_practice_id' => Yii::t('app', 'Vršilac tehničke kontrole'),
             'control_engineer_id' => Yii::t('app', 'Odgovorno lice vršioca tehničke kontrole'),
+            'builder_practice_id' => Yii::t('app', 'Odgovorni izvođač radova'),
+            'builder_engineer_id' => Yii::t('app', 'Odgovorno lice izvođača radova'),
+            'supervision_practice_id' => Yii::t('app', 'Stručni nadzor'),
+            'supervision_engineer_id' => Yii::t('app', 'Odgovorno lice stručnog nadzora'),
             'time' => Yii::t('app', 'Datum'),
         ];
     }    
@@ -303,6 +311,38 @@ class Projects extends \yii\db\ActiveRecord
     public function getControlEngineer()
     {
         return $this->hasOne(Engineers::className(), ['id' => 'control_engineer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBuilderPractice()
+    {
+        return $this->hasOne(Practices::className(), ['id' => 'builder_practice_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBuilderEngineer()
+    {
+        return $this->hasOne(Engineers::className(), ['id' => 'builder_engineer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSupervisionPractice()
+    {
+        return $this->hasOne(Practices::className(), ['id' => 'supervision_practice_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSupervisionEngineer()
+    {
+        return $this->hasOne(Engineers::className(), ['id' => 'supervision_engineer_id']);
     }
 
     /**
@@ -524,6 +564,14 @@ class Projects extends \yii\db\ActiveRecord
             }
         }
         return false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBrElaborata()
+    {
+        return \common\models\ProjectVolumes::find()->where('project_id='.$this->id.' and (volume_id="13" or volume_id="14" or volume_id="15")')->all();
     }
 
     /**

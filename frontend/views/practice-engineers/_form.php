@@ -22,7 +22,8 @@ use kartik\widgets\FileInput;
             'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
-            'changeOnReset' => false,           
+            'changeOnReset' => false,   
+            'disabled' => true,        
         ]) ?>
 
     <?= $form->field($model, 'engineer_id')->widget(Select2::classname(), [

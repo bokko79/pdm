@@ -22,7 +22,8 @@ use kartik\widgets\FileInput;
             'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
-            'changeOnReset' => false,           
+            'changeOnReset' => false, 
+            'disabled' => true,          
         ]) ?>
 
     <?= $form->field($model, 'type')->textInput() ?>

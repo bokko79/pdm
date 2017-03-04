@@ -20,7 +20,7 @@ use kartik\widgets\FileInput;
 
 <hr>
 <h4>Opšti podaci</h4>
-    <?= $form->field($model, 'type')->dropDownList([ 'individual' => 'Fizičko lice', 'company' => 'Pravno lice/Preduzeće', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'type')->radioList([ 'individual' => 'Fizičko lice', 'company' => 'Pravno lice/Preduzeće', ], ['prompt' => '']) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 

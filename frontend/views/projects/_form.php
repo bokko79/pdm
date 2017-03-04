@@ -98,6 +98,38 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
             'changeOnReset' => false,           
         ])->hint($model->hintControlEngineer) ?>
 
+<hr>
+<h3>Izvođač radova</h3>
+    <?= $form->field($model, 'builder_practice_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
+            'options' => ['placeholder' => 'Izaberite...'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,           
+        ])->hint($model->hintControlPractice) ?>
+
+    <?= $form->field($model, 'builder_engineer_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'id', 'name'),
+            'options' => ['placeholder' => 'Izaberite...'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,           
+        ])->hint($model->hintControlEngineer) ?>
+
+<hr>
+<h3>Stručni nadzor</h3>
+    <?= $form->field($model, 'supervision_practice_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
+            'options' => ['placeholder' => 'Izaberite...'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,           
+        ])->hint($model->hintControlPractice) ?>
+
+    <?= $form->field($model, 'supervision_engineer_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'id', 'name'),
+            'options' => ['placeholder' => 'Izaberite...'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,           
+        ])->hint($model->hintControlEngineer) ?>
+
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">
             <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -19,19 +19,19 @@ use kartik\widgets\FileInput;
 ]); ?>
 
     <?= $form->field($model, 'type')->dropDownList([ 
-            'licence_no' => 'Broj licence', 
+            /*'licence_no' => 'Broj licence', 
             'licence_copy' => 'Kopija licence', 
-            'licence_conf' => 'Potvrda licence', 
+            'licence_conf' => 'Potvrda licence', */
             'apr' => 'APR', 
             'signature' => 'Potpis', 
-            'licence_stamp' => 'Pečat licencni', 
+            /*'licence_stamp' => 'Pečat licencni', */
             'company_stamp' => 'Pečat preduzeća', 
-            'stamp' => 'Pečat', 
+            'stamp' => 'Pečat',
             'memo-header' => 'Memorandum zaglavlje', 
-            'memo-footer' => 'Memorandum podnožje', 
+            //'memo-footer' => 'Memorandum podnožje', 
             'logo' => 'Logo',  
             'other' => 'Drugo', 
-        ], ['prompt' => '', 'disabled'=>true]) ?>
+        ], ['prompt' => '', 'disabled'=>(!$model->type) ? false:true]) ?>
 
     <?= $form->field($model, 'entity')->dropDownList([ 'client' => 'Investitor', 'engineer' => 'Inženjer', 'practice' => 'Firma', 'authority' => 'Nadležni organ', ], ['prompt' => '', 'disabled'=>true]) ?>
 

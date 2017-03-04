@@ -57,20 +57,20 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             // 'location_id',
             //'work',
-            [
+           /* [
                'attribute'=>'phase',
                'format' => 'raw',
                'value'=>function ($data) {
                     return $data->projectPhase;
                 },
-            ],
-            [
+            ],*/
+            /*[
                'attribute'=>'work',
                'format' => 'raw',
                'value'=>function ($data) {
                     return $data->projectTypeOfWorks;
                 },
-            ],
+            ],*/
             [
                'attribute'=>'practice_id',
                'format' => 'raw',

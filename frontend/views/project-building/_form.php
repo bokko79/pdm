@@ -53,6 +53,13 @@ if(!$model->building_line_dist) $model->building_line_dist = 0;
 <hr>
 <h3>Numerički pokazatelji</h3>
 
+    
+    <?= $form->field($model, 'width', [
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%'])->hint('') ?>
+
+    <?= $form->field($model, 'length', [
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%'])->hint('') ?>
+
     <?= $form->field($model, 'ground_floor_level', [
                 'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%'])->hint('Apsolutna visinska kota gotovog poda prizemlja objekta, npr. 81.60. Ova kota se koristi kao referentna kota za sve ostale visinke kote objekta.') ?>
 

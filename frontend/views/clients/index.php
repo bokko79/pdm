@@ -12,10 +12,17 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="clients-index">
 
-    <h1><i class="fa fa-building"></i> <?= Html::encode($this->title) ?></h1>
-    <p>
-        <?= Html::a(Yii::t('app', 'Dodaj investitora'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+<div class="card_container record-full transparent no-shadow grid-item fadeInUp animated" id="">
+    <div class="primary-context  normal">
+        <div class="head"><h1 style="display: inline;"><i class="fa fa-building"></i> <?= Html::encode($this->title) ?></h1>
+        <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Novi investitor'), ['create'], ['class' => 'btn btn-success' ]) ?>
+            </div>
+        </div>
+        <div class="subhead">Lista registrovanih investitora.</div>
+    </div>              
+</div>
+<hr>
+
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
