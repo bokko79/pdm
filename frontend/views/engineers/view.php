@@ -12,16 +12,19 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Inženjeri'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
-
-    <h1><i class="fa fa-user-circle-o"></i> <?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a(Yii::t('app', 'Izmeni'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
- 
-    </p>            
-
-<div class="container">
+     
+<div class="card_container record-full grid-item fadeInUp animated" id="">
+    <div class="primary-context gray normal">
+        <div class="head"><i class="fa fa-user-circle-o"></i> <?= Html::encode($this->title) ?>
+        <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Podesi'), ['update', 'id' => $model->id], ['class' => 'btn btn-success btn-sm' ]) ?>
+            </div>
+        </div>
+        <div class="subhead">Lista Vaših projekata.</div>
+    </div>              
+</div>
+<hr>
+<div class="container-fluid">
+     
     <div class="row">
         <div class="col-sm-4">
             <?= DetailView::widget([
@@ -38,8 +41,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-8">       
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Dokumenti</div>
-                    <div class="subhead"><?= Html::a('Dodaj dokument', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'engineer']), ['class' => 'btn btn-warning btn-sm']) ?></div>
+                    <div class="head">Dokumenti
+                    <div class="action-area"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj dokument', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'engineer']), ['class' => 'btn btn-primary btn-sm']) ?></div>
+                    </div>
+                    <div class="subhead"></div>
                 </div>
                 
                 <div class="secondary-context">
@@ -61,14 +66,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Licenca</div>
-                    <div class="subhead"><?= Html::a('Dodaj licencni paket', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+                    <div class="head">Licenca
+                    <div class="action-area"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj licencni paket', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?></div></div>
+                    </div>
+                    <div class="subhead">
                 </div>
                 <div class="secondary-context">
                 <?php if($engineerLicences = $model->engineerLicences){
                     foreach($engineerLicences as $engineerLicence){
                         echo $engineerLicence->no.'<br>'; 
-                        echo Html::a('Izmeni licencni paket', Url::to(['/engineer-licences/update', 'id'=>$engineerLicence->id]), ['class' => 'btn btn-success btn-sm']);
+                        echo Html::a('Izmeni licencni paket', Url::to(['/engineer-licences/update', 'id'=>$engineerLicence->id]), ['class' => 'btn btn-success btn-sm right']).'<hr>';
                         echo $engineerLicence->copy ? Html::img('/images/legal_files/licences/'.$engineerLicence->copy->name) : null;
                         echo $engineerLicence->conf ? Html::img('/images/legal_files/licences/'.$engineerLicence->conf->name) : null;
                         echo $engineerLicence->stamp ? Html::img('/images/legal_files/licences/'.$engineerLicence->stamp->name) : null;
@@ -103,8 +110,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         },
                     ],
                     'code',
-                    'projectPhase',
-                    'projectTypeOfWorks',
                     [
                         'label'=>'Lokacija',
                         'format' => 'raw',

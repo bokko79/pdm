@@ -38,7 +38,7 @@ class ProjectFiles extends \yii\db\ActiveRecord
     {
         return [
             [['project_id', 'type'], 'required'],
-            [['project_id', 'file_id'], 'integer'],
+            [['project_id', 'file_id', 'authority_id'], 'integer'],
             [['type'], 'string'],
             [['date'], 'safe'],
             [['number'], 'string', 'max' => 64],
@@ -124,5 +124,43 @@ class ProjectFiles extends \yii\db\ActiveRecord
     public function getFile()
     {
         return $this->hasOne(Files::className(), ['id' => 'file_id']);
-    }    
+    } 
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDocument()
+    {
+        $type;
+        switch ($this->type) {
+            case 'prostorniplan': $type = 'Prostorni plan'; break;
+            case 'informacija': $type = 'Informacija o lokaciji'; break;
+            case 'svojina': $type = 'List nepokretnosti'; break;
+            case 'geodetski': $type = 'Geodetski snimak'; break;
+            case 'preparcelacija': $type = 'Projekat parcelacije i preparcelacije'; break;
+            case 'formparcele': $type = 'Potvrda o formiranju parcele'; break;
+            case 'obelparcele': $type = 'Rešenje o obeležavanju parcele'; break;
+            case 'plana': $type = 'Kopija plana'; break;
+            case 'vodovi': $type = 'Izvod iz katastra vodova'; break;
+            case 'katplan': $type = 'Katastarsko-topografski plan'; break;
+            case 'uslovi': $type = 'Lokacijski uslovi'; break;
+            case 'saglasnost': $type = 'Saglasnost JKP'; break;
+            case 'energetska': $type = 'Energetska dozvola'; break;
+            case 'vlasnici': $type = 'Saglasnost ostalih vlasnika'; break;
+            case 'punomoc': $type = 'Punomocć'; break;
+            case 'dozvola': $type = 'Građevinska dozvola'; break;
+            case 'prijava': $type = 'Prijava radova'; break;
+            case 'odobrenje': $type = 'Rešenje o odobrenju radova'; break;
+            case 'uplatnica': $type = 'Uplatnica'; break;
+            case 'upotrebna': $type = 'Upotrebna dozvola'; break;
+            case 'ugovor': $type = 'Ugovor'; break;
+            case 'zalba': $type = 'Žalba'; break;
+            case 'resenje': $type = 'Rešenje'; break;
+            
+            default:
+                $type = 'Dokument';
+                break;
+        }
+        return $type;
+    }   
 }

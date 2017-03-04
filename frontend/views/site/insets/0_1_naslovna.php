@@ -64,13 +64,13 @@ $formatter->locale = 'sr-Latn';
 			<td class="right" style="padding:5px 20px;">
 				<small>Pečat projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/stamps/'.$model->practice->stamp, ['style'=>'width:120px; margin-top:10px;']) ?>
+					<?= Html::img('@web/images/legal_files/stamps/'.$model->practice->stamp, ['style'=>'width:120px; max-height:120px; margin-top:10px;']) ?>
 				</div>
 			</td>
 			<td class="content" style="padding:5px 20px;">
 				<small>Potpis odgovornog lica projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/signatures/'.$model->practice->signature, ['style'=>'width:160px;']) ?>
+					<?= Html::img('@web/images/legal_files/signatures/'.$model->practice->signature, ['style'=>'width:160px; max-height:120px;']) ?>
 				</div>
 			</td>			
 		</tr>

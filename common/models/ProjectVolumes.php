@@ -111,7 +111,8 @@ class ProjectVolumes extends \yii\db\ActiveRecord
      */
     public function getEngineer()
     {
-        return $this->hasOne(Engineers::className(), ['id' => 'engineer_id']);
+        // return $this->hasOne(Engineers::className(), ['id' => 'engineer_id']);
+        return $this->engineerLicence->engineer;
     } 
 
     /**
@@ -127,7 +128,8 @@ class ProjectVolumes extends \yii\db\ActiveRecord
      */
     public function getControlEngineer()
     {
-        return $this->hasOne(Engineers::className(), ['id' => 'control_engineer_id']);
+        //return $this->hasOne(Engineers::className(), ['id' => 'control_engineer_id']);
+        return $this->controlEngineerLicence->engineer;
     }
 
     /**

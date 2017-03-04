@@ -132,6 +132,14 @@ class Projects extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getProjectBuildingDoorwin()
+    {
+        return $this->hasMany(ProjectBuildingDoorwin::className(), ['project_id' => 'id'])->orderBy('pos_no ASC');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getProjectBuildingHeights()
     {
         return $this->hasMany(ProjectBuildingHeights::className(), ['project_id' => 'id']);
@@ -539,6 +547,159 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getSaglasnosti()
     {
-        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="saglasnost"')->one();
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="saglasnost"')->all();
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInformacijaOLokaciji()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="informacija"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKopijaPlana()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="plana"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getListNepokretnosti()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="svojina"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGeodetski()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="geodetski"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getResenjeOOdobrenjuRadova()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="odobrenje"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGraDozvola()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="dozvola"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKATPlan()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="katplan"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUpotrebnaDozvola()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="upotrebna"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getResenjeOObelezavanjuParcele()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="obelparcele"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPotvrdaOFormiranjuParcele()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="formparcele"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPrijavaRadova()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="prijava"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSaglasnostVlasnika()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="vlasnici"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKatastarVodova()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="vodovi"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjekatPreparcelacije()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="preparcelacija"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEnergetskaDozvola()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="energetska"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUplatnice()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="uplatnica"')->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUgovori()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="ugovor"')->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getZalbe()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="zalba"')->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getResenja()
+    {
+        return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="resenje"')->all();
+    }
+
 }

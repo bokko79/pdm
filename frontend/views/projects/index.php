@@ -9,10 +9,7 @@ use yii\widgets\Pjax;
 
 $this->title = Yii::t('app', 'Lista projekata');
 $this->params['breadcrumbs'][] = $this->title;
-?>
-<div class="projects-index">
-
-    
+?>    
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
@@ -97,4 +94,4 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-<?php Pjax::end(); ?></div>
+<?php Pjax::end(); ?>

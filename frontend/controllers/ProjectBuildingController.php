@@ -58,6 +58,7 @@ class ProjectBuildingController extends Controller
         $query_st = \common\models\ProjectBuildingStoreys::find()->where(['project_id' => $id]);
         $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_id' => $id]);
         $query_pa = \common\models\ProjectBuildingParts::find()->where(['project_id' => $id]);
+        $query_dw = \common\models\ProjectBuildingDoorwin::find()->where(['project_id' => $id]);
         $searchModel = new \common\models\ProjectBuildingStoreyPartRoomsSearch();
         $rooms = $searchModel->search(Yii::$app->request->queryParams);
         
@@ -119,6 +120,9 @@ class ProjectBuildingController extends Controller
             ]),
             'projectBuildingParts' => new ActiveDataProvider([
                 'query' => $query_pa,
+            ]),
+            'projectBuildingDoorwin' => new ActiveDataProvider([
+                'query' => $query_dw,
             ]),
            /*'rooms' => new ActiveDataProvider([
                 'query' => $rooms,

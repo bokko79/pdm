@@ -45,7 +45,7 @@ class ProjectBuildingInsulations extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'project_id' => Yii::t('app', 'Project ID'),
+            'project_id' => Yii::t('app', 'Projekat'),
             'thermal' => Yii::t('app', 'Termička izolacija objekta'),
             'sound' => Yii::t('app', 'Zvukoizolacija objekta'),
             'hidro' => Yii::t('app', 'Hidroizolacija objekta'),

@@ -20,11 +20,11 @@ use kartik\widgets\FileInput;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'title')->textInput(['maxlength' => true])->hint('Stečeno stručno zvanje, npr. dipl.ing.građ. ili master arhitekture') ?>
 
-    <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'phone')->textInput(['maxlength' => true])->hint('Kontakt telefon inženjera.') ?>
 
-    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'email')->textInput(['maxlength' => true])->hint('Kontakt email adresa.') ?>
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

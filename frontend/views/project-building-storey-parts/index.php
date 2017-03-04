@@ -28,7 +28,7 @@ $gridColumns = [
             return Html::a($data->projectBuildingStorey->name, ['project-building-storeys/view', 'id' => $data->project_building_storey_id]);
         },
         'filterType'=>GridView::FILTER_SELECT2,
-        'filter'=>\yii\helpers\ArrayHelper::map(\common\models\ProjectBuildingStoreys::find()->orderBy('id')->asArray()->all(), 'id', 'name'), 
+        'filter'=>\yii\helpers\ArrayHelper::map(\common\models\ProjectBuildingStoreys::find()->orderBy('level')->asArray()->all(), 'id', 'name'), 
         'filterWidgetOptions'=>[
             'pluginOptions'=>['allowClear'=>true],
         ],

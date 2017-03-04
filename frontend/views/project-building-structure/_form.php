@@ -15,13 +15,12 @@ use dosamigos\tinymce\TinyMce;
 <?php $form = kartik\widgets\ActiveForm::begin([
     'id' => 'form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
-    'fullSpan' => 12,      
+    'fullSpan' => 7,      
     'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
     'options' => ['enctype' => 'multipart/form-data'],
 ]); ?>
 
-<hr>
-<h3>Osnovni podaci</h3>
+
 
     <?= $form->field($model, 'project_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Projects::find()->all(), 'id', 'name'),
@@ -31,290 +30,41 @@ use dosamigos\tinymce\TinyMce;
             'disabled' => true,         
         ]) ?>
 
-    <?= $form->field($model, 'construction')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+<hr>
+<h3>Konstrukcija i temelji</h3>
 
-    <?= $form->field($model, 'foundation')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'construction')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
-    <?= $form->field($model, 'wall_external')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'foundation')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
-    <?= $form->field($model, 'wall_bearing')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+<hr>
+<h3>Zidovi i platna</h3>
 
-    <?= $form->field($model, 'wall_internal')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'wall_external')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
-    <?= $form->field($model, 'slab')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'wall_internal')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
-    <?= $form->field($model, 'columns')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+<hr>
+<h3>Ploče i linijski elementi</h3>
 
-    <?= $form->field($model, 'beam')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'slab')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
-    <?= $form->field($model, 'truss')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'columns')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
-    <?= $form->field($model, 'stair')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'beam')->textarea(['rows' => 6, 'placeholder'=>'']) ?>   
 
-    <?= $form->field($model, 'arch')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+<hr>
+<h3>Ostale konstrukcije</h3>
 
-    <?= $form->field($model, 'door')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'roof')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
-    <?= $form->field($model, 'window')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'stair')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
-    <?= $form->field($model, 'roof')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'truss')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
-    <?= $form->field($model, 'chimney')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'arch')->textarea(['rows' => 6, 'placeholder'=>'']) ?>    
 
-    <?= $form->field($model, 'facade')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'tinwork')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'woodwork')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'steelwork')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'chimney')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

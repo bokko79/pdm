@@ -45,6 +45,8 @@ class ProjectBuildingStoreyPartsController extends Controller
             $dataProvider->query->orWhere('project_building_storey_id='.$storey->id);           
         }
 
+        $dataProvider->query->innerJoin('project_building_storeys as pbs')->orderBy('pbs.level ASC')->groupBy('id');
+
         return $this->render('index', [
             'project' => $project,
             'searchModel' => $searchModel,

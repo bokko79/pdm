@@ -57,15 +57,15 @@ $model->control_engineer_id = $model->project->control_engineer_id;
             'changeOnReset' => false,           
         ])->hint($model->hintPractice) ?>
 
-    <?= $form->field($model, 'engineer_id')->widget(Select2::classname(), [
+    <?php /* $form->field($model, 'engineer_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           
-        ])->hint($model->hintEngineer) ?>
+        ])->hint($model->hintEngineer) */ ?>
 
     <?= $form->field($model, 'engineer_licence_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\EngineerLicences::find()->all(), 'id', 'no'),
+            'data' => ArrayHelper::map(\common\models\EngineerLicences::find()->all(), 'id', 'fullname'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           
@@ -81,15 +81,15 @@ $model->control_engineer_id = $model->project->control_engineer_id;
             'changeOnReset' => false,           
         ])->hint($model->hintControlPractice) ?>
 
-    <?= $form->field($model, 'control_engineer_id')->widget(Select2::classname(), [
+    <?php /* $form->field($model, 'control_engineer_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           
-        ])->hint($model->hintControlEngineer) ?>  
+        ])->hint($model->hintControlEngineer) */ ?>  
 
     <?= $form->field($model, 'control_engineer_licence_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\EngineerLicences::find()->all(), 'id', 'no'),
+            'data' => ArrayHelper::map(\common\models\EngineerLicences::find()->all(), 'id', 'fullname'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           

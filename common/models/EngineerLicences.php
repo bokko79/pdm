@@ -203,4 +203,12 @@ class EngineerLicences extends \yii\db\ActiveRecord
     {
         return $this->hasMany(ProjectVolumes::className(), ['control_engineer_licence_id' => 'id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFullname()
+    {
+        return $this->engineer->name . ': '. $this->no;
+    }
 }

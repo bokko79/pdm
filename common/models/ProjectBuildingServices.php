@@ -59,7 +59,7 @@ class ProjectBuildingServices extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'project_id' => Yii::t('app', 'Project ID'),
+            'project_id' => Yii::t('app', 'Projekat'),
             'heating' => Yii::t('app', 'Grejanje objekta'),
             'ac' => Yii::t('app', 'Klimatizacija objekta'),
             'ventilation' => Yii::t('app', 'Ventilacija objekta'),
@@ -69,8 +69,8 @@ class ProjectBuildingServices extends \yii\db\ActiveRecord
             'sewage' => Yii::t('app', 'Kanalizacija objekta'),
             'phone' => Yii::t('app', 'Telefonske i telekomunikacione instalacije objekta'),
             'tv' => Yii::t('app', 'Televizija i kablovska televizija'),
-            'electricity' => Yii::t('app', 'elektroinstalacije jake struje objekta'),
-            'catv' => Yii::t('app', 'video nadzor objekta'),
+            'electricity' => Yii::t('app', 'Elektroinstalacije jake struje objekta'),
+            'catv' => Yii::t('app', 'Video nadzor objekta'),
             'internet' => Yii::t('app', 'Internet'),
             'lift' => Yii::t('app', 'Lift i eskalatori'),
             'pool' => Yii::t('app', 'Bazenske instalacije'),

@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><i class="fa fa-map-marker"></i> <?= Html::encode($this->title) ?></h1>
 
 <hr>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-7">
             <div class="card_container record-full grid-item fadeInUp animated" id="">

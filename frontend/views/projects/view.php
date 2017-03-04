@@ -17,7 +17,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <h1><i class="fa fa-file-o"></i> <?= Html::encode($this->title) ?></h1>
 
 <hr>
-<div class="container">
+
+<div class="alert alert-info" role="alert"><i class="fa fa-bell"></i></div>
+
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-7">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
@@ -147,7 +150,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php if($projectFiles = $model->projectFiles){
                         foreach($projectFiles as $projectFile){
                             $thumb = ($projectFile->file and $projectFile->file->type!='pdf') ? Html::img('/images/projects/files/'.$projectFile->file->name, ['style'=>'max-height:30px;']) : null;
-                            echo Html::a('<i class="fa fa-file"></i> '.substr($projectFile->name,0,50). '... '.$thumb, Url::to(['/project-files/update', 'id'=>$projectFile->id]), ['class' => 'btn btn-default btn-sm']).'<br><br>';
+                            echo Html::a('<i class="fa fa-file"></i> '.substr($projectFile->document,0,50). '... '.$thumb, Url::to(['/project-files/update', 'id'=>$projectFile->id]), ['class' => 'btn btn-default btn-sm']).'<hr>';
 
                         }
                     } ?>
@@ -166,7 +169,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="secondary-context">
                     <?php if($projectClients = $model->projectClients){
                         foreach($projectClients as $projectClient){
-                            echo Html::a('<i class="fa fa-building"></i> '.$projectClient->client->name, Url::to(['/project-clients/update', 'id'=>$projectClient->id]), ['class' => 'btn btn-default btn-sm']).'<br><br>';
+                            echo Html::a('<i class="fa fa-building"></i> '.$projectClient->client->name, Url::to(['/project-clients/update', 'id'=>$projectClient->id]), ['class' => 'btn btn-default btn-sm']).'<hr>';
                         }
                     } ?>
                 </div>                

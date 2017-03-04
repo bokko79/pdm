@@ -15,7 +15,7 @@ use dosamigos\tinymce\TinyMce;
 <?php $form = kartik\widgets\ActiveForm::begin([
     'id' => 'form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
-    'fullSpan' => 12,      
+    'fullSpan' => 7,      
     'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
     'options' => ['enctype' => 'multipart/form-data'],
 ]); ?>
@@ -31,290 +31,34 @@ use dosamigos\tinymce\TinyMce;
             'disabled' => true,         
         ]) ?>
 
-    <?= $form->field($model, 'heating')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
 
-    <?= $form->field($model, 'ac')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'ventilation')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'gas')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'sprinkler')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'water')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'sewage')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'phone')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'tv')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'electricity')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'catv')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'internet')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'lift')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'pool')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'geotech')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'traffic')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'construction')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'fire')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
-
-    <?= $form->field($model, 'special')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+<hr>
+<h3>Hidrotehničke instalacije</h3>
+    <?= $form->field($model, 'water')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'sewage')->textarea(['rows' => 6, 'placeholder'=>'']) ?>  
+<hr>
+<h3>Električne i elektronske instalacije</h3>
+    <?= $form->field($model, 'electricity')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'phone')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'tv')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'catv')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'internet')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+<hr>
+<h3>Termomašinske instalacije</h3>
+    <?= $form->field($model, 'heating')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'gas')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'geotech')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'ac')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'ventilation')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'sprinkler')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    
+    <?= $form->field($model, 'lift')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+<hr>
+<h3>Ostale instalacije</h3>
+    <?= $form->field($model, 'fire')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'pool')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'traffic')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+    <?= $form->field($model, 'special')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

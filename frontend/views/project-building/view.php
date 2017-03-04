@@ -228,6 +228,34 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]); ?>
                 </div>
             </div>
+
+            <div class="card_container record-full grid-item fadeInUp animated" id="">
+                <div class="primary-context gray normal">
+                    <div class="head">Stolarija i bravarija objekta
+                        <div class="action-area normal-case"><?= Html::a('Dodaj poziciju', Url::to(['/project-building-doorwin/create', 'ProjectBuildingDoorwin[project_id]'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+                    </div>
+                    
+                </div>
+                <div class="secondary-context">
+                    <?= GridView::widget([
+                        'dataProvider' => $projectBuildingDoorwin,
+                        'columns' => [
+                            'pos_type',
+                            [
+                                'attribute'=>'type',
+                                'format' => 'raw',
+                                'value'=>function ($data) {
+                                    return Html::a($data->type, ['project-building-doorwin/update', 'id' => $data->id]);
+                                },
+                            ],
+                            'pos_no',                            
+                            'width',
+                            'height',
+                        ],
+                        'summary' => false,
+                    ]); ?>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -247,14 +275,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             'access:ntext',
                             'entrance:ntext',
                             'position:ntext',
-                            'shape:ntext',
-                            'architecture:ntext',
-                            'style:ntext',
-                            'context:ntext',
-                            'ventilation:ntext',
-                            'lights:ntext',
                             'orientation:ntext',
+                            'shape:ntext',
+                            'context:ntext',
+                            'architecture:ntext',
+                            'style:ntext',                                                      
                             'adjacent:ntext',
+                            'ventilation:ntext',
+                            'lights:ntext',  
                             'environment:ntext',
                         ],
                     ]) ?>
@@ -278,66 +306,22 @@ $this->params['breadcrumbs'][] = $this->title;
                             'construction:ntext',
                             'foundation:ntext',
                             'wall_external:ntext',
-                            'wall_bearing:ntext',
                             'wall_internal:ntext',
                             'slab:ntext',
                             'columns:ntext',
                             'beam:ntext',
-                            'truss:ntext',
+                            'roof:ntext',                            
                             'stair:ntext',
-                            'arch:ntext',
-                            'door:ntext',
-                            'window:ntext',
-                            'roof:ntext',
+                            'truss:ntext',
+                            'arch:ntext',                            
                             'chimney:ntext',
-                            'facade:ntext',
-                            'tinwork:ntext',
-                            'woodwork:ntext',
-                            'steelwork:ntext',
                         ],
                     ]) ?>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card_container record-full grid-item fadeInUp animated" id="">
-                <div class="primary-context gray normal">
-                    <div class="head">Instalacije objekta
-                        <div class="action-area normal-case"><?= Html::a('Uredi instalacije objekta', Url::to(['/project-building-services/update', 'id'=>$model->project_id]), ['class' => 'btn btn-info btn-sm']) ?></div>
-                    </div>
-                    <div class="subhead">Lista instalacija predmetnog objekta.</div>
-                </div>
-                <div class="secondary-context">
-                    <?= DetailView::widget([
-                        'model' => $model->project->projectBuildingServices,
-                        'attributes' => [
-                            'heating:ntext',
-                            'ac:ntext',
-                            'ventilation:ntext',
-                            'gas:ntext',
-                            'sprinkler:ntext',
-                            'water:ntext',
-                            'sewage:ntext',
-                            'phone:ntext',
-                            'tv:ntext',
-                            'electricity:ntext',
-                            'catv:ntext',
-                            'internet:ntext',
-                            'lift:ntext',
-                            'pool:ntext',
-                            'geotech:ntext',
-                            'traffic:ntext',
-                            'construction:ntext',
-                            'fire:ntext',
-                            'special:ntext',
-                        ],
-                    ]) ?>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <div class="row">
         <div class="col-sm-12">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
@@ -351,32 +335,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= DetailView::widget([
                         'model' => $model->project->projectBuildingMaterials,
                         'attributes' => [
-                            'access:ntext',
-                            'foundation:ntext',
-                            'wall_external:ntext',
-                            'wall_bearing:ntext',
-                            'wall_internal:ntext',
+                            'access:ntext',                            
                             'facade:ntext',
-                            'flooring:ntext',
-                            'ceiling:ntext',
+                            'roofing:ntext',                            
                             'door:ntext',
-                            'window:ntext',
-                            'tinwork:ntext',
-                            'stair:ntext',
+                            'window:ntext',  
                             'woodwork:ntext',
-                            'steelwork:ntext',
-                            'roof:ntext',
-                            'light:ntext',
-                            'sanitary:ntext',
-                            'electrical:ntext',
-                            'plumbing:ntext',
-                            'hvac:ntext',
-                            'chimney:ntext',
+                            'steelwork:ntext',  
+                            'tinwork:ntext',  
+                            'wall_internal:ntext',
+                            'flooring:ntext',
+                            'ceiling:ntext',                        
                             'furniture:ntext',
                             'kitchen:ntext',
-                            'bathroom:ntext',
-                            'lift:ntext',
-                            'roofing:ntext',
+                            'sanitary:ntext',                            
                         ],
                     ]) ?>
                 </div>
@@ -401,6 +373,43 @@ $this->params['breadcrumbs'][] = $this->title;
                             'hidro:ntext',
                             'fireproof:ntext',
                             'chemical:ntext',
+                        ],
+                    ]) ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card_container record-full grid-item fadeInUp animated" id="">
+                <div class="primary-context gray normal">
+                    <div class="head">Instalacije objekta
+                        <div class="action-area normal-case"><?= Html::a('Uredi instalacije objekta', Url::to(['/project-building-services/update', 'id'=>$model->project_id]), ['class' => 'btn btn-info btn-sm']) ?></div>
+                    </div>
+                    <div class="subhead">Lista instalacija predmetnog objekta.</div>
+                </div>
+                <div class="secondary-context">
+                    <?= DetailView::widget([
+                        'model' => $model->project->projectBuildingServices,
+                        'attributes' => [
+                            'water:ntext',
+                            'sewage:ntext',
+                            'electricity:ntext',
+                            'phone:ntext',
+                            'tv:ntext',
+                            'catv:ntext',
+                            'internet:ntext',
+                            'heating:ntext',                            
+                            'gas:ntext',
+                            'geotech:ntext',
+                            'ac:ntext',
+                            'ventilation:ntext',
+                            'sprinkler:ntext',
+                            'fire:ntext',
+                            'lift:ntext',
+                            'pool:ntext',                            
+                            'traffic:ntext',                            
+                            'special:ntext',
                         ],
                     ]) ?>
                 </div>

@@ -89,7 +89,7 @@ class ProjectLot extends \yii\db\ActiveRecord
             'built_index_reg' => Yii::t('app', 'Zahtevani indeks izgrađenosti'),
             'parking' => Yii::t('app', 'Parking'),
             'parking_spaces' => Yii::t('app', 'Broj parking mesta'),
-            'parking_disabled' => Yii::t('app', 'Broj parking mesta za osobe sa invaliditetom'),
+            'parking_disabled' => Yii::t('app', 'Br. parking m. za osobe sa inv.'),
         ];
     }
 
@@ -99,5 +99,35 @@ class ProjectLot extends \yii\db\ActiveRecord
     public function getProject()
     {
         return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGroundType()
+    {
+        $ground;
+        switch ($this->ground) {
+            case 'ravan':
+                $ground = 'ravan';
+                break;
+            case 'strm':
+                $ground = 'strm';
+                break;
+            case 'pretezno':
+                $ground = 'pretežno ravan';
+                break;
+            case 'blago':
+                $ground = 'u blagom nagibu';
+                break;
+            case 'nepristupacan':
+                $ground = 'nepristupačan';
+                break;
+            
+            default:
+                $ground = 'ravan';
+                break;
+        }
+        return $ground;
     }
 }

@@ -404,6 +404,206 @@ class ProjectBuilding extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getNetAreaStan()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type=='stan'){
+                            $total += $part->netArea;
+                        }
+                    }
+                }                
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubNetAreaStan()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type=='stan'){
+                            $total += $part->subNetArea;
+                        }
+                    }
+                }                
+            }
+        }        
+        return $total;
+    }
+
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNetAreaBiz()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type=='biz'){
+                            $total += $part->netArea;
+                        }
+                    }
+                }                
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubNetAreaBiz()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type=='biz'){
+                            $total += $part->subNetArea;
+                        }
+                    }
+                }                
+            }
+        }        
+        return $total;
+    }
+
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNetAreaGarage()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type=='garage'){
+                            $total += $part->netArea;
+                        }
+                    }
+                }                
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubNetAreaGarage()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type=='garage'){
+                            $total += $part->subNetArea;
+                        }
+                    }
+                }                
+            }
+        }        
+        return $total;
+    }
+
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNetAreaCommon()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type=='common'){
+                            $total += $part->netArea;
+                        }
+                    }
+                }                
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubNetAreaCommon()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type=='common'){
+                            $total += $part->subNetArea;
+                        }
+                    }
+                }                
+            }
+        }        
+        return $total;
+    }
+
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNetAreaTech()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type=='tech'){
+                            $total += $part->netArea;
+                        }
+                    }
+                }                
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubNetAreaTech()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type=='tech'){
+                            $total += $part->subNetArea;
+                        }
+                    }
+                }                
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getBrStanova()
     {
         $total = 0;
@@ -411,7 +611,7 @@ class ProjectBuilding extends \yii\db\ActiveRecord
             foreach($storeys as $storey){
                 if($parts = $storey->projectBuildingStoreyParts){
                     foreach($parts as $part){
-                        if($part->type='stan'){
+                        if($part->type=='stan'){
                             $total++;
                         }
                     }
@@ -431,7 +631,7 @@ class ProjectBuilding extends \yii\db\ActiveRecord
             foreach($storeys as $storey){
                 if($parts = $storey->projectBuildingStoreyParts){
                     foreach($parts as $part){
-                        if($part->type='biz'){
+                        if($part->type=='biz'){
                             $total++;
                         }
                     }
@@ -497,5 +697,59 @@ class ProjectBuilding extends \yii\db\ActiveRecord
                break;
        }       
         return $type;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSchemePositionTotal()
+    {
+        $total = 0;
+        if($pos = $this->project->projectBuildingDoorwin){
+            foreach($pos as $ps){
+                if($stps = $ps->projectBuildingStoreyDoorwins){
+                    foreach($stps as $stp){
+                        $total += $stp->total;
+                    }
+                }                
+            }
+        }
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSchemePositionLeftsTotal()
+    {
+        $total = 0;
+        if($pos = $this->project->projectBuildingDoorwin){
+            foreach($pos as $ps){
+                if($stps = $ps->projectBuildingStoreyDoorwins){
+                    foreach($stps as $stp){
+                        $total += $stp->lefts;
+                    }
+                }                
+            }
+        }
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSchemePositionRightsTotal()
+    {
+        $total = 0;
+        if($pos = $this->project->projectBuildingDoorwin){
+            foreach($pos as $ps){
+                if($stps = $ps->projectBuildingStoreyDoorwins){
+                    foreach($stps as $stp){
+                        $total += $stp->rights;
+                    }
+                }                
+            }
+        }
+        return $total;
     }
 }

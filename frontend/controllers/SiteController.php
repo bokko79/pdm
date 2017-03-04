@@ -266,7 +266,8 @@ class SiteController extends Controller
         $model = \common\models\Projects::findOne($id);
         $volume = \common\models\ProjectVolumes::findOne($volume);
         $mpdf = new mpdf();  
-        $mpdf->tMargin = 35;            
+        $mpdf->tMargin = 35;
+        $mpdf->lMargin = 100;            
         $mpdf->backupSubsFont = array('arial', 'serif'); 
         $mpdf->defaultheaderline = 0; 
         $mpdf->title = $model->code . ': 0 - Glavna sveska';  
@@ -296,15 +297,15 @@ class SiteController extends Controller
         exit;
     }
 
-    public function actionPovrsine($id, $volume=null)
+    public function actionPovrsine($id, $volume=null, $format='A1', $orientation='L')
     {
         $model = \common\models\Projects::findOne($id);
         $volume = \common\models\ProjectVolumes::findOne($volume);
-        $mpdf = new mpdf('utf-8', 'A2-L');  
+        $mpdf = new mpdf('utf-8', $format.'-'.$orientation);  
         //$mpdf->tMargin = 35;            
         $mpdf->backupSubsFont = array('arial', 'serif'); 
         $mpdf->defaultheaderline = 0; 
-        $mpdf->title = $model->code . ': 0 - Glavna sveska';  
+        $mpdf->title = $model->code . ': Obračun redukovanih neto površina objekta';  
         
         //$mpdf->AddPage($this->renderPartial('_reportView', ['model'=>$model], true), 0); 
         
@@ -327,8 +328,43 @@ class SiteController extends Controller
             $mpdf->UseTemplate($import_page1);
 
         }*/
-        $mpdf->Output($model->code . ': 0 - Glavna sveska.pdf', 'I');
+        $mpdf->Output($model->code . ' - Obračun površina.pdf', 'I');
         exit;
     }
 
+    public function actionSeme($id, $volume=null, $format='A4', $orientation='P')
+    {
+        $model = \common\models\Projects::findOne($id);
+        $volume = \common\models\ProjectVolumes::findOne($volume);
+        $mpdf = new mpdf('utf-8', $format.'-'.$orientation);  
+        $mpdf->tMargin = 58;            
+        $mpdf->backupSubsFont = array('arial', 'serif'); 
+        $mpdf->defaultheaderline = 0; 
+        $mpdf->title = $model->code . ': Šeme stolarije i bravarije';  
+        
+        //$mpdf->AddPage($this->renderPartial('_reportView', ['model'=>$model], true), 0); 
+        
+        //$mpdf->SetImportUse();
+        /*$pagecount = $mpdf->SetSourceFile('images/legal_files/projektni.pdf');
+        for ($i=1; $i<=$pagecount; $i++) {
+            $mpdf->AddPage();
+            $import_page = $mpdf->ImportPage($i);
+            $mpdf->UseTemplate($import_page);
+        }*/
+        //$mpdf->SetHeader();
+        $mpdf->SetHeader($this->renderPartial('schemes/_header', ['model'=>$model, 'volume'=>$volume], true));
+        //$mpdf->AddPage();
+        $mpdf->WriteHTML($this->renderPartial('volumes/_arhitektura', ['model'=>$model, 'volume'=>$volume], true), 0);
+        //$mpdf->SetWatermarkText('eee');
+        //$mpdf->SetHeader();
+        /*$pagecount1 = $mpdf->SetSourceFile('images/legal_files/docs/'.$model->practice->apr);
+        for ($i=1; $i<=$pagecount1; $i++) {
+            $mpdf->AddPage();
+            $import_page1 = $mpdf->ImportPage($i);
+            $mpdf->UseTemplate($import_page1);
+
+        }*/
+        $mpdf->Output($model->code . ' - Obračun površina.pdf', 'I');
+        exit;
+    }
 }

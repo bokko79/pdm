@@ -71,6 +71,27 @@ $gridColumns = [
         'filterInputOptions'=>['placeholder'=>'Any Part'],
         'group'=>true,  // enable grouping
         'subGroupOf'=>1,
+        'groupFooter'=>function ($model, $key, $index, $widget) { // Closure method
+            return [
+                'mergeColumns'=>[[2,5]], // columns to merge in summary
+                'content'=>[             // content to show in each summary cell
+                    1=>'Summary (' . $model->projectBuildingStoreyPart->projectBuildingStorey->name . ')',
+                    //6=>GridView::F_SUM,
+                    //7=>GridView::F_SUM,
+                ],
+                'contentFormats'=>[      // content reformatting for each summary cell
+                    6=>['format'=>'number', 'decimals'=>2],
+                    7=>['format'=>'number', 'decimals'=>2],
+                ],
+                'contentOptions'=>[      // content html attributes for each summary cell
+                    1=>['style'=>'font-variant:small-caps'],
+                    6=>['style'=>'text-align:right'],
+                    7=>['style'=>'text-align:right'],
+                ],
+                // html attributes for group summary row
+                'options'=>['class'=>'danger','style'=>'font-weight:bold;']
+            ];
+        }
     ],
     'mark',
     [
@@ -92,7 +113,7 @@ $gridColumns = [
         'attribute'=>'sub_net_area',
         'width'=>'150px',
         'hAlign'=>'right',
-        'format'=>['decimal', 2],
+        //'format'=>['decimal', 2],
         'pageSummary'=>true
     ],
     [
@@ -100,7 +121,7 @@ $gridColumns = [
         'attribute'=>'net_area',
         'width'=>'150px',
         'hAlign'=>'right',
-        'format'=>['decimal', 2],
+        //'format'=>['decimal', 2],
         'pageSummary'=>true,
         'editableOptions'=> function ($model, $key, $index) {
             return [
@@ -138,12 +159,12 @@ echo GridView::widget([
     // parameters from the demo form
     'bordered'=>true,
     'striped'=>true,
-    'condensed'=>false,
+    'condensed'=>true,
     'responsive'=>true,
     'hover'=>true,
     //'showPageSummary'=>true,
     'panel'=>[
-        'type'=>GridView::TYPE_PRIMARY,
+        'type'=>GridView::TYPE_DEFAULT,
         'heading'=>'Površine',
     ],
     'persistResize'=>false,

@@ -15,81 +15,29 @@ use dosamigos\tinymce\TinyMce;
 <?php $form = kartik\widgets\ActiveForm::begin([
     'id' => 'form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
-    'fullSpan' => 12,      
+    'fullSpan' => 7,      
     'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
     'options' => ['enctype' => 'multipart/form-data'],
 ]); ?>
 
-<hr>
-<h3>Osnovni podaci</h3>
+
 
     <?= $form->field($model, 'project_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Projects::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false, 
-            'disabled' => true,          
+            'disabled' => true,         
         ]) ?>
-        
-    <?= $form->field($model, 'thermal')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+<hr>
+<h3>Izolacije objekta</h3>        
+    <?= $form->field($model, 'thermal')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
-    <?= $form->field($model, 'sound')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'sound')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
-    <?= $form->field($model, 'hidro')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'hidro')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
-    <?= $form->field($model, 'fireproof')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+    <?= $form->field($model, 'fireproof')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
     <?= $form->field($model, 'chemical')->widget(TinyMce::className(), [
         'options' => ['rows' => 6],

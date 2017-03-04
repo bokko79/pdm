@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-5">
           <?= DetailView::widget([
