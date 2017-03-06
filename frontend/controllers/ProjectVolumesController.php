@@ -51,6 +51,11 @@ class ProjectVolumesController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'project';
+        
+        $model = $this->findModel($id);
+        $model->dataReqs();
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -69,11 +74,14 @@ class ProjectVolumesController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post())) {
+            $model->time = time();
+            $engLic = $this->findEngineerLicence($model->engineer_licence_id);
+            $model->engineer_id = $engLic->engineer_id;
+            if($model->control_engineer_licence_id){
+                $engLicC = $this->findEngineerLicence($model->control_engineer_licence_id);
+                $model->control_engineer_id = $engLic->engineer_id;
+            }
             if($model->save()){
-                $model->engineer_licence_id = $model->engineer->engineerLicences ? $model->engineer->engineerLicences[0]->id : null;
-                if($model->control_engineer_id){
-                    $model->control_engineer_licence_id = $model->controlEngineer->engineerLicences ? $model->controlEngineer->engineerLicences[0]->id : null;
-                }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -93,8 +101,16 @@ class ProjectVolumesController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $engLic = $this->findEngineerLicence($model->engineer_licence_id);
+            $model->engineer_id = $engLic->engineer_id;
+            if($model->control_engineer_licence_id){
+                $engLicC = $this->findEngineerLicence($model->control_engineer_licence_id);
+                $model->control_engineer_id = $engLic->engineer_id;
+            }
+            if($model->save()){
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -125,6 +141,22 @@ class ProjectVolumesController extends Controller
     protected function findModel($id)
     {
         if (($model = ProjectVolumes::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectVolumes model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectVolumes the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findEngineerLicence($id)
+    {
+        if (($model = \common\models\EngineerLicences::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

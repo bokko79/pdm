@@ -67,6 +67,8 @@ class ProjectsController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'project';
+        
         $model = $this->findModel($id);
         $query = \common\models\ProjectBuilding::find()->where(['project_id' => $id]);
         return $this->render('view', [
@@ -105,7 +107,7 @@ class ProjectsController extends Controller
                 $this->createProjectBuildingStructure($model);
                 $this->createProjectClient($model);
                 $this->createProjectLot($model);
-                $this->createProjectVolume($model);                
+                $this->createProjectVolume($model);
                 if($location->lot){
                     $this->createLocationLot($location);                    
                 } 
@@ -261,7 +263,7 @@ class ProjectsController extends Controller
         $projectVolume->practice_id = $model->practice_id;
         $projectVolume->engineer_id = $model->engineer_id;
         $projectVolume->engineer_licence_id = ($model->engineer->engineerLicences) ? $model->engineer->engineerLicences[0]->id : 4;
-        $projectVolume->number = 0;
+        $projectVolume->number = '0';
         $projectVolume->name = 'glavna sveska';
         $projectVolume->code = $model->code;
         $projectVolume->control_practice_id = $model->control_practice_id;

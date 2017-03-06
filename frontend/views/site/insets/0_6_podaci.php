@@ -10,7 +10,7 @@ $formatter->locale = 'sr-Latn';
 
 	<?php if($volumes = $model->projectVolumes){
 		foreach ($volumes as $volume){ 
-			if($volume->volume->type!='elaborat'){ // ako su projekti ?>
+			if($volume->volume->type=='projekat'){ // ako su projekti ?>
 				<h3 class="bold uppercase"><?= $volume->number ?>. <?= c($volume->name) ?>:</h3>
 				<table class="clear nopadd bottom">
 					<tr>
@@ -29,14 +29,14 @@ $formatter->locale = 'sr-Latn';
 					<tr>
 						<td class="">Broj licence</td>
 						<td class="content">
-							<?= $volume->engineer->engineerLicences[0]->no ?>
+							<?= $volume->engineerLicence->no ?>
 						</td>					
 					</tr>
 					<tr>
 						<td class="">
 							Lični pečat
 							<div>
-								<?= Html::img('@web/images/legal_files/licences/'.$volume->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
+								<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
 							</div>
 						</td>
 						<td class="content">
@@ -76,14 +76,14 @@ $formatter->locale = 'sr-Latn';
 					<tr>
 						<td class="">Broj ovlašćenja</td>
 						<td class="content">
-							<?= $volume->engineer->engineerLicences[0]->no ?>
+							<?= $volume->engineerLicence->no ?>
 						</td>					
 					</tr>
 					<tr>
 						<td class="">
 							Lični pečat
 							<div>
-								<?= Html::img('@web/images/legal_files/licences/'.$volume->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
+								<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
 							</div>
 						</td>
 						<td class="content">

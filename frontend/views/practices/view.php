@@ -56,11 +56,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-sm-12">                    
                     <div class="card_container record-full grid-item fadeInUp animated" id="">
                         <div class="primary-context gray normal">
-                            <div class="head">Memorandum zaglavlje
+                            <div class="head button_to_show_secondary">Memorandum zaglavlje
                             <div class="action-area normal-case"><?= ($model->memo) ? Html::a('<i class="fa fa-cogs"></i> Promeni', Url::to(['/legal-files/update', 'id'=>$model->memoID->id]), ['class' => 'btn btn-success btn-sm']) : Html::a('<i class="fa fa-plus-circle"></i> Dodaj memorandum zaglavlje', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'memo-header']), ['class' => 'btn btn-primary btn-sm']) ?></div>
                             </div>                           
                         </div>
-                        <div class="secondary-context">
+                        <div class="secondary-context none">
                             <?= ($model->memo) ? Html::img('/images/legal_files/visual/'.$model->memo)  : null ?>
                         </div>
                     </div>
@@ -70,11 +70,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-sm-4">
                     <div class="card_container record-full grid-item fadeInUp animated" id="" style="height:300px;">
                         <div class="primary-context gray normal">
-                            <div class="head">Rešenje APR</div>
+                            <div class="head button_to_show_secondary">Rešenje APR</div>
                             <div class="subhead"><?= ($model->apr) ? Html::a('<i class="fa fa-cogs"></i> Promeni', Url::to(['/legal-files/update', 'id'=>$model->aprID->id]), ['class' => 'btn btn-success btn-sm']) : null ?></div>
                             <?php if(!$model->apr): ?><div class="subhead"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj rešenje APR', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'apr']), ['class' => 'btn btn-primary btn-sm']) ?></div><?php endif; ?>
                         </div>
-                        <div class="secondary-context">
+                        <div class="secondary-context none">
                             <?= ($model->apr) ? Html::a('APR pdf', ['/site/download', 'path'=>'/images/legal_files/docs/'.$model->apr]) : null ?>
                         </div>
                     </div>                                  
@@ -82,11 +82,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-sm-4">                     
                     <div class="card_container record-full grid-item fadeInUp animated" id="" style="height:300px;">
                         <div class="primary-context gray normal">
-                            <div class="head">Pečat
+                            <div class="head button_to_show_secondary">Pečat
                             <div class="action-area normal-case"><?= ($model->stamp) ? Html::a('<i class="fa fa-cogs"></i> Promeni', Url::to(['/legal-files/update', 'id'=>$model->stampID->id]), ['class' => 'btn btn-success btn-sm']) : Html::a('<i class="fa fa-plus-circle"></i> Dodaj pečat', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'company_stamp']), ['class' => 'btn btn-primary btn-sm']) ?></div>
                             </div>
                         </div>
-                        <div class="secondary-context">
+                        <div class="secondary-context none">
                             <?= ($model->stamp) ? Html::img('/images/legal_files/stamps/'.$model->stamp, ['style'=>'max-height:180px;']) : null ?>
                         </div>
                     </div>           
@@ -94,11 +94,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-sm-4">
                     <div class="card_container record-full grid-item fadeInUp animated" id="" style="height:300px;">
                         <div class="primary-context gray normal">
-                            <div class="head">Potpis ovl. lica
+                            <div class="head button_to_show_secondary">Potpis ovl. lica
                             <div class="action-area normal-case"><?= ($model->signature) ? Html::a('<i class="fa fa-cogs"></i> Promeni', Url::to(['/legal-files/update', 'id'=>$model->signatureID->id]), ['class' => 'btn btn-success btn-sm']) :  Html::a('<i class="fa fa-plus-circle"></i> Dodaj potpis ovlašćenog lica', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'signature']), ['class' => 'btn btn-primary btn-sm']) ?></div>
                             </div>
                         </div>
-                        <div class="secondary-context">
+                        <div class="secondary-context none">
                             <?= ($model->signature) ? Html::img('/images/legal_files/signatures/'.$model->signature, ['style'=>'max-height:180px;']) : null ?>
                         </div>
                     </div>                       
@@ -110,7 +110,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-12">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Projekti
+                    <div class="head button_to_show_secondary">Projekti
 
                     </div>
                     <div class="subhead">Projekti na kojima firma ima svojstvo projektanta.</div>
@@ -157,11 +157,11 @@ $this->params['breadcrumbs'][] = $this->title;
             
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Inženjeri firme
+                    <div class="head button_to_show_secondary">Inženjeri firme
                     <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Novi inženjer firme', ['/practice-engineers/create', 'PracticeEngineersSearch[practice_id]' => $model->id], ['class' => 'btn btn-primary btn-sm']) ?></div>
                     </div>
                 </div>
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= GridView::widget([
                         'dataProvider' => $practiceEngineers,
                         'columns' => [

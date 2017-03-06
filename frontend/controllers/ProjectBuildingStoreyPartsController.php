@@ -63,6 +63,7 @@ class ProjectBuildingStoreyPartsController extends Controller
     {
         $model = $this->findModel($id);
         $query_cl = \common\models\ProjectBuildingStoreyPartRooms::find()->where(['project_building_storey_part_id' => $id]);
+        $roomTypes = \common\models\RoomTypes::find()->all();
 
         // validate if there is a editable input saved via AJAX
         if (Yii::$app->request->post('hasEditable')) {
@@ -71,26 +72,38 @@ class ProjectBuildingStoreyPartsController extends Controller
             $edit = Yii::$app->request->post('editableIndex');
             $model = \common\models\ProjectBuildingStoreyPartRooms::findOne($roomId);
 
-            // store a default json response as desired by editable
-            $out = \yii\helpers\Json::encode(['output'=>'', 'message'=>'']);
-
-            // fetch the first entry in posted data (there should only be one entry 
-            // anyway in this array for an editable submission)
-            // - $posted is the posted data for Book without any indexes
-            // - $post is the converted array for single model validation
-            $posted = current($_POST['ProjectBuildingStoreyPartRooms']);
-            $post = ['ProjectBuildingStoreyPartRooms' => $posted];
-
             // load model like any single model validation
             //if ($model->load(Yii::$app->request->post('ProjectBuildingStoreyPartRooms'))) {
-                $model->net_area = Yii::$app->request->post('ProjectBuildingStoreyPartRooms')[$edit]['net_area'];
+                $ps = Yii::$app->request->post('ProjectBuildingStoreyPartRooms');
+                if(isset($ps[$edit]['net_area'])){
+                    $model->net_area = $ps[$edit]['net_area'];                    
+                    $output = Yii::$app->request->post('ProjectBuildingStoreyPartRooms')[$edit]['net_area'];
+                }
+                if(isset($ps['flooring'])){
+                    $model->flooring = $ps['flooring'];
+                    $output = Yii::$app->request->post('ProjectBuildingStoreyPartRooms')['flooring'];
+                }
+                if(isset($ps[$edit]['sub_net_area'])){
+                    $model->sub_net_area = $ps[$edit]['sub_net_area'];
+                    $output = Yii::$app->request->post('ProjectBuildingStoreyPartRooms')[$edit]['sub_net_area'];
+                }
+                
+                if(isset($ps[$edit]['name'])){
+                    $model->name = $ps[$edit]['name'];
+                    $output = Yii::$app->request->post('ProjectBuildingStoreyPartRooms')[$edit]['name'];
+                }
+                if(isset($ps[$edit]['mark'])){
+                    $model->mark = $ps[$edit]['mark'];
+                    $output = Yii::$app->request->post('ProjectBuildingStoreyPartRooms')[$edit]['mark'];
+                }
+                
                 // can save model or do something before saving model
                 $model->save();
 
                 // custom output to return to be displayed as the editable grid cell
                 // data. Normally this is empty - whereby whatever value is edited by
                 // in the input by user is updated automatically.
-                $output = Yii::$app->request->post('ProjectBuildingStoreyPartRooms')[$edit]['net_area'];
+                
 
                 // specific use case where you need to validate a specific
                 // editable column posted when you have more than one
@@ -110,11 +123,30 @@ class ProjectBuildingStoreyPartsController extends Controller
             echo $out;
             return;
         }
+
+        if ($post = Yii::$app->request->post('ProjectBuildingStoreyParts')){
+            //print_r($post); die();
+            foreach ($post['qty'] as $k=>$p){
+                //
+                if($p>0){
+                    //print_r($k); die();
+                    for ($x = 0; $x <= $p; $x++) {
+                        // add room
+                        $room[$k][$x] = new \common\models\ProjectBuildingStoreyPartRooms();
+                        $room[$k][$x]->project_building_storey_part_id = $id;
+                        $room[$k][$x]->room_type_id = $post['room_type_id'][$k];
+                        $room[$k][$x]->save();
+                    }
+                }
+            }
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
         return $this->render('view', [
             'model' => $this->findModel($id),
             'projectBuildingStoreyPartRooms' => new ActiveDataProvider([
                 'query' => $query_cl,
             ]),
+            'roomTypes' => $roomTypes,
         ]);
     }
 

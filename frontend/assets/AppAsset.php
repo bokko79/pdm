@@ -18,6 +18,7 @@ class AppAsset extends AssetBundle
         'css/style_box1.css',
     ];
     public $js = [
+        'js/app.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

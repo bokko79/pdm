@@ -270,10 +270,10 @@ uslovima:</small></td>
 		<tr>
 			<td class="shorttitler"><small>procenat zelenih površina:</small></td>
 			<td class=""><small>dato lokacijskim uslovima:</small><br>
-				<?= ($model->projectLot->green_area_reg) ? $formatter->format($model->projectLot->green_area_reg*$model->projectLot->area/100, ['decimal',2]) : null ?> m<sup>2</sup> (<?= $formatter->format($model->projectLot->green_area_reg, ['decimal',2]) ?> %)</td>
+				<?= $formatter->format($model->projectLot->greenPctReg, ['decimal',2]) ?> m<sup>2</sup> (<?= $formatter->format($model->projectLot->green_area_reg, ['decimal',2]) ?> %)</td>
 			<td class="content">
 				<small>ostvareno: </small><br>
-				<?= $formatter->format($model->projectLot->green_area, ['decimal',2]) ?> m<sup>2</sup> (<?= ($building->pr->gross_area) ? $formatter->format($model->projectLot->green_area/$building->pr->gross_area, ['decimal',2]) :null ?> %)
+				<?= $formatter->format($model->projectLot->green_area, ['decimal',2]) ?> m<sup>2</sup> (<?= ($building->pr->gross_area) ? $formatter->format($model->projectLot->greenPct, ['decimal',2]) : null ?> %)
 			</td>
 		</tr>
 		<?php endif; ?>
@@ -285,7 +285,7 @@ uslovima:</small></td>
 				<?= $formatter->format($model->projectLot->occupancy_reg, ['decimal',2]) ?>% (<?= $formatter->format($building->occupancyAreaReg, ['decimal',2]) ?> m<sup>2</sup>)</td>
 			<td class="content">
 				<small>ostvareno: </small><br>
-				<?= $formatter->format($building->occupancy, ['decimal',2]) ?> %
+				<?= $formatter->format($building->occupancy*100, ['decimal',2]) ?> %
 				(<?= $formatter->format($building->pr->gross_area, ['decimal',2]) ?> m<sup>2</sup>)
 			</td>
 		</tr>
@@ -298,7 +298,7 @@ uslovima:</small></td>
 				<?= $formatter->format($model->projectLot->built_index_reg, ['decimal',2]) ?> (<?= $formatter->format($building->builtAreaReg, ['decimal',2]) ?> m<sup>2</sup>)</td>
 			<td class="content">
 				<small>ostvareno: </small><br>
-				<?= $formatter->format($building->builtIndex, ['decimal',2]) ?>
+				<?= $formatter->format($building->builtIndex, ['decimal',2]) ?> (<?= $formatter->format($building->grossAboveArea, ['decimal',2]) ?> m<sup>2</sup>)
 			</td>
 		</tr>
 		<?php endif; ?>
@@ -316,7 +316,7 @@ uslovima:</small></td>
 		</tr>
 	</table>
 	<div class="right">
-		<?= Html::img('@web/images/legal_files/licences/'.$volume->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
+		<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
 		<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px; margin-top:10px;']) ?>
 	</div>
 	

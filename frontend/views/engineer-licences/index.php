@@ -51,10 +51,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         foreach($engineerLicences as $engineerLicence){?>
                 <div class="card_container record-full grid-item fadeInUp animated" id="">
                     <div class="primary-context gray normal">
-                        <div class="head">Licenca  <?= $engineerLicence->no ?></div>                         
+                        <div class="head button_to_show_secondary">Licenca  <?= $engineerLicence->no ?></div>                         
                         <div class="subhead"></div>
                     </div>
-                    <div class="secondary-context">
+                    <div class="secondary-context none">
                     <?php                                
                             echo Html::a('Podesi licencni paket', Url::to(['/engineer-licences/update', 'id'=>$engineerLicence->id]), ['class' => 'btn btn-success btn-sm right']).'<hr>';
                             echo $engineerLicence->copy ? Html::img('/images/legal_files/licences/'.$engineerLicence->copy->name) : null;

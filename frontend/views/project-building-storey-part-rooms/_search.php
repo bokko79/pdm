@@ -19,7 +19,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'project_building_storey_part_id') ?>
 
-    <?= $form->field($model, 'type') ?>
 
     <?= $form->field($model, 'name') ?>
 

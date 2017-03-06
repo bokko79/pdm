@@ -50,6 +50,7 @@ html, body {
 .card_container .head.float {width: auto; float:left;}
 .card_container .head:after {clear: both;}
 .card_container .head.text-shadow {text-shadow: 0px 2px 1px #000;}
+.button_to_show_secondary:hover {cursor: pointer;}
 .dim {opacity:.36;}
 .card_container .subhead {font-size: 13px; font-weight: 400; color:#999; float:none; width:100%; line-height: 14px;}
 .card_container .subhead.float-left {float: left !important; font-weight:700;}
@@ -143,6 +144,7 @@ html, body {
 .secondary-context .widget .line {}
 .secondary-context .widget i {color: #2196F3; position: relative; z-index: 2;}
 .secondary-context .widget .label {position: relative; z-index: 2;}
+.secondary-context.none {display:none;}
 tr.strikeout td.line:before { content: "";position: absolute;top: 7px;left: 0;border-bottom: 4px solid #ddd;width: 100%;z-index: 0;}
 tr.strikeout td.line.right:before { left: -5px; }
 /* built-in-context */

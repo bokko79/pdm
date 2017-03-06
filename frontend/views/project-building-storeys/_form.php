@@ -10,6 +10,8 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\FileInput;
 use dosamigos\tinymce\TinyMce;
+
+if(!$model->name){$model->name = $model->storey;}
 ?>
 
 <?php $form = kartik\widgets\ActiveForm::begin([
@@ -29,14 +31,15 @@ use dosamigos\tinymce\TinyMce;
             'language' => 'sr-Latn',
             'changeOnReset' => false, 
             'disabled' => true,         
-        ]) ?>
+        ]) ?>    
+
+    <?= $form->field($model, 'storey')->dropDownList([ 'podrum' => 'Podrum', 'suteren' => 'Suteren', 'galerija' => 'Galerija', 'prizemlje' => 'Prizemlje', 'sprat' => 'Sprat', 'povucenisprat' => 'Povucenisprat', 'potkrovlje' => 'Potkrovlje', 'mansarda' => 'Mansarda', 'tavan' => 'Tavan', 'krov' => 'Krov', ], ['prompt' => '', 'disabled' => true,]) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'storey')->dropDownList([ 'podrum' => 'Podrum', 'suteren' => 'Suteren', 'galerija' => 'Galerija', 'prizemlje' => 'Prizemlje', 'sprat' => 'Sprat', 'povucenisprat' => 'Povucenisprat', 'potkrovlje' => 'Potkrovlje', 'mansarda' => 'Mansarda', 'tavan' => 'Tavan', 'krov' => 'Krov', ], ['prompt' => '']) ?>
-
     <?= $form->field($model, 'order_no')->input('number', ['min'=>0, 'style'=>'width:40%']) ?>
 
+<?php if(!$model->sameAs): ?>
     <?= $form->field($model, 'gross_area', [
                 'addon' => ['prepend' => ['content'=>'m<sup>2</sup>']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
 
@@ -48,7 +51,7 @@ use dosamigos\tinymce\TinyMce;
 
     <?= $form->field($model, 'height', [
                 'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
-
+<?php endif; ?>
     <?= $form->field($model, 'level', [
                 'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%']) ?>
 

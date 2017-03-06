@@ -19,7 +19,7 @@ class ProjectBuildingStoreyPartRoomsSearch extends ProjectBuildingStoreyPartRoom
     {
         return [
             [['id', 'project_building_storey_part_id'], 'integer'],
-            [['type', 'name', 'mark', 'flooring'], 'safe'],
+            [['room_type_id', 'name', 'mark', 'flooring'], 'safe'],
             [['circumference', 'length', 'width', 'height', 'sub_net_area', 'net_area'], 'number'],
         ];
     }
@@ -70,8 +70,7 @@ class ProjectBuildingStoreyPartRoomsSearch extends ProjectBuildingStoreyPartRoom
             'net_area' => $this->net_area,
         ]);
 
-        $query->andFilterWhere(['like', 'type', $this->type])
-            ->andFilterWhere(['like', 'name', $this->name])
+        $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'mark', $this->mark])
             ->andFilterWhere(['like', 'flooring', $this->flooring]);
 

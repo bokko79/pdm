@@ -83,7 +83,7 @@ class ProjectBuildingStoreyPartRoomsController extends Controller
                 $model->sub_net_area = $model->net_area;
             }
             if($model->name==null){
-                $model->name = $model->type;
+                $model->name = $model->roomType->name;
             }
             if($model->mark==null){                
                 $model->mark = $m ? (count($m->projectBuildingStoreyPartRooms)+1) : 1;

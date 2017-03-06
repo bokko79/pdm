@@ -14,10 +14,7 @@ use dosamigos\tinymce\TinyMce;
 
 <?php $form = kartik\widgets\ActiveForm::begin([
     'id' => 'form-horizontal',
-    'type' => ActiveForm::TYPE_HORIZONTAL,
-    'fullSpan' => 7,      
-    'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
-    'options' => ['enctype' => 'multipart/form-data'],
+    'type' => ActiveForm::TYPE_VERTICAL,
 ]); ?>
 
 <hr>
@@ -30,7 +27,11 @@ use dosamigos\tinymce\TinyMce;
             'changeOnReset' => false, 
             'disabled' => true,         
         ]) ?>
-
+    <div class="row" style="margin:20px;">
+        <div class="">
+            <?= Html::submitButton('<i class="fa fa-save"></i> Sačuvaj izmene', ['class' => 'btn btn-success']) ?>
+        </div>        
+    </div>
 <hr>
 <h3>Spoljašnja obrada</h3>
     <?= $form->field($model, 'access')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
@@ -56,8 +57,8 @@ use dosamigos\tinymce\TinyMce;
     <?= $form->field($model, 'sanitary')->textarea(['rows' => 6, 'placeholder'=>'']) ?>
 
     <div class="row" style="margin:20px;">
-        <div class="col-md-offset-3">
-            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <div class="">
+            <?= Html::submitButton('<i class="fa fa-save"></i> Sačuvaj izmene', ['class' => 'btn btn-success']) ?>
         </div>        
     </div>
 

@@ -4,21 +4,22 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
+use common\widgets\Alert;
+use yii\bootstrap\Nav;
 
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Projects */
 
-$this->title = $model->code. ': '.$model->name. ' '.$model->projectBuilding->storey.', '.$model->location->city->town;
+$this->title = $model->code. ': '.$model->name. ' ('.$model->projectBuilding->spratnost.')';
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Projekti'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['project'] = $model;
 ?>
 
-<h1><i class="fa fa-file-o"></i> <?= Html::encode($this->title) ?></h1>
+
 
 <hr>
-
-<div class="alert alert-info" role="alert"><i class="fa fa-bell"></i></div>
 
 <div class="container-fluid">
     <div class="row">
@@ -26,9 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
                     <div class="head"><i class="fa fa-plus-circle"></i> Osnovni podaci projekta
-                    <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog"></i> Uredi projekat', Url::to(['/projects/update', 'id'=>$model->id]), ['class' => 'btn btn-success btn-sm']) ?>
-                    <?= Html::a($model->status=='deleted' ? Yii::t('app', 'Aktiviraj') : Yii::t('app', '<i class="fa fa-power-off"></i>'), ['activate', 'id' => $model->id], ['class' => 'btn btn-danger btn-sm']) ?>
-                        </div>
+                    
                     </div>
                     <div class="subhead">Predmetni projekat.</div>
                 </div>
@@ -90,7 +89,27 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                     ]) ?>
                 </div>           
-            </div> 
+                <div class="primary-context gray normal">
+                    <div class="head">Investitori
+                    <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Novi investitor', Url::to(['/project-clients/create', 'ProjectClients[project_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?>
+                        </div>
+                    </div>
+                    <div class="subhead">Lista investitora projekta.
+
+                    </div>
+                </div>
+                <div class="secondary-context">
+                    <?php if($projectClients = $model->projectClients){
+                        foreach($projectClients as $projectClient){
+                            echo Html::a('<i class="fa fa-building"></i> '.$projectClient->client->name, Url::to(['/project-clients/update', 'id'=>$projectClient->id]), ['class' => 'btn btn-default btn-sm']).'<hr>';
+                        }
+                    } ?>
+                </div>                
+            </div>
+            
+        </div>
+        <div class="col-sm-5">           
+
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
                     <div class="head">Projektna dokumentacija
@@ -107,13 +126,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php if($volumes = $model->projectVolumes);
                     foreach($volumes as $volume){
                         /*echo Html::a(c($volume->name), Url::to(['/site/glavna-sveska', 'id'=>$model->id]), ['class' => 'btn btn-danger', 'style'=>'width:100%', 'target'=>'_blank']).'<br>';*/
-                        echo Html::a(c($volume->name), Url::to(['/project-volumes/view', 'id'=>$volume->id]), ['class' => 'btn btn-default', 'style'=>'width:100%', ]).'<br><br>';
+                        echo Html::a($volume->number.'. '.c($volume->name), Url::to(['/project-volumes/view', 'id'=>$volume->id]), ['class' => 'btn btn-default', 'style'=>'width:100%', ]).'<hr>';
                     } ?>
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-5">           
-
+<?php /*
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
                     <div class="head"><?= Html::a('<i class="fa fa-map-marker"></i> Građevinska parcela', Url::to(['/project-lot/view', 'id'=>$model->id]), ['class' => '']) ?>
@@ -135,8 +151,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div> 
             <hr>
-
-            <div class="card_container record-full grid-item fadeInUp animated" id="">
+*/ ?>
                 <div class="primary-context gray normal">
                     <div class="head"><i class="fa fa-file"></i> Dokumenti
                     <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Novi dokument', Url::to(['/project-files/create', 'ProjectFiles[project_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?>
@@ -156,24 +171,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     } ?>
                 </div>                
             </div>
-            <div class="card_container record-full grid-item fadeInUp animated" id="">
-                <div class="primary-context gray normal">
-                    <div class="head">Investitori
-                    <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Novi investitor', Url::to(['/project-clients/create', 'ProjectClients[project_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?>
-                        </div>
-                    </div>
-                    <div class="subhead">Lista investitora projekta.
-
-                    </div>
-                </div>
-                <div class="secondary-context">
-                    <?php if($projectClients = $model->projectClients){
-                        foreach($projectClients as $projectClient){
-                            echo Html::a('<i class="fa fa-building"></i> '.$projectClient->client->name, Url::to(['/project-clients/update', 'id'=>$projectClient->id]), ['class' => 'btn btn-default btn-sm']).'<hr>';
-                        }
-                    } ?>
-                </div>                
-            </div>           
+                       
         </div>
     </div>
 </div>

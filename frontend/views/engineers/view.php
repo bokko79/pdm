@@ -65,13 +65,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ]); ?>
              <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Dokumenti
+                    <div class="head button_to_show_secondary">Dokumenti
                     <div class="action-area"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj dokument', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'engineer']), ['class' => 'btn btn-primary btn-sm']) ?></div>
                     </div>
                     <div class="subhead"></div>
                 </div>
                 
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= GridView::widget([
                         'dataProvider' => $engineerFiles,
                         'columns' => [
@@ -90,12 +90,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head"><?= Html::a('<i class="fa fa-stamp"></i> Licencni paketi', Url::to(['/engineer-licences/index', 'engineer_id'=>$model->id]), ['class' => '']) ?>
+                    <div class="head button_to_show_secondary"><?= Html::a('<i class="fa fa-stamp"></i> Licencni paketi', Url::to(['/engineer-licences/index', 'engineer_id'=>$model->id]), ['class' => '']) ?>
                     <div class="action-area"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj licencni paket', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?></div></div>
                     
                     <div class="subhead">Licencni paketi inžerenja. Paket podrazumeva broj licence, kao i kopiju, potvrdu i lični petat.</div>
                 </div>    
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= GridView::widget([
                         'dataProvider' => $engineerLicences,
                         'columns' => [
@@ -115,11 +115,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-4"> 
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Osnovni podaci</div>
+                    <div class="head button_to_show_secondary">Osnovni podaci</div>
                     
                 </div>
                 
-                <div class="secondary-context">
+                <div class="secondary-context none">
                    <?= DetailView::widget([
                         'model' => $model,
                         'attributes' => [

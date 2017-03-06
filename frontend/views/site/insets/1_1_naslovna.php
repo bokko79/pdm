@@ -5,8 +5,10 @@ use yii\helpers\Url;
 
 $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
+$building = $model->projectBuilding;
 ?>
-<p class="times uppercase"><small>0.1. Naslovna strana glavne sveske</small></p>	
+<?php // $this->render('../pdf/_header', ['model'=>$model, 'volume'=>$volume]) ?>
+<p class="times uppercase"><small><?= $volume->number ?>.1. Naslovna strana <?= $volume->volume->nameGen ?></small></p>	
 	<table class="homepage">
 		<tr>
 			<td class="right titler">Investitor</td>
@@ -24,7 +26,7 @@ $formatter->locale = 'sr-Latn';
 		<tr>
 			<td class="right">Objekat</td>
 			<td class="content">
-				<h3><b><?= $model->name ?></b></h3>
+				<h3><b><?= $building->name ?></b></h3>
 				<p>ul. <?= $model->location->street. ' br. ' . $model->location->number . ' ' .$model->location->city->town ?></p>
 				<p>kat.parc.br. 
 				<?php if($lots = $model->location->locationLots){
@@ -33,9 +35,7 @@ $formatter->locale = 'sr-Latn';
 						echo $lot->lot.', ';
 					}
 				}?>
-					<?= 'K.O. '.$model->location->county0->name; ?>
-						
-					</p>
+					<?= 'K.O. '.$model->location->county0->name; ?></p>
 			</td>
 		</tr>
 		<tr>
@@ -44,7 +44,7 @@ $formatter->locale = 'sr-Latn';
 		</tr>
 		<tr>
 			<td class="right">Naziv i oznaka dela projekta</td>
-			<td class="content bold"><h3>0 - Glavna sveska</h3></td>
+			<td class="content bold"><h3><?= $volume->number ?> - <?= $volume->name ?: $volume->volume->name ?></h3></td>
 		</tr>
 		<tr>
 			<td class="right">Za građenje/izvođenje radova</td>
@@ -52,55 +52,55 @@ $formatter->locale = 'sr-Latn';
 		</tr>
 		<tr>
 			<td class="right" style="padding-bottom: 5px; border-top:1px dotted #777">Projektant</td>
-			<td class="content" style="padding-bottom: 5px; border-top:1px dotted #777"><p><?= $model->practice->name ?></p>
-				<p>ul. <?= $model->practice->location->street. ' br. ' . $model->practice->location->number . ' ' .$model->practice->location->city->town; ?></p>
+			<td class="content" style="padding-bottom: 5px; border-top:1px dotted #777"><p><?= $volume->practice->name ?></p>
+				<p>ul. <?= $volume->practice->location->street. ' br. ' . $volume->practice->location->number . ' ' .$volume->practice->location->city->town; ?></p>
 			</td>			
 		</tr>
 		<tr>
 			<td class="right" style="padding:5px 20px;">Odgovorno lice projektanta</td>
-			<td class="content" style="padding:5px 20px;"><?= $model->practice->practiceEngineers[0]->engineer->name . ($model->practice->practiceEngineers[0] ? ', '. $model->practice->practiceEngineers[0]->engineer->title : null) ?></td>			
+			<td class="content" style="padding:5px 20px;"><?= $volume->practice->director->name . ($volume->practice->practiceEngineers[0] ? ', '. $volume->practice->director->title : null) ?></td>			
 		</tr>
 		<tr>
 			<td class="right" style="padding:5px 20px;">
 				<small>Pečat projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/stamps/'.$model->practice->stamp, ['style'=>'width:120px; max-height:120px; margin-top:10px;']) ?>
+					<?= Html::img('@web/images/legal_files/stamps/'.$volume->practice->stamp, ['style'=>'width:120px; max-height:120px; margin-top:10px;']) ?>
 				</div>
 			</td>
 			<td class="content" style="padding:5px 20px;">
 				<small>Potpis odgovornog lica projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/signatures/'.$model->practice->signature, ['style'=>'width:160px; max-height:120px;']) ?>
+					<?= Html::img('@web/images/legal_files/signatures/'.$volume->practice->signature, ['style'=>'width:160px; max-height:120px;']) ?>
 				</div>
 			</td>			
 		</tr>
 		<tr>
-			<td class="right" style="padding-bottom: 5px;">Glavni projektant</td>
+			<td class="right" style="padding-bottom: 5px;">Odgovorni projektant</td>
 			<td class="content" style="padding-bottom: 5px;">
-				<p><?= $model->engineer->name .', '. $model->engineer->title ?></p>
-				<p>Broj licence: <?= $model->engineer->engineerLicences[0]->no ?></p>
+				<p><?= $volume->engineer->name .', '. $volume->engineer->title ?></p>
+				<p>Broj licence: <?= $volume->engineerLicence->no ?></p>
 			</td>			
 		</tr>
 		<tr>
 			<td class="right" style="padding:5px 20px 20px;">
-				<small>Lični pečat glavnog projektanta</small> 
+				<small>Lični pečat odgovornog projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/licences/'.$model->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
+					<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
 				</div>
 			</td>
 			<td class="content" style="padding:5px 20px 20px;">
-				<small>Potpis glavnog projektanta</small> 
+				<small>Potpis odgovornog projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/signatures/'.$model->engineer->signature, ['style'=>'width:160px;']) ?>
+					<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px;']) ?>
 				</div>
 			</td>				
 		</tr>
 		<tr>
 			<td class="right" style="border-top:1px dotted #777">Broj tehničke dokumentacije</td>
-			<td class="content" style="border-top:1px dotted #777"><p><?= $model->code ?></p></td>
+			<td class="content" style="border-top:1px dotted #777"><p><?= $volume->code ?></p></td>
 		</tr>
 		<tr>
 			<td class="right">Mesto i datum</td>
-			<td class="content"><p><?= $model->practice->location->city->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
+			<td class="content"><p><?= $volume->practice->location->city->town ?>, <?= $formatter->asDate(time(), 'php:mm Y') ?></p></td>
 		</tr>
 	</table>

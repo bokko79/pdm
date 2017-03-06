@@ -5,80 +5,66 @@ use yii\helpers\Url;
 
 $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
+$building = $model->projectBuilding;
 ?>
-<p class="times uppercase"><small>0.4. Izjava glavnog projektanta <?= $model->projectPhaseGen ?></small></p>
+<p class="times uppercase"><small><?= $volume->number ?>.4. Izjava odgovornog projektanta <?= $volume->volume->nameGen ?></small></p>
 
-<p>Glavni projektant 
-	<?= c($model->projectPhaseGen) ?> za <?= $model->projectTypeOfWorksGen ?> objekta <?= $model->name ?>, 
-	<?php if($model->location->street){ echo 'ulica '. $model->location->street;} ?>
-	<?php if($model->location->number){ echo ' br. '.$model->location->number. ', ';} ?>
-	<?= $model->location->city->town ?>, 
-	kat.parc.br.
+<p>Odgovorni projektant 
+	<?= $volume->volume->nameGen ?>, koji je deo <?= c($model->projectPhaseGen) ?> za <?= $model->projectTypeOfWorksGen ?> za objekat <?= $building->name ?> (<?= $building->spratnost ?>), ulica <?= $model->location->street ?> br. <?= $model->location->number ?>, <?= $model->location->city->town ?>, kat.parc.br.
 	<?php if($lots = $model->location->locationLots){
 		foreach($lots as $lot){
 			echo $lot->lot. ', ';
 		}
-	} ?>
-	K.O <?= $model->location->county0->name ?>
+	} ?> K.O <?= $model->location->county0->name ?>
 </p>
 
-<p class="center" style="padding:30px 0 0;"><?= $model->engineer->name .', '. $model->engineer->title ?></p>
+<p class="center" style="padding:30px 0 0;"><?= $volume->engineer->name .', '. $volume->engineer->title ?></p>
 
 <h2 class="center" style="padding:30px 0; letter-spacing: 4px;">IZJAVLJUJEM</h2>
 
-<p>da su delovi <?= c($model->projectPhaseGen) ?> međusobno usaglašeni i da podaci u glavnoj svesci
-odgovaraju sadržini projekta i da su u projektu priloženi odgovarajući elaborati i studije:
+<?php if($model->phase=='pgd'): ?>
+<p>1. da je projekat u svemu u skladu sa izdatim lokacijskim uslovima br. <?= $model->lokacijskiUslovi->number ?>,
 </p>
-
-<table class="other" style="margin-bottom: 30px;">
-	<?php if($volumes = $model->projectVolumes){
-		foreach ($volumes as $volume){ ?>
-			<tr>
-				<td class=""><?= $volume->volume->no ?>.</td>
-				<td class="content uppercase">
-					<p><?= c($volume->volume->name) ?></p>
-				</td>
-				<td>
-					br. <?= $volume->code ?>
-				</td>					
-			</tr>
-	<?php
-		}
-	} ?>
-</table>
+<?php endif; ?>
+<?php if($model->phase=='pzi'): ?>
+<p>1. da je projekat u svemu u skladu sa izdatim lokacijskim uslovima br. <?= $model->lokacijskiUslovi->number ?>, građevinskom dozvolom br. <?= $model->graDozvola->number ?> i projektom za građevinsku dozvolu,
+</p>
+<?php endif; ?>
+<p><?= ($model->phase=='pzi' or $model->phase=='pgd') ? 2 : 1; ?>. da je projekat izrađen u skladu sa Zakonom o planiranju i izgradnji, propisima, standardima i normativima iz oblasti izgradnje objekata i pravilima struke,</p>
+<p><?= ($model->phase=='pzi' or $model->phase=='pgd') ? 3 : 2; ?>. da su pri izradi projekta poštovane sve propisane i utvrđene mere i preporuke za ispunjenje osnovnih zahteva za objekat i da je projekat izrađen u skladu sa merama i preporukama kojima se dokazuje ispunjenost osnovnih zahteva.</p>
 
 
 <table class="homepage">
 	<tr>
-		<td class="right titler">Glavni projektant <?= $model->projectPhaseGen ?></td>
+		<td class="right titler">Odgovorni projektant <?= $volume->volume->nameGen ?></td>
 		<td class="content">
-			<p><?= $model->engineer->name .', '. $model->engineer->title ?></p>
+			<p><?= $volume->engineer->name .', '. $volume->engineer->title ?></p>
 		</td>
 	</tr>
 	<tr>
 		<td class="right">Broj licence</td>
 		<td class="content">				
-			<p><?= $model->engineer->engineerLicences[0]->no ?></p>
+			<p><?= $volume->engineerLicence->no ?></p>
 		</td>
 	</tr>
 	<tr>
 		<td class="right">Lični pečat
 			<div style="padding:10px;">
-				<?= Html::img('@web/images/legal_files/licences/'.$model->engineer->engineerLicences[0]->stamp->name, ['style'=>'max-width:180px; margin-top:20px;']) ?>
+				<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'max-width:180px; margin-top:20px;']) ?>
 			</div>
 		</td>
 		<td class="content">Potpis
 			<div>
-				<?= Html::img('@web/images/legal_files/signatures/'.$model->engineer->signature, ['style'=>'max-width:180px; margin-top:20px;']) ?>
+				<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'max-width:180px; margin-top:20px;']) ?>
 			</div>
 		</td>
 	</tr>
 	<tr>
 		<td class="right">Broj tehničke dokumentacije</td>
-		<td class="content"><p><?= $model->code ?></p></td>
+		<td class="content"><p><?= $volume->code ?></p></td>
 	</tr>
 	<tr>
 		<td class="right">Mesto i datum</td>
-		<td class="content"><p><?= $model->location->city->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
+		<td class="content"><p><?= $model->location->city->town ?>, <?= $formatter->asDate(time(), 'php:mm Y') ?></p></td>
 	</tr>
 </table>

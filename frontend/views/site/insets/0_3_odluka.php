@@ -22,8 +22,8 @@ $formatter->locale = 'sr-Latn';
 <div style="padding:20px 0 60px">
 	<table class="clear">
 		<tr>
-			<td class=""><span class="bold"><?= $model->engineer->name .'</span>, '. $model->engineer->title ?> ________________________________</td>
-			<td class="right">licenca br. <?= $model->engineer->engineerLicences[0]->no ?></td>
+			<td class=""><span class="bold"><?= $volume->engineer->name .'</span>, '. $volume->engineer->title ?> ________________________________</td>
+			<td class="right">licenca br. <?= $volume->engineerLicence->no ?></td>
 		</tr>
 	</table>
 	  
@@ -58,10 +58,10 @@ $formatter->locale = 'sr-Latn';
 	</tr>
 	<tr>
 		<td class="right">Broj dela projekta</td>
-		<td class="content"><p><?= $model->code ?></p></td>
+		<td class="content"><p><?= $volume->code ?></p></td>
 	</tr>
 	<tr>
 		<td class="right">Mesto i datum</td>
-		<td class="content"><p><?= $model->client->location->city->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
+		<td class="content"><p><?= $model->client->location->city->town ?>, <?= $formatter->asDate(time(), 'php:mm Y') ?></p></td>
 	</tr>
 </table>

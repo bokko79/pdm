@@ -29,8 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'project_building_storey_part_id',
-            'type',
+            'projectBuildingStoreyPart.fullType',
+            'roomType.name',
             'name',
             'mark',
             'circumference',

@@ -25,6 +25,9 @@ use Yii;
  */
 class ProjectBuildingStoreys extends \yii\db\ActiveRecord
 {
+    public $samePart; // u generatoru etaža objekta
+    public $copiedPart;
+
     /**
      * @inheritdoc
      */
@@ -40,11 +43,12 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     {
         return [
             [['project_id', 'storey'], 'required'],
-            [['project_id', 'units_total'], 'integer'],
+            [['project_id', 'units_total', 'same_as_id'], 'integer'],
             [['storey', 'description', 'order_no'], 'string'],
             [['sub_net_area', 'net_area', 'gross_area', 'level', 'height'], 'number'],
             [['name'], 'string', 'max' => 64],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
+            
         ];
     }
 
@@ -56,6 +60,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'project_id' => Yii::t('app', 'Naziv projekta'),
+            'same_as_id' => Yii::t('app', 'Kopirana etaža'),
             'storey' => Yii::t('app', 'Etaža'),
             'order_no' => Yii::t('app', 'Redni broj'),
             'sub_net_area' => Yii::t('app', 'Redukovana neto površina'),
@@ -83,7 +88,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     public function getProjectBuildingStoreyDoorwin()
     {
         return $this->hasMany(ProjectBuildingStoreyDoorwin::className(), ['project_building_storey_id' => 'id']);
-    }
+    }    
 
     /**
      * @return \yii\db\ActiveQuery
@@ -91,6 +96,22 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     public function getProject()
     {
         return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCopies()
+    {
+        return $this->hasMany(ProjectBuildingStoreys::className(), ['same_as_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSameAs()
+    {
+        return $this->hasOne(ProjectBuildingStoreys::className(), ['id' => 'same_as_id']);
     }
 
     /**
@@ -427,5 +448,37 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
             }
         }
         return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOtherStoreysOfBuilding()
+    {
+        $storeys = [];
+        if($otherStoreys = $this->project->projectBuildingStoreys){
+            foreach($otherStoreys as $otherStorey){
+                if($otherStorey->id!=$this->id){
+                    $storeys[] = $otherStorey;
+                }
+            }
+        }
+        return $storeys;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOtherUniqueStoreysOfBuilding()
+    {
+        $storeys = [];
+        if($otherStoreys = $this->project->projectBuildingStoreys){
+            foreach($otherStoreys as $otherStorey){
+                if($otherStorey->id!=$this->id and $otherStorey->same_as_id==null){
+                    $storeys[] = $otherStorey;
+                }
+            }
+        }
+        return $storeys;
     }
 }

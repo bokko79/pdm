@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use kartik\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ProjectBuildingStoreysSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -13,15 +15,12 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Objekat'), 'url' => 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Površine jedinica objekta'), 'url' => ['/project-building-storey-parts/index', 'id'=>$model->project_id]];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Površine prostorija objekta'), 'url' => ['/project-building-storey-part-rooms/index', 'id'=>$model->project_id]];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['project'] = $model->project;
 ?>
-<h1><i class="fa fa-bars"></i> <?= Html::encode($this->title) ?></h1>
-
-<p>Upravljanje etažama, jedinicama i prostorijama objekta. Dodajte i/ili uklonite etaže iz predmetnog objekta.</p>
 
 <div class="table-responsive container">
 	<div class="row">		
 		<div class="col-sm-7">
-			<h3>Spratnost objekta: <?= $model->spratnost ?></h3>
 			<table class="table table-striped table-hover table-bordered">
 				<tr>
 					<td class="center">						
@@ -77,9 +76,30 @@ $this->params['breadcrumbs'][] = $this->title;
 						<?php 
 							if($model->sp){
 								foreach($model->sp as $sp){
-									echo Html::a($sp->name ? c($sp->name) : c($sp->storey), Url::to(['/project-building-storeys/view', 'id'=>$sp->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-copy"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'copy_storey'=>$sp->id]), ['class' => 'btn btn-info btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storeys/update', 'id'=>$sp->id]), ['class' => 'btn btn-success btn-sm']). ' ' .((!$sp->projectBuildingStoreyParts) ? Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'remove_storey'=>$sp->id]), ['class' => 'btn btn-danger btn-sm', 'data' => [
-                'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu. Brisanjem etaže, obrisaćete i njene jedinice i prostorije, a proces ne može biti povraćen.'),
-            ],]) : '<span class="hint">Sprat ne može biti obrisan jer sadrži jedinice/prostorije.</span>') . '<br><br>';
+									$model->sameStorey = $sp->same_as_id;
+									if(!$sp->same_as_id){									
+										echo Html::a($sp->name ? c($sp->name) : c($sp->storey), Url::to(['/project-building-storeys/view', 'id'=>$sp->id]), ['class' => 'btn btn-default']). ' '.Html::a('<i class="fa fa-copy"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'copy_storey'=>$sp->id]), ['class' => 'btn btn-info btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storeys/update', 'id'=>$sp->id]), ['class' => 'btn btn-success btn-sm']). ' ' ./*((!$sp->projectBuildingStoreyParts) ? */Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'remove_storey'=>$sp->id]), ['class' => 'btn btn-danger btn-sm', 'style'=>'float:right', 'data' => ['confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu. Brisanjem etaže, obrisaćete i njene jedinice i prostorije, a proces ne može biti povraćen.'),],])/* : '<span class="hint">Sprat ne može biti obrisan jer sadrži jedinice/prostorije.</span>')*/ . '<br><br>'; 
+									} else {
+										echo Html::a($sp->name ? c($sp->name) : c($sp->storey), Url::to(['/project-building-storeys/view', 'id'=>$sp->id]), ['class' => 'btn btn-default']);
+									}
+									
+									if(!$sp->copies){ // ne moze da se bira ako je već kopija neke etaže
+										echo '<small>...isti kao...</small>';
+										$form = kartik\widgets\ActiveForm::begin([
+										    'id' => 'form-horizontal',
+										    'type' => ActiveForm::TYPE_INLINE,
+										    'options' => ['style' => 'display:inline'],
+										]);
+
+										    echo $form->field($model, 'sameStorey', ['options'=>['style'=>'width:40%; display:inline']])->dropDownList(					            ArrayHelper::map($sp->otherUniqueStoreysOfBuilding, 'id', 'name'),
+										            ['prompt'=>'', 'style'=>'width:40%']    // options
+										        );
+										    echo $form->field($model, 'copiedStorey')->hiddenInput(['value'=> $sp->id])->label(false);
+										    echo Html::submitButton('<i class="fa fa-save"></i>', ['class' => 'btn btn-default']);
+									    ActiveForm::end();
+									}									
+
+								    echo '<hr>';
 								}								 
 							} else {
 									echo '<span class="hint">Objekat nema sprat.</span>';

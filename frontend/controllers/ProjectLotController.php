@@ -51,6 +51,8 @@ class ProjectLotController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'project';
+        
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);

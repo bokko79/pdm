@@ -42,6 +42,17 @@ td.shorttitler {width: 30%;}
 td.container {padding:0; margin:0;}
 td.container table, td.container table td {padding:0; margin:0; border:none;}
 .pagebreaker {page-break-after: always;}
+/*ol { 
+  counter-reset: par-num;
+}
+
+ol > li {
+  counter-increment: par-num;
+}*/
+
+li ol li {
+  list-style: "I"; 
+}
 	</style>
 }
 </head>
@@ -50,15 +61,29 @@ td.container table, td.container table td {padding:0; margin:0; border:none;}
 		// 0.1. Naslovna strana glavne sveske
 		// Obavezno u svim slučajevima
 	 ?>
-			<?php echo $this->render('../insets/0_1_naslovna', ['model'=>$model]) ?>
+			<?php echo $this->render('../insets/0_1_naslovna', ['model'=>$model, 'volume'=>$volume]) ?>
 
 	<div class="pagebreaker"></div>
 
-	<?php 
+			<?php */ echo $this->render('../insets/izv_naslovna', ['model'=>$model, 'volume'=>$volume]) ?>
+
+			<div class="pagebreaker"></div>
+			<?php echo $this->render('../insets/tk_izjava', ['model'=>$model, 'volume'=>$volume]) ?>
+			<div class="pagebreaker"></div>
+			<?php echo $this->render('../insets/tk_vrsioci', ['model'=>$model, 'volume'=>$volume]) ?>
+			<?php foreach($model->projectVolumes as $vol){
+				if($vol->volume->type=='projekat' and $vol->volume_id!=1){ ?>
+					<div class="pagebreaker"></div>
+					<?php echo $this->render('../insets/tk_rezime', ['model'=>$model, 'vol'=>$vol]) ?>
+			<?php
+				}
+			} ?>
+			
+	<?php /*
 		// 0.2. Sadržaj glavne sveske
 		// Obavezno u svim slučajevima
 	 ?>
-			<?php echo $this->render('../insets/0_2_sadrzaj', ['model'=>$model]) ?>
+			<?php echo $this->render('../insets/0_2_sadrzaj', ['model'=>$model, 'volume'=>$volume]) ?>
 
 	<div class="pagebreaker"></div>
 
@@ -66,55 +91,47 @@ td.container table, td.container table td {padding:0; margin:0; border:none;}
 		// 0.3. Odluka o određivanju glavnog projektanta
 		// Samo u IDP, PGD, PZI, PIO
 		if($model->phase=='idp' or $model->phase=='pgd' or $model->phase=='pzi' or $model->phase=='pio'): ?>	
-			<?= $this->render('../insets/0_3_odluka', ['model'=>$model]) ?>
+			<?= $this->render('../insets/0_3_odluka', ['model'=>$model, 'volume'=>$volume]) ?>
 
 	<div class="pagebreaker"></div>
 
 	<?php 
 		// 0.4. Izjava glavnog projektanta
 		// Samo u IDP, PGD, PZI, PIO ?>
-			<?= $this->render('../insets/0_4_izjava', ['model'=>$model]) ?>
+			<?= $this->render('../insets/0_4_izjava', ['model'=>$model, 'volume'=>$volume]) ?>
 
 	<div class="pagebreaker"></div>
 		<?php endif; ?>
 
 	<?php // 0.5. Sadržaj tehničke dokumentacije ?>
-			<?= $this->render('../insets/0_5_sadrzaj_tehdok', ['model'=>$model]) ?>
+			<?= $this->render('../insets/0_5_sadrzaj_tehdok', ['model'=>$model, 'volume'=>$volume]) ?>
 
 	<div class="pagebreaker"></div>
 
 	<?php  // 0.6. Podaci o projektantima ?>
-			<?= $this->render('../insets/0_6_podaci', ['model'=>$model]) ?>
+			<?= $this->render('../insets/0_6_podaci', ['model'=>$model, 'volume'=>$volume]) ?>
 
 	<div class="pagebreaker"></div>
 
 	<?php // 0.7. Opšti podaci o objektu ?>
-			<?= $this->render('../insets/0_7_opsti', ['model'=>$model, 'volume'=>$volume]) ?>
+			<?= $this->render('../insets/0_7_opsti', ['model'=>$model, 'volume'=>$volume]) ?>	
 
-	
-
-	<?php */
+	<?php
 		// 0.8. Sažeti tehnički opis 
 		// Samo u IDP, PGD i PIO 
 		if($model->phase=='idp' or $model->phase=='pgd' or $model->phase=='pio'): ?>
 
-		<!--<div class="pagebreaker"></div>-->
-			<?= $this->render('../insets/1_7_graficka_naslovna', ['model'=>$model, 'volume'=>$volume]) ?>
 			<div class="pagebreaker"></div>
 			<?= $this->render('../insets/0_8_tehopis', ['model'=>$model, 'volume'=>$volume]) ?>
-
-
-
-		
 		<?php endif; ?>
 
-	<?php /*
+	<?php 
 		// 0.9. Izjave ovlašćenih lica o merama za ispunjenje osnovnih zahteva za objekat 
 		// Samo u IDP i PGD 
 		if($model->checkIfElaborat and ($model->phase=='idp' or $model->phase=='pgd')): ?>
 
 		<div class="pagebreaker"></div>
-			<?= $this->render('../insets/0_9_ovl_lica', ['model'=>$model]) ?>	
+			<?= $this->render('../insets/0_9_ovl_lica', ['model'=>$model, 'volume'=>$volume]) ?>	
 		<?php endif;  ?>
 
 	<?php
@@ -122,8 +139,8 @@ td.container table, td.container table td {padding:0; margin:0; border:none;}
 		// Samo u PGD i PIO 
 		if($model->phase=='pio' or $model->phase=='pgd'): ?>
 
-		<div class="pagebreaker"></div>
-			<?= $this->render('../insets/0_10_saglasnosti', ['model'=>$model]) ?>
+		
+			
 		<?php endif; ?>
 
 	<?php 
@@ -131,10 +148,8 @@ td.container table, td.container table td {padding:0; margin:0; border:none;}
 		// Samo u PIO
 		if($model->phase=='pio'): ?>
 		<div class="pagebreaker"></div>
-			<?= $this->render('../insets/0_11_investitor', ['model'=>$model]) ?>
-		<?php endif;  ?>
-
-		<?php echo $this->render('../insets/povrsine', ['model'=>$model, 'volume'=>$volume]) */ ?>
+			<?= $this->render('../insets/0_11_investitor', ['model'=>$model, 'volume'=>$volume]) ?>
+		<?php endif; */ ?>
 
 </body>
 </html>

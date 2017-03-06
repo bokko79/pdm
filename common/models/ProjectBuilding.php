@@ -40,6 +40,8 @@ class ProjectBuilding extends \yii\db\ActiveRecord
 {
     public $buildFile;
 
+    public $sameStorey; // u generatoru etaža objekta
+    public $copiedStorey;
     /**
      * @inheritdoc
      */
@@ -66,6 +68,7 @@ class ProjectBuilding extends \yii\db\ActiveRecord
             [['file_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['file_id' => 'id']],
             [['podrum', 'suteren', 'prizemlje', 'visokoprizemlje', 'mezanin', 'galerija', 'sprat', 'povucenisprat', 'potkrovlje', 'mansarda', 'tavan', 'krov', 'duplex'], 'safe'],
             [['buildFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
+            [['sameStorey', 'copiedStorey'], 'safe'],
         ];
     }
 
@@ -369,6 +372,38 @@ class ProjectBuilding extends \yii\db\ActiveRecord
             foreach($storeys as $storey){
                 if($storey->storey=='podrum' or $storey->storey=='suteren'){
                     $total += $storey->gross_area;
+                }                
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNetAboveArea()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($storey->storey!='podrum' and $storey->storey!='suteren'){
+                    $total += $storey->netArea;
+                }                
+            }
+        }        
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNetBelowArea()
+    {
+        $total = 0;
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($storey->storey=='podrum' or $storey->storey=='suteren'){
+                    $total += $storey->netArea;
                 }                
             }
         }        

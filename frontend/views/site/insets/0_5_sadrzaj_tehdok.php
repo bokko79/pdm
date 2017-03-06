@@ -10,7 +10,8 @@ $formatter->locale = 'sr-Latn';
 
 	<table class="other">
 	<?php if($volumes = $model->projectVolumes){
-		foreach ($volumes as $volume){ ?>
+		foreach ($volumes as $volume){ 
+			if($volume->volume->type=='projekat' or $volume->volume->type=='elaborat') { ?>
 			<tr>
 				<td class=""><?= $volume->number ?>.</td>
 				<td class="content uppercase">
@@ -20,7 +21,7 @@ $formatter->locale = 'sr-Latn';
 					br. <?= $volume->code ?>
 				</td>					
 			</tr>
-	<?php
+	<?php }
 		}
 	} ?>		
 	</table>

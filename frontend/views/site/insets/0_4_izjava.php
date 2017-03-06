@@ -5,11 +5,12 @@ use yii\helpers\Url;
 
 $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
+$building = $model->projectBuilding;
 ?>
 <p class="times uppercase"><small>0.4. Izjava glavnog projektanta <?= $model->projectPhaseGen ?></small></p>
 
 <p>Glavni projektant 
-	<?= c($model->projectPhaseGen) ?> za <?= $model->projectTypeOfWorksGen ?> objekta <?= $model->name ?>, 
+	<?= c($model->projectPhaseGen) ?> za <?= $model->projectTypeOfWorksGen ?> objekta <?= $building->name ?> <?= $building->spratnost ?>, 
 	<?php if($model->location->street){ echo 'ulica '. $model->location->street;} ?>
 	<?php if($model->location->number){ echo ' br. '.$model->location->number. ', ';} ?>
 	<?= $model->location->city->town ?>, 
@@ -22,7 +23,7 @@ $formatter->locale = 'sr-Latn';
 	K.O <?= $model->location->county0->name ?>
 </p>
 
-<p class="center" style="padding:30px 0 0;"><?= $model->engineer->name .', '. $model->engineer->title ?></p>
+<p class="center" style="padding:30px 0 0;"><?= $volume->engineer->name .', '. $volume->engineer->title ?></p>
 
 <h2 class="center" style="padding:30px 0; letter-spacing: 4px;">IZJAVLJUJEM</h2>
 
@@ -32,17 +33,18 @@ odgovaraju sadržini projekta i da su u projektu priloženi odgovarajući elabor
 
 <table class="other" style="margin-bottom: 30px;">
 	<?php if($volumes = $model->projectVolumes){
-		foreach ($volumes as $volume){ ?>
+		foreach ($volumes as $vol){
+		 if($vol->volume->type=='projekat' or $vol->volume->type=='elaborat'){ ?>
 			<tr>
-				<td class=""><?= $volume->volume->no ?>.</td>
+				<td class=""><?= $vol->volume->no ?>.</td>
 				<td class="content uppercase">
-					<p><?= c($volume->volume->name) ?></p>
+					<p><?= c($vol->volume->name) ?></p>
 				</td>
 				<td>
-					br. <?= $volume->code ?>
+					br. <?= $vol->code ?>
 				</td>					
 			</tr>
-	<?php
+	<?php }
 		}
 	} ?>
 </table>
@@ -52,33 +54,33 @@ odgovaraju sadržini projekta i da su u projektu priloženi odgovarajući elabor
 	<tr>
 		<td class="right titler">Glavni projektant <?= $model->projectPhaseGen ?></td>
 		<td class="content">
-			<p><?= $model->engineer->name .', '. $model->engineer->title ?></p>
+			<p><?= $volume->engineer->name .', '. $volume->engineer->title ?></p>
 		</td>
 	</tr>
 	<tr>
 		<td class="right">Broj licence</td>
 		<td class="content">				
-			<p><?= $model->engineer->engineerLicences[0]->no ?></p>
+			<p><?= $volume->engineerLicence->no ?></p>
 		</td>
 	</tr>
 	<tr>
 		<td class="right">Lični pečat
 			<div style="padding:10px;">
-				<?= Html::img('@web/images/legal_files/licences/'.$model->engineer->engineerLicences[0]->stamp->name, ['style'=>'max-width:180px; margin-top:20px;']) ?>
+				<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'max-width:180px; margin-top:20px;']) ?>
 			</div>
 		</td>
 		<td class="content">Potpis
 			<div>
-				<?= Html::img('@web/images/legal_files/signatures/'.$model->engineer->signature, ['style'=>'max-width:180px; margin-top:20px;']) ?>
+				<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'max-width:180px; margin-top:20px;']) ?>
 			</div>
 		</td>
 	</tr>
 	<tr>
 		<td class="right">Broj tehničke dokumentacije</td>
-		<td class="content"><p><?= $model->code ?></p></td>
+		<td class="content"><p><?= $volume->code ?></p></td>
 	</tr>
 	<tr>
 		<td class="right">Mesto i datum</td>
-		<td class="content"><p><?= $model->location->city->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
+		<td class="content"><p><?= $volume->practice->location->city->town ?>, <?= $formatter->asDate(time(), 'php:mm Y') ?></p></td>
 	</tr>
 </table>

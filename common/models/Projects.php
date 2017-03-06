@@ -246,7 +246,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getProjectVolumes()
     {
-        return $this->hasMany(ProjectVolumes::className(), ['project_id' => 'id']);
+        return $this->hasMany(ProjectVolumes::className(), ['project_id' => 'id'])->orderBy('number ASC');
     }
 
     /**
@@ -467,10 +467,10 @@ class Projects extends \yii\db\ActiveRecord
                 $work = 'sanaciju';
                 break;
             case 'promena_namene':
-                $work = 'promena namene';
+                $work = 'promenu namene';
                 break;
             case 'dogradnja':
-                $work = 'dogradnja';
+                $work = 'dogradnju';
                 break;
             case 'ozakonjenje':
                 $work = 'ozakonjenje';
@@ -564,7 +564,7 @@ class Projects extends \yii\db\ActiveRecord
             }
         }
         return false;
-    }
+    }    
 
     /**
      * @return \yii\db\ActiveQuery
@@ -750,4 +750,11 @@ class Projects extends \yii\db\ActiveRecord
         return \common\models\ProjectFiles::find()->where('project_id='.$this->id.' and type="resenje"')->all();
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTehnickaKontrola()
+    {
+        return \common\models\ProjectVolumes::find()->where('project_id='.$this->id.' and volume_id=18')->one();
+    }
 }

@@ -30,7 +30,7 @@ table {width: 100%; border: 1px solid #000}
 table.other th, table.other td {
     border: 1px dotted #777;
 }
-table.homepage td {padding: 15px 20px; }
+table.homepage td {padding: 10px 20px; border:none;}
 table.other td {padding: 10px; }
 table.bottom {margin-bottom:50px; }
 table.nopadd td {padding: 0px 10px; }
@@ -40,40 +40,15 @@ td.titler {width: 40%;}
 td.shorttitler {width: 30%;}
 td.container {padding:0; margin:0;}
 td.container table, td.container table td {padding:0; margin:0; border:none;}
+td.subtitle {padding:5px 0; margin:0; border-bottom: 2px solid #000;}
 table.clear td.storeys {border-bottom: 1px dotted #777 !important; border-right: 1px dotted #777 !important;}
 table.clear td.storeys-bottom {border-bottom: 1px dotted #777 !important;}
 table.clear td.storeys-right {border-right: 1px dotted #777 !important;}
 .pagebreaker {page-break-after: always;}
+ol { counter-reset: item }
+li{ display: block }
+li:before { content: counters(item, ".") " "; counter-increment: item }
 	</style>
 }
 </head>
 <body>
-	<?php 
-		// 0.1. Naslovna strana glavne sveske
-		// Obavezno u svim slučajevima
-	 ?>
-			<?php /* echo $this->render('../insets/0_1_naslovna', ['model'=>$model]) ?>
-
-	<div class="pagebreaker"></div>
-
-	<?php 
-		// 0.2. Sadržaj glavne sveske
-		// Obavezno u svim slučajevima
-	 ?>
-			<?php echo $this->render('../insets/0_2_sadrzaj', ['model'=>$model]) ?>
-
-	<div class="pagebreaker"></div>
-
-	<?php
-		// 0.3. Odluka o određivanju glavnog projektanta
-		// Samo u IDP, PGD, PZI, PIO
-		if($model->phase=='idp' or $model->phase=='pgd' or $model->phase=='pzi' or $model->phase=='pio'): ?>	
-			<?= $this->render('../insets/0_3_odluka', ['model'=>$model]) */ ?>
-
-
-
-
-		<?= $this->render('../insets/scheme', ['model'=>$model, 'volume'=>$volume]) ?>
-
-</body>
-</html>

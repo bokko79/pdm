@@ -9,11 +9,11 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\FileInput;
 
-$model->code = $model->project->code;
-$model->practice_id = $model->project->practice_id;
-$model->engineer_id = $model->project->engineer_id;
-$model->control_practice_id = $model->project->control_practice_id;
-$model->control_engineer_id = $model->project->control_engineer_id;
+$model->code = $model->code ?: $model->project->code;
+$model->practice_id = $model->practice_id ?: $model->project->practice_id;
+$model->engineer_id = $model->engineer_id ?: $model->project->engineer_id;
+$model->control_practice_id = $model->control_practice_id ?: $model->project->control_practice_id;
+$model->control_engineer_id = $model->control_engineer_id ?: $model->project->control_engineer_id;
 ?>
 
 <?php $form = kartik\widgets\ActiveForm::begin([
@@ -70,7 +70,9 @@ $model->control_engineer_id = $model->project->control_engineer_id;
             'language' => 'sr-Latn',
             'changeOnReset' => false,           
         ])->hint($model->hintEngineer) ?>
-
+<?php 
+    if($model->volume){
+        if ($model->volume->type=='projekat' and $model->volume_id!=1) { ?>
 <hr>
 <h3>Tehnička kontrola</h3>
 
@@ -94,6 +96,12 @@ $model->control_engineer_id = $model->project->control_engineer_id;
             'language' => 'sr-Latn',
             'changeOnReset' => false,           
         ])->hint($model->hintEngineer) ?>  
+
+    <?php // $form->field($model, 'control_code')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'control_text')->textArea(['rows' => 6])->hint('Rezime izveštaja o tehničkoj kontroli, izrađen od strane vršioca tehničke kontrole ') ?>
+<?php }
+} ?>
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

@@ -27,13 +27,19 @@ $model->flooring='parket';
 <hr>
 <h3>Osnovni podaci</h3>
 
-    <?= $form->field($model, 'project_building_storey_part_id')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'type')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map($model->getTypesofRooms(),'type','text','group'),
+    <?= $form->field($model, 'project_building_storey_part_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\ProjectBuildingStoreyParts::find()->all(), 'id', 'type'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
-            'changeOnReset' => false,           
+            'changeOnReset' => false,    
+            'disabled' => true,     
+        ])->hint('') ?>
+
+    <?= $form->field($model, 'room_type_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\RoomTypes::find()->all(), 'id', 'name', 'type'),
+            'options' => ['placeholder' => 'Izaberite...'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,         
         ])->hint('') ?>
 
  
@@ -47,15 +53,18 @@ $model->flooring='parket';
 
     <?= $form->field($model, 'flooring')->dropDownList([ 'parket' => 'Parket', 'keramika' => 'Keramika', 'estrih' => 'Estrih', 'tarkett' => 'Tarkett', 'beton' => 'Beton', 'opeka' => 'Opeka', 'kamen' => 'Kamen', 'teraco' => 'Teraco', 'zemlja' => 'Zemlja', 'tepih' => 'Tepih', 'drugo' => 'Drugo', ], ['prompt' => '']) ?>
 
-    <?php /* $form->field($model, 'length')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'width')->textInput(['maxlength' => true]) ?>
-     <?= $form->field($model, 'circumference')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'height')->textInput(['maxlength' => true]) */ ?>
+    
 
     <?= $form->field($model, 'sub_net_area')->textInput(['maxlength' => true]) ?>
+<hr>
+<h3>Ostali detalji prostorije</h3>
 
+    <?= $form->field($model, 'length')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'width')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'circumference')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'height')->textInput(['maxlength' => true]) ?>
     
 
     <div class="row" style="margin:20px;">

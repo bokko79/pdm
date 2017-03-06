@@ -21,6 +21,12 @@ use Yii;
  */
 class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
 {
+    public $sameRoom; // u generatoru etaža objekta
+    public $copiedRoom;
+
+    public $room_to_add;
+    public $qty;
+
     /**
      * @inheritdoc
      */
@@ -36,7 +42,7 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
     {
         return [
             [['project_building_storey_id', 'type'], 'required'],
-            [['project_building_storey_id'], 'integer'],
+            [['project_building_storey_id', 'same_as_id', 'qty', 'room_to_add'], 'integer'],
             [['type', 'structure', 'description'], 'string'],
             [['area'], 'number'],
             [['name'], 'string', 'max' => 64],
@@ -53,6 +59,7 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'project_building_storey_id' => Yii::t('app', 'Etaža'),
+            'same_as_id' => Yii::t('app', 'Kopirana jedinica'),
             'type' => Yii::t('app', 'Vrsta'),
             'name' => Yii::t('app', 'Naziv'),
             'mark' => Yii::t('app', 'Oznaka'),
@@ -76,6 +83,22 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
     public function getProjectBuildingStorey()
     {
         return $this->hasOne(ProjectBuildingStoreys::className(), ['id' => 'project_building_storey_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCopies()
+    {
+        return $this->hasMany(ProjectBuildingStoreyParts::className(), ['same_as_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSameAs()
+    {
+        return $this->hasOne(ProjectBuildingStoreyParts::className(), ['id' => 'same_as_id']);
     }
 
     public function getNetArea()
@@ -136,5 +159,19 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
                 break;
         }
         return $type;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStambene()
+    {
+        $rooms = [];
+        foreach($this->projectBuildingStoreyParts as $room){
+            if ($room->group=='Stambene prostorije'){
+                $rooms[] = $room;
+            }
+        }
+        return $rooms;
     }
 }

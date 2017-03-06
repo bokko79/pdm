@@ -38,9 +38,9 @@ class ProjectBuildingStoreyPartRooms extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_building_storey_part_id', 'type'], 'required'],
-            [['project_building_storey_part_id', 'mark'], 'integer'],
-            [['type', 'flooring'], 'string'],
+            [['project_building_storey_part_id'], 'required'],
+            [['project_building_storey_part_id', 'mark', 'same_as_id'], 'integer'],
+            [['room_type_id', 'flooring'], 'string'],
             [['circumference', 'length', 'width', 'height', 'sub_net_area', 'net_area'], 'number'],
             [['name'], 'string', 'max' => 32],
            // [['mark'], 'string', 'max' => 12],
@@ -56,7 +56,8 @@ class ProjectBuildingStoreyPartRooms extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'project_building_storey_part_id' => Yii::t('app', 'Jedinica etaže'),
-            'type' => Yii::t('app', 'Vrsta prostorije'),
+            'same_as_id' => Yii::t('app', 'Kopirana prostorija'),
+            'room_type_id' => Yii::t('app', 'Vrsta prostorije'),
             'name' => Yii::t('app', 'Naziv prostorije'),
             'mark' => Yii::t('app', 'Oznaka'),
             'circumference' => Yii::t('app', 'Obim'),
@@ -80,9 +81,33 @@ class ProjectBuildingStoreyPartRooms extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getRoomType()
+    {
+        return $this->hasOne(RoomTypes::className(), ['id' => 'room_type_id']);
+    } 
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCopies()
+    {
+        return $this->hasMany(ProjectBuildingStoreyPartRooms::className(), ['same_as_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSameAs()
+    {
+        return $this->hasOne(ProjectBuildingStoreyPartRooms::className(), ['id' => 'same_as_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getFullname()
     {
-        return $this->mark. ' ' .$this->name. ' '.$this->type;
+        return $this->mark. ' ' .$this->name. ' '.$this->roomType->name;
     }
 
     /**
@@ -91,7 +116,7 @@ class ProjectBuildingStoreyPartRooms extends \yii\db\ActiveRecord
     public function getFullType()
     {
         $type;
-        switch ($this->type) {
+        switch ($this->room_type_id) {
             case 'soba': $type = 'soba'; break;
             case 'terasa': $type = 'terasa';  break;
             case 'kupatilo': $type = 'kupatilo';  break;
@@ -143,6 +168,9 @@ class ProjectBuildingStoreyPartRooms extends \yii\db\ActiveRecord
             case 'biblioteka': $type = 'biblioteka'; break;
             case 'citaonica': $type = 'čitaionica'; break;
             case 'ucionica': $type = 'učionica'; break;
+            case 'sala': $type = 'sala'; break;
+            case 'hala': $type = 'hala'; break;
+            case 'kantina': $type = 'kantina'; break;
             //default: $type = 'drugo';
         }
         return $type;
@@ -154,11 +182,11 @@ class ProjectBuildingStoreyPartRooms extends \yii\db\ActiveRecord
     public function getGroup()
     {
         $type;
-        switch ($this->type) {
+        switch ($this->room_type_id) {
             case 'soba': $type = 'Stambene prostorije';  break;
             case 'terasa': $type = 'Stambene prostorije';  break;
             case 'kupatilo': $type = 'Stambene prostorije';  break;
-            case 'sanitarni': $type = 'Sanitarni čvor';  break;
+            case 'sanitarni': $type = 'Tehničke prostorije';  break;
             case 'kuhinja': $type = 'Stambene prostorije';   break;
             case 'trpezarija': $type = 'Stambene prostorije';   break;
             case 'dnevna': $type = 'Stambene prostorije';   break;
@@ -206,6 +234,9 @@ class ProjectBuildingStoreyPartRooms extends \yii\db\ActiveRecord
             case 'biblioteka': $type = 'Stambene prostorije';  break;
             case 'citaonica': $type = 'Ostale prostorije';  break;
             case 'ucionica': $type = 'Ostale prostorije';  break;
+            case 'sala': $type = 'Ostale prostorije';  break;
+            case 'hala': $type = 'Tehničke prostorije';  break;
+            case 'kantina': $type = 'Ostale prostorije';  break;
             default: $type = 'Ostale prostorije';  break;
         }
         return $type;
@@ -217,57 +248,64 @@ class ProjectBuildingStoreyPartRooms extends \yii\db\ActiveRecord
     public function getTypesofRooms()
     {
         $type = [];
+        // ulazi, prolazi, komunikacije
+        $type[] = [ 'type'=> 'predprostor', 'text'=> 'predprostor', 'group' => 'Ulaz i hodnici'];        
+        $type[] = [ 'type'=> 'ulaz', 'text'=> 'ulaz', 'group' => 'Ulaz i hodnici']; 
+        $type[] = [ 'type'=> 'trem', 'text'=> 'trem', 'group' => 'Ulaz i hodnici']; 
+        $type[] = [ 'type'=> 'stepeniste', 'text'=> 'stepenište', 'group' => 'Ulaz i hodnici']; 
+        $type[] = [ 'type'=> 'pasaz', 'text'=> 'pasaž', 'group' => 'Ulaz i hodnici']; 
+        $type[] = [ 'type'=> 'rampa', 'text'=> 'rampa', 'group' => 'Ulaz i hodnici'];         
+        $type[] = [ 'type'=> 'vetrobran', 'text'=> 'vetrobran', 'group' => 'Ulaz i hodnici']; 
+        $type[] = [ 'type'=> 'vestibil', 'text'=> 'vestibil', 'group' => 'Ulaz i hodnici']; 
+        // stambene
         $type[] = [ 'type'=>'soba', 'text'=> 'soba', 'group' => 'Stambene prostorije']; 
         $type[] = [ 'type'=> 'terasa','text'=> 'terasa', 'group' => 'Stambene prostorije']; 
-        $type[] = [ 'type'=> 'kupatilo', 'text'=> 'kupatilo', 'group' => 'Stambene prostorije']; 
-        $type[] = [ 'type'=> 'sanitarni', 'text'=> 'sanitarni čvor', 'group' => 'Sanitarni čvor']; 
+        $type[] = [ 'type'=> 'kupatilo', 'text'=> 'kupatilo', 'group' => 'Stambene prostorije'];         
         $type[] = [ 'type'=> 'kuhinja', 'text'=> 'kuhinja', 'group' => 'Stambene prostorije']; 
         $type[] = [ 'type'=> 'trpezarija', 'text'=> 'trpezarija', 'group' => 'Stambene prostorije']; 
         $type[] = [ 'type'=> 'dnevna', 'text'=> 'dnevna soba', 'group' => 'Stambene prostorije']; 
         $type[] = [ 'type'=> 'radna', 'text'=> 'radna soba', 'group' => 'Stambene prostorije']; 
         $type[] = [ 'type'=> 'spavaca', 'text'=> 'spavaća soba', 'group' => 'Stambene prostorije']; 
-        $type[] = [ 'type'=> 'tehnicka', 'text'=> 'tehnička prostorija', 'group' => 'Tehničke prostorije']; 
         $type[] = [ 'type'=> 'balkon', 'text'=> 'balkon', 'group' => 'Stambene prostorije']; 
         $type[] = [ 'type'=> 'hodnik', 'text'=> 'hodnik', 'group' => 'Stambene prostorije']; 
-        $type[] = [ 'type'=> 'predprostor', 'text'=> 'predprostor', 'group' => 'Ulaz i hodnici']; 
         $type[] = [ 'type'=> 'degazman', 'text'=> 'degažman', 'group' => 'Stambene prostorije']; 
-        $type[] = [ 'type'=> 'ulaz', 'text'=> 'ulaz', 'group' => 'Ulaz i hodnici']; 
-        $type[] = [ 'type'=> 'trem', 'text'=> 'trem', 'group' => 'Ulaz i hodnici']; 
-        $type[] = [ 'type'=> 'laboratorija', 'text'=> 'laboratorija', 'group' => 'Tehničke prostorije']; 
-        $type[] = [ 'type'=> 'studio', 'text'=> 'studio', 'group' => 'Poslovne prostorije']; 
-        $type[] = [ 'type'=> 'igraonica', 'text'=> 'igraonica', 'group' => 'Ostale prostorije']; 
-        $type[] = [ 'type'=> 'radionica', 'text'=> 'radionica', 'group' => 'Poslovne prostorije']; 
-        $type[] = [ 'type'=> 'stepeniste', 'text'=> 'stepenište', 'group' => 'Ulaz i hodnici']; 
-        $type[] = [ 'type'=> 'vesernica', 'text'=> 'vešernica', 'group' => 'Tehničke prostorije']; 
-        $type[] = [ 'type'=> 'kotlarnica', 'text'=> 'kotlarnica', 'group' => 'Tehničke prostorije']; 
-        $type[] = [ 'type'=> 'lift', 'text'=> 'lift', 'group' => 'Tehničke prostorije']; 
         $type[] = [ 'type'=> 'dnevna_kuhinja', 'text'=> 'dnevna soba sa kuhinjom', 'group' => 'Stambene prostorije']; 
         $type[] = [ 'type'=> 'dnevna_kuhinja_trp', 'text'=> 'dnevna soba sa kuhinjom i trpezarijom','Stambene prostorije']; 
         $type[] = [ 'type'=> 'ostava', 'text'=> 'ostava', 'group' => 'Stambene prostorije']; 
-        $type[] = [ 'type'=> 'garaza', 'text'=> 'garaža', 'group' => 'Ostale prostorije']; 
-        $type[] = [ 'type'=> 'pasaz', 'text'=> 'pasaž', 'group' => 'Ulaz i hodnici']; 
-        $type[] = [ 'type'=> 'parking', 'text'=> 'parking', 'group' => 'Ostale prostorije']; 
-        $type[] = [ 'type'=> 'dnevna_trp', 'text'=> 'dnevna soba sa trpezarijom', 'group' => 'Stambene prostorije']; 
+        $type[] = [ 'type'=> 'garderober', 'text'=> 'garderober', 'group' => 'Stambene prostorije']; 
+        $type[] = [ 'type'=> 'toalet', 'text'=> 'toalet', 'group' => 'Stambene prostorije']; 
+        $type[] = [ 'type'=> 'vinski', 'text'=> 'vinski podrum', 'group' => 'Stambene prostorije']; 
+        $type[] = [ 'type'=> 'hladna', 'text'=> 'hladna ostava', 'group' => 'Stambene prostorije']; 
+        $type[] = [ 'type'=> 'biblioteka', 'text'=> 'biblioteka', 'group' => 'Stambene prostorije']; 
+        $type[] = [ 'type'=> 'dnevna_trp', 'text'=> 'dnevna soba sa trpezarijom', 'group' => 'Stambene prostorije'];
+        // poslovne
+        $type[] = [ 'type'=> 'blagajna', 'text'=> 'blagajna', 'group' => 'Poslovne prostorije']; 
+        $type[] = [ 'type'=> 'studio', 'text'=> 'studio', 'group' => 'Poslovne prostorije']; 
         $type[] = [ 'type'=> 'lounge', 'text'=> 'laundž', 'group' => 'Poslovne prostorije']; 
         $type[] = [ 'type'=> 'kancelarija', 'text'=> 'kancelarija', 'group' => 'Poslovne prostorije']; 
         $type[] = [ 'type'=> 'poslovni', 'text'=> 'poslovni prostor', 'group' => 'Poslovne prostorije']; 
-        $type[] = [ 'type'=> 'garderober', 'text'=> 'garderober', 'group' => 'Stambene prostorije']; 
-        $type[] = [ 'type'=> 'toalet', 'text'=> 'toalet', 'group' => 'Stambene prostorije']; 
-        $type[] = [ 'type'=> 'svlacionica', 'text'=> 'svlačionica', 'group' => 'Ostale prostorije']; 
-        $type[] = [ 'type'=> 'spa', 'text'=> 'wellness&spa', 'group' => 'Ostale prostorije']; 
-        $type[] = [ 'type'=> 'masina_lifta', 'text'=> 'mašina lifta', 'group' => 'Tehničke prostorije']; 
-        $type[] = [ 'type'=> 'rampa', 'text'=> 'rampa', 'group' => 'Ulaz i hodnici']; 
+        $type[] = [ 'type'=> 'radionica', 'text'=> 'radionica', 'group' => 'Poslovne prostorije']; 
+        $type[] = [ 'type'=> 'sala', 'text'=> 'sala', 'group' => 'Poslovne prostorije'];
+        // tehnicke
+        $type[] = [ 'type'=> 'tehnicka', 'text'=> 'tehnička prostorija', 'group' => 'Tehničke prostorije']; 
+        $type[] = [ 'type'=> 'laboratorija', 'text'=> 'laboratorija', 'group' => 'Tehničke prostorije']; 
+        $type[] = [ 'type'=> 'vesernica', 'text'=> 'vešernica', 'group' => 'Tehničke prostorije']; 
+        $type[] = [ 'type'=> 'kotlarnica', 'text'=> 'kotlarnica', 'group' => 'Tehničke prostorije']; 
+        $type[] = [ 'type'=> 'lift', 'text'=> 'lift', 'group' => 'Tehničke prostorije']; 
+        $type[] = [ 'type'=> 'sanitarni', 'text'=> 'sanitarni čvor', 'group' => 'Tehničke prostorije']; 
         $type[] = [ 'type'=> 'hidrocel', 'text'=> 'hidrocel', 'group' => 'Tehničke prostorije']; 
-        $type[] = [ 'type'=> 'vetrobran', 'text'=> 'vetrobran', 'group' => 'Ulaz i hodnici']; 
-        $type[] = [ 'type'=> 'vestibil', 'text'=> 'vestibil', 'group' => 'Ulaz i hodnici']; 
-        $type[] = [ 'type'=> 'izlozbeni', 'text'=> 'izložbeni prostor', 'group' => 'Ostale prostorije']; 
-        $type[] = [ 'type'=> 'blagajna', 'text'=> 'blagajna', 'group' => 'Poslovne prostorije']; 
-        $type[] = [ 'type'=> 'vinski', 'text'=> 'vinski podrum', 'group' => 'Stambene prostorije']; 
-        $type[] = [ 'type'=> 'hladna', 'text'=> 'hladna ostava', 'group' => 'Stambene prostorije']; 
-        $type[] = [ 'type'=> 'teretana', 'text'=> 'teretana', 'group' => 'Ostale prostorije']; 
-        $type[] = [ 'type'=> 'biblioteka', 'text'=> 'biblioteka', 'group' => 'Stambene prostorije']; 
-        $type[] = [ 'type'=> 'citaonica', 'text'=> 'čitaonica', 'group' => 'Ostale prostorije']; 
-        $type[] = [ 'type'=> 'ucionica', 'text'=> 'učionica', 'group' => 'Ostale prostorije'];        
+        $type[] = [ 'type'=> 'masina_lifta', 'text'=> 'mašina lifta', 'group' => 'Tehničke prostorije']; 
+        $type[] = [ 'type'=> 'hala', 'text'=> 'hala', 'group' => 'Tehničke prostorije']; 
+        // ostale
+        $type[] = [ 'type'=> 'garaza', 'text'=> 'garaža', 'group' => 'Ostale prostorije']; 
+        $type[] = [ 'type'=> 'igraonica', 'text'=> 'igraonica', 'group' => 'Ostale prostorije']; 
+        $type[] = [ 'type'=> 'parking', 'text'=> 'parking', 'group' => 'Ostale prostorije'];         
+        $type[] = [ 'type'=> 'svlacionica', 'text'=> 'svlačionica', 'group' => 'Ostale prostorije']; 
+        $type[] = [ 'type'=> 'spa', 'text'=> 'wellness&spa', 'group' => 'Ostale prostorije'];
+        $type[] = [ 'type'=> 'izlozbeni', 'text'=> 'izložbeni prostor', 'group' => 'Ostale prostorije'];
+        $type[] = [ 'type'=> 'teretana', 'text'=> 'teretana', 'group' => 'Ostale prostorije'];         
+        $type[] = [ 'type'=> 'citaonica', 'text'=> 'čitaonica', 'group' => 'Ostale prostorije'];        
+        $type[] = [ 'type'=> 'kantina', 'text'=> 'kantina', 'group' => 'Ostale prostorije'];        
         return $type;
     }
 }

@@ -190,4 +190,12 @@ class Practices extends \yii\db\ActiveRecord
     {
         return 'Direktor nije na listi? ' .\yii\helpers\Html::a('Dodaj direktora.', \yii\helpers\Url::to(['/engineers/create']));
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDirector()
+    {
+        return \common\models\PracticeEngineers::find()->where('position="direktor"')->one()->engineer;
+    }
 }

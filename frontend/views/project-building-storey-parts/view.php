@@ -6,6 +6,12 @@ use yii\widgets\DetailView;
 use kartik\grid\GridView;
 use kartik\editable\Editable;
 
+use kartik\widgets\ActiveForm;
+use kartik\widgets\ActiveField;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
+use kartik\widgets\TouchSpin;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectBuildingStoreyParts */
 
@@ -23,9 +29,50 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container">
     <div class="row">
         <div class="col-sm-4">
+        <?php $form = kartik\widgets\ActiveForm::begin([
+                'id' => 'form-horizontal',
+                'type' => ActiveForm::TYPE_VERTICAL,
+                
+            ]); ?>
+            <table class="table table-striped table-hover table-bordered">
+            <?php foreach($roomTypes as $key=>$roomType): ?>
+            
+                <tr>
+                    <td class="center"> 
+                        <?php /* $form->field($model, 'qty[]')->widget(TouchSpin::classname(), [
+                                'options' => ['placeholder' => $roomType->name],
+                            ]) */ ?>
+                        <?php /* TouchSpin::widget([
+    'name' => 'ProjectBuildingStoreyPartRooms[qty][]',
+    //'value' => $roomType->id,
+    'options' => ['placeholder' => $roomType->name],
+    'pluginOptions' => [
+        'min' => 0,
+        'max' => 6,
+    ],
+]); */ ?>
+<?= $form->field($model, 'qty['.$key.']')->widget(TouchSpin::classname(), [
+    'options' => ['placeholder' => $roomType->name],
+])->label($roomType->name) ?>
+
+                        <?= $form->field($model, 'room_type_id[]')->hiddenInput(['value'=> $roomType->id])->label(false) ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?> 
+            </table>
+            <div class="row" style="margin:20px;">
+        <div class="col-md-offset-3">
+            <?= Html::submitButton('Sačuvaj', ['class' => 'btn btn-success']) ?>
+        </div>        
+    </div>
+
+<?php ActiveForm::end(); ?>
+            
+        </div>
+        <div class="col-sm-8">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head"><i class="fa fa-plus-circle"></i> Osnovni podaci jedinice
+                    <div class="head button_to_show_secondary"><i class="fa fa-plus-circle"></i> Osnovni podaci jedinice
                     <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog"></i> Uredi jedinicu', Url::to(['/project-building-storey-parts/update', 'id'=>$model->id]), ['class' => 'btn btn-success btn-sm']) ?> <?= Html::a('<i class="fa fa-power-off"></i>', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -37,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="subhead"></div>
                 </div>
-                <div class="secondary-context">  
+                <div class="secondary-context none">  
                    <?= DetailView::widget([
                         'model' => $model,
                         'attributes' => [
@@ -53,17 +100,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]) ?>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-8">
-        
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Prostorije jedinice etaže
+                    <div class="head button_to_show_secondary">Prostorije jedinice etaže
                         <div class="action-area normal-case"><?= Html::a('Dodaj prostoriju', Url::to(['/project-building-storey-part-rooms/create', 'ProjectBuildingStoreyPartRooms[project_building_storey_part_id]'=>$model->id]), ['class' => 'btn btn-success btn-sm']) ?></div>
                     </div>
                     <div class="subhead">Ukupna neto površina jedinice: <?= $model->netArea ?> m<sup>2</sup>. Ukupna redukovana neto površina jedinice: <?= $model->subNetArea ?> m<sup>2</sup></div>
                 </div>
-                <div class="secondary-context">               
+                <div class="secondary-context none">               
 
                 <?php
                     $gridColumns = [
@@ -103,29 +147,70 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ];
                             }
                         ],
-                        'mark',
-                        'type',
+                        [
+                            'class'=>'kartik\grid\EditableColumn',
+                            'attribute'=>'mark',
+                            'width'=>'50px',
+                            'hAlign'=>'right',
+                            //'format'=>['decimal', 2],
+                            'pageSummary'=>true,
+                            'editableOptions'=> function ($model, $key, $index) {
+                                return [
+                                    'header'=>'Oznaka prostorije',
+                                    'size'=>'md',
+                                    //'asPopover' => false,
+                                    //'inputType' => Editable::INPUT_HTML5_INPUT,
+                                    'placement' => 'left',              
+                                ];
+                            }
+                        ],
                         [
                             'attribute'=>'name',
                             'format' => 'raw',
                             'value'=>function ($data) {
-                                return Html::a($data->name, ['project-building-storey-part-rooms/view', 'id' => $data->id]);
+                                return Html::a($data->roomType->name, ['project-building-storey-part-rooms/update', 'id' => $data->id]);
                             },
                             'filterType'=>GridView::FILTER_SELECT2,
-                            'filter'=>\yii\helpers\ArrayHelper::map(\common\models\ProjectBuildingStoreyPartRooms::find()->orderBy('id')->asArray()->all(), 'id', 'fullname'), 
+                            'filter'=>\yii\helpers\ArrayHelper::map(\common\models\ProjectBuildingStoreyPartRooms::find()->orderBy('id')->asArray()->all(), 'id', 'roomType.name'), 
                             'filterWidgetOptions'=>[
                                 'pluginOptions'=>['allowClear'=>true],
                             ],
                             'filterInputOptions'=>['placeholder'=>'Any Part'],
                             //'group'=>true,  // enable grouping
-                        ],
-                        'flooring',
+                        ],                        
                         [
+                            'class'=>'kartik\grid\EditableColumn',
+                            'attribute'=>'name',
+                            'width'=>'50px',
+                            'hAlign'=>'right',
+                            //'format'=>['decimal', 2],
+                            'pageSummary'=>true,
+                            'editableOptions'=> function ($model, $key, $index) {
+                                return [
+                                    'header'=>'Bliži naziv prostorije',
+                                    'size'=>'md',
+                                    //'asPopover' => false,
+                                    //'inputType' => Editable::INPUT_HTML5_INPUT,
+                                    'placement' => 'left',              
+                                ];
+                            }
+                        ],
+                        [
+                            'class'=>'kartik\grid\EditableColumn',
                             'attribute'=>'sub_net_area',
                             'width'=>'50px',
                             'hAlign'=>'right',
                             //'format'=>['decimal', 2],
-                            'pageSummary'=>true
+                            'pageSummary'=>true,
+                            'editableOptions'=> function ($model, $key, $index) {
+                                return [
+                                    'header'=>'Neto redukovana površina',
+                                    'size'=>'md',
+                                    //'asPopover' => false,
+                                    //'inputType' => Editable::INPUT_HTML5_INPUT,
+                                    'placement' => 'left',              
+                                ];
+                            }
                         ],
                         [
                             'class'=>'kartik\grid\EditableColumn',
@@ -141,9 +226,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                     //'asPopover' => false,
                                     //'inputType' => Editable::INPUT_HTML5_INPUT,
                                     'placement' => 'left', 
-                                    'beforeInput' => function ($form, $widget) use ($model, $index) {
-                                        echo $form->field($model, 'sub_net_area')->input('number', ['min'=>0, 'step'=>0.01]);
-                                    },
                                     'afterInput' => function ($form, $widget) use ($model, $index) {
                                         
                                         echo $form->field($model, 'flooring')->dropDownList([ 'parket' => 'Parket', 'keramika' => 'Keramika', 'estrih' => 'Estrih', 'tarkett' => 'Tarkett', 'beton' => 'Beton', 'opeka' => 'Opeka', 'kamen' => 'Kamen', 'teraco' => 'Teraco', 'zemlja' => 'Zemlja', 'tepih' => 'Tepih', 'drugo' => 'Drugo', ], ['prompt' => '']);

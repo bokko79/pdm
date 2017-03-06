@@ -37,7 +37,7 @@ $futureDevs = $model->projectLotFutureDevelopments;
 		<tr>
 			<td class="right"><b>Objekat</b></td>
 			<td class="content">
-				<?= $model->name ?>				
+				<?= $model->name ?> <?= $building->spratnost ?>
 			</td>
 		</tr>
 		<tr>
@@ -227,7 +227,7 @@ $futureDevs = $model->projectLotFutureDevelopments;
 				<?php if($storey->brPoslProstora){echo 'poslovni prostori ('.$storey->brPoslProstora .'), ';} ?>
 				<?php if($storey->c){echo $storey->c->fullType.' (';
 					foreach($ps = $storey->c->projectBuildingStoreyPartRooms as $key=>$room){
-						echo $room->fullType. (($key+1)==count($ps) ? null : ', ');
+						echo $room->roomType->name. (($key+1)==count($ps) ? null : ', ');
 					}
 					echo '), ';
 				} ?>
@@ -245,8 +245,8 @@ $futureDevs = $model->projectLotFutureDevelopments;
 				</tr>
 				<?php foreach($storey->projectBuildingStoreyParts as $key=>$part): ?>
 				<tr>
-					<td <?= ($key % 2 == 0) ? 'bgcolor="#eee"' : null ?> class=""><?= ($key+1). '. '.$part->mark. ' ('.$part->structure.')' ?></td>
-					<td <?= ($key % 2 == 0) ? 'bgcolor="#eee"' : null ?> class="right"><?= $formatter->format($part->netArea, ['decimal',2]) ?> m<sup>2</sup></td>
+					<td class=""><?= ($key+1). '. '.$part->name.' '.$part->mark . ($part->structure ? ' ('.$part->structure.')' : null); ?></td>
+					<td class="right"><?= $formatter->format($part->netArea, ['decimal',2]) ?> m<sup>2</sup></td>
 				</tr>
 				<?php endforeach; ?>
 				<tr>
@@ -438,10 +438,10 @@ $futureDevs = $model->projectLotFutureDevelopments;
 			<td class="right" style="width:60%;">
 				<small>Sastavio:</small><br>
 				<?= $volume->engineer->name. ', '.$volume->engineer->title ?><br>
-				<small>br. licence:<?= $volume->engineer->engineerLicences[0]->no ?></small>
+				<small>br. licence:<?= $volume->engineerLicence->no ?></small>
 				<div style="width:300px; height: 0px; border-bottom: 1px solid #777;"></div>
 				<br>
-				<?= Html::img('@web/images/legal_files/licences/'.$volume->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
+				<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
 				<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px; margin-top:10px;']) ?>
 			</td>
 		</tr>

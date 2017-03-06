@@ -50,7 +50,7 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
     <?= $form->field($location, 'street')->textInput(['maxlength' => true]) ?>
     <?= $form->field($location, 'number')->textInput(['maxlength' => true]) ?>
     <?= $form->field($location, 'city_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Cities::find()->all(), 'id', 'town'),
+            'data' => ArrayHelper::map(\common\models\Cities::find()->all(), 'id', 'town', 'city'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           

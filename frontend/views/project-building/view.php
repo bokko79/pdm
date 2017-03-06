@@ -10,28 +10,24 @@ use kartik\editable\Editable;
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectBuilding */
 
-$this->title = $model->project->name . ' ('. $model->spratnost . ')';
+$this->title = 'Projektni objekat';
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Projekat'), 'url' => ['/projects/view', 'id'=>$model->project_id]];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['project'] = $model->project;
 ?>
-<div class="project-building-view">
 
-    <h1><?= Html::a('<i class="fa fa-home"></i>'.Html::encode($this->title), Url::to(['/projects/view', 'id'=>$model->project_id]), ['class' => '']) ?></h1>
-
-
-<hr>
 <div class="container">
     <div class="row">
         <div class="col-sm-5">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head"><i class="fa fa-plus-circle"></i> Osnovni podaci objekta
+                    <div class="head button_to_show_secondary"><i class="fa fa-plus-circle"></i> Osnovni podaci objekta
                     <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog"></i> Uredi objekat', Url::to(['/project-building/update', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?>
                         </div>
                     </div>
                     <div class="subhead">Predmetni objekat projekta. Ukupna bruto površina: <?= $model->grossArea ?> m<sup>2</sup></div>
                 </div>
-                <div class="secondary-context">  
+                <div class="secondary-context none">  
                     <?= DetailView::widget([
                         'model' => $model,
                         'attributes' => [
@@ -129,12 +125,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= $model->file ? Html::img('/images/projects/'.date('Y').'/'.$model->project_id.'/'.$model->file->name, ['style'=>'max-height:100%;']) : null ?>
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Etaže objekta
-                        <div class="action-area normal-case"><?= Html::a('Upravljanje etažama', Url::to(['/project-building/storeys', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+                    <div class="head button_to_show_secondary">Etaže objekta
+                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cogs"></i> Upravljanje etažama', Url::to(['/project-building/storeys', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
                     </div>
                     <div class="subhead">Ukupna bruto površina objekta: <?= $model->grossArea ?> m<sup>2</sup>. Ukupna neto površina objekta: <?= $model->netArea ?> m<sup>2</sup>. Ukupna redukovana neto površina objekta: <?= $model->subNetArea ?> m<sup>2</sup></div>
                 </div>
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= GridView::widget([
                         'dataProvider' => $projectBuildingStoreys,
                         'columns' => [
@@ -154,12 +150,12 @@ $this->params['breadcrumbs'][] = $this->title;
             </div> 
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Klase objekta                        
-                        <div class="action-area normal-case"><?= Html::a('Dodaj klasu objekta', Url::to(['/project-building-classes/create', 'ProjectBuildingClasses[project_id]'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+                    <div class="head button_to_show_secondary">Klase objekta                        
+                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj klasu objekta', Url::to(['/project-building-classes/create', 'ProjectBuildingClasses[project_id]'=>$model->project_id]), ['class' => 'btn btn-primary btn-sm']) ?></div>
                     </div>
                     
                 </div>
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= GridView::widget([
                         'dataProvider' => $projectBuildingClasses,
                         'columns' => [                            
@@ -180,12 +176,12 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Visine objekta
-                        <div class="action-area normal-case"><?= Html::a('Dodaj visinu dela objekta', Url::to(['/project-building-heights/create', 'ProjectBuildingHeights[project_id]'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+                    <div class="head button_to_show_secondary">Visine objekta
+                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj visinu dela objekta', Url::to(['/project-building-heights/create', 'ProjectBuildingHeights[project_id]'=>$model->project_id]), ['class' => 'btn btn-primary btn-sm']) ?></div>
                     </div>
                     
                 </div>
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= GridView::widget([
                         'dataProvider' => $projectBuildingHeights,
                         'columns' => [
@@ -205,12 +201,12 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Delovi i celine objekta
-                        <div class="action-area normal-case"><?= Html::a('Dodaj deo objekta', Url::to(['/project-building-parts/create', 'ProjectBuildingParts[project_id]'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+                    <div class="head button_to_show_secondary">Delovi i celine objekta
+                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj deo objekta', Url::to(['/project-building-parts/create', 'ProjectBuildingParts[project_id]'=>$model->project_id]), ['class' => 'btn btn-primary btn-sm']) ?></div>
                     </div>
                     
                 </div>
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= GridView::widget([
                         'dataProvider' => $projectBuildingParts,
                         'columns' => [
@@ -233,12 +229,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Stolarija i bravarija objekta
-                        <div class="action-area normal-case"><?= Html::a('Dodaj poziciju', Url::to(['/project-building-doorwin/create', 'ProjectBuildingDoorwin[project_id]'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+                    <div class="head button_to_show_secondary">Stolarija i bravarija objekta
+                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj poziciju', Url::to(['/project-building-doorwin/create', 'ProjectBuildingDoorwin[project_id]'=>$model->project_id]), ['class' => 'btn btn-primary btn-sm']) ?></div>
                     </div>
                     
                 </div>
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= GridView::widget([
                         'dataProvider' => $projectBuildingDoorwin,
                         'columns' => [
@@ -264,12 +260,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-12">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Arhitektonske karakteristike objekta
-                        <div class="action-area normal-case"><?= Html::a('Uredi karakteristike objekta', Url::to(['/project-building-characteristics/update', 'id'=>$model->project_id]), ['class' => 'btn btn-info btn-sm']) ?></div>
+                    <div class="head button_to_show_secondary">Arhitektonske karakteristike objekta
+                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-pencil"></i> Uredi karakteristike objekta', Url::to(['/project-building-characteristics/update', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
                     </div>
                     <div class="subhead">Lista arhitektonskih karakteristika predmetnog objekta.</div>
                 </div>
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= DetailView::widget([
                         'model' => $model->project->projectBuildingCharacteristics,
                         'attributes' => [
@@ -296,12 +292,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-12">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Konstrukcija objekta
-                        <div class="action-area normal-case"><?= Html::a('Uredi konstrukciju objekta', Url::to(['/project-building-structure/update', 'id'=>$model->project_id]), ['class' => 'btn btn-info btn-sm']) ?></div>
+                    <div class="head button_to_show_secondary">Konstrukcija objekta
+                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-pencil"></i> Uredi konstrukciju objekta', Url::to(['/project-building-structure/update', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
                     </div>
                     <div class="subhead">Lista konstruktivnih delova predmetnog objekta.</div>
                 </div>
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= DetailView::widget([
                         'model' => $model->project->projectBuildingStructure,
                         'attributes' => [
@@ -328,12 +324,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-12">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Materijalizacija objekta
-                        <div class="action-area normal-case"><?= Html::a('Uredi materijale objekta', Url::to(['/project-building-materials/update', 'id'=>$model->project_id]), ['class' => 'btn btn-info btn-sm']) ?></div>
+                    <div class="head button_to_show_secondary">Materijalizacija objekta
+                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-pencil"></i> Uredi materijale objekta', Url::to(['/project-building-materials/update', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
                     </div>
                     <div class="subhead">Lista predviđenih materijala predmetnog objekta.</div>
                 </div>
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= DetailView::widget([
                         'model' => $model->project->projectBuildingMaterials,
                         'attributes' => [
@@ -361,12 +357,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-12">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Izolacije objekta
-                        <div class="action-area normal-case"><?= Html::a('Uredi izolacije objekta', Url::to(['/project-building-insulations/update', 'id'=>$model->project_id]), ['class' => 'btn btn-info btn-sm']) ?></div>
+                    <div class="head button_to_show_secondary">Izolacije objekta
+                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-pencil"></i> Uredi izolacije objekta', Url::to(['/project-building-insulations/update', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-succes']) ?></div>
                     </div>
                     <div class="subhead">Lista predviđenih izolacija predmetnog objekta.</div>
                 </div>
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= DetailView::widget([
                         'model' => $model->project->projectBuildingInsulations,
                         'attributes' => [
@@ -385,12 +381,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-12">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head">Instalacije objekta
-                        <div class="action-area normal-case"><?= Html::a('Uredi instalacije objekta', Url::to(['/project-building-services/update', 'id'=>$model->project_id]), ['class' => 'btn btn-info btn-sm']) ?></div>
+                    <div class="head button_to_show_secondary">Instalacije objekta
+                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-pencil"></i> Uredi instalacije objekta', Url::to(['/project-building-services/update', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
                     </div>
                     <div class="subhead">Lista instalacija predmetnog objekta.</div>
                 </div>
-                <div class="secondary-context">
+                <div class="secondary-context none">
                     <?= DetailView::widget([
                         'model' => $model->project->projectBuildingServices,
                         'attributes' => [

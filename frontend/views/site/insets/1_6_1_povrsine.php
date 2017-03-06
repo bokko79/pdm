@@ -56,8 +56,8 @@ $building = $model->projectBuilding;
 					
 				<?php foreach($storey->projectBuildingStoreyParts as $part): ?>	
 				<tr>
-					<td><?= $storey->name. ' ' .$storey->storey ?></td>
-					<td><?= $part->type. ' ' .$part->mark ?></td>
+					<td><?= $storey->name ?></td>
+					<td><?= $part->fullType. ' ' .$part->mark ?></td>
 					<td class="center">m<sup>2</sup></td>
 
 					<td class="right"><?= ( $part->type == 'stan') ? $formatter->format($part->netArea, ['decimal',2]) : null ?></td>
@@ -83,7 +83,7 @@ $building = $model->projectBuilding;
 				<?php endforeach; ?>
 				<tr><td colspan="18" style="height:1px; border-bottom: 2px solid #000; padding:0;"></td></tr>
 				<tr>
-					<td colspan="3">Ukupno <?= $storey->name. ' ' .$storey->storey ?></td>
+					<td colspan="3">Ukupno <?= $storey->name ?></td>
 
 					<td class="right"><?= $formatter->format($storey->netAreaStan, ['decimal',2]) ?></td>
 					<td class="right"><?= $formatter->format($storey->subNetAreaStan, ['decimal',2]) ?></td>
@@ -201,5 +201,22 @@ $building = $model->projectBuilding;
 		<tr>
 			<td colspan="2"><h2>Za obračun komunalnih naknada korisnu površinu umanjiti za 3%</h2></td>
 			<td colspan="16" class="center"><h2><?= $formatter->format($building->subNetArea*0.97, ['decimal',2]) ?> m<sup>2</sup></h2></td>						
+		</tr>
+	</table>
+
+	<table class="clear" style="margin-top:40px;">
+		<tr>
+			<td>
+				<?= $volume->practice->location->city->town. ', '.$formatter->asDate(time(), 'php:mm Y.') ?>
+			</td>
+			<td class="right" style="width:60%;">
+				<small>Sastavio:</small><br>
+				<?= $volume->engineer->name. ', '.$volume->engineer->title ?><br>
+				<small>br. licence:<?= $volume->engineer->engineerLicences[0]->no ?></small>
+				<div style="width:300px; height: 0px; border-bottom: 1px solid #777;"></div>
+				<br>
+				<?= Html::img('@web/images/legal_files/licences/'.$volume->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
+				<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px; margin-top:10px;']) ?>
+			</td>
 		</tr>
 	</table>

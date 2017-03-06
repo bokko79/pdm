@@ -53,6 +53,8 @@ class ProjectBuildingController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'project';
+
         $model = $this->findModel($id);
         $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_id' => $id]);
         $query_st = \common\models\ProjectBuildingStoreys::find()->where(['project_id' => $id]);
@@ -139,8 +141,17 @@ class ProjectBuildingController extends Controller
      */
     public function actionStoreys($id, $add_storey=null, $remove_storey=null, $copy_storey=null)
     {
-        $model = $this->findModel($id);
+        $this->layout = 'project';
+        
+        $model = $this->findModel($id);        
         $storeys = $model->project->projectBuildingStoreys;
+
+        if($same = Yii::$app->request->post('ProjectBuilding')){
+            $st = $this->findStoreyById($same['copiedStorey']);
+            $st->same_as_id = $same['sameStorey'];
+            $st->save();
+            return $this->redirect(['storeys', 'id' => $model->project_id]);
+        }
         
         if($add_storey){
             $this->addStorey($model, $add_storey);             
@@ -151,7 +162,7 @@ class ProjectBuildingController extends Controller
             return $this->redirect(['storeys', 'id' => $id]);
         }
         if($remove_storey){
-            $this->removeStorey($remove_storey);              
+            $this->removeStorey($remove_storey);
             return $this->redirect(['storeys', 'id' => $id]);     
         }        
         return $this->render('storeys', [
@@ -192,7 +203,7 @@ class ProjectBuildingController extends Controller
         $new =  new \common\models\ProjectBuildingStoreys();
         $new->project_id = $model->project_id;
         $new->storey = $add_storey;
-        $new->order_no = 1;
+        //$new->order_no = 1;
         $new->save();
     }
 
@@ -201,6 +212,7 @@ class ProjectBuildingController extends Controller
         if($storey_to_copy = $this->findStoreyById($copy_storey)){
             $new = new \common\models\ProjectBuildingStoreys();
             $new->project_id = $storey_to_copy->project_id;
+            $new->same_as_id = $storey_to_copy->id;
             $new->storey = $storey_to_copy->storey;
             $new->order_no = $storey_to_copy->order_no;
             $new->name = $storey_to_copy->name.'_kopija';
@@ -213,6 +225,7 @@ class ProjectBuildingController extends Controller
                 foreach($parts as $key=>$part){
                     $new_part[$key] = new \common\models\ProjectBuildingStoreyParts();
                     $new_part[$key]->project_building_storey_id = $new->id;
+                    $new_part[$key]->same_as_id = $part->id;
                     $new_part[$key]->type = $part->type;
                     $new_part[$key]->name = $part->name;
                     $new_part[$key]->mark = $part->mark;
@@ -225,7 +238,8 @@ class ProjectBuildingController extends Controller
                         foreach($rooms as $r=>$room){                        
                             $new_room[$r] = new \common\models\ProjectBuildingStoreyPartRooms();
                             $new_room[$r]->project_building_storey_part_id = $new_part[$key]->id;
-                            $new_room[$r]->type = $room->type;
+                            $new_room[$r]->same_as_id = $room->id;
+                            $new_room[$r]->room_type_id = $room->room_type_id;
                             $new_room[$r]->name = $room->name;
                             $new_room[$r]->mark = $room->mark;
                             $new_room[$r]->circumference = $room->circumference;

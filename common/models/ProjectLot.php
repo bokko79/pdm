@@ -130,4 +130,20 @@ class ProjectLot extends \yii\db\ActiveRecord
         }
         return $ground;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGreenPctReg()
+    {
+        return ($this->green_area_reg and $this->area) ? $this->green_area_reg*$this->area/100 : null;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGreenPct()
+    {
+        return ($this->green_area_reg and $this->area) ? $this->green_area*100/$this->area : null;
+    }
 }
