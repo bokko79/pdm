@@ -65,7 +65,7 @@ $building = $model->projectBuilding;
 	K.O <?= $model->location->county0->name ?>,
 </p>
 
-<p class="center" style="padding:5px 0 ; margin:0; line-height: 0;"><?= $volume->controlEngineer->name .', '. $volume->controlEngineer->title ?></p>
+<p class="center" style="padding:5px 0 ; margin:0; line-height: 0;"><?= $model->controlEngineer->name .', '. $model->controlEngineer->title ?></p>
 
 <h2 class="center" style="letter-spacing: 4px;">POTVRĐUJEM</h2>
 
@@ -81,25 +81,25 @@ $building = $model->projectBuilding;
 	<tr>
 		<td class="right titler">Vršilac tehničke kontrole</td>
 		<td class="content">
-			<h3><b><?= $volume->controlPractice->name ?></b></h3>
-			<p>ul. <?= $volume->controlPractice->location->street. ' br. ' . $volume->controlPractice->location->number . ' ' .$volume->controlPractice->location->city->town; ?></p>
+			<h3><b><?= $model->controlPractice->name ?></b></h3>
+			<p>ul. <?= $model->controlPractice->location->street. ' br. ' . $model->controlPractice->location->number . ' ' .$model->controlPractice->location->city->town; ?></p>
 		</td>
 	</tr>
 	<tr>
 		<td class="right">Odgovorno lice / zastupnik</td>
 		<td class="content">				
-			<p><?= $volume->controlPractice->director->name. ', '.$volume->controlPractice->director->title; ?></p>
+			<p><?= $model->controlPractice->director->name. ', '.$model->controlPractice->director->title; ?></p>
 		</td>
 	</tr>
 	<tr>
 		<td class="right">Pečat
 			<div>
-				<?= ($volume->controlPractice->stamp) ? Html::img('@web/images/legal_files/stamps/'.$volume->controlPractice->stamp, ['style'=>'width:120px; margin-top:20px;']) : null ?>
+				<?= ($model->controlPractice->stamp) ? Html::img('@web/images/legal_files/stamps/'.$model->controlPractice->stamp, ['style'=>'width:120px; margin-top:20px;']) : null ?>
 			</div>
 		</td>
 		<td class="content">Potpis
 			<div>
-				<?= ($volume->controlPractice->stamp) ? Html::img('@web/images/legal_files/signatures/'.$volume->controlPractice->signature, ['style'=>'width:180px; margin-top:20px;']) : null ?>
+				<?= ($model->controlPractice->stamp) ? Html::img('@web/images/legal_files/signatures/'.$model->controlPractice->signature, ['style'=>'width:180px; margin-top:20px;']) : null ?>
 			</div>
 		</td>
 	</tr>
@@ -109,6 +109,6 @@ $building = $model->projectBuilding;
 	</tr>
 	<tr>
 		<td class="right">Mesto i datum</td>
-		<td class="content"><p><?= $volume->controlPractice->location->city->town ?>, <?= $formatter->asDate(time(), 'php:mm Y') ?></p></td>
+		<td class="content"><p><?= $model->controlPractice->location->city->town ?>, <?= $formatter->asDate(time(), 'php:mm Y') ?></p></td>
 	</tr>
 </table>

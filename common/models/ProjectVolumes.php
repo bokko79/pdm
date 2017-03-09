@@ -49,7 +49,7 @@ class ProjectVolumes extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id', 'volume_id', 'practice_id', 'engineer_id', 'engineer_licence_id', 'name', 'code'], 'required'],
+            [['project_id', 'volume_id', 'practice_id', 'engineer_id', 'engineer_licence_id', 'code'], 'required'],
             [['project_id', 'volume_id', 'practice_id', 'engineer_id', 'engineer_licence_id', 'control_practice_id', 'control_engineer_id', 'control_engineer_licence_id', 'time'], 'integer'],
             [['number'], 'string', 'max' => 20],
             [['name'], 'string', 'max' => 64],
@@ -153,6 +153,14 @@ class ProjectVolumes extends \yii\db\ActiveRecord
     public function getControlEngineerLicence()
     {
         return $this->hasOne(EngineerLicences::className(), ['id' => 'control_engineer_licence_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectVolumeDrawings()
+    {
+        return $this->hasMany(ProjectVolumeDrawings::className(), ['project_volume_id' => 'id'])->orderBy('CAST(number AS INTEGER)');
     }
 
     /**

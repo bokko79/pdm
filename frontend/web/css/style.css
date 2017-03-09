@@ -266,10 +266,10 @@ ul.disc {list-style-type:disc}
 .navpro-tabs>.active>a,.navpro-tabs>.active>a:hover{color:#555;cursor:pointer;background-color:#fff;border:none;border-bottom-color:transparent; box-shadow:0px 0px 3px #ddd;}
 
 /* multiple columns */	
-.column6 {-webkit-column-count: 6; /* Chrome, Safari, Opera */-moz-column-count: 6; /* Firefox */column-count: 6; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important;}
-.column4 {-webkit-column-count: 4; /* Chrome, Safari, Opera */-moz-column-count: 4; /* Firefox */column-count: 4; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important;}
-.column3 {-webkit-column-count: 3; /* Chrome, Safari, Opera */-moz-column-count: 3; /* Firefox */column-count: 3; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important;}
-.column2 {-webkit-column-count: 2; /* Chrome, Safari, Opera */-moz-column-count: 2; /* Firefox */column-count: 2; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important;}
+.column6 {-webkit-column-count: 6; /* Chrome, Safari, Opera */-moz-column-count: 6; /* Firefox */column-count: 6; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; display:table;}
+.column4 {-webkit-column-count: 4; /* Chrome, Safari, Opera */-moz-column-count: 4; /* Firefox */column-count: 4; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; display:table;}
+.column3 {-webkit-column-count: 3; /* Chrome, Safari, Opera */-moz-column-count: 3; /* Firefox */column-count: 3; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; display:table;}
+.column2 {-webkit-column-count: 2; /* Chrome, Safari, Opera */-moz-column-count: 2; /* Firefox */column-count: 2; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; display:table;}
 
 /* fieldsets */
 fieldset {border:1px solid #DDDDDD; background: white; padding: 20px; margin-bottom:20px;}
@@ -1028,141 +1028,11 @@ fieldset.no_data {margin: 0px 0 30px; padding: 40px; border:1px solid #ddd; bord
 #footer ul {padding: 5px;}
 #footer ul li {display: inline; padding: 5px;}
 
-
-/* ---------------------------
-	
-	41. BOXES
-
------------------------------ */
-/* BOX SERVICE */
-.cart #box_service {margin: 20px 17px;}
-.profile_body #box_service {margin: 20px 9px 10px 8px;}
-.profile_body .provider #box_service {margin: 20px 7px 10px 8px;}
-
-.divider.horizontal {display: table;white-space: nowrap;height: auto;margin:20px 0;overflow: hidden;
-    line-height: 1;text-align: center; letter-spacing: 2px; color:#999;
-}
-
-.divider.horizontal:before {
-    background-position: right 1em top 50%;
-}
-
-.divider.horizontal:after, .divider.horizontal:before {
-    content: '';
-    display: table-cell;
-    position: relative;
-    top: 50%;
-    width: 50%;
-    background-repeat: no-repeat;
-    background-image: url('../images/general/divider.png');
-}
-
-.divider.horizontal:after {
-    background-position: left 1em top 50%;
-}
-
-.card-width-cover img {top:0 !important; left: 0 !important;}
-
-.summary {}
-.summary a {color:black;} 
-.summary a.label {color:white;}
-.summary-first {margin:0;}
-.summary-second {margin:20px 0;}
-.summary-head {margin:20px 0;}
-.summary-head h1 {margin: 0; font-size:32px; font-weight:300; color:#444; float:left; letter-spacing: 1px;}
-.summary-head .title_details {font-size:15px; display: inline; letter-spacing: 0; margin-left:10px;}
-.summary-data {margin: 10px;}
-.summary-data td {text-align: left; color:#bbb;}
-.summary-data .icon {height:30px;}
-.summary-data .data {font-size: 15px; font-weight: 700; color:#444; line-height: 15px;}
-
-.controls-box {font-size: 13px; letter-spacing: 2px; color: #444; background: #fff; border: 1px solid #ddd; padding: 3px 20px;}
-.controls-box .icon {font-weight: 500; color: #444; letter-spacing: 2px;}
-.cntd {font-weight: 400; font-size: 21px;}
-.controls-box .butn {}
-a.butn {width: 100%; /*font-weight: 700;*/ font-size: 13px; text-transform: uppercase; border-radius: 2px;}
-/* HACKS */
-/* full-calendar row height */
-.fc-row {height: 52px !important;}
-/* select2 input styling */
-/*.select2-container--krajee .select2-selection {border-radius: 0px !important;}*/
-/* for geocomplete in modals */
 .pac-container {z-index: 9999 !important;}
 
-.createProject {
-    display: block;
-    box-sizing: border-box;
-    width: 100%;
-    /*margin: 20px 0;*/
-    padding: 50px;
-    border: 2px dashed #DEDEDE;
-    text-align: center;
-    color: #1f2836;
-}
+.tabs-left > .nav-tabs > li > a {text-align: right; font-size: 85%; text-transform: uppercase; font-weight: bold;}
+.tabs-krajee.tabs-left .nav-tabs, .tabs-krajee.tabs-right .nav-tabs {width:24%;}
+.tabs-krajee.tabs-left .tab-content {margin-left: 25%;}
+.nav-justified > li > a {font-size: 115%;}
 
-.createProject, .createProject:hover, .createProject:active, .createProject:visited {text-decoration: none !important;}
 
-#loading {width: 100%;text-align: center;padding: 50px;}
-
-/* youtube embedding */
-.video-container {
-    position: relative;
-    padding-bottom: 56.25%;
-    padding-top: 30px; height: 0; overflow: hidden;
-}
-
-.video-container iframe,
-.video-container object,
-.video-container embed {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.list-view > div {overflow: hidden;}
-/*.js-masonry .list-view ul.pagination {position: absolute; top: -124px; right: 0;}*/
-
-/* GOOGLE FONTS AND ICONS */
-.material-icons {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;  /* Preferred icon size */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
-
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
-
-  /* Support for IE. */
-  font-feature-settings: 'liga';
-}
-
-/* Rules for sizing the icon. */
-.material-icons.md-11 { font-size: 14px; line-height: 11px;}
-.material-icons.md-18 { font-size: 18px; }
-.material-icons.md-24 { font-size: 24px; }
-.material-icons.md-36 { font-size: 36px; }
-.material-icons.md-48 { font-size: 48px; }
-
-/* Rules for using icons as black on a light background. */
-.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
-.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
-
-/* Rules for using icons as white on a dark background. */
-.material-icons.md-light { color: rgba(255, 255, 255, 1); }
-.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
-
-.material-icons.orange600 { color: #FB8C00; }

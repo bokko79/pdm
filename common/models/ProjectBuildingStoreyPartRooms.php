@@ -39,11 +39,11 @@ class ProjectBuildingStoreyPartRooms extends \yii\db\ActiveRecord
     {
         return [
             [['project_building_storey_part_id'], 'required'],
-            [['project_building_storey_part_id', 'mark', 'same_as_id'], 'integer'],
-            [['room_type_id', 'flooring'], 'string'],
+            [['project_building_storey_part_id', 'same_as_id', 'room_type_id'], 'integer'],
+            [['flooring'], 'string'],
             [['circumference', 'length', 'width', 'height', 'sub_net_area', 'net_area'], 'number'],
-            [['name'], 'string', 'max' => 32],
-           // [['mark'], 'string', 'max' => 12],
+            [['name',], 'string', 'max' => 32],
+            [['mark'], 'string', 'max' => 12],
             [['project_building_storey_part_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuildingStoreyParts::className(), 'targetAttribute' => ['project_building_storey_part_id' => 'id']],
         ];
     }

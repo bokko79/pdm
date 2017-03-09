@@ -10,7 +10,7 @@ $formatter->nullDisplay = '--';
 <?php foreach($model->projectBuildingStoreys as $storey): ?>
 <table class="smallpadd" style="width:300px !important;">
 	<tr bgcolor="#ddd">
-		<td colspan="5"><h2><?= c($stan->name) ?>: Pregled površina</h2></td>
+		<td colspan="5"><h2 class="uppercase"><?= c($storey->name) ?>: pregled površina</h2></td>
 	</tr>
 	<?php if($storey->st): ?>
 		<?php foreach($storey->st as $stan): ?>
@@ -27,7 +27,7 @@ $formatter->nullDisplay = '--';
 			<?php foreach($stan->projectBuildingStoreyPartRooms as $room): ?>
 				<tr>
 					<td style="width:15px;"><?= $room->mark ?></td>
-					<td><?= $room->roomType->name ?></td>
+					<td><?= $room->name ?: $room->roomType->name ?></td>
 					<td><?= $room->flooring ?></td>
 					<td class="right"><?= $room->sub_net_area ? $formatter->format($room->sub_net_area, ['decimal',2]) : null ?></td>
 					<td class="right"><?= $room->net_area ? $formatter->format($room->net_area, ['decimal',2]) : null ?></td>
@@ -45,6 +45,40 @@ $formatter->nullDisplay = '--';
 				<td class="right"><?= $formatter->format($stan->netArea*0.97, ['decimal',2]) ?></td>
 			</tr>
 		<?php endforeach; ?>
+	<?php endif; ?>
+
+	<?php if($storey->s): ?>
+		<tr bgcolor="#eee">
+			<td colspan="5" style="border-top:2px solid #000;"><h3><b>Stambene prostorije</b></h3></td>
+		</tr>	
+		<tr>
+			<td style="width:15px;" class="center hint subtitle">br.</td>
+			<td style="width:105px" class="center hint subtitle">naziv prostorije</td>
+			<td style="width:60px" class="center hint subtitle">obrada poda</td>
+			<td style="width:60px" class="center hint subtitle">red. površ. [m<sup>2</sup>]</td>
+			<td style="width:60px" class="center hint subtitle">površina [m<sup>2</sup>]</td>
+		</tr>
+		<?php foreach($storey->s->projectBuildingStoreyPartRooms as $room): ?>
+			<tr>
+				<td><?= $room->mark ?></td>
+				<td><?= $room->name ?: $room->roomType->name ?></td>
+				<td><?= $room->flooring ?></td>
+				<td class="right"><?= $room->sub_net_area ? $formatter->format($room->sub_net_area, ['decimal',2]) : null ?></td>
+				<td class="right"><?= $room->net_area ? $formatter->format($room->net_area, ['decimal',2]) : null ?></td>
+			</tr>
+		<?php endforeach; ?>
+		<tr>
+			<td colspan="2" rowspan="2" style="background: #eee;border-top:3px solid #777;vertical-align: middle;" class="center"><h3>ukupno <?= $storey->s->fullType. ' '.$storey->s->mark ?></h3></td>
+			<td class="right">netto:</td>
+			<td class="right"><b><?= $formatter->format($storey->s->subNetArea, ['decimal',2]) ?></b></td>
+			<td class="right"><b><?= $formatter->format($storey->s->netArea, ['decimal',2]) ?></b></td>
+		</tr>
+		<tr>
+			<td class="right">netto (-3%):</td>
+			<td class="right"><?= $formatter->format($storey->s->subNetArea*0.97, ['decimal',2]) ?></td>
+			<td class="right"><?= $formatter->format($storey->s->netArea*0.97, ['decimal',2]) ?></td>
+		</tr>
+		
 	<?php endif; ?>
 	
 	<?php if($storey->b): ?>
@@ -66,7 +100,7 @@ $formatter->nullDisplay = '--';
 			<?php foreach($biz->projectBuildingStoreyPartRooms as $room): ?>
 				<tr>
 					<td><?= $room->mark ?></td>
-					<td><?= $room->roomType->name ?></td>
+					<td><?= $room->name ?: $room->roomType->name ?></td>
 					<td><?= $room->flooring ?></td>
 					<td class="right"><?= $room->sub_net_area ? $formatter->format($room->sub_net_area, ['decimal',2]) : null ?></td>
 					<td class="right"><?= $room->net_area ? $formatter->format($room->net_area, ['decimal',2]) : null ?></td>
@@ -86,6 +120,40 @@ $formatter->nullDisplay = '--';
 		<?php endforeach; ?>
 	<?php endif; ?>
 
+	<?php if($storey->p): ?>
+		<tr bgcolor="#eee">
+			<td colspan="5" style="border-top:2px solid #000;"><h3><b>Poslovne prostorije</b></h3></td>
+		</tr>	
+		<tr>
+			<td style="width:15px;" class="center hint subtitle">br.</td>
+			<td style="width:105px" class="center hint subtitle">naziv prostorije</td>
+			<td style="width:60px" class="center hint subtitle">obrada poda</td>
+			<td style="width:60px" class="center hint subtitle">red. površ. [m<sup>2</sup>]</td>
+			<td style="width:60px" class="center hint subtitle">površina [m<sup>2</sup>]</td>
+		</tr>
+		<?php foreach($storey->p->projectBuildingStoreyPartRooms as $room): ?>
+			<tr>
+				<td><?= $room->mark ?></td>
+				<td><?= $room->name ?: $room->roomType->name ?></td>
+				<td><?= $room->flooring ?></td>
+				<td class="right"><?= $room->sub_net_area ? $formatter->format($room->sub_net_area, ['decimal',2]) : null ?></td>
+				<td class="right"><?= $room->net_area ? $formatter->format($room->net_area, ['decimal',2]) : null ?></td>
+			</tr>
+		<?php endforeach; ?>
+		<tr>
+			<td colspan="2" rowspan="2" style="background: #eee;border-top:3px solid #777;vertical-align: middle;" class="center"><h3>ukupno <?= $storey->p->fullType. ' '.$storey->p->mark ?></h3></td>
+			<td class="right">netto:</td>
+			<td class="right"><b><?= $formatter->format($storey->p->subNetArea, ['decimal',2]) ?></b></td>
+			<td class="right"><b><?= $formatter->format($storey->p->netArea, ['decimal',2]) ?></b></td>
+		</tr>
+		<tr>
+			<td class="right">netto (-3%):</td>
+			<td class="right"><?= $formatter->format($storey->p->subNetArea*0.97, ['decimal',2]) ?></td>
+			<td class="right"><?= $formatter->format($storey->p->netArea*0.97, ['decimal',2]) ?></td>
+		</tr>
+		
+	<?php endif; ?>
+
 	<?php if($storey->g): ?>
 		<tr bgcolor="#eee">
 			<td colspan="5" style="border-top:2px solid #000;"><h3><b>Garažni i saobr. prostori</b></h3></td>
@@ -100,7 +168,7 @@ $formatter->nullDisplay = '--';
 		<?php foreach($storey->g->projectBuildingStoreyPartRooms as $room): ?>
 			<tr>
 				<td><?= $room->mark ?></td>
-				<td><?= $room->roomType->name ?></td>
+				<td><?= $room->name ?: $room->roomType->name ?></td>
 				<td><?= $room->flooring ?></td>
 				<td class="right"><?= $room->sub_net_area ? $formatter->format($room->sub_net_area, ['decimal',2]) : null ?></td>
 				<td class="right"><?= $room->net_area ? $formatter->format($room->net_area, ['decimal',2]) : null ?></td>
@@ -134,7 +202,7 @@ $formatter->nullDisplay = '--';
 		<?php foreach($storey->t->projectBuildingStoreyPartRooms as $room): ?>
 			<tr>
 				<td><?= $room->mark ?></td>
-				<td><?= $room->roomType->name ?></td>
+				<td><?= $room->name ?: $room->roomType->name ?></td>
 				<td><?= $room->flooring ?></td>
 				<td class="right"><?= $room->sub_net_area ? $formatter->format($room->sub_net_area, ['decimal',2]) : null ?></td>
 				<td class="right"><?= $room->net_area ? $formatter->format($room->net_area, ['decimal',2]) : null ?></td>
@@ -168,7 +236,7 @@ $formatter->nullDisplay = '--';
 		<?php foreach($storey->c->projectBuildingStoreyPartRooms as $room): ?>
 			<tr>
 				<td><?= $room->mark ?></td>
-				<td><?= $room->roomType->name ?></td>
+				<td><?= $room->name ?: $room->roomType->name ?></td>
 				<td><?= $room->flooring ?></td>
 				<td class="right"><?= $room->sub_net_area ? $formatter->format($room->sub_net_area, ['decimal',2]) : null ?></td>
 				<td class="right"><?= $room->net_area ? $formatter->format($room->net_area, ['decimal',2]) : null ?></td>
@@ -188,7 +256,7 @@ $formatter->nullDisplay = '--';
 		
 	<?php endif; ?>
 	<tr bgcolor="#ddd" style="border-top:3px solid #777; padding:10px 0">
-		<td colspan="5"><h2><?= $storey->name ?></h2></td>
+		<td colspan="5"><h2><?= c($storey->name) ?></h2></td>
 	</tr>
 	<tr>
 		<td colspan="3" class="center hint subtitle">naziv prostorije</td>
@@ -202,11 +270,25 @@ $formatter->nullDisplay = '--';
 			<td class="right"><?= $formatter->format($storey->netAreaStan, ['decimal',2]) ?></td>
 		</tr>
 	<?php endif; ?>
+	<?php if($storey->s): ?>
+		<tr>
+			<td colspan="3" class="uppercase">Stambene prostorije</td>
+			<td class="right"><?= $formatter->format($storey->subNetAreaStamb, ['decimal',2]) ?></td>
+			<td class="right"><?= $formatter->format($storey->netAreaStamb, ['decimal',2]) ?></td>
+		</tr>
+	<?php endif; ?>
 	<?php if($storey->b): ?>
 		<tr>
 			<td colspan="3" class="uppercase">Poslovni prostor</td>
 			<td class="right"><?= $formatter->format($storey->subNetAreaBiz, ['decimal',2]) ?></td>
 			<td class="right"><?= $formatter->format($storey->netAreaBiz, ['decimal',2]) ?></td>
+		</tr>
+	<?php endif; ?>
+	<?php if($storey->p): ?>
+		<tr>
+			<td colspan="3" class="uppercase">Poslovne prostorije</td>
+			<td class="right"><?= $formatter->format($storey->subNetAreaPosl, ['decimal',2]) ?></td>
+			<td class="right"><?= $formatter->format($storey->netAreaPosl, ['decimal',2]) ?></td>
 		</tr>
 	<?php endif; ?>
 	<?php if($storey->g): ?>
@@ -231,7 +313,7 @@ $formatter->nullDisplay = '--';
 		</tr>
 	<?php endif; ?>
 	<tr>
-		<td colspan="2" rowspan="3" style="background: #eee; vertical-align: middle;" class="center"><h3><b>ukupno <?= $storey->name ?></b></h3></td>
+		<td colspan="2" rowspan="3" style="background: #eee; vertical-align: middle;" class="center"><h3><b>Ukupno <?= c($storey->name) ?></b></h3></td>
 		<td class="right">netto:</td>
 		<td class="right"><b><?= $formatter->format($storey->subNetArea, ['decimal',2]) ?></b></td>
 		<td class="right"><b><?= $formatter->format($storey->netArea, ['decimal',2]) ?></b></td>

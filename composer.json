@@ -30,7 +30,8 @@
         "dektrium/yii2-user": "^0.9.12",
         "kartik-v/yii2-grid": "@dev",
         "kartik-v/yii2-editable": "@dev",
-        "kartik-v/yii2-tabs-x": "*"
+        "kartik-v/yii2-tabs-x": "*",
+        "softark/yii2-dual-listbox": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

@@ -31,8 +31,8 @@ $this->params['project'] = $model->project;
 							if($model->po){
 								foreach($model->po as $po){
 									echo Html::a($po->name ? c($po->name) : c($po->storey), Url::to(['/project-building-storeys/view', 'id'=>$po->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storeys/update', 'id'=>$po->id]), ['class' => 'btn btn-success btn-sm']). ' ' . ((!$po->projectBuildingStoreyParts) ? Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'remove_storey'=>$po->id]), ['class' => 'btn btn-danger btn-sm', 'data' => [
-                'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu. Brisanjem etaže, obrisaćete i njene jedinice i prostorije, a proces ne može biti povraćen.'),
-            ],]) : '<span class="hint">Podrum ne može biti obrisan jer sadrži jedinice/prostorije.</span>'). '<br><br>';
+						                'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu. Brisanjem etaže, obrisaćete i njene jedinice i prostorije, a proces ne može biti povraćen.'),
+						            ],]) : '<span class="hint">Podrum ne može biti obrisan jer sadrži jedinice/prostorije.</span>'). '<br><br>';
 								}								 
 							} else {
 									echo '<span class="hint">Objekat nema podrum.</span>';

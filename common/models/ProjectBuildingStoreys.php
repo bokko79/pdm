@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\data\ActiveDataProvider;
 
 /**
  * This is the model class for table "project_building_storeys".
@@ -28,6 +29,15 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     public $samePart; // u generatoru etaža objekta
     public $copiedPart;
 
+    public $stan;
+    public $biz;
+    public $stamb;
+    public $posl;
+    public $garage;
+    public $common;
+    public $tech;
+    public $external;
+
     /**
      * @inheritdoc
      */
@@ -43,12 +53,11 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     {
         return [
             [['project_id', 'storey'], 'required'],
-            [['project_id', 'units_total', 'same_as_id'], 'integer'],
+            [['project_id', 'units_total', 'same_as_id', 'stan', 'biz', 'stamb', 'posl', 'garage', 'common', 'tech', 'external'], 'integer'],
             [['storey', 'description', 'order_no'], 'string'],
             [['sub_net_area', 'net_area', 'gross_area', 'level', 'height'], 'number'],
             [['name'], 'string', 'max' => 64],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
-            
+            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],            
         ];
     }
 
@@ -70,7 +79,14 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
             'level' => Yii::t('app', 'Relativna visinska kota'),
             'height' => Yii::t('app', 'Spratna visina'),
             'units_total' => Yii::t('app', 'Broj jedinica'),
-            'description' => Yii::t('app', 'Opis etaže'),
+            'stan' => Yii::t('app', 'Stan (stambena jedinica)'),
+            'stamb' => Yii::t('app', 'Stambene prostorije'),
+            'biz' => Yii::t('app', 'Lokal (poslovni prostor)'),
+            'posl' => Yii::t('app', 'Poslovne prostorije'),
+            'common' => Yii::t('app', 'Zajedničke prostorije'),
+            'tech' => Yii::t('app', 'Tehničke prostorije'),
+            'garage' => Yii::t('app', 'Garažne i parking prostorije'),
+            'external' => Yii::t('app', 'Spoljašnje prostorije'),
         ];
     }
 
@@ -125,6 +141,14 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getS()
+    {
+        return \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id. ' and type="stamb"')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getT()
     {
         return \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id. ' and type="tech"')->one();
@@ -136,6 +160,14 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     public function getB()
     {
         return \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id. ' and type="biz"')->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getP()
+    {
+        return \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id. ' and type="posl"')->one();
     }
 
     /**
@@ -200,7 +232,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
         $total = 0;
         if($parts = $this->projectBuildingStoreyParts){
             foreach($parts as $part){
-                if($part->type=='stan'){
+                if($part->type=='stan' or $part->type=='stamb'){
                     $total += $part->netArea;
                 }
             }
@@ -216,7 +248,39 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
         $total = 0;
         if($parts = $this->projectBuildingStoreyParts){
             foreach($parts as $part){
-                if($part->type=='stan'){
+                if($part->type=='stan' or $part->type=='stamb'){
+                    $total += $part->subNetArea;
+                }
+            }
+        } 
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNetAreaStamb()
+    {
+        $total = 0;
+        if($parts = $this->projectBuildingStoreyParts){
+            foreach($parts as $part){
+                if($part->type=='stamb'){
+                    $total += $part->netArea;
+                }
+            }
+        } 
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubNetAreaStamb()
+    {
+        $total = 0;
+        if($parts = $this->projectBuildingStoreyParts){
+            foreach($parts as $part){
+                if($part->type=='stamb'){
                     $total += $part->subNetArea;
                 }
             }
@@ -232,7 +296,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
         $total = 0;
         if($parts = $this->projectBuildingStoreyParts){
             foreach($parts as $part){
-                if($part->type=='biz'){
+                if($part->type=='biz' or $part->type=='posl'){
                     $total += $part->netArea;
                 }
             }
@@ -248,7 +312,39 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
         $total = 0;
         if($parts = $this->projectBuildingStoreyParts){
             foreach($parts as $part){
-                if($part->type=='biz'){
+                if($part->type=='biz' or $part->type=='posl'){
+                    $total += $part->subNetArea;
+                }
+            }
+        } 
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNetAreaPosl()
+    {
+        $total = 0;
+        if($parts = $this->projectBuildingStoreyParts){
+            foreach($parts as $part){
+                if($part->type=='posl'){
+                    $total += $part->netArea;
+                }
+            }
+        } 
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubNetAreaPosl()
+    {
+        $total = 0;
+        if($parts = $this->projectBuildingStoreyParts){
+            foreach($parts as $part){
+                if($part->type=='posl'){
                     $total += $part->subNetArea;
                 }
             }
@@ -481,4 +577,32 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
         }
         return $storeys;
     }
-}
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRooms()
+    {
+        $query_cla = \common\models\ProjectBuildingStoreyPartRooms::find()->where('id=0');
+        
+        if($parts = $this->projectBuildingStoreyParts){
+            foreach ($parts as $key => $part) {
+                $query_cla->orWhere(['project_building_storey_part_id' => $part->id]);
+            }
+        }
+        return new \yii\data\ActiveDataProvider([
+                'query' => $query_cla->orderBy('project_building_storey_part_id ASC, CAST(mark AS INTEGER)')->groupBy(''),
+            ]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParts()
+    {
+        $query_cla = \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id);
+        return new \yii\data\ActiveDataProvider([
+                'query' => $query_cla->orderBy('')->groupBy(''),
+            ]);
+    }
+}   

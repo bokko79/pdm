@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectVolumeDrawings */
 
-$this->title = Yii::t('app', 'Create Project Volume Drawings');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Project Volume Drawings'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Dodavanje crteža svesci');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Sveska'), 'url' => ['/project-volumes/view', 'id'=>$model->project_volume_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="project-volume-drawings-create">
@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'storeys' => $storeys,
     ]) ?>
 
 </div>

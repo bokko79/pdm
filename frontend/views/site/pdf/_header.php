@@ -15,6 +15,7 @@ $formatter = \Yii::$app->formatter;
 .center {text-align: center}
 .right {text-align: right}
 .bold {font-weight: bold;}
+.middle {vertical-align: middle;}
 .uppercase {text-transform: uppercase;}
 .times {font-family: 'freeserif', serif; font-weight: bold;}
 h3 {font-weight: bold; font-size: 14pt;}
@@ -30,7 +31,11 @@ table {width: 100%; border: 1px solid #000}
 table.other th, table.other td {
     border: 1px dotted #777;
 }
+
+
 table.homepage td {padding: 10px 20px; border:none;}
+table.sheet  {border: none;}
+table.sheet td {padding: 3px; border:none; border-top:1px solid #aaa;}
 table.other td {padding: 10px; }
 table.bottom {margin-bottom:50px; }
 table.nopadd td {padding: 0px 10px; }

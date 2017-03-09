@@ -3,6 +3,7 @@ html, body {
 	/*font-family: 'Arial/Helvetica';*/
 	font-size: 13px;
 }
+
 .list-container {border-bottom: 1px solid #ddd;}
 .card_container, #card_container {margin:0 0 26px 0; padding:0; border-radius: 2px; box-shadow: 0px 2px 4px #999; background: #fff; float: left; /*position: relative;*/}
 
@@ -160,6 +161,7 @@ tr.strikeout td.line.right:before { left: -5px; }
 .primary-context .head .action-area {padding-top: 0; float: right;}
 .primary-context .head .action-area a {margin: 0;}
 .left-sidebar .action-area {padding:12px 8px;}
+.secondary-context .action-area {padding-top: 0; float: right;}
 .action-area td {vertical-align: middle;}
 /* bids-area & comments-area */
 .bids-area, .comments-area {min-height: 72px;}
@@ -189,3 +191,4 @@ tr.strikeout td.line.right:before { left: -5px; }
 
 .cover-product {position:absolute; left: 0; right: 0; max-height:432px; height:432px;}
 .backscreen {position: absolute; z-index: 1; background: rgba(0,0,0,.4); top: 0; left: 0; right: 0; bottom: 0; pointer-events: none;}
+.modal {z-index: 1052 !important;}

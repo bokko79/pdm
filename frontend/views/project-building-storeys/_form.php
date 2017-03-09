@@ -37,48 +37,26 @@ if(!$model->name){$model->name = $model->storey;}
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'order_no')->input('number', ['min'=>0, 'style'=>'width:40%']) ?>
-
 <?php if(!$model->sameAs): ?>
+<hr>
+<h3>Dimenzije</h3>
+
     <?= $form->field($model, 'gross_area', [
                 'addon' => ['prepend' => ['content'=>'m<sup>2</sup>']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
-
-    <?php /* $form->field($model, 'net_area', [
-                'addon' => ['prepend' => ['content'=>'m<sup>2</sup>']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
-
-    <?= $form->field($model, 'sub_net_area', [
-                'addon' => ['prepend' => ['content'=>'m<sup>2</sup>']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) */ ?>
 
     <?= $form->field($model, 'height', [
                 'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
 <?php endif; ?>
     <?= $form->field($model, 'level', [
-                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%']) ?>
-
-    <?php // $form->field($model, 'units_total')->input('number', ['min'=>0, 'style'=>'width:40%']) ?>
-
-    <?= $form->field($model, 'description')->widget(TinyMce::className(), [
-        'options' => ['rows' => 6],
-        'language' => 'sr',
-        'clientOptions' => [
-            'plugins' => [
-               "insertdatetime media table contextmenu paste" 
-            ],
-            'convert_fonts_to_spans' => true,
-            'paste_as_text' => true,
-            'menubar' => false,
-            'statusbar' => false,
-            'toolbar' => "undo redo | bold italic | bullist numlist outdent indent"
-        ]
-    ]) ?>
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%', 'disabled' => $model->storey=='prizemlje' ? true : false]) ?>
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">
             <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-            <?= (!$model->isNewRecord) ? Html::a(Yii::t('app', 'Ukloni'), ['delete', 'id' => $model->id], [
+            <?= (!$model->isNewRecord and !$model->copies and $model->storey!='prizemlje') ? Html::a(Yii::t('app', 'Ukloni'), ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
-                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                    'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu, sa svim prostorijama?'),
                     'method' => 'post',
                 ],
             ]) : null ?>

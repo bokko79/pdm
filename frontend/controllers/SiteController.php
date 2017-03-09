@@ -325,7 +325,7 @@ class SiteController extends Controller
         $mpdf->lMargin = 100;            
         $mpdf->backupSubsFont = array('arial', 'serif'); 
         $mpdf->defaultheaderline = 0; 
-        $mpdf->title = $model->code . ': '.$volume->number.' - '.($volume->name ?: $volume->volume->name);       
+        $mpdf->title = $volume->code . ': '.$volume->number.' - '.($volume->name ?: $volume->volume->name);       
       
         $mpdf->SetImportUse();        
 
@@ -430,7 +430,105 @@ class SiteController extends Controller
         }
         $mpdf->WriteHTML($this->renderPartial('pdf/_footer', ['model'=>$model, 'volume'=>$volume], true), 0);
         
-        $mpdf->Output($model->code . ': '.$volume->number.' - '.($volume->name ?: $volume->volume->name).'.pdf', 'I');
+        $mpdf->Output($volume->code . ': '.$volume->number.' - '.($volume->name ?: $volume->volume->name).'.pdf', 'I');
+        exit;
+    }
+
+    public function actionIzvod($id, $volume)
+    {
+        $model = \common\models\Projects::findOne($id);
+        $volume = \common\models\ProjectVolumes::findOne($volume);
+        $mpdf = new mpdf();  
+        $mpdf->tMargin = 35;           
+        $mpdf->backupSubsFont = array('arial', 'serif'); 
+        $mpdf->defaultheaderline = 0; 
+        $mpdf->title = $volume->code . ': Izvod iz projekta';  
+        
+
+        $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$volume->practice->memo, ['style'=>'margin-bottom:20px;']));
+        $mpdf->WriteHTML($this->renderPartial('pdf/_header_gl', ['model'=>$model, 'volume'=>$volume], true), 0);   
+        
+        $mpdf->SetWatermarkText('PRIMERAK');
+
+        $mpdf->showWatermarkText = true;
+
+        $mpdf->WriteHTML($this->renderPartial('insets/izv_naslovna', ['model'=>$model, 'volume'=>$volume], true), 0);        
+        $mpdf->AddPage();
+
+        $mpdf->WriteHTML($this->renderPartial('insets/tk_izjava', ['model'=>$model, 'volume'=>$volume], true), 0);        
+        $mpdf->AddPage();
+
+        $mpdf->WriteHTML($this->renderPartial('insets/tk_vrsioci', ['model'=>$model, 'volume'=>$volume], true), 0);        
+        $mpdf->AddPage();
+
+        foreach($model->projectVolumes as $vol){
+            if($vol->volume->type=='projekat'){
+                $mpdf->WriteHTML($this->renderPartial('insets/tk_rezime', ['model'=>$model, 'vol'=>$vol], true), 0);        
+                $mpdf->AddPage();
+            }
+        }
+
+        // 0.1. Naslovna strana glavne sveske
+        // Obavezno u svim slučajevima
+        $mpdf->WriteHTML($this->renderPartial('insets/0_1_naslovna', ['model'=>$model, 'volume'=>$volume], true), 0);        
+        $mpdf->AddPage();
+
+        // 0.2. Sadržaj glavne sveske
+        // Obavezno u svim slučajevima
+        $mpdf->WriteHTML($this->renderPartial('insets/0_2_sadrzaj', ['model'=>$model, 'volume'=>$volume], true), 0);
+        $mpdf->AddPage();
+
+        // 0.3. Odluka o određivanju glavnog projektanta
+        // Samo u IDP, PGD, PZI, PIO        
+        $mpdf->WriteHTML($this->renderPartial('insets/0_3_odluka', ['model'=>$model, 'volume'=>$volume], true), 0);
+        $mpdf->AddPage();
+        
+        // 0.4. Izjava glavnog projektanta
+        // Samo u IDP, PGD, PZI, PIO        
+        $mpdf->WriteHTML($this->renderPartial('insets/0_4_izjava', ['model'=>$model, 'volume'=>$volume], true), 0);            
+        $mpdf->AddPage();
+               
+
+        // 0.5. Sadržaj tehničke dokumentacije
+        $mpdf->WriteHTML($this->renderPartial('insets/0_5_sadrzaj_tehdok', ['model'=>$model, 'volume'=>$volume], true), 0);
+        $mpdf->AddPage();
+
+        // 0.6. Podaci o projektantima
+        $mpdf->WriteHTML($this->renderPartial('insets/0_6_podaci', ['model'=>$model, 'volume'=>$volume], true), 0);
+        $mpdf->AddPage();
+
+        // 0.7. Opšti podaci o objektu
+        $mpdf->WriteHTML($this->renderPartial('insets/0_7_opsti', ['model'=>$model, 'volume'=>$volume], true), 0);
+        $mpdf->AddPage();
+
+        // 0.8. Sažeti tehnički opis 
+        // Samo u IDP, PGD i PIO 
+        $mpdf->WriteHTML($this->renderPartial('insets/0_8_1_projektni', ['model'=>$model, 'volume'=>$volume], true), 0);            
+        $mpdf->AddPage();
+        $mpdf->WriteHTML($this->renderPartial('insets/0_8_tehopis', ['model'=>$model, 'volume'=>$volume], true), 0);            
+        $mpdf->AddPage();
+        
+        // 0.9. Izjave ovlašćenih lica o merama za ispunjenje osnovnih zahteva za objekat 
+        // Samo u IDP i PGD 
+        if($model->checkIfElaborat) {
+            $mpdf->WriteHTML($this->renderPartial('insets/0_9_ovl_lica', ['model'=>$model, 'volume'=>$volume], true), 0);
+            //$mpdf->AddPage();
+        }
+
+        // insert lokacijskiUslovi.
+        if($model->lokacijskiUslovi){
+            $mpdf->SetHeader('');
+            $pagecount = $mpdf->SetSourceFile('images/projects/'.$model->year.'/'.$id.'/'.$model->geodetski->file->name);
+            for ($i=1; $i<=$pagecount; $i++) {
+                $mpdf->AddPage();
+                $import_page = $mpdf->ImportPage($i);
+                $mpdf->UseTemplate($import_page);
+            }
+        }
+
+        $mpdf->WriteHTML($this->renderPartial('pdf/_footer', ['model'=>$model, 'volume'=>$volume], true), 0);
+
+        $mpdf->Output($volume->code . ': Izvod iz projekta.pdf', 'I');
         exit;
     }
 
@@ -464,12 +562,29 @@ class SiteController extends Controller
         exit;
     }
 
-    public function actionPovrsine($id, $volume=null, $format='A1', $orientation='L')
+    public function actionPovrsine($id, $volume=null, $format='B0', $orientation='P')
     {
         $model = \common\models\Projects::findOne($id);
+        $volume = \common\models\ProjectVolumes::findOne($volume);
         $mpdf = new mpdf('utf-8', $format.'-'.$orientation);          
         $mpdf->backupSubsFont = array('arial', 'serif'); 
         $mpdf->title = $model->code . ': Obračun redukovanih neto površina objekta';  
+
+        $mpdf->WriteHTML($this->renderPartial('pdf/_header', ['model'=>$model, 'volume'=>$volume], true), 0);
+        $mpdf->WriteHTML($this->renderPartial('insets/povrsine_tablice', ['model'=>$model, 'volume'=>$volume], true), 0);
+        $mpdf->WriteHTML($this->renderPartial('pdf/_footer', ['model'=>$model, 'volume'=>$volume], true), 0);
+      
+        $mpdf->Output($model->code . ' - Tablice površina.pdf', 'I');
+        exit;
+    }
+
+    public function actionTablice($id, $volume=null, $format='A5', $orientation='L')
+    {
+        $model = \common\models\Projects::findOne($id);
+        $volume = \common\models\ProjectVolumes::findOne($volume);
+        $mpdf = new mpdf('utf-8', $format.'-'.$orientation);          
+        $mpdf->backupSubsFont = array('arial', 'serif'); 
+        $mpdf->title = $volume->code . ': Tablice crteža';  
 
         $mpdf->WriteHTML($this->renderPartial('pdf/_header', ['model'=>$model, 'volume'=>$volume], true), 0);
         $mpdf->WriteHTML($this->renderPartial('insets/tablice_crtezi', ['model'=>$model, 'volume'=>$volume], true), 0);

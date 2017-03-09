@@ -12,12 +12,11 @@ use kartik\editable\Editable;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Površine prostorija');
-$this->params['breadcrumbs'][] = ['label' => 'Etaže', 'url' => ['/project-building/storeys', 'id' => $project->id]];
-$this->params['breadcrumbs'][] = ['label' => 'Površine jedinica', 'url' => ['/project-building-storey-parts/index', 'id' => $project->id]];
+$this->params['breadcrumbs'][] = ['label' => 'Objekat', 'url' => ['/project-building/view', 'id' => $project->id]];
+$this->params['breadcrumbs'][] = ['label' => 'Etaže', 'url' => ['/project-building-storeys/index', 'id' => $project->id]];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['project'] = $project;
 ?>
-
-<h1><?= Html::encode($this->title) ?></h1>
 
 <?php
 $gridColumns = [
@@ -29,7 +28,7 @@ $gridColumns = [
             return Html::a($data->projectBuildingStoreyPart->projectBuildingStorey->name, ['project-building-storeys/view', 'id' => $data->projectBuildingStoreyPart->project_building_storey_id]);
         },
         'filterType'=>GridView::FILTER_SELECT2,
-        'filter'=>\yii\helpers\ArrayHelper::map(\common\models\ProjectBuildingStoreys::find()->orderBy('id')->asArray()->all(), 'id', 'name'), 
+        'filter'=>\yii\helpers\ArrayHelper::map(\common\models\ProjectBuildingStoreys::find()->where('project_id='.$project->id)->orderBy('id')->asArray()->all(), 'id', 'name'), 
         'filterWidgetOptions'=>[
             'pluginOptions'=>['allowClear'=>true],
         ],
@@ -40,8 +39,8 @@ $gridColumns = [
                 'mergeColumns'=>[[1,5]], // columns to merge in summary
                 'content'=>[             // content to show in each summary cell
                     1=>'Summary (' . $model->projectBuildingStoreyPart->projectBuildingStorey->name . ')',
-                    //6=>GridView::F_SUM,
-                    //7=>GridView::F_SUM,
+                    6=>GridView::F_SUM,
+                    7=>GridView::F_SUM,
                 ],
                 'contentFormats'=>[      // content reformatting for each summary cell
                     6=>['format'=>'number', 'decimals'=>2],
@@ -61,14 +60,14 @@ $gridColumns = [
         'attribute'=>'project_building_storey_part_id',
         'format' => 'raw',
         'value'=>function ($data) {
-            return Html::a($data->projectBuildingStoreyPart->mark. ' '.$data->projectBuildingStoreyPart->type, ['project-building-storey-parts/view', 'id' => $data->project_building_storey_part_id]);
+            return Html::a($data->projectBuildingStoreyPart->mark. ' '.$data->projectBuildingStoreyPart->fullType, ['project-building-storey-parts/view', 'id' => $data->project_building_storey_part_id]);
         },
-        'filterType'=>GridView::FILTER_SELECT2,
-        'filter'=>\yii\helpers\ArrayHelper::map(\common\models\ProjectBuildingStoreyParts::find()->orderBy('id')->asArray()->all(), 'id', 'fullname'), 
+        /*'filterType'=>GridView::FILTER_SELECT2,
+        'filter'=>\yii\helpers\ArrayHelper::map(\common\models\ProjectBuildingStoreyParts::find()->innerJoin('project_building_storeys as pbs')->where('pbs.project_id='.$project->id)->orderBy('project_building_storey_parts.id')->groupBy('id')->asArray()->all(), 'id', 'name'), 
         'filterWidgetOptions'=>[
             'pluginOptions'=>['allowClear'=>true],
         ],
-        'filterInputOptions'=>['placeholder'=>'Any Part'],
+        'filterInputOptions'=>['placeholder'=>'Bilo koja'],*/
         'group'=>true,  // enable grouping
         'subGroupOf'=>1,
         'groupFooter'=>function ($model, $key, $index, $widget) { // Closure method
@@ -93,82 +92,124 @@ $gridColumns = [
             ];
         }
     ],
-    'mark',
-    [
-        'attribute'=>'name',
-        'format' => 'raw',
-        'value'=>function ($data) {
-            return Html::a($data->name, ['project-building-storey-part-rooms/view', 'id' => $data->id]);
-        },
-        'filterType'=>GridView::FILTER_SELECT2,
-        'filter'=>\yii\helpers\ArrayHelper::map(\common\models\ProjectBuildingStoreyPartRooms::find()->orderBy('id')->asArray()->all(), 'id', 'fullname'), 
-        'filterWidgetOptions'=>[
-            'pluginOptions'=>['allowClear'=>true],
-        ],
-        'filterInputOptions'=>['placeholder'=>'Any Part'],
-        //'group'=>true,  // enable grouping
-    ],
-    'flooring',
-    [
-        'attribute'=>'sub_net_area',
-        'width'=>'150px',
-        'hAlign'=>'right',
-        //'format'=>['decimal', 2],
-        'pageSummary'=>true
-    ],
     [
         'class'=>'kartik\grid\EditableColumn',
-        'attribute'=>'net_area',
-        'width'=>'150px',
+        'attribute'=>'mark',
+        'width'=>'50px',
         'hAlign'=>'right',
         //'format'=>['decimal', 2],
         'pageSummary'=>true,
         'editableOptions'=> function ($model, $key, $index) {
             return [
-                'header'=>'Neto površina',
-                'size'=>'md',                
+                'header'=>'Oznaka prostorije',
+                'size'=>'',
+                'placement' => 'top',              
             ];
         }
     ],
-    //'level',
-    //'gross_area',
-    //['class' => 'kartik\grid\ActionColumn', 'urlCreator'=>function(){return '#';}]
+    [
+        'class'=>'kartik\grid\EditableColumn',
+        'attribute'=>'name',
+        /*'filterType'=>GridView::FILTER_SELECT2,
+        'filter'=>\yii\helpers\ArrayHelper::map(\common\models\ProjectBuildingStoreyPartRooms::find()->innerJoin('project_building_storey_parts as pbsp')->innerJoin('project_building_storeys as pbs')->where('pbs.project_id='.$project->id)->groupBy('pbs.id')->asArray()->all(), 'id', 'name'), 
+        'filterWidgetOptions'=>[
+            'pluginOptions'=>['allowClear'=>true],
+        ],
+        'filterInputOptions'=>['placeholder'=>'Bilo koja'],*/
+        'pageSummary'=>true,
+        'editableOptions'=> function ($model, $key, $index) {
+            return [
+                'header'=>'Bliži naziv prostorije',
+                'placement' => 'top',              
+            ];
+        }
+    ],   
+    [
+        'class'=>'kartik\grid\EditableColumn',
+        'attribute'=>'flooring',
+        'pageSummary'=>true,
+        'editableOptions'=> function ($model, $key, $index) {
+            return [
+                'header'=>'Obrada poda',
+                'placement' => 'top',  
+                'inputType' => Editable::INPUT_DROPDOWN_LIST,
+                'data' => [ 'parket' => 'Parket', 'keramika' => 'Keramika', 'estrih' => 'Estrih', 'tarkett' => 'Tarkett', 'beton' => 'Beton', 'opeka' => 'Opeka', 'kamen' => 'Kamen', 'teraco' => 'Teraco', 'zemlja' => 'Zemlja', 'tepih' => 'Tepih', 'drugo' => 'Drugo', ],            
+            ];
+        }
+    ],                   
+    
+    [
+        'class'=>'kartik\grid\EditableColumn',
+        'attribute'=>'sub_net_area',
+        'width'=>'50px',
+        'hAlign'=>'right',
+        'pageSummary'=>true,
+        'editableOptions'=> function ($model, $key, $index) {
+            return [
+                'header'=>'Neto redukovana površina',
+                'placement' => 'top',              
+            ];
+        }
+    ],
+    [
+        'class'=>'kartik\grid\EditableColumn',
+        'attribute'=>'net_area',
+        'width'=>'50px',
+        'hAlign'=>'right',
+        'pageSummary'=>true,
+        'editableOptions'=> function ($model, $key, $index) {
+            return [
+                'header'=>'Neto površina',
+                'placement' => 'top',                                                 
+            ];
+        }
+    ],
+    [
+        'class' => 'kartik\grid\ActionColumn',
+        'header' => 'Opcije',
+        'headerOptions' => ['style' => 'color:#337ab7'],
+        'template' => '{update}{delete}',
+        'buttons' => [
+            'update' => function ($url, $model, $key) {
+                return Html::a('<i class="fa fa-wrench"></i>', $url, ['class'=>'btn btn-default btn-sm', 'style'=>'margin-right:10px;']);
+            },
+            'delete' => function ($url, $model, $key) {
+                return Html::a('<i class="fa fa-power-off"></i>', $url, ['class'=>'btn btn-danger btn-sm', 'data'=>['method'=>'post', 'confirm'=>'Da li ste sigurni da želite da obrišete prostoriju?']]);
+            },                
+        ],
+        'urlCreator' => function ($action, $model, $key, $index) {
+            if ($action === 'update') {
+                $url = ['/project-building-storey-part-rooms/update', 'id'=>$model->id];
+                return $url;
+            }
+            if ($action === 'delete') {
+                $url = ['/project-building-storey-part-rooms/delete', 'id'=>$model->id];
+                return $url;
+            }
+        }
+    ],
 ];
 echo GridView::widget([
     'id' => 'kv-grid-demo',
     'dataProvider'=>$dataProvider,
-    'filterModel'=>$searchModel,
+    //'filterModel'=>$searchModel,
     'columns'=>$gridColumns,
     'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
     'headerRowOptions'=>['class'=>'kartik-sheet-style'],
     'filterRowOptions'=>['class'=>'kartik-sheet-style'],
-    'pjax'=>true, // pjax is set to always true for this demo
-    // set your toolbar
-    'toolbar'=> [
-        ['content'=>
-            Html::button('<i class="glyphicon glyphicon-plus"></i>', ['type'=>'button', 'title'=>Yii::t('app', 'Add Book'), 'class'=>'btn btn-success', 'onclick'=>'alert("This will launch the book creation form.\n\nDisabled for this demo!");']) . ' '.
-            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['', 'id'=>$project->id], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
-        ],
-        '{export}',
-        '{toggleData}',
-    ],
-    // set export properties
-    'export'=>[
-        'fontAwesome'=>true
-    ],
-    // parameters from the demo form
+    'pjax'=>true,
     'bordered'=>true,
     'striped'=>true,
     'condensed'=>true,
     'responsive'=>true,
     'hover'=>true,
-    //'showPageSummary'=>true,
+    'persistResize'=>false,
+    'toolbar'=> [
+        '{toggleData}',
+    ],
     'panel'=>[
         'type'=>GridView::TYPE_DEFAULT,
-        'heading'=>'Površine',
+        //'heading'=>$storey->storey,
     ],
-    'persistResize'=>false,
-    //'perfectScrollbar'=>true,
-    //'exportConfig'=>$exportConfig,
 ]);
 ?>

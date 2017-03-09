@@ -43,9 +43,9 @@ class RoomTypes extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
-            'type' => Yii::t('app', 'Type'),
-            'description' => Yii::t('app', 'Description'),
+            'name' => Yii::t('app', 'Vrsta Prostorije'),
+            'type' => Yii::t('app', 'Kategorija prostorije'),
+            'description' => Yii::t('app', 'Opis prostorije'),
         ];
     }
 

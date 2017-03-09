@@ -64,12 +64,26 @@ class ProjectVolumeDrawingsController extends Controller
     public function actionCreate()
     {
         $model = new ProjectVolumeDrawings();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if($p = Yii::$app->request->get('ProjectVolumeDrawings')){
+            $model->project_volume_id = !empty($p['project_volume_id']) ? $p['project_volume_id'] : null;
+            $storeys = $this->findVolume($p['project_volume_id'])->project->projectBuildingStoreys;
+        }
+        if ($model->load(Yii::$app->request->post())) {
+            
+            if($model->name==null){
+                
+                $model->name = $model->fullType;
+            }
+            if($model->title==null){
+                $model->title = $model->name;
+            }
+            if($model->save()){
+                return $this->redirect(['/project-volumes/view', 'id' => $model->project_volume_id]);
+            }            
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'storeys' => $storeys,
             ]);
         }
     }
@@ -83,12 +97,13 @@ class ProjectVolumeDrawingsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $storeys = $model->projectVolume->project->projectBuildingStoreys;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/project-volumes/view', 'id' => $model->project_volume_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'storeys' => $storeys,
             ]);
         }
     }
@@ -101,9 +116,10 @@ class ProjectVolumeDrawingsController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/project-volumes/view', 'id' => $model->project_volume_id]);
     }
 
     /**
@@ -116,6 +132,22 @@ class ProjectVolumeDrawingsController extends Controller
     protected function findModel($id)
     {
         if (($model = ProjectVolumeDrawings::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectVolumeDrawings model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectVolumeDrawings the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findVolume($id)
+    {
+        if (($model = \common\models\ProjectVolumes::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -39,6 +39,14 @@ $this->params['project'] = $model->project;
 					</td>
 				</tr>
 				<tr>
+					<td class="center" style="width: 30%;">
+						<?= (!$model->s) ? Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Dodaj stambene prostorije'), ['/project-building-storeys/parts', 'id' => $model->id, 'add_part'=>'stamb'], [ 'class' => 'btn btn-primary', 'data' => ['method' => 'post',], 'style'=>'width:100%;']) : Html::button(Yii::t('app', 'Stambene prostorije'), [ 'class' => 'btn btn-default', 'disabled' => 'disabled', 'style'=>'width:100%;']); ?>
+					</td>
+					<td>
+						<?= ($model->s) ? Html::a($model->s->name ? c($model->s->name) : c($model->s->fullType), Url::to(['/project-building-storey-parts/view', 'id'=>$model->s->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storey-parts/update', 'id'=>$model->c->id]), ['class' => 'btn btn-success btn-sm']). ' ' .Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building-storeys/parts', 'id' => $model->id, 'remove_part'=>$model->s->id]), ['class' => 'btn btn-danger btn-sm']) : '<span class="hint">Etaža nema stambene prostorije.</span>' ?>
+					</td>
+				</tr>
+				<tr>
 					<td class="center">
 						
 						<?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Dodaj poslovni prostor'), ['/project-building-storeys/parts', 'id' => $model->id, 'add_part'=>'biz'], [ 'class' => 'btn btn-primary', 'data' => ['method' => 'post',], 'style'=>'width:100%;']) ?>
@@ -52,6 +60,14 @@ $this->params['project'] = $model->project;
 							} else {
 									echo '<span class="hint">Etaža nema poslovni prostor.</span>';
 							}  ?>
+					</td>
+				</tr>
+				<tr>
+					<td class="center" style="width: 30%;">
+						<?= (!$model->p) ? Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Dodaj poslovne prostorije'), ['/project-building-storeys/parts', 'id' => $model->id, 'add_part'=>'posl'], [ 'class' => 'btn btn-primary', 'data' => ['method' => 'post',], 'style'=>'width:100%;']) : Html::button(Yii::t('app', 'Stambene prostorije'), [ 'class' => 'btn btn-default', 'disabled' => 'disabled', 'style'=>'width:100%;']); ?>
+					</td>
+					<td>
+						<?= ($model->p) ? Html::a($model->p->name ? c($model->p->name) : c($model->p->fullType), Url::to(['/project-building-storey-parts/view', 'id'=>$model->p->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storey-parts/update', 'id'=>$model->p->id]), ['class' => 'btn btn-success btn-sm']). ' ' .Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building-storeys/parts', 'id' => $model->id, 'remove_part'=>$model->p->id]), ['class' => 'btn btn-danger btn-sm']) : '<span class="hint">Etaža nema poslovne prostorije.</span>' ?>
 					</td>
 				</tr>
 				<tr>

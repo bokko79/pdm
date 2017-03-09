@@ -73,7 +73,7 @@ class ProjectBuildingStoreyPartRoomsSearch extends ProjectBuildingStoreyPartRoom
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'mark', $this->mark])
             ->andFilterWhere(['like', 'flooring', $this->flooring]);
-
+        $query->orderBy('project_building_storey_part_id ASC, CAST(mark AS INTEGER)');
         return $dataProvider;
     }
 }

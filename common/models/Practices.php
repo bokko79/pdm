@@ -150,6 +150,24 @@ class Practices extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getLogo()
+    {
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'logo'])->one();
+        return $doc ? $doc->file->name : false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLogoID()
+    {
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'logo'])->one();
+        return $doc ? $doc : false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getMemoID()
     {
         $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'memo-header'])->one();

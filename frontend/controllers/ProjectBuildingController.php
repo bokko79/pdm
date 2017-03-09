@@ -57,7 +57,7 @@ class ProjectBuildingController extends Controller
 
         $model = $this->findModel($id);
         $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_id' => $id]);
-        $query_st = \common\models\ProjectBuildingStoreys::find()->where(['project_id' => $id]);
+        $query_st = \common\models\ProjectBuildingStoreys::find()->where(['project_id' => $id])->orderBy('level');
         $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_id' => $id]);
         $query_pa = \common\models\ProjectBuildingParts::find()->where(['project_id' => $id]);
         $query_dw = \common\models\ProjectBuildingDoorwin::find()->where(['project_id' => $id]);
@@ -150,20 +150,20 @@ class ProjectBuildingController extends Controller
             $st = $this->findStoreyById($same['copiedStorey']);
             $st->same_as_id = $same['sameStorey'];
             $st->save();
-            return $this->redirect(['storeys', 'id' => $model->project_id]);
+            return $this->redirect(['/project-building-storeys/index', 'id' => $model->project_id]);
         }
         
         if($add_storey){
-            $this->addStorey($model, $add_storey);             
-            return $this->redirect(['storeys', 'id' => $id]);
+            $link = $this->addStorey($model, $add_storey);             
+            return $this->redirect(['/project-building-storeys/update', 'id' => $link]);
         }
         if($copy_storey){
-            $this->copyStorey($copy_storey);  
-            return $this->redirect(['storeys', 'id' => $id]);
+            $link = $this->copyStorey($copy_storey);  
+            return $this->redirect(['/project-building-storeys/update', 'id' => $link]);
         }
         if($remove_storey){
             $this->removeStorey($remove_storey);
-            return $this->redirect(['storeys', 'id' => $id]);     
+            return $this->redirect(['/project-building-storeys/index', 'id' => $id]);     
         }        
         return $this->render('storeys', [
             'model' => $model,
@@ -205,6 +205,9 @@ class ProjectBuildingController extends Controller
         $new->storey = $add_storey;
         //$new->order_no = 1;
         $new->save();
+
+        \Yii::$app->session->setFlash('info', '<i class="fa fa-bell"></i> Etaža '.$add_storey. ' je uspešno dodata. Podesi naziv etaže, visinu, visinsku kotu i bruto površinu etaže.');
+        return $new->id;
     }
 
     public function copyStorey($copy_storey)
@@ -253,7 +256,9 @@ class ProjectBuildingController extends Controller
                         }
                     }
                 }
-            }  
+            } 
+            \Yii::$app->session->setFlash('info', '<i class="fa fa-bell"></i> Etaža '.$copy_storey. ' je uspešno kopirana.'); 
+            return $new->id;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }                 
@@ -275,6 +280,7 @@ class ProjectBuildingController extends Controller
             }
         }
         $st_to_remove->delete();
+        \Yii::$app->session->setFlash('warning', '<i class="fa fa-warning"></i> Etaža '.$remove_storey. ' je obrisana.'); 
     }
 
 

@@ -10,7 +10,7 @@ $formatter->locale = 'sr-Latn';
 
 	<?php if($volumes = $model->projectVolumes){
 		foreach ($volumes as $volume){ 
-			if($volume->volume->type=='projekat' and $volume->volume_id!=1){ // ako su projekti ?>
+			if($volume->volume->type=='projekat'){ // ako su projekti ?>
 				<h3 class="bold uppercase"><?= $volume->number ?>. <?= c($volume->name) ?>:</h3>
 				<table class="clear nopadd">
 					<tr>

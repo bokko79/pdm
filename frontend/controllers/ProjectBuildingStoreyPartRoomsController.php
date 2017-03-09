@@ -36,9 +36,11 @@ class ProjectBuildingStoreyPartRoomsController extends Controller
      */
     public function actionIndex($id)
     {
+        $this->layout = 'project';
+        
         $project = $this->findProjectById($id);        
         $searchModel = new ProjectBuildingStoreyPartRoomsSearch();
-
+        
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         foreach($project->projectBuildingStoreys as $storey){
@@ -47,6 +49,44 @@ class ProjectBuildingStoreyPartRoomsController extends Controller
             }
         }
 
+        // validate if there is a editable input saved via AJAX
+        if (Yii::$app->request->post('hasEditable')) {
+            // instantiate your book model for saving
+            $roomId = Yii::$app->request->post('editableKey');
+            $edit = Yii::$app->request->post('editableIndex');
+            $room = \common\models\ProjectBuildingStoreyPartRooms::findOne($roomId);
+
+            $ps = Yii::$app->request->post('ProjectBuildingStoreyPartRooms');
+            if(isset($ps[$edit]['net_area'])){
+                $room->net_area = $ps[$edit]['net_area']; 
+                if($room->sub_net_area==null){
+                    $room->sub_net_area = $room->net_area;
+                }
+            }
+            if(isset($ps[$edit]['flooring'])){
+                $room->flooring = $ps[$edit]['flooring'];
+            }
+            if(isset($ps[$edit]['sub_net_area'])){
+                $room->sub_net_area = $ps[$edit]['sub_net_area'];
+                if($room->net_area==null){
+                    $room->net_area = $room->sub_net_area;
+                }
+            }
+            
+            if(isset($ps[$edit]['name'])){
+                $room->name = $ps[$edit]['name'];
+            }
+            if(isset($ps[$edit]['mark'])){
+                $room->mark = $ps[$edit]['mark'];
+            }
+            
+            // can save model or do something before saving model
+            $room->save();
+
+            $out = \yii\helpers\Json::encode(['output'=>'', 'message'=>'']);
+            echo $out;
+            return;
+        }
         return $this->render('index', [
             'project' => $project,
             'searchModel' => $searchModel,
@@ -125,9 +165,10 @@ class ProjectBuildingStoreyPartRoomsController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/project-building-storey-parts/view', 'id' => $model->project_building_storey_part_id]);
     }
 
     /**

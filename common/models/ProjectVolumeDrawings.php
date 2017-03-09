@@ -36,11 +36,11 @@ class ProjectVolumeDrawings extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_volume_id', 'number', 'name', 'scale'], 'required'],
-            [['project_volume_id', 'project_building_storey_id', 'scale'], 'integer'],
+            [['project_volume_id', 'number', 'scale'], 'required'],
+            [['project_volume_id', 'project_building_storey_id', 'scale', 'print_title'], 'integer'],
             [['type', 'note'], 'string'],
             [['number'], 'string', 'max' => 5],
-            [['name'], 'string', 'max' => 40],
+            [['name'], 'string', 'max' => 80],
             [['title'], 'string', 'max' => 128],
             [['project_volume_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectVolumes::className(), 'targetAttribute' => ['project_volume_id' => 'id']],
             [['project_building_storey_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuildingStoreys::className(), 'targetAttribute' => ['project_building_storey_id' => 'id']],
@@ -54,14 +54,15 @@ class ProjectVolumeDrawings extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_volume_id' => Yii::t('app', 'Project Volume ID'),
-            'project_building_storey_id' => Yii::t('app', 'Project Building Storey ID'),
-            'type' => Yii::t('app', 'Type'),
-            'number' => Yii::t('app', 'Number'),
-            'name' => Yii::t('app', 'Name'),
-            'title' => Yii::t('app', 'Title'),
-            'scale' => Yii::t('app', 'Scale'),
-            'note' => Yii::t('app', 'Note'),
+            'project_volume_id' => Yii::t('app', 'Sveska projekta'),
+            'project_building_storey_id' => Yii::t('app', 'Etaža objekta'),
+            'type' => Yii::t('app', 'Vrsta crteža'),
+            'number' => Yii::t('app', 'Broj crteža'),
+            'name' => Yii::t('app', 'Naziv crteža'),
+            'title' => Yii::t('app', 'Glavni naslov'),
+            'print_title' => Yii::t('app', 'Ispisivanje naslova'),
+            'scale' => Yii::t('app', 'Razmera'),
+            'note' => Yii::t('app', 'Napomena'),
         ];
     }
 
@@ -79,5 +80,35 @@ class ProjectVolumeDrawings extends \yii\db\ActiveRecord
     public function getProjectBuildingStorey()
     {
         return $this->hasOne(ProjectBuildingStoreys::className(), ['id' => 'project_building_storey_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFullType()
+    {
+        $type;
+        switch ($this->type) {
+            case 'osnova': $type = 'osnova'; break; 
+            case 'etaza': $type = 'osnova etaže'; break; 
+            case 'temelj': $type ='osnova temelja'; break; 
+            case 'krovna': $type = 'osnova krovne konstrukcije'; break; 
+            case 'presek': $type = 'presek'; break; 
+            case 'izgled': $type = 'izgled'; break; 
+            case 'detalj': $type = 'detalj'; break; 
+            case 'situacija': $type = 'situacija'; break; 
+            case 'izv1': $type = 'situacioni plan sa osnovom krova'; break;
+            case 'izv2': $type = 'situaciono nivelacioni plan sa osnovom prizemlja'; break; 
+            case 'izv3': $type = 'situaciono nivelacioni plan sa prikazom saobraćajnog rešenja'; break; 
+            case 'izv4': $type = 'situacioni plan sa prikazom sinhron-plana instalacija'; break; 
+            case 'izv5': $type = 'osnova etaže pristup svetlarniku'; break;
+            case '3d': $type = '3D prikaz'; break;
+            case 'sema': $type = 'šema'; break;
+            
+            default:
+                'Osnova';
+                break;
+        }
+        return $type;
     }
 }

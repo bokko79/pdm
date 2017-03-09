@@ -226,7 +226,7 @@ class ProjectsController extends Controller
         $new->project_id = $model->id;
         $new->storey = 'prizemlje';
         $new->level = 0.00;
-        $new->order_no = 1;
+        $new->order_no = "1";
         $new->save();
     }
 
@@ -268,7 +268,7 @@ class ProjectsController extends Controller
         $projectVolume->code = $model->code;
         $projectVolume->control_practice_id = $model->control_practice_id;
         $projectVolume->control_engineer_id = $model->control_engineer_id;
-        $projectVolume->control_engineer_licence_id = ($model->controlEngineer->engineerLicences) ? $model->controlEngineer->engineerLicences[0]->id : 4;
+        $projectVolume->control_engineer_licence_id = ($model->controlEngineer and $model->controlEngineer->engineerLicences) ? $model->controlEngineer->engineerLicences[0]->id : 4;
         $projectVolume->save();
     }
 

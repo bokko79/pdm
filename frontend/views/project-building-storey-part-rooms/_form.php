@@ -11,8 +11,10 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\FileInput;
 use dosamigos\tinymce\TinyMce;
 
-if($model->flooring==null)
-$model->flooring='parket';
+if($model->flooring==null){
+  $model->flooring='parket';  
+}
+
 
 ?>
 
@@ -28,7 +30,7 @@ $model->flooring='parket';
 <h3>Osnovni podaci</h3>
 
     <?= $form->field($model, 'project_building_storey_part_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\ProjectBuildingStoreyParts::find()->all(), 'id', 'type'),
+            'data' => ArrayHelper::map(\common\models\ProjectBuildingStoreyParts::find()->all(), 'id', 'fullType'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,    
@@ -39,33 +41,37 @@ $model->flooring='parket';
             'data' => ArrayHelper::map(\common\models\RoomTypes::find()->all(), 'id', 'name', 'type'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
-            'changeOnReset' => false,         
-        ])->hint('') ?>
-
- 
-    <?= $form->field($model, 'net_area')->input('number', ['min'=>0, 'step'=>0.01, 'style'=>'width:40%']) ?>
+            'changeOnReset' => false, 
+            'disabled' => $model->room_type_id ? true : false,         
+        ])->hint('') ?>    
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'mark')->input('number', ['min'=>0, 'style'=>'width:40%']) ?>
-
-   
+    <?= $form->field($model, 'mark')->input('number', ['min'=>0, 'style'=>'width:40%']) ?>   
 
     <?= $form->field($model, 'flooring')->dropDownList([ 'parket' => 'Parket', 'keramika' => 'Keramika', 'estrih' => 'Estrih', 'tarkett' => 'Tarkett', 'beton' => 'Beton', 'opeka' => 'Opeka', 'kamen' => 'Kamen', 'teraco' => 'Teraco', 'zemlja' => 'Zemlja', 'tepih' => 'Tepih', 'drugo' => 'Drugo', ], ['prompt' => '']) ?>
 
-    
-
-    <?= $form->field($model, 'sub_net_area')->textInput(['maxlength' => true]) ?>
 <hr>
-<h3>Ostali detalji prostorije</h3>
+<h3>Površina prostorije</h3>
 
-    <?= $form->field($model, 'length')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'net_area', [
+                'addon' => ['prepend' => ['content'=>'m<sup>2</sup>']]])->input('number', ['min'=>0, 'step'=>0.01, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'width')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'circumference')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'sub_net_area', [
+                'addon' => ['prepend' => ['content'=>'m<sup>2</sup>']]])->input('number', ['min'=>0, 'step'=>0.01, 'style'=>'width:40%']) ?>
+<hr>
+<h3>Dimenzije prostorije</h3>
+    <?= $form->field($model, 'circumference', [
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['min'=>0, 'step'=>0.01, 'style'=>'width:40%']) ?>
 
-    <?= $form->field($model, 'height')->textInput(['maxlength' => true]) ?>
-    
+    <?= $form->field($model, 'length', [
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['min'=>0, 'step'=>0.01, 'style'=>'width:40%']) ?>
+
+    <?= $form->field($model, 'width', [
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['min'=>0, 'step'=>0.01, 'style'=>'width:40%']) ?>    
+
+    <?= $form->field($model, 'height', [
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['min'=>0, 'step'=>0.01, 'style'=>'width:40%']) ?>    
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

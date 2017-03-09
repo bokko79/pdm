@@ -789,4 +789,39 @@ class ProjectBuilding extends \yii\db\ActiveRecord
         }
         return $total;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRooms()
+    {
+        $query_cla = \common\models\ProjectBuildingStoreyPartRooms::find()->where('id=0');
+        
+        if($storeys = $this->project->projectBuildingStoreys){
+            foreach ($storeys as $key => $storey) {
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach ($parts as $key => $part) {
+                        $query_cla->orWhere(['project_building_storey_part_id' => $part->id]);
+                    }
+                }                
+            }
+        }
+        
+        return new \yii\data\ActiveDataProvider([
+                'query' => $query_cla->orderBy('project_building_storey_part_id ASC, CAST(mark AS INTEGER)')->groupBy(''),
+            ]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStoreys()
+    {
+        $query_cla = \common\models\ProjectBuildingStoreys::find()->where('project_id='.$this->project_id);
+                        
+        return new \yii\data\ActiveDataProvider([
+                'query' => $query_cla->orderBy('level')->groupBy(''),
+            ]);
+    }
+
 }

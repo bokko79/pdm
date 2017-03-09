@@ -23,7 +23,7 @@ use dosamigos\tinymce\TinyMce;
 <hr>
 <h3>Osnovni podaci</h3>
 
-    <?= $form->field($model, 'type')->dropDownList([ 'stan' => 'Stan', 'biz' => 'Biz', 'tech' => 'Tech', 'common' => 'Common', 'garage' => 'Garage', 'external' => 'External', 'whole' => 'Whole', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'type')->dropDownList([ 'stan' => 'Stan', 'stamb' => 'Stambene prostorije', 'biz' => 'Poslovni prostor - lokal', 'posl' => 'Poslovne prostorije', 'tech' => 'Tehničke prostorije', 'common' => 'Zajedničke prostorije', 'garage' => 'Garažne i parking prostorije', 'external' => 'Spoljašnje prostorije', ], ['prompt' => '']) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 

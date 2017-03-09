@@ -77,49 +77,70 @@ $model = isset($this->params['project']) ? $this->params['project'] : [];
     ?>
 
     <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <div class="card_container record-full grid-item transparent no-shadow no-margin fadeInUp animated" id="">
-            <div class="primary-context normal">
-                <div class="head grand thin"><i class="fa fa-file-powerpoint-o"></i> <?= $model->code. ': '.$model->name. ' ('.$model->projectBuilding->spratnost.')' ?>
-                <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog"></i> Podesi', Url::to(['/projects/update', 'id'=>$model->id]), ['class' => 'btn btn-success btn-sm']) ?>
-                            <?= Html::a($model->status=='deleted' ? Yii::t('app', 'Aktiviraj') : Yii::t('app', '<i class="fa fa-power-off"></i>'), ['activate', 'id' => $model->id], ['class' => 'btn btn-danger btn-sm']) ?>
-                    </div>
-                </div>
-                <div class="subhead">Podaci projekta.</div>
+        <div class="row">
+            <div class="col-sm-12">
+                <?= Breadcrumbs::widget([
+                    'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                ]) ?>
             </div>
         </div>
-        <?php
-            echo Nav::widget([
-                'options'=>['class'=>'nav nav-pills', 'style'=>'z-index:10000'],
-                'encodeLabels' => false,
-                'items' => [
-                    ['label' => '<i class="fa fa-home"></i> '.$model->code, 'url' => ['/projects/view', 'id'=>$model->id]],
-                   /* ['label' => '<i class="fa fa-user-circle-o"></i> Investitori', 'url' => ['/project-clients/view', 'id'=>$model->id]],*/
-                   /* ['label' => '<i class="fa fa-file"></i> Dokumenti', 'url' => '#'],*/
-                    ['label' => '<i class="fa fa-map-marker"></i> Parcela', 'url' => ['/project-lot/view', 'id'=>$model->id]],
-                    ['label' => '<i class="fa fa-building"></i> Objekat', 'url' => ['/project-building/view', 'id'=>$model->id]],
-                    ['label' => '<i class="fa fa-bars"></i> Prostori objekta', 'url' => ['/project-building/storeys', 'id'=>$model->id]],
-                    ['label' => '<i class="fa fa-pencil"></i> Opis objekta', 'items' => [
-                        '<li class="dropdown-header">Tehnički opis</li>',
-                        ['label' => 'Arhitektonsko rešenje', 'url' => ['/project-building-characteristics/update', 'id'=>$model->id]],
-                        ['label' => 'Konstrukcija', 'url' => ['/project-building-structure/update', 'id'=>$model->id]],
-                        ['label' => 'Materijalizacija', 'url' => ['/project-building-materials/update', 'id'=>$model->id]],
-                        ['label' => 'Izolacija', 'url' => ['/project-building-insulations/update', 'id'=>$model->id]],
-                        ['label' => 'Instalacije', 'url' => ['/project-building-services/update', 'id'=>$model->id]],
-                        '<li class="divider"></li>',
-                        '<li class="dropdown-header">Numerička dokumentacija</li>',
-                        ['label' => '<i class="fa fa-calculator"></i> Predmer i predračun', 'url' => '#'],
-                        ['label' => '<i class="fa fa-calendar"></i> Šeme stolarije i bravarije', 'url' => '#'], 
-                    ]],
-                    
-                ]
-            ]);
-        ?>
+
+        <div class="row">
+            <div class="col-sm-12">
+               <div class="card_container record-full grid-item transparent no-shadow no-margin fadeInUp animated" id="">
+                    <div class="primary-context normal">
+                        <div class="head grand thin"><i class="fa fa-file-powerpoint-o"></i> <?= $model->code. ': '.$model->name. ' ('.$model->projectBuilding->spratnost.')' ?>
+                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog"></i> Podesi', Url::to(['/projects/update', 'id'=>$model->id]), ['class' => 'btn btn-success btn-sm']) ?>
+                                    <?= Html::a($model->status=='deleted' ? Yii::t('app', 'Aktiviraj') : Yii::t('app', '<i class="fa fa-power-off"></i>'), ['activate', 'id' => $model->id], ['class' => 'btn btn-danger btn-sm']) ?>
+                            </div>
+                        </div>
+                        <div class="subhead">Podaci projekta.</div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-12">
+                <?php
+                    echo Nav::widget([
+                        'options'=>['class'=>'nav nav-pills nav-justified', 'style'=>'z-index:10000'],
+                        'encodeLabels' => false,
+                        'items' => [
+                            ['label' => '<i class="fa fa-home"></i> '.$model->code.': Početna', 'url' => ['/projects/view', 'id'=>$model->id]],
+                           /* ['label' => '<i class="fa fa-user-circle-o"></i> Investitori', 'url' => ['/project-clients/view', 'id'=>$model->id]],*/
+                           /* ['label' => '<i class="fa fa-file"></i> Dokumenti', 'url' => '#'],*/
+                            ['label' => '<i class="fa fa-map-marker"></i> Parcela', 'url' => ['/project-lot/view', 'id'=>$model->id]],
+                            ['label' => '<i class="fa fa-building"></i> Objekat', 'url' => ['/project-building/view', 'id'=>$model->id]],
+                            ['label' => '<i class="fa fa-calculator"></i> Površine', 'url' => ['/project-building-storeys/index', 'id'=>$model->id]],
+                            
+                            ['label' => '<i class="fa fa-pencil"></i> Opis objekta', 'items' => [
+                                '<li class="dropdown-header">Tehnički opis</li>',
+                                ['label' => 'Arhitektonsko rešenje', 'url' => ['/project-building-characteristics/update', 'id'=>$model->id]],
+                                ['label' => 'Konstrukcija', 'url' => ['/project-building-structure/update', 'id'=>$model->id]],
+                                ['label' => 'Materijalizacija', 'url' => ['/project-building-materials/update', 'id'=>$model->id]],
+                                ['label' => 'Izolacija', 'url' => ['/project-building-insulations/update', 'id'=>$model->id]],
+                                ['label' => 'Instalacije', 'url' => ['/project-building-services/update', 'id'=>$model->id]],
+                                '<li class="divider"></li>',
+                                '<li class="dropdown-header">Numerička dokumentacija</li>',
+                                ['label' => '<i class="fa fa-calculator"></i> Predmer i predračun', 'url' => '#'],
+                                ['label' => '<i class="fa fa-calendar"></i> Šeme stolarije i bravarije', 'url' => '#'], 
+                            ]],
+                            
+                        ]
+                    ]);
+                ?>
+            </div>
+        </div>
+                
+        
         <hr style="margin:5px 0 30px;">
-        <?= Alert::widget() ?>
-        <?= $content ?>
+        <div class="row">
+            <div class="col-sm-12">
+                <?= Alert::widget() ?>
+                <?= $content ?>
+            </div>
+        </div>
     </div>
 </div>
 

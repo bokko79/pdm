@@ -66,6 +66,10 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
             'structure' => Yii::t('app', 'Struktura'),
             'area' => Yii::t('app', 'Površina'),
             'description' => Yii::t('app', 'Opis'),
+            'room_to_add' => 'Lista prostorija za dodavanje celini',
+            'fullType' => 'Vrsta celine',
+            'subNetArea' => 'Reduk. neto površina',
+            'netArea' => 'Neto površina',
         ];
     }
 
@@ -74,7 +78,7 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
      */
     public function getProjectBuildingStoreyPartRooms()
     {
-        return $this->hasMany(ProjectBuildingStoreyPartRooms::className(), ['project_building_storey_part_id' => 'id']);
+        return $this->hasMany(ProjectBuildingStoreyPartRooms::className(), ['project_building_storey_part_id' => 'id'])->orderBy('CAST(mark as INTEGER)');
     }
 
     /**
@@ -141,8 +145,14 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
             case 'stan':
                 $type = 'stan';
                 break;
+            case 'stamb':
+                $type = 'stambene prostorije';
+                break;
             case 'biz':
                 $type = 'poslovni prostor';
+                break;
+            case 'posl':
+                $type = 'poslovne prostorije';
                 break;
             case 'common':
                 $type = 'zajedničke prostorije';
@@ -173,5 +183,72 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
             }
         }
         return $rooms;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPoslovne()
+    {
+        $rooms = [];
+        foreach($this->projectBuildingStoreyParts as $room){
+            if ($room->group=='Poslovne prostorije'){
+                $rooms[] = $room;
+            }
+        }
+        return $rooms;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getZajednicke()
+    {
+        $rooms = [];
+        foreach($this->projectBuildingStoreyParts as $room){
+            if ($room->group=='Zajedničke prostorije'){
+                $rooms[] = $room;
+            }
+        }
+        return $rooms;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTehnicke()
+    {
+        $rooms = [];
+        foreach($this->projectBuildingStoreyParts as $room){
+            if ($room->group=='Tehničke prostorije'){
+                $rooms[] = $room;
+            }
+        }
+        return $rooms;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOstale()
+    {
+        $rooms = [];
+        foreach($this->projectBuildingStoreyParts as $room){
+            if ($room->group=='Ostale prostorije'){
+                $rooms[] = $room;
+            }
+        }
+        return $rooms;
+    }
+
+    public function saveNewRoom()
+    {
+        $new_room = new \common\models\ProjectBuildingStoreyPartRooms();
+        $new_room->project_building_storey_part_id = $this->id;
+        $new_room->room_type_id = 15;
+        $new_room->name = 'ulaz';
+        $new_room->mark = '1';
+        $new_room->flooring = 'keramika';
+        $new_room->save();
     }
 }

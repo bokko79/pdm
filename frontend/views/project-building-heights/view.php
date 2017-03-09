@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model common\models\ProjectBuildingHeights */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Project Building Heights'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Visine dela objekta'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="project-building-heights-view">

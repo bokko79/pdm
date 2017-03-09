@@ -8,6 +8,7 @@ use common\models\ProjectVolumesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 
 /**
  * ProjectVolumesController implements the CRUD actions for ProjectVolumes model.
@@ -54,10 +55,40 @@ class ProjectVolumesController extends Controller
         $this->layout = 'project';
         
         $model = $this->findModel($id);
+        $query_cla = \common\models\ProjectVolumeDrawings::find()->where('project_volume_id='.$id)->orderBy('CAST(number AS INTEGER)');
         $model->dataReqs();
+
+        // validate if there is a editable input saved via AJAX
+        if (Yii::$app->request->post('hasEditable')) {
+            // instantiate your book model for saving
+            $drawId = Yii::$app->request->post('editableKey');
+            $edit = Yii::$app->request->post('editableIndex');
+            $drawing = \common\models\ProjectVolumeDrawings::findOne($drawId);
+            $out = \yii\helpers\Json::encode(['output'=>'', 'message'=>'']);
+            $ps = Yii::$app->request->post('ProjectVolumeDrawings');
+            if(isset($ps[$edit]['number'])){
+                $drawing->number = $ps[$edit]['number'];                    
+            }
+            if(isset($ps[$edit]['scale'])){
+                $drawing->scale = $ps[$edit]['scale'];
+            }            
+            if(isset($ps[$edit]['name'])){
+                $drawing->name = $ps[$edit]['name'];
+            }
+            if(isset($ps[$edit]['title'])){
+                $drawing->title = $ps[$edit]['title'];
+            }
+            
+            $drawing->save();
+            echo \yii\helpers\Json::encode(['output'=>'', 'message'=>'']);
+            return;
+        }
 
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'projectVolumeDrawings' => new ActiveDataProvider([
+                'query' => $query_cla,
+            ]),
         ]);
     }
 
@@ -77,6 +108,10 @@ class ProjectVolumesController extends Controller
             $model->time = time();
             $engLic = $this->findEngineerLicence($model->engineer_licence_id);
             $model->engineer_id = $engLic->engineer_id;
+            if($model->name==null){
+                $volume = $this->findVolumeById($model->volume_id);
+                $model->name = $volume->name;
+            }
             if($model->control_engineer_licence_id){
                 $engLicC = $this->findEngineerLicence($model->control_engineer_licence_id);
                 $model->control_engineer_id = $engLic->engineer_id;
@@ -126,9 +161,16 @@ class ProjectVolumesController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        // delete all the drawings
 
-        return $this->redirect(['index']);
+        if($drawings = $model->projectVolumeDrawings){
+            foreach($drawings as $drawing){
+                $drawing->delete();
+            }
+        }
+        $model->delete();
+        return $this->redirect(['/projects/view', 'id' => $model->project_id]);
     }
 
     /**
@@ -141,6 +183,22 @@ class ProjectVolumesController extends Controller
     protected function findModel($id)
     {
         if (($model = ProjectVolumes::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectVolumes model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectVolumes the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findVolumeById($id)
+    {
+        if (($model = \common\models\Volumes::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
