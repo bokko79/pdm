@@ -83,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'template' => '{generateRooms}{view}{update}{delete}',
                             'buttons' => [                
                                 'generateRooms' => function ($url, $model, $key) {
-                                    return Html::a('<i class="fa fa-cubes"></i>', $url, ['class'=>'btn btn-primary btn-sm', 'style'=>'margin-right:10px;', 'data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#'.($model->projectBuildingStoreyPartRooms ? '' : 'init-').'rooms-modal'.$model->id]);
+                                    return Html::a('<i class="fa fa-cubes"></i>', $url, ['class'=>'btn btn-primary btn-sm', 'style'=>'margin-right:10px;', 'data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#'.($model->projectBuildingStoreyPartRooms ? 'init-' : 'init-').'rooms-modal'.$model->id]);
                                 },
                                 'view' => function ($url, $model, $key) {
                                     return Html::a('<i class="fa fa-eye"></i>', $url, ['class'=>'btn btn-default btn-sm', 'style'=>'margin-right:10px;']);
@@ -111,11 +111,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                 }
 
                             },
-                            'visibleButtons' => [
+                            /*'visibleButtons' => [
                                 'generateRooms' => function ($model, $key, $index) {
                                     return $model->projectBuildingStoreyPartRooms ? false : true;
                                  }
-                            ]
+                            ]*/
 
                         ],
                     ];
@@ -165,7 +165,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 if($parts = $model->projectBuildingStoreyParts){
     foreach($parts as $part){
-        if($part->projectBuildingStoreyPartRooms){
+        /*if($part->projectBuildingStoreyPartRooms){
             Modal::begin([
                 'id'=>'rooms-modal'.$part->id,
                 'size'=>Modal::SIZE_LARGE,
@@ -174,7 +174,7 @@ if($parts = $model->projectBuildingStoreyParts){
             ]); ?>
                 <div id="loading"><i class="fa fa-cog fa-spin fa-3x gray-color"></i></div>
             <?php Modal::end();
-        } else {
+        } else {*/
             Modal::begin([
                 'id'=>'init-rooms-modal'.$part->id,
                 'size'=>Modal::SIZE_LARGE,
@@ -185,6 +185,6 @@ if($parts = $model->projectBuildingStoreyParts){
             <?php Modal::end();
             
 
-        }
+        /*}*/
     }
 } ?>

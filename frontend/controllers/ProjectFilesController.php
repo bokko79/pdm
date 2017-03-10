@@ -77,7 +77,7 @@ class ProjectFilesController extends Controller
                     $model->file_id = $image;
                     $model->save();
                 }                    
-                return $this->redirect(['/projects/view', 'id' => $model->project_id]);
+                return $this->redirect(['/projects/view', 'id' => $model->project_id, '#'=>'w1-tab2']);
             }             
         } else {
             return $this->render('create', [
@@ -104,7 +104,7 @@ class ProjectFilesController extends Controller
                     $model->file_id = $image;
                     $model->save();
                 } 
-                return $this->redirect(['/projects/view', 'id' => $model->project_id]);
+                return $this->redirect(['/projects/view', 'id' => $model->project_id, '#'=>'w1-tab2']);
             }                    
         } else {
             return $this->render('update', [

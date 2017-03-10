@@ -22,7 +22,8 @@ use yii\bootstrap\Nav;
     <div class="secondary-context">
         <?php if($projectClients = $model->projectClients){
             foreach($projectClients as $projectClient){
-                echo Html::a('<i class="fa fa-building"></i> '.$projectClient->client->name, Url::to(['/project-clients/update', 'id'=>$projectClient->id]), ['class' => 'btn btn-default btn-sm']).'<hr>';
+                $client = $projectClient->client;
+                echo Html::a('<i class="fa fa-building"></i> '.$client->name . '<br>'.$client->location->fullAddress, Url::to(['/project-clients/update', 'id'=>$projectClient->id]), ['class' => 'btn btn-default btn-sm']).'<hr>';
             }
         } ?>
     </div>                

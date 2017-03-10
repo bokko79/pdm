@@ -266,10 +266,10 @@ ul.disc {list-style-type:disc}
 .navpro-tabs>.active>a,.navpro-tabs>.active>a:hover{color:#555;cursor:pointer;background-color:#fff;border:none;border-bottom-color:transparent; box-shadow:0px 0px 3px #ddd;}
 
 /* multiple columns */	
-.column6 {-webkit-column-count: 6; /* Chrome, Safari, Opera */-moz-column-count: 6; /* Firefox */column-count: 6; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; display:table;}
-.column4 {-webkit-column-count: 4; /* Chrome, Safari, Opera */-moz-column-count: 4; /* Firefox */column-count: 4; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; display:table;}
-.column3 {-webkit-column-count: 3; /* Chrome, Safari, Opera */-moz-column-count: 3; /* Firefox */column-count: 3; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; display:table;}
-.column2 {-webkit-column-count: 2; /* Chrome, Safari, Opera */-moz-column-count: 2; /* Firefox */column-count: 2; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; display:table;}
+.column6 {-webkit-column-count: 6; /* Chrome, Safari, Opera */-moz-column-count: 6; /* Firefox */column-count: 6; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important;}
+.column4 {-webkit-column-count: 4; /* Chrome, Safari, Opera */-moz-column-count: 4; /* Firefox */column-count: 4; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important;}
+.column3 {-webkit-column-count: 3; /* Chrome, Safari, Opera */-moz-column-count: 3; /* Firefox */column-count: 3; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important;}
+.column2 {-webkit-column-count: 2; /* Chrome, Safari, Opera */-moz-column-count: 2; /* Firefox */column-count: 2; -webkit-column-break-inside: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important;}
 
 /* fieldsets */
 fieldset {border:1px solid #DDDDDD; background: white; padding: 20px; margin-bottom:20px;}
@@ -1035,4 +1035,18 @@ fieldset.no_data {margin: 0px 0 30px; padding: 40px; border:1px solid #ddd; bord
 .tabs-krajee.tabs-left .tab-content {margin-left: 25%;}
 .nav-justified > li > a {font-size: 115%;}
 
+
+.box1 {}
+.box1 ul {background: rgba(84, 70, 19, 0.59); padding: 10px; box-shadow: 0px 0px 8px #777; border-radius: 3px;}
+.box1 li {padding:3px 0; color: white; font-weight: bold; }
+.box1 li:hover, .removeAllButton {cursor: pointer;color: lightblue;}
+.removeAllButton { color: blue;}
+.box2 select {border:none; overflow: auto; width: 90%;}
+.box2 select:active, .box2 select:hover {
+  outline: none
+}
+.box2 option {background-color: white; color:black;
+    color:#000; font-size: 15px; padding:3px 10px; margin:3px 0; font-weight: bold;}
+.box2 option:selected {background-color: white !important; 
+    color:#000; font-size: 14px;}
 

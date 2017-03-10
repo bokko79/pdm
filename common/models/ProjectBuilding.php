@@ -79,11 +79,11 @@ class ProjectBuilding extends \yii\db\ActiveRecord
     {
         return [
             'project_id' => Yii::t('app', 'Naziv projekta'),
-            'building_id' => Yii::t('app', 'Klasa objekta'),
-            'name' => Yii::t('app', 'Naziv objekta'),
-            'type' => Yii::t('app', 'Tip objekta'),
+            'building_id' => Yii::t('app', 'Pretežna klasa'),
+            'name' => Yii::t('app', 'Naziv'),
+            'type' => Yii::t('app', 'Tip'),
             'ground_floor_level' => Yii::t('app', 'Apsolutna kota prizemlja'),
-            'building_type_id' => Yii::t('app', 'Namena objekta'),
+            'building_type_id' => Yii::t('app', 'Namena'),
             'building_line_dist' => Yii::t('app', 'Rastojanje građ. od reg. linije'),
             'width' => Yii::t('app', 'Širina'),
             'length' => Yii::t('app', 'Dužina'),

@@ -65,7 +65,7 @@ class Projects extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'code', 'user_id', 'client_id', 'building_id', 'practice_id', 'engineer_id'], 'required'],
+            [['name', 'code', 'user_id', 'client_id', 'building_id', 'practice_id', 'engineer_id', 'phase', 'work'], 'required'],
             [['client_id', 'building_id', 'location_id', 'practice_id', 'engineer_id', 'control_practice_id', 'control_engineer_id', 'builder_practice_id', 'builder_engineer_id', 'supervision_practice_id', 'supervision_engineer_id', 'time', 'year'], 'integer'],
             [['code'], 'unique'],
             [['phase', 'work', 'status'], 'string'],
@@ -507,7 +507,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getHintPractice()
     {
-        return 'Projektant nije na listi? ' .\yii\helpers\Html::a('Dodaj novog projektanta', \yii\helpers\Url::to(['/practices/create']));
+        return 'Projektant nije na listi? ' .\yii\helpers\Html::a('Dodaj novog projektanta', \yii\helpers\Url::to(['/practices/create']), ['target'=>'_blank']);
     }
 
     /**
@@ -515,7 +515,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getHintEngineer()
     {
-        return 'Odgovorni/glavni projektant nije na listi? ' .\yii\helpers\Html::a('Dodaj novog projektanta', \yii\helpers\Url::to(['/engineers/create']));
+        return 'Odgovorni/glavni projektant nije na listi? ' .\yii\helpers\Html::a('Dodaj novog projektanta', \yii\helpers\Url::to(['/engineers/create']), ['target'=>'_blank']);
     }
 
     /**
@@ -523,7 +523,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getHintControlPractice()
     {
-        return 'Ovaj podatak je obavezan samo za Izvod iz projekta u fazi PGD. Vršilac tehničke kontrole nije na listi? ' .\yii\helpers\Html::a('Dodaj novog vršioca', \yii\helpers\Url::to(['/practices/create']));
+        return 'Ovaj podatak je obavezan samo za Izvod iz projekta u fazi PGD. Vršilac tehničke kontrole nije na listi? ' .\yii\helpers\Html::a('Dodaj novog vršioca', \yii\helpers\Url::to(['/practices/create']), ['target'=>'_blank']);
     }
 
     /**
@@ -531,7 +531,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getHintControlEngineer()
     {
-        return 'Ovaj podatak je obavezan samo za Izvod iz projekta u fazi PGD. Odgovorno lice vršioca tehničke kontrole nije na listi? ' .\yii\helpers\Html::a('Dodaj novog projektanta', \yii\helpers\Url::to(['/engineers/create']));
+        return 'Ovaj podatak je obavezan samo za Izvod iz projekta u fazi PGD. Odgovorno lice vršioca tehničke kontrole nije na listi? ' .\yii\helpers\Html::a('Dodaj novog projektanta', \yii\helpers\Url::to(['/engineers/create']), ['target'=>'_blank']);
     }
 
     /**
@@ -539,7 +539,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getHintClient()
     {
-        return 'Investitor nije na listi? ' .\yii\helpers\Html::a('Dodaj novog investitora', \yii\helpers\Url::to(['/clients/create']));
+        return 'Investitor nije na listi? ' .\yii\helpers\Html::a('Dodaj novog investitora', \yii\helpers\Url::to(['/clients/create']), ['target'=>'_blank']);
     }
 
     /**

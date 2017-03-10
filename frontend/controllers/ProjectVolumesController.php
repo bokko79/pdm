@@ -36,12 +36,18 @@ class ProjectVolumesController extends Controller
      */
     public function actionIndex()
     {
+        $this->layout = 'project';
         $searchModel = new ProjectVolumesSearch();
+        if($p = Yii::$app->request->get('ProjectVolumes')){
+            $searchModel->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
+            $model = $this->findProjectById($searchModel->project_id);
+        }
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'model' => $model,
         ]);
     }
 
@@ -57,7 +63,6 @@ class ProjectVolumesController extends Controller
         $model = $this->findModel($id);
         $query_cla = \common\models\ProjectVolumeDrawings::find()->where('project_volume_id='.$id)->orderBy('CAST(number AS INTEGER)');
         $model->dataReqs();
-
         // validate if there is a editable input saved via AJAX
         if (Yii::$app->request->post('hasEditable')) {
             // instantiate your book model for saving
@@ -199,6 +204,22 @@ class ProjectVolumesController extends Controller
     protected function findVolumeById($id)
     {
         if (($model = \common\models\Volumes::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectVolumes model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectVolumes the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findProjectById($id)
+    {
+        if (($model = \common\models\Projects::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

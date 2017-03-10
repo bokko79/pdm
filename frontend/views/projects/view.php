@@ -23,12 +23,12 @@ $items = [
         'content'=>$this->render('tabs/_general', ['model'=>$model]),
         'active'=>true
     ],
-    [
+    /*[
         'label'=>'Tehnička dokumentacija',
         'content'=>$this->render('tabs/_volumes', ['model'=>$model]),
-    ],
+    ],*/
     [
-        'label'=>'Investitori projekta',
+        'label'=>'Investitori',
         'content'=>$this->render('tabs/_clients', ['model'=>$model]),
     ],
     [
@@ -51,5 +51,3 @@ $items = [
         </div>  
     </div>
 </div>
-
-<?=  Html::a('dsdf', Url::to(['project-lot/view?id=11#w1-tab2']), ['data-toggle'=>'tab']) ?>

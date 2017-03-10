@@ -128,8 +128,10 @@ $(document).ready(function(){
   $("[id^='init-rooms-modal']").one("show.bs.modal", function(e) {
     var id = $(this).attr('id');
     var lastChar = id.replace('init-rooms-modal', '');
+    console.log(lastChar);
     $(this).find(".modal-body").load('/project-building-storey-parts/init-rooms?id=' + lastChar, function() {
       checkAllOrNone();
+      selectRooms();
     });
   });
  
@@ -143,6 +145,59 @@ $(document).ready(function(){
   $('.nav-tabs a').on('shown.bs.tab', function (e) {
       window.location.hash = e.target.hash;
   })
+
+  function selectRooms() {
+    $(".box1 li").on('click', function(){
+      var myClass = $(this).attr("class");
+      var myId = $(this).attr("id");
+      $(this).closest('.row').find('.box2 select').append('<option value="' + myClass + '" selected><i class="fa fa-arrow-circle-right"></i> ' + myId + '</option>');
+    });
+
+    $(".removeAllButton").on('click', function(){
+      $(this).closest('.row').find('.box2 select').empty();
+    });
+
+    $(".box2 select").on('change', function(){      
+      var selectVal = $(this).val();
+      $('.box2 select option').each(function() {
+          if ( $(this).val() == selectVal ) {
+              $(this).remove();
+          }
+      });
+    });
+  }
+
+(function ($) {
+    $.each(['show', 'hide'], function (i, ev) {
+      var el = $.fn[ev];
+      $.fn[ev] = function () {
+        this.trigger(ev);
+        return el.apply(this, arguments);
+      };
+    });
+  })(jQuery);
+
+// editable column autofocus input on click
+  $('.kv-editable-popover').on('show',function(){
+      $(this).find('input').focus();
+  });
+
+// tabs refresh
+  $('ul.nav-tabs a').click(function(e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+
+  // store the currently selected tab in the hash value
+  $("ul.nav-tabs > li > a").on("shown.bs.tab", function(e) {
+    var id = $(e.target).attr("href").substr(1);
+    window.location.hash = id;
+  });
+
+  // on load of the page: switch to the currently selected tab
+  var hash = window.location.hash;
+  $('ul.nav-tabs a[href="' + hash + '"]').tab('show');
+
 });
 
 

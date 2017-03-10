@@ -30,21 +30,6 @@ class ProjectLotController extends Controller
     }
 
     /**
-     * Lists all ProjectLot models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new ProjectLotSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
      * Displays a single ProjectLot model.
      * @param string $id
      * @return mixed

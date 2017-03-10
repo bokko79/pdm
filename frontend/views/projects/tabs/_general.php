@@ -11,7 +11,9 @@ use yii\bootstrap\Nav;
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
         <div class="head"><i class="fa fa-plus-circle"></i> Osnovni podaci projekta
-        
+          <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog"></i>', Url::to(['/projects/update', 'id'=>$model->id]), ['class' => 'btn btn-success btn-sm']) ?>
+                  <?= Html::a($model->status=='deleted' ? Yii::t('app', 'Aktiviraj') : Yii::t('app', '<i class="fa fa-power-off"></i>'), ['activate', 'id' => $model->id], ['class' => 'btn btn-danger btn-sm', 'data'=>['confirm'=>'Da li ste sigurni da želite da deaktivirate projekat? Podaci neće biti obrisani, samo deaktivirani. Da biste ponovo pristupili projektu, zapišite ID projekta i unesite ga u pretrazi projekata.']]) ?>
+          </div>
         </div>
         <div class="subhead">Predmetni projekat.</div>
     </div>

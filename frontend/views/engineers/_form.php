@@ -20,7 +20,7 @@ use kartik\widgets\FileInput;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true])->hint('Stečeno stručno zvanje, npr. dipl.ing.građ. ili master arhitekture') ?>
+    <?= $form->field($model, 'title')->textInput(['maxlength' => true])->hint('Stečeno stručno zvanje, npr. dipl.ing.građ. ili master arhitekture. Titula se pojavljuje u tehničkoj dokumentaciji, uz ime inženjera.') ?>
 
     <?= $form->field($model, 'phone')->textInput(['maxlength' => true])->hint('Kontakt telefon inženjera.') ?>
 

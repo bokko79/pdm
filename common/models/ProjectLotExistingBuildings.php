@@ -59,11 +59,11 @@ class ProjectLotExistingBuildings extends \yii\db\ActiveRecord
             'conditions' => Yii::t('app', 'Stanje objekta'),
             'gross_area' => Yii::t('app', 'Bruto površina objekta'),
             'removal' => Yii::t('app', 'Objekat se ruši?'),
-            'file_id' => Yii::t('app', 'File ID'),
+            'file_id' => Yii::t('app', 'Slike objekta'),
             'storeys' => Yii::t('app', 'Spratnost objekta'),
             'description' => Yii::t('app', 'Opis objekta'),
             'note' => Yii::t('app', 'Napomena'),
-            'mark' => Yii::t('app', 'Oznaka'),
+            'mark' => Yii::t('app', 'Oznaka objekta na snimku/planu'),
         ];
     }
 

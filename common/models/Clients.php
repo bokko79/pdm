@@ -38,7 +38,11 @@ class Clients extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'location_id'], 'required'],
+            [['name', 'location_id', 'type'], 'required'],
+            /*['contact_person', 'required', 
+                'when' => function($model) {               
+                    return $model->type == 'company';                 
+                },],*/
             [['location_id', 'tax_no', 'company_no'], 'integer'],
             [['type'], 'string'],
             [['name'], 'string', 'max' => 128],
@@ -163,5 +167,13 @@ class Clients extends \yii\db\ActiveRecord
     {
         $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'client', 'type' => 'apr'])->one();
         return $doc ? $doc : false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDirector()
+    {        
+        return $this->contact_person ?: $this->name;
     }
 }

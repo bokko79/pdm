@@ -56,4 +56,12 @@ class LocationLots extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Locations::className(), ['id' => 'location_id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFullAddress()
+    {
+        return ($this->lot and $this->location->county0) ? 'kat.parc.br. '.$this->lot . ' K.O. '.$this->location->county0->name : null;
+    }
 }

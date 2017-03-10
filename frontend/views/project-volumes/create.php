@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectVolumes */
 
-$this->title = Yii::t('app', 'Dodaj deo projekta');
-$this->params['breadcrumbs'][] = ['label' => $model->project->code. ': Projekat', 'url' => ['/projects/view', 'id' => $model->project_id]];
+$this->title = Yii::t('app', 'Dodavanje sveske (dela projekta)');
+$this->params['breadcrumbs'][] = ['label' => 'Sveske projekta '.$model->project->code, 'url' => ['/project-volumes/index', 'ProjectVolumes[project_id]' => $model->project_id]];
 ?>
 <div class="project-volumes-create">
 

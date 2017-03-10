@@ -38,15 +38,17 @@ use kartik\checkbox\CheckboxX;
 
 <hr>
 <h4>Dimenzije parcele</h4>
+    <?= $form->field($model, 'area', [
+                'addon' => ['prepend' => ['content'=>'m<sup>2</sup>']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
+
     <?= $form->field($model, 'width', [
                 'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%', 'placeholder'=>'npr.14.50'])->hint('Širina parcele u metrima. Ukoliko je parcela nepravilnog oblika, uneti prosečnu, okvirnu vrednost.') ?>
 
     <?= $form->field($model, 'length', [
-                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%'])->hint('Dužina parcele u metrima. Ukoliko je parcela nepravilnog oblika, uneti prosečnu, okvirnu vrednost.') ?>
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%'])->hint('Dužina parcele u metrima. Ukoliko je parcela nepravilnog oblika, uneti prosečnu, okvirnu vrednost.') ?>    
 
-    <?= $form->field($model, 'area', [
-                'addon' => ['prepend' => ['content'=>'m<sup>2</sup>']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%']) ?>
-
+<hr>
+<h4>Urbanistički parametri</h4>
     <?= $form->field($model, 'green_area_reg', [
                 'addon' => ['prepend' => ['content'=>'%']]])->input('number', ['step'=>0.01, 'min'=>0, 'style'=>'width:40%'])->hint('Uneti vrednost predviđene površine zelenih površina date u važećem prostornom planu ili dato na osnovu rešenja o lokacijskim uslovima ili sl.') ?>
     <?= $form->field($model, 'green_area', [

@@ -49,7 +49,7 @@ class ProjectVolumes extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id', 'volume_id', 'practice_id', 'engineer_id', 'engineer_licence_id', 'code'], 'required'],
+            [['project_id', 'volume_id', 'practice_id', 'engineer_licence_id', 'code'], 'required'],
             [['project_id', 'volume_id', 'practice_id', 'engineer_id', 'engineer_licence_id', 'control_practice_id', 'control_engineer_id', 'control_engineer_licence_id', 'time'], 'integer'],
             [['number'], 'string', 'max' => 20],
             [['name'], 'string', 'max' => 64],
@@ -74,13 +74,13 @@ class ProjectVolumes extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'project_id' => Yii::t('app', 'Projekat'),
-            'volume_id' => Yii::t('app', 'Deo projekta'),
-            'practice_id' => Yii::t('app', 'Projektant'),
+            'volume_id' => Yii::t('app', 'Sveska (deo projekta)'),
+            'practice_id' => Yii::t('app', 'Odgovorni projektant'),
             'engineer_id' => Yii::t('app', 'Odgovorni/glavni projektant'),
             'engineer_licence_id' => Yii::t('app', 'Licenca odgovornog projektanta'),
-            'number' => Yii::t('app', 'Redni broj projekta'),
-            'name' => Yii::t('app', 'Naziv projekta'),
-            'code' => Yii::t('app', 'Broj projektne dokumentacije dela projekta'),
+            'number' => Yii::t('app', 'Redni broj sveske'),
+            'name' => Yii::t('app', 'Naziv sveske (dela projekta)'),
+            'code' => Yii::t('app', 'Broj projektne dokumentacije (dela projekta)'),
             'control_practice_id' => Yii::t('app', 'Vršilac tehničke kontrole'),
             'control_engineer_id' => Yii::t('app', 'Odgovorno lice vršioca tehničke kontrole'),
             'control_engineer_licence_id' => Yii::t('app', 'Licenca vršioca tehničke kontrole'),

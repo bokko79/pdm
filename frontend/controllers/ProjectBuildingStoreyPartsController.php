@@ -105,9 +105,9 @@ class ProjectBuildingStoreyPartsController extends Controller
         }
 
         if ($rooms = Yii::$app->request->post('ProjectBuildingStoreyParts')['room_to_add']){           
-            foreach($rooms as $key=>$room){
-                $this->generateRooms($id, $room, $key);
-            }        
+            //foreach($rooms as $key=>$room){
+                $this->generateRooms($model, $rooms);
+            //}        
             return $this->redirect(['view', 'id' => $model->id]);
         }
         return $this->render('view', [
@@ -193,16 +193,33 @@ class ProjectBuildingStoreyPartsController extends Controller
      * @param string $id
      * @return mixed
      */
-    public function generateRooms($part, $room, $key)
+    public function generateRooms($model, $rooms)
     {
-        $room_type = $this->findRoomTypeById($room);
-        $room_n = new \common\models\ProjectBuildingStoreyPartRooms();
-        $room_n->project_building_storey_part_id = $part;
-        $room_n->room_type_id = $room;
-        $room_n->name = $room_type->name;
-        $room_n->mark = strval($key+1);
-        $room_n->flooring = 'keramika';
-        $room_n->save();
+        $room_container = []; // array koji sadrži sve id soba
+        if($roomz = $model->projectBuildingStoreyPartRooms){
+            foreach($roomz as $rm){
+                $room_container[] = $rm->room_type_id;
+                // remove the ones that are not on the list
+                if(!in_array($rm->room_type_id, $rooms)){
+                    $rm->delete();
+                }
+            }
+        }        
+        if($rooms){
+            foreach($rooms as $key=>$room){
+                // add new ones
+                if(!in_array($room, $room_container)){
+                    $room_type = $this->findRoomTypeById($room);
+                    $room_n[$key] = new \common\models\ProjectBuildingStoreyPartRooms();
+                    $room_n[$key]->project_building_storey_part_id = $model->id;
+                    $room_n[$key]->room_type_id = $room;
+                    $room_n[$key]->name = $room_type->name;
+                    $room_n[$key]->mark = strval($key+1);
+                    $room_n[$key]->flooring = 'keramika';
+                    $room_n[$key]->save();
+                }                
+            }
+        }                    
     }
 
     /**

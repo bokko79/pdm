@@ -130,5 +130,61 @@ class Locations extends \yii\db\ActiveRecord
     public function getPractices()
     {
         return $this->hasMany(Practices::className(), ['location_id' => 'id']);
-    }    
+    } 
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFullAddress()
+    {
+        return (($this->street and $this->number) ? 'ul. '.$this->street . ' br. '.$this->number. ', ' : null).$this->city->town;
+    } 
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLotAddress($br=false)
+    {
+        $address = (($this->street and $this->number) ? 'ul. '.$this->street . ' br. '.$this->number. ', ' : null).$this->city->town;
+        $lottext = 'kat.parc.br. ';
+        if($lots = $this->locationLots and $this->county0){
+            foreach($lots as $lot){
+                $lottext .= $lot .', ';
+            }
+            $lottext .= 'K.O. '.$this->county0->name;
+        }
+        return $address . ($br ? '<br>':null) . $lottext;
+    } 
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getServiceLotAddress($br=false)
+    {
+        $address = (($this->street and $this->number) ? 'ul. '.$this->street . ' br. '.$this->number. ', ' : null).$this->city->town;
+        $lottext = 'kat.parc.br. ';
+        if($lots = $this->serviceLots and $this->county0){
+            foreach($lots as $lot){
+                $lottext .= $lot .', ';
+            }
+            $lottext .= 'K.O. '.$this->county0->name;
+        }
+        return $address . ($br ? '<br>':null) . $lottext;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccessLotAddress($br=false)
+    {
+        $address = (($this->street and $this->number) ? 'ul. '.$this->street . ' br. '.$this->number. ', ' : null).$this->city->town;
+        $lottext = 'kat.parc.br. ';
+        if($lots = $this->accessLots and $this->county0){
+            foreach($lots as $lot){
+                $lottext .= $lot .', ';
+            }
+            $lottext .= 'K.O. '.$this->county0->name;
+        }
+        return $address . ($br ? '<br>':null) . $lottext;
+    } 
 }

@@ -10,6 +10,11 @@ use kartik\widgets\TouchSpin;
 use kartik\select2\Select2;
 use softark\duallistbox\DualListbox;
 
+if($rooms = $model->projectBuildingStoreyPartRooms){
+	foreach($rooms as $room){
+		$model->room_to_add[] = $room->room_type_id;
+	}
+}
 ?>
 
 <?php $form = kartik\widgets\ActiveForm::begin([
@@ -17,27 +22,30 @@ use softark\duallistbox\DualListbox;
 	'action' => ['/project-building-storey-parts/view', 'id'=>$model->id],
 	'type' => ActiveForm::TYPE_VERTICAL,
 ]); ?>         
-    <div>
-    	<?php echo $form->field($model, 'room_to_add')->widget(DualListbox::className(),[
-	        'items' => ArrayHelper::map(\common\models\RoomTypes::find()->all(), 'id', 'name'),
-	        'options' => [
-		        'multiple' => true,
-		        'size' => 10,
-		    ],
-		    'id' => 'test'.$model->id,
-	        'clientOptions' => [
-	            'moveOnSelect' => true,
-	            'preserveSelectionOnMove' => false,
-	            'selectedListLabel' => 'Izabrane prostorije',
-	            'nonSelectedListLabel' => 'Dostupne prostorije',
 
-	        ],
-	    ]) ?>		
-    
-    <div class="row" style="margin:20px;">
-        <div class="col-md-offset-3">
-            <?= Html::submitButton('Sačuvaj', ['class' => 'btn btn-success']) ?>
-        </div>        
-    </div>
+	<div class="row box">
+		<div class="col-sm-6">
+			<div class="box1">
+				<h5>Dostupne prostorije:</h5>
+				<hr>
+				<ul class="column3" style="">
+					<?php foreach(\common\models\RoomTypes::find()->all() as $roomtype){
+						echo '<li class="'.$roomtype->id.'" id="'.$roomtype->name.'">'.$roomtype->name.'</li>';
+					} ?>
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-6">			
+			<div class="box2">
+				<h5>Izabrane prostorije:</h5>
+				<hr>
+				<div class="removeAllButton"><i class="fa fa-refresh"></i> Resetuj</div>
+				<?= Html::submitButton('Sačuvaj', ['class' => 'btn btn-success', 'style'=>'float:right; margin-bottom:20px;', 'onclick'=>'(function ( $event ) { $(".form-control option").prop("selected", true); })();']) ?>				
+				
+				<?php echo $form->field($model, 'room_to_add[]')->dropDownList(($model->projectBuildingStoreyPartRooms) ? ArrayHelper::map(\common\models\ProjectBuildingStoreyPartRooms::find()->where('project_building_storey_part_id='.$model->id)->all(), 'room_type_id', 'name') : [], ['multiple' => true, 'size'=>20,]); ?>
+			</div>
+
+		</div>
+	</div>		
 
 <?php ActiveForm::end(); ?>

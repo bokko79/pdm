@@ -30,33 +30,6 @@ class ProjectLotFutureDevelopmentsController extends Controller
     }
 
     /**
-     * Lists all ProjectLotFutureDevelopments models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new ProjectLotFutureDevelopmentsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single ProjectLotFutureDevelopments model.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
      * Creates a new ProjectLotFutureDevelopments model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -104,9 +77,10 @@ class ProjectLotFutureDevelopmentsController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/project-lot/view', 'id' => $model->project_id]);
     }
 
     /**

@@ -88,7 +88,7 @@ class ProjectClientsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/projects/view', 'id' => $model->project_id]);
+            return $this->redirect(['/projects/view', 'id' => $model->project_id, '#'=>'w1-tab1']);
         } else {
             return $this->render('update', [
                 'model' => $model,

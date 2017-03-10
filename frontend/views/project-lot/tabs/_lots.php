@@ -23,7 +23,7 @@ use yii\bootstrap\Nav;
     <div class="secondary-context">                   
         <?php if($lots = $model->project->location->locationLots){
             foreach($lots as $lot){
-                echo Html::a($lot->lot. ' K.O. '.$model->project->location->county0->name, Url::to(['/location-lots/update', 'id'=>$lot->id]), ['class' => 'btn btn-default btn-sm']). '<hr>';
+                echo Html::a($lot->fullAddress, Url::to(['/location-lots/update', 'id'=>$lot->id]), ['class' => 'btn btn-default btn-sm']). '<hr>';
             }
         } ?>
     </div>
@@ -36,7 +36,7 @@ use yii\bootstrap\Nav;
     <div class="secondary-context">
         <?php if($lots = $model->project->location->serviceLots){
             foreach($lots as $lot){
-                echo Html::a($lot->lot. ' K.O. '.$model->project->location->county0->name, Url::to(['/location-lots/update', 'id'=>$lot->id]), ['class' => 'btn btn-default btn-sm']). '<hr>';
+                echo Html::a($lot->fullAddress, Url::to(['/location-lots/update', 'id'=>$lot->id]), ['class' => 'btn btn-default btn-sm']). '<hr>';
             }
         } ?>
     </div>
@@ -49,7 +49,7 @@ use yii\bootstrap\Nav;
     <div class="secondary-context ">
         <?php if($lots = $model->project->location->accessLots){
             foreach($lots as $lot){
-                echo Html::a($lot->lot. ' K.O. '.$model->project->location->county0->name, Url::to(['/location-lots/update', 'id'=>$lot->id]), ['class' => 'btn btn-default btn-sm']). '<hr>';
+                echo Html::a($lot->fullAddress, Url::to(['/location-lots/update', 'id'=>$lot->id]), ['class' => 'btn btn-default btn-sm']). '<hr>';
             }
         } ?>
     </div>

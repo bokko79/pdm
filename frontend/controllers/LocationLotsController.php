@@ -90,7 +90,7 @@ class LocationLotsController extends Controller
         $model = $this->findModel($id);
         $project = $model->location->project;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['projects/view', 'id' => $project->id]);
+            return $this->redirect(['project-lot/view', 'id' => $project->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,

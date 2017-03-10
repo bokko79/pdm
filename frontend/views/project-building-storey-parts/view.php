@@ -5,17 +5,16 @@ use yii\helpers\Url;
 use yii\widgets\DetailView;
 use kartik\grid\GridView;
 use kartik\editable\Editable;
-
 use kartik\widgets\ActiveForm;
 use kartik\widgets\ActiveField;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
-use kartik\widgets\TouchSpin;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectBuildingStoreyParts */
 
-$this->title = $model->mark.':'.$model->name.'@'.$model->projectBuildingStorey->name;
+$this->title = c($model->name) . '  '. $model->mark. '@'.c($model->projectBuildingStorey->name);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Etaža objekta'), 'url' => ['/project-building-storeys/view', 'id'=>$model->project_building_storey_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -26,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
                     <div class="head"><?= Html::a(c($model->projectBuildingStorey->name), Url::to(['/project-building-storeys/view', 'id'=>$model->project_building_storey_id])) ?> <i class="fa fa-arrow-circle-right hint small"></i> <?= c($model->name) ?> <?= $model->mark ?>: Lista prostorija
-                        <div class="action-area normal-case"><?= Html::a('<i class="glyphicon glyphicon-plus"></i> Dodaj prostoriju', Url::to(['/project-building-storey-part-rooms/create', 'ProjectBuildingStoreyPartRooms[project_building_storey_part_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?></div>
+                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cubes"></i>', Url::to(['']), ['class'=>'btn btn-primary btn-sm', 'style'=>'margin-right:10px;', 'data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#init-rooms-modal'.$model->id]) ?> <?= Html::a('<i class="glyphicon glyphicon-plus"></i> Dodaj prostoriju', Url::to(['/project-building-storey-part-rooms/create', 'ProjectBuildingStoreyPartRooms[project_building_storey_part_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?></div>
                     </div>
                 </div>
                 <div class="secondary-context">               
@@ -183,3 +182,13 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
+
+<?php
+    Modal::begin([
+        'id'=>'init-rooms-modal'.$model->id,
+        'size'=>Modal::SIZE_LARGE,
+        'class'=>'overlay_modal',
+        'header'=> '<h3>Prostorije</h3>',
+    ]); ?>
+        <div id="loading"><i class="fa fa-cog fa-spin fa-3x gray-color"></i></div>
+    <?php Modal::end(); ?>
