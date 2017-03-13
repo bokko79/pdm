@@ -8,7 +8,7 @@ use yii\helpers\Html;
 $this->title = Yii::t('app', 'Podešavanje {modelClass}: ', [
     'modelClass' => 'etaže objekta',
 ]) . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Etaže', 'url' => ['/project-building-storeys/index', 'id' => $model->project_id]];
+$this->params['breadcrumbs'][] = ['label' => 'Etaže', 'url' => ['/project-building-storeys/index', 'id' => $model->project_building_id]];
 $this->params['breadcrumbs'][] = ['label' => c($model->name), 'url' => ['/project-building-storeys/view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Podešavanje');
 ?>

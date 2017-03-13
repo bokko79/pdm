@@ -7,7 +7,7 @@ $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
 $formatter->nullDisplay = '--';
 ?>
-<?php foreach($model->projectBuildingStoreys as $storey): ?>
+<?php foreach($model->projectBuilding->projectBuildingStoreys as $storey): ?>
 <table class="smallpadd" style="width:300px !important;">
 	<tr bgcolor="#ddd">
 		<td colspan="5"><h2 class="uppercase"><?= c($storey->name) ?>: pregled površina</h2></td>

@@ -51,6 +51,9 @@ use Yii;
  */
 class Projects extends \yii\db\ActiveRecord
 {
+    public $storey;
+    public $part_type;
+
     /**
      * @inheritdoc
      */
@@ -67,7 +70,7 @@ class Projects extends \yii\db\ActiveRecord
         return [
             [['name', 'code', 'user_id', 'client_id', 'building_id', 'practice_id', 'engineer_id', 'phase', 'work'], 'required'],
             [['client_id', 'building_id', 'location_id', 'practice_id', 'engineer_id', 'control_practice_id', 'control_engineer_id', 'builder_practice_id', 'builder_engineer_id', 'supervision_practice_id', 'supervision_engineer_id', 'time', 'year'], 'integer'],
-            [['code'], 'unique'],
+            [['code'], 'unique', 'targetAttribute' => 'code'],
             [['phase', 'work', 'status'], 'string'],
             [['name'], 'string', 'max' => 128],
             [['code'], 'string', 'max' => 20],
@@ -82,6 +85,11 @@ class Projects extends \yii\db\ActiveRecord
             [['builder_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['builder_engineer_id' => 'id']],
             [['supervision_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['supervision_practice_id' => 'id']],
             [['supervision_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['supervision_engineer_id' => 'id']],
+            [['storey', 'part_type'], 'required', 'when' => function ($model) {
+                                                return $model->work == 'adaptacija';
+                                            }, 'whenClient' => "function (attribute, value) {
+                                                return $('#work-id').val() == 'adaptacija';
+                                            }"],
         ];
     }
 
@@ -110,95 +118,76 @@ class Projects extends \yii\db\ActiveRecord
             'supervision_practice_id' => Yii::t('app', 'Stručni nadzor'),
             'supervision_engineer_id' => Yii::t('app', 'Odgovorno lice stručnog nadzora'),
             'time' => Yii::t('app', 'Datum'),
+
+            'storey' => Yii::t('app', 'Etaža jedinice'),
+            'part_type' => Yii::t('app', 'Vrsta jedinice'),
         ];
     }    
 
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getProjectBuildings()
+    {
+        return $this->hasMany(ProjectBuilding::className(), ['project_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getProjectBuilding()
     {
-        return $this->hasOne(ProjectBuilding::className(), ['project_id' => 'id']);
+        return \common\models\ProjectBuilding::find()->where('project_id='.$this->id .' and mode="new"')->one();
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProjectBuildingCharacteristics()
+    public function getProjectExBuilding()
     {
-        return $this->hasOne(ProjectBuildingCharacteristics::className(), ['project_id' => 'id']);
+        return \common\models\ProjectBuilding::find()->where('project_id='.$this->id .' and mode="existing"')->one();
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProjectBuildingClasses()
+    public function getProjectUnits()
     {
-        return $this->hasMany(ProjectBuildingClasses::className(), ['project_id' => 'id']);
+        return $this->projectExBuilding ? $this->projectExBuilding->projectBuildingStoreys[0]->projectBuildingStoreyParts : null;
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProjectBuildingDoorwin()
+    public function getProjectUnit()
     {
-        return $this->hasMany(ProjectBuildingDoorwin::className(), ['project_id' => 'id'])->orderBy('pos_no ASC');
+        $u = '';
+        if($units = $this->projectUnits){
+            foreach($units as $unit){
+                if($unit->mode=='new'){
+                    $u = $unit;
+                    break;
+                }
+            }
+        }
+        return $u ?: false;
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProjectBuildingHeights()
+    public function getProjectExunit()
     {
-        return $this->hasMany(ProjectBuildingHeights::className(), ['project_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProjectBuildingInsulations()
-    {
-        return $this->hasOne(ProjectBuildingInsulations::className(), ['project_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProjectBuildingMaterials()
-    {
-        return $this->hasOne(ProjectBuildingMaterials::className(), ['project_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProjectBuildingParts()
-    {
-        return $this->hasMany(ProjectBuildingParts::className(), ['project_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProjectBuildingServices()
-    {
-        return $this->hasOne(ProjectBuildingServices::className(), ['project_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProjectBuildingStoreys()
-    {
-        return $this->hasMany(ProjectBuildingStoreys::className(), ['project_id' => 'id'])->orderBy('level ASC');
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProjectBuildingStructure()
-    {
-        return $this->hasOne(ProjectBuildingStructure::className(), ['project_id' => 'id']);
+        $u = '';
+        if($units = $this->projectUnits){
+            foreach($units as $unit){
+                if($unit->mode=='existing'){
+                    $u = $unit;
+                    break;
+                }
+            }
+        }
+        return $u ?: false;
     }
 
     /**
@@ -488,6 +477,82 @@ class Projects extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getCheckIfNewBuilding()
+    {
+        $work = null;
+        switch($this->work){
+            case 'nova_gradnja':
+                $work = true;
+                break;
+            case 'rekonstrukcija':
+                $work = true;
+                break;
+            case 'adaptacija':
+                $work = false;
+                break;
+            case 'sanacija':
+                $work = true;
+                break;
+            case 'promena_namene':
+                $work = false;
+                break;
+            case 'dogradnja':
+                $work = true;
+                break;
+            case 'ozakonjenje':
+                $work = false;
+                break;
+            case 'odrzavanje':
+                $work = true;
+                break;
+            default:
+                $work = true;
+                break;
+        }
+        return $work;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCheckIfExistingBuilding()
+    {
+        $work = null;
+        switch($this->work){
+            case 'nova_gradnja':
+                $work = false;
+                break;
+            case 'rekonstrukcija':
+                $work = true;
+                break;
+            case 'adaptacija':
+                $work = true;
+                break;
+            case 'sanacija':
+                $work = true;
+                break;
+            case 'promena_namene':
+                $work = true;
+                break;
+            case 'dogradnja':
+                $work = true;
+                break;
+            case 'ozakonjenje':
+                $work = true;
+                break;
+            case 'odrzavanje':
+                $work = true;
+                break;
+            default:
+                $work = true;
+                break;
+        }
+        return $work;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getHintPhase()
     {
         return 'Koja faza Vam treba?<br>Ako želite da dobijete lokacijske uslove - IDR<br>
@@ -756,5 +821,88 @@ class Projects extends \yii\db\ActiveRecord
     public function getTehnickaKontrola()
     {
         return \common\models\ProjectVolumes::find()->where('project_id='.$this->id.' and volume_id=18')->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public static function getPhasesOfWork($work)
+    {
+        $phases = [];
+        switch($work){
+            case 'nova_gradnja':
+                $phases = ['idr', 'pgd', 'pzi', 'pio'];
+                break;
+            case 'rekonstrukcija':
+                $phases = ['idr', 'pgd', 'pzi', 'pio'];
+                break;
+            case 'adaptacija':
+                $phases = ['idp'];
+                break;
+            case 'sanacija':
+                $phases = ['idr', 'pgd', 'pzi', 'pio'];
+                break;
+            case 'promena_namene':
+                $phases = ['idp'];
+                break;
+            case 'dogradnja':
+                $phases = ['idr', 'pgd', 'pzi', 'pio'];
+                break;
+            case 'ozakonjenje':
+                $phases = ['idp'];
+                break;
+            case 'odrzavanje':
+                $phases = ['idp'];
+                break;
+            default:
+                $phases = ['gnp', 'idr', 'idp', 'pgd', 'pzi', 'pio'];
+                break;
+        }
+        return $phases;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public static function getProjectPhaseFullname($phase_name)
+    {
+        $phase = null;
+        switch($phase_name){
+            case 'gnp':
+                $phase = 'Generalni projekat (GNP)';
+                break;
+            case 'idr':
+                $phase = 'Idejno rešenje (IDR)';
+                break;
+            case 'idp':
+                $phase = 'Idejni projekat (IDP)';
+                break;
+            case 'pgd':
+                $phase = 'Projekat za građevinsku dozvolu (PGD)';
+                break;
+            case 'pzi':
+                $phase = 'Projekat za izvođenje (PZI)';
+                break;
+            case 'pio':
+                $phase = 'Projekat izvedenog objekta (PIO)';
+                break;
+            default:
+                $phase = 'Tehnička kontrola projekta (TKP)';
+                break;
+        }
+        return $phase;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public static function phases($work)
+    {
+        $res = \common\models\Projects::getPhasesOfWork($work);            
+        foreach($res as $key=>$r){
+            $out[$key]['id'] = $r;
+            $out[$key]['name'] =\common\models\Projects::getProjectPhaseFullname($r);
+        }
+        return $out;
     }
 }

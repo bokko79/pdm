@@ -12,7 +12,7 @@ use yii\bootstrap\Nav;
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
         <div class="head">Delovi i celine objekta
-            <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj deo objekta', Url::to(['/project-building-parts/create', 'ProjectBuildingParts[project_id]'=>$model->project_id]), ['class' => 'btn btn-primary btn-sm']) ?></div>
+            <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj deo objekta', Url::to(['/project-building-parts/create', 'ProjectBuildingParts[project_building_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?></div>
         </div>
         
     </div>

@@ -56,11 +56,11 @@ class ProjectBuildingController extends Controller
         $this->layout = 'project';
 
         $model = $this->findModel($id);
-        $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_id' => $id]);
-        $query_st = \common\models\ProjectBuildingStoreys::find()->where(['project_id' => $id])->orderBy('level');
-        $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_id' => $id]);
-        $query_pa = \common\models\ProjectBuildingParts::find()->where(['project_id' => $id]);
-        $query_dw = \common\models\ProjectBuildingDoorwin::find()->where(['project_id' => $id]);
+        $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_building_id' => $id]);
+        $query_st = \common\models\ProjectBuildingStoreys::find()->where(['project_building_id' => $id])->orderBy('level');
+        $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_building_id' => $id]);
+        $query_pa = \common\models\ProjectBuildingParts::find()->where(['project_building_id' => $id]);
+        $query_dw = \common\models\ProjectBuildingDoorwin::find()->where(['project_building_id' => $id]);
         $searchModel = new \common\models\ProjectBuildingStoreyPartRoomsSearch();
         $rooms = $searchModel->search(Yii::$app->request->queryParams);
         
@@ -144,13 +144,13 @@ class ProjectBuildingController extends Controller
         $this->layout = 'project';
         
         $model = $this->findModel($id);        
-        $storeys = $model->project->projectBuildingStoreys;
+        $storeys = $model->projectBuildingStoreys;
 
         if($same = Yii::$app->request->post('ProjectBuilding')){
             $st = $this->findStoreyById($same['copiedStorey']);
             $st->same_as_id = $same['sameStorey'];
             $st->save();
-            return $this->redirect(['/project-building-storeys/index', 'id' => $model->project_id]);
+            return $this->redirect(['/project-building-storeys/index', 'id' => $model->id]);
         }
         
         if($add_storey){
@@ -179,29 +179,140 @@ class ProjectBuildingController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $modelCheck = $this->findModel($id);
+        $model = null;
+        $model_new = null;
+        $building = null;
+        if($modelCheck->project->work=='dogradnja' or $modelCheck->project->work=='sanacija' or $modelCheck->project->work=='rekonstrukcija'){
+            if($modelCheck->mode=='new'){
+                $model = $this->findExModel($id);
+                $model_new = $modelCheck;
+                $building = [            
+                    'existing' => $this->findExModel($id),
+                    'new' => $modelCheck,
+                ];
+            } else {
+                $model = $modelCheck;
+                $model_new = $this->findNewModel($id);
+                $building = [            
+                    'existing' => $modelCheck,
+                    'new' => $this->findNewModel($id),
+                ];
+            }
+            $architecture = [            
+                'existing' => $model ? $model->projectBuildingCharacteristics : null,
+                'new' => $model_new ? $model_new->projectBuildingCharacteristics : null,
+            ];
+            $structure = [            
+                'existing' => $model ? $model->projectBuildingStructure : null,
+                'new' => $model_new ? $model_new->projectBuildingStructure : null,
+            ];
+            $materials = [            
+                'existing' => $model ? $model->projectBuildingMaterials : null,
+                'new' => $model_new ? $model_new->projectBuildingMaterials : null,
+            ];
+            $insulations = [            
+                'existing' => $model ? $model->projectBuildingInsulations : null,
+                'new' => $model_new ? $model_new->projectBuildingInsulations : null,
+            ];
+            $services = [            
+                'existing' => $model ? $model->projectBuildingServices : null,
+                'new' => $model_new ? $model_new->projectBuildingServices : null,
+            ];
+        } else {
+            $building = $modelCheck;
+            $architecture = $modelCheck->projectBuildingCharacteristics;
+            $structure = $modelCheck->projectBuildingStructure;
+            $materials = $modelCheck->projectBuildingMaterials;
+            $insulations = $modelCheck->projectBuildingInsulations;
+            $services = $modelCheck->projectBuildingServices;
+        }
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->buildFile = UploadedFile::getInstance($model, 'buildFile');
-            if($model->save()){
-                if ($model->buildFile) {
-                    $image = $model->uploadFiles();
-                    $model->file_id = $image;
-                    $model->save();
-                }
-                return $this->redirect(['view', 'id' => $model->project_id]);
-            } 
+        if ($modelCheck->load(Yii::$app->request->post())){
+            if($modelCheck->project->work=='dogradnja' or $modelCheck->project->work=='sanacija' or $modelCheck->project->work=='rekonstrukcija'){
+
+                $this->validateMultipleBuilding($building, $architecture, $structure, $materials, $insulations, $services);
+                return $this->redirect(['view', 'id' => $modelCheck->id]);
+
+            } else {
+
+                $this->validateBuilding($building, $architecture, $structure, $materials, $insulations, $services);
+                return $this->redirect(['view', 'id' => $modelCheck->id]);
+
+            }                  
+            
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'model_new' => $model_new,
+                'modelCheck' => $modelCheck,
+                'building' => $building,
+                'architecture' => $architecture,
+                'structure' => $structure,
+                'materials' => $materials,
+                'insulations' => $insulations,
+                'services' => $services,
             ]);
         }
+           /* } else {
+                // promena, ozakonjenje, adaptacija
+                if ($model->load(Yii::$app->request->post())) {                    
+                    $model->save();
+                    $this->validateBuilding($building, $architecture, $structure, $materials, $insulations, $services);
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }  else {
+                    return $this->render('update', [
+                        'model' => $model,
+                        'model_new' => $model_new,
+                        'modelCheck' => $modelCheck,
+                        'building' => $building,
+                        'architecture' => $architecture,
+                        'structure' => $structure,
+                        'materials' => $materials,
+                        'insulations' => $insulations,
+                        'services' => $services,
+                    ]);
+                }
+            }
+        } else {
+            // izgradnja
+            if ($model_new->load(Yii::$app->request->post())) {                    
+                $model_new->save();
+                $this->validateBuilding($building, $architecture, $structure, $materials, $insulations, $services);
+                return $this->redirect(['view', 'id' => $model->id]);
+            }  else {
+                    return $this->render('update', [
+                        'model' => $model,
+                        'model_new' => $model_new,
+                        'modelCheck' => $modelCheck,
+                        'building' => $building,
+                        'architecture' => $architecture,
+                        'structure' => $structure,
+                        'materials' => $materials,
+                        'insulations' => $insulations,
+                        'services' => $services,
+                    ]);
+                }
+        }*/
+        
+        /*if ($model->load(Yii::$app->request->post()) or $model_new->load(Yii::$app->request->post())) {
+            $model->buildFile = UploadedFile::getInstance($model, 'buildFile');
+            if ($model->buildFile) {
+                    $image = $model->uploadFiles();
+                    $model->file_id = $image;                    
+                }
+                $model->save();
+                $model_new->save(); */  
+            
+            //return $this->redirect(['view', 'id' => $model->id]);
+             
+        
     }
 
     public function addStorey($model, $add_storey)
     {
         $new =  new \common\models\ProjectBuildingStoreys();
-        $new->project_id = $model->project_id;
+        $new->project_building_id = $model->id;
         $new->storey = $add_storey;
         //$new->order_no = 1;
         $new->save();
@@ -214,7 +325,7 @@ class ProjectBuildingController extends Controller
     {
         if($storey_to_copy = $this->findStoreyById($copy_storey)){
             $new = new \common\models\ProjectBuildingStoreys();
-            $new->project_id = $storey_to_copy->project_id;
+            $new->project_building_id = $storey_to_copy->project_building_id;
             $new->same_as_id = $storey_to_copy->id;
             $new->storey = $storey_to_copy->storey;
             $new->order_no = $storey_to_copy->order_no;
@@ -320,12 +431,129 @@ class ProjectBuildingController extends Controller
      * @return ProjectBuilding the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
+    protected function findNewModel($id)
+    {
+        if (($model = ProjectBuilding::findOne($id)) !== null) {
+            $new = ProjectBuilding::find()->where('project_id='.$model->project_id .' and mode="new"')->one();
+            return $new;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectBuilding model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectBuilding the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findExModel($id)
+    {
+        if (($model = ProjectBuilding::findOne($id)) !== null) {
+            $new = ProjectBuilding::find()->where('project_id='.$model->project_id .' and mode="existing"')->one();
+            return $new;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectBuilding model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectBuilding the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
     protected function findStoreyById($id)
     {
         if (($model = \common\models\ProjectBuildingStoreys::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectBuilding model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectBuilding the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function validateMultipleBuilding($building, $architecture, $structure, $materials, $insulations, $services)
+    {
+        if (\yii\base\Model::loadMultiple($building, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($building)) {
+            foreach ($building as $build) {
+                if($build){
+                    $build->save();
+                }                    
+            }               
+        }
+        if (\yii\base\Model::loadMultiple($architecture, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($architecture)) {
+            foreach ($architecture as $architect) {
+                if($architect){
+                    $architect->save();
+                }                    
+            }               
+        }
+        if (\yii\base\Model::loadMultiple($structure, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($structure)) {
+            foreach ($structure as $struct) {
+                if($struct){
+                    $struct->save();
+                }
+            }               
+        }
+        if (\yii\base\Model::loadMultiple($materials, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($materials)) {
+            foreach ($materials as $material) {
+                if($material){
+                    $material->save();
+                }
+            }               
+        }
+        if (\yii\base\Model::loadMultiple($insulations, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($insulations)) {
+            foreach ($insulations as $insulation) {
+                if($insulation){
+                    $insulation->save();
+                }
+            }               
+        }
+        if (\yii\base\Model::loadMultiple($services, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($services)) {
+            foreach ($services as $service) {
+                if($service){
+                    $service->save();
+                }
+            }               
+        }
+    }
+
+    /**
+     * Finds the ProjectBuilding model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectBuilding the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function validateBuilding($building, $architecture, $structure, $materials, $insulations, $services)
+    {
+        if ($building->load(Yii::$app->request->post())) {             
+            $building->save();                            
+        }
+        if ($architecture->load(Yii::$app->request->post())) { 
+            //print "<pre>";print_r($architecture); print "</pre>";die();
+            $architecture->save();                            
+        }
+        if ($structure->load(Yii::$app->request->post())) { 
+            $structure->save();                            
+        }
+        if ($materials->load(Yii::$app->request->post())) { 
+            $materials->save();                            
+        }
+        if ($insulations->load(Yii::$app->request->post())) { 
+            $insulations->save();                            
+        }
+        if ($services->load(Yii::$app->request->post())) { 
+            $services->save();                            
         }
     }
 }

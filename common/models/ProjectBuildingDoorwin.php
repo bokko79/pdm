@@ -12,7 +12,7 @@ use Yii;
  * @property string $pos_type
  * @property string $type
  * @property string $name
- * @property string $project_id
+ * @property string $project_building_id
  * @property string $description
  * @property integer $width
  * @property integer $height
@@ -45,7 +45,7 @@ class ProjectBuildingDoorwin extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pos_no', 'project_id', 'scale', 'file_id'], 'integer'],
+            [['pos_no', 'project_building_id', 'scale', 'file_id'], 'integer'],
             [['width', 'height', 'length', 'length_slanted', ], 'number'],
             [['pos_type', 'type', 'description', 'opening_type'], 'string'],
             [['name', 'frame', 'sash', 'material', 'metal', 'note'], 'string', 'max' => 256],
@@ -63,7 +63,7 @@ class ProjectBuildingDoorwin extends \yii\db\ActiveRecord
             'pos_type' => Yii::t('app', 'Vrsta'),
             'type' => Yii::t('app', 'Podvrsta'),
             'name' => Yii::t('app', 'Naziv'),
-            'project_id' => Yii::t('app', 'Projekat'),
+            'project_building_id' => Yii::t('app', 'Objekat projekta'),
             'description' => Yii::t('app', 'Opis pozicije'),
             'width' => Yii::t('app', 'Širina'),
             'height' => Yii::t('app', 'Visina'),
@@ -91,9 +91,9 @@ class ProjectBuildingDoorwin extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProject()
+    public function getProjectBuilding()
     {
-        return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+        return $this->hasOne(ProjectBuilding::className(), ['id' => 'project_building_id']);
     }
 
     /**

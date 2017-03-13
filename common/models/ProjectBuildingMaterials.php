@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "project_building_materials".
  *
- * @property string $project_id
+ * @property string $project_building_id
  * @property string $access
  * @property string $foundation
  * @property string $wall_external
@@ -53,10 +53,10 @@ class ProjectBuildingMaterials extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id'], 'required'],
-            [['project_id'], 'integer'],
+            [['project_building_id'], 'required'],
+            [['project_building_id'], 'integer'],
             [['access', 'foundation', 'wall_external', 'wall_bearing', 'wall_internal', 'facade', 'flooring', 'ceiling', 'door', 'window', 'tinwork', 'stair', 'woodwork', 'steelwork', 'roof', 'light', 'sanitary', 'electrical', 'plumbing', 'hvac', 'chimney', 'furniture', 'kitchen', 'bathroom', 'lift', 'roofing'], 'string'],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
+            [['project_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuilding::className(), 'targetAttribute' => ['project_building_id' => 'id']],
         ];
     }
 
@@ -66,7 +66,7 @@ class ProjectBuildingMaterials extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'project_id' => Yii::t('app', 'Projekat'),
+            'project_building_id' => Yii::t('app', 'Objekat projekta'),
             'access' => Yii::t('app', 'Prilazi objektu'),
             'foundation' => Yii::t('app', 'Temelji'),
             'wall_external' => Yii::t('app', 'Spoljašnji i fasadni zidovi'),
@@ -99,8 +99,8 @@ class ProjectBuildingMaterials extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProject()
+    public function getProjectBuilding()
     {
-        return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+        return $this->hasOne(ProjectBuilding::className(), ['id' => 'project_building_id']);
     }
 }

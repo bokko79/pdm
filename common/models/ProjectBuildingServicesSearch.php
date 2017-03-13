@@ -18,7 +18,7 @@ class ProjectBuildingServicesSearch extends ProjectBuildingServices
     public function rules()
     {
         return [
-            [['id', 'project_id'], 'integer'],
+            [['id', 'project_building_id'], 'integer'],
             [['type', 'text'], 'safe'],
         ];
     }
@@ -60,7 +60,7 @@ class ProjectBuildingServicesSearch extends ProjectBuildingServices
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'project_id' => $this->project_id,
+            'project_building_id' => $this->project_building_id,
         ]);
 
         $query->andFilterWhere(['like', 'type', $this->type])

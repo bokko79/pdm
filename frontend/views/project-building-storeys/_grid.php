@@ -15,7 +15,7 @@ use kartik\editable\Editable;
             'format' => 'raw',
             'value'=>function ($data) {
 
-                return Html::a($data->name.'@'.$data->level, ['project-building-storeys/update', 'id' => $data->id]);
+                return $data->projectBuilding->project->work!='adaptacija' ? Html::a($data->name.'@'.$data->level, ['project-building-storeys/update', 'id' => $data->id]) : $data->name.'@'.$data->level;
             },
             
         ],
@@ -49,7 +49,7 @@ use kartik\editable\Editable;
             'width'=>'50px',
             'hAlign'=>'right',
             //'format'=>['decimal', 2],
-            'pageSummary'=>true,
+            
             'editableOptions'=> function ($model, $key, $index) {
                 return [
                     'header'=>'Neto površina',
@@ -58,11 +58,30 @@ use kartik\editable\Editable;
                                   
                 ];
             }
+        ],         
+        [
+            'label'=>'reduk. neto',
+            'format' => 'raw',
+            'hAlign'=>'right',
+            'pageSummary'=>true,
+            'value'=>function ($data) {
+                return $data->subNetArea;
+            },
+        ],
+        [
+            'label'=>'neto',
+            'format' => 'raw',
+            'hAlign'=>'right',
+            'pageSummary'=>true,
+            'value'=>function ($data) {
+                return $data->netArea;
+            },
         ],
         [
             'class'=>'kartik\grid\EditableColumn',
             'attribute'=>'gross_area',
-            //'pageSummary'=>true,
+            'hAlign'=>'right',
+            'pageSummary'=>true,
             'editableOptions'=> function ($model, $key, $index) {
                 return [
                     'header'=>'Naziv',
@@ -70,29 +89,17 @@ use kartik\editable\Editable;
                     'placement' => 'top',              
                 ];
             }
-        ], 
-        [
-            'label'=>'neto',
-            'format' => 'raw',
-            'value'=>function ($data) {
-                return $data->netArea;
-            },
         ],
-        [
-            'label'=>'reduk. neto',
-            'format' => 'raw',
-            'value'=>function ($data) {
-                return $data->subNetArea;
-            },
-        ],
+        
         [
             'class' => 'kartik\grid\ActionColumn',
             'header' => 'Opcije',
             'headerOptions' => ['style' => 'color:#337ab7'],
-            'template' => '{generateParts}{view}{update}{delete}',
+            //'template' => '{generateParts}{view}{update}{delete}',
+            'template' => '{generateParts}',
             'buttons' => [                
                 'generateParts' => function ($url, $model, $key) {
-                    return Html::a('<i class="fa fa-cubes"></i>', $url, ['class'=>'btn btn-primary btn-sm', 'style'=>'margin-right:10px;', 'data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#'.($model->projectBuildingStoreyParts ? '' : 'init-').'storey-parts-modal'.$model->id]);
+                    return $model->projectBuilding->project->work!='adaptacija' ? Html::a('<i class="fa fa-cubes"></i>', $url, ['class'=>'btn btn-primary btn-sm', 'style'=>'margin-right:10px;', 'data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#'.($model->projectBuildingStoreyParts ? '' : 'init-').'storey-parts-modal'.$model->id]) : null;
                 },
                 'view' => function ($url, $model, $key) {
                     return Html::a('<i class="fa fa-eye"></i>', $url, ['class'=>'btn btn-default btn-sm', 'style'=>'margin-right:10px;']);
@@ -115,7 +122,7 @@ use kartik\editable\Editable;
                     return $url;
                 }
                 if ($action === 'delete') {
-                    $url = ['/project-building-storeys/index', 'id'=>$model->project_id, 'remove_storey'=>$model->id];
+                    $url = ['/project-building-storeys/index', 'id'=>$model->id, 'remove_storey'=>$model->id];
                     return $url;
                 }
 
@@ -140,8 +147,8 @@ use kartik\editable\Editable;
         // set your toolbar
         'toolbar'=> [
             ['content'=>
-                Html::a('<i class="glyphicon glyphicon-plus"></i>', Url::to(), ['data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#storey-modal'.$model->project_id, 'class'=>'btn btn-success']) . ' '.
-                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['', 'id'=>$model->project_id], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
+                Html::a('<i class="glyphicon glyphicon-plus"></i>', Url::to(), ['data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#storey-modal'.$model->id, 'class'=>'btn btn-success']) . ' '.
+                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['', 'id'=>$model->id], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
             ],
             '{toggleData}',
         ],
@@ -155,7 +162,7 @@ use kartik\editable\Editable;
         'condensed'=>true,
         'responsive'=>true,
         'hover'=>true,
-        //'showPageSummary'=>true,
+        'showPageSummary'=>true,
         /*'panel'=>[
             'type'=>GridView::TYPE_DEFAULT,
             'heading'=>'',

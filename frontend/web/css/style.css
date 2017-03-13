@@ -1030,10 +1030,28 @@ fieldset.no_data {margin: 0px 0 30px; padding: 40px; border:1px solid #ddd; bord
 
 .pac-container {z-index: 9999 !important;}
 
-.tabs-left > .nav-tabs > li > a {text-align: right; font-size: 85%; text-transform: uppercase; font-weight: bold;}
+.tabs-left > .nav-tabs > li > a, .nav-pills.nav-stacked > li > a {text-align: right; font-size: 85%; text-transform: uppercase; font-weight: bold;}
 .tabs-krajee.tabs-left .nav-tabs, .tabs-krajee.tabs-right .nav-tabs {width:24%;}
-.tabs-krajee.tabs-left .tab-content {margin-left: 25%;}
+.tabs-krajee.tabs-left .tab-content {margin-left: 25%; padding: 0 20px;}
 .nav-justified > li > a {font-size: 115%;}
+
+.tab-content > .active, .pill-content > .active {display: inline !important;}
+.tabs-left .nav-tabs, .tabs-right .nav-tabs, .tabs-left .tab-content, .tabs-right .tab-content {height: 0;}
+
+.nav .divider-vertical {
+    height: 38px;
+    margin: 0 9px;
+    border-right: 1px solid #ccc;
+    /*border-left: 1px solid #aaa;*/
+}
+@media (max-width: 767px) {
+    .nav > .divider-vertical {
+        display: none;
+     }
+}
+
+.dropdown-menu {text-transform: capitalize;}
+
 
 
 .box1 {}

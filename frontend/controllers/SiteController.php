@@ -134,6 +134,17 @@ class SiteController extends Controller
         }
     }
 
+    public function actionTest($id, $volume=null)
+    {
+        $model = \common\models\Projects::findOne($id);
+        $volume = \common\models\ProjectVolumes::findOne($volume);
+        
+        return $this->render('test', [
+            'model' => $model,
+            'volume' => $volume,
+        ]);
+    }
+
     /**
      * Displays about page.
      *
@@ -628,5 +639,6 @@ class SiteController extends Controller
         }*/
         $mpdf->Output($model->code . ' - Obračun površina.pdf', 'I');
         exit;
-    }
+    }   
+
 }

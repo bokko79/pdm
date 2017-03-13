@@ -31,7 +31,8 @@ $model->control_engineer_id = $model->control_engineer_id ?: $model->project->co
             'data' => ArrayHelper::map(\common\models\Projects::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
-            'changeOnReset' => false,           
+            'changeOnReset' => false,       
+            'disabled' => true,    
         ]) ?>
 
     <?= $form->field($model, 'volume_id')->widget(Select2::classname(), [

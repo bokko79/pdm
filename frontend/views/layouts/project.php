@@ -44,6 +44,11 @@ $model = isset($this->params['project']) ? $this->params['project'] : [];
         ['label' => '<i class="fa fa-file"></i> Projekti', 'url' => ['/projects'], 'visible'=>!Yii::$app->user->isGuest],
         
         //['label' => 'Help', 'url' => ['/site/contact']],
+        ['label' => '<i class="fa fa-article"></i> Info',
+            'items' => [
+                ['label' => '<i class="fa fa-bookmark"></i> Pomoć', 'url' => ['/posts']],                
+            ],
+        ],
         ['label' => '<i class="fa fa-database"></i> Baza podataka', 'visible'=>!Yii::$app->user->isGuest,
             'items' => [
                 ['label' => '<i class="fa fa-shield"></i> Firme', 'url' => ['/practices']],
@@ -57,7 +62,7 @@ $model = isset($this->params['project']) ? $this->params['project'] : [];
     ];
     if (Yii::$app->user->isGuest) {
         //$menuItems[] = ['label' => 'Registracija', 'url' => ['/site/signup']];
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => 'Login', 'url' => ['/user/login']];
     } else {
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
@@ -89,7 +94,7 @@ $model = isset($this->params['project']) ? $this->params['project'] : [];
             <div class="col-sm-12">
                <div class="card_container record-full grid-item transparent no-shadow no-margin fadeInUp animated" id="">
                     <div class="primary-context normal">
-                        <div class="head grand thin"><i class="fa fa-file-powerpoint-o"></i> <?= \yii\helpers\StringHelper::truncate($model->name, 50). ' ('.$model->projectBuilding->spratnost.')' ?>
+                        <div class="head grand thin"><i class="fa fa-file-powerpoint-o"></i> <?= \yii\helpers\StringHelper::truncate($model->name, 50) . ($model->work!='adaptacija' ? ' ('.(($model->projectBuilding) ? $model->projectBuilding->spratnost : $model->projectExBuilding->spratnost).')' : null) ?>
                     
                         </div>
                         <div class="subhead">Podaci projekta.</div>
@@ -102,27 +107,50 @@ $model = isset($this->params['project']) ? $this->params['project'] : [];
             <div class="col-sm-12">
                 <?php
                     echo Nav::widget([
-                        'options'=>['class'=>'nav nav-pills nav-justified', 'style'=>'z-index:10000'],
+                        'options'=>['class'=>'nav nav-pills', 'style'=>'z-index:10000'],
                         'encodeLabels' => false,
-                        'items' => [
-                            ['label' => '<i class="fa fa-home"></i> Projekat '.$model->code, 'url' => ['/projects/view', 'id'=>$model->id], ],
-                            ['label' => '<i class="fa fa-book"></i> Sveske', 'url' => ['/project-volumes/index', 'ProjectVolumes[project_id]'=>$model->id], 'linkOptions'=>['style'=>'border-right: 2px solid #ccc'], 'active'=>Yii::$app->request->getUrl() == Url::toRoute(['/project-volumes/index?ProjectVolumes%5Bproject_id%5D='.$model->id])],
-                            ['label' => '<i class="fa fa-map-marker"></i> Parcela', 'url' => ['/project-lot/view', 'id'=>$model->id]],
-                            ['label' => '<i class="fa fa-building"></i> Objekat', 'url' => ['/project-building/view', 'id'=>$model->id]],
-                            ['label' => '<i class="fa fa-calculator"></i> Površine', 'url' => ['/project-building-storeys/index', 'id'=>$model->id]],
-                            
-                            ['label' => '<i class="fa fa-pencil"></i> Opis objekta', 'items' => [
-                                '<li class="dropdown-header">Tehnički opis</li>',
-                                ['label' => 'Arhitektonsko rešenje', 'url' => ['/project-building-characteristics/update', 'id'=>$model->id]],
-                                ['label' => 'Konstrukcija', 'url' => ['/project-building-structure/update', 'id'=>$model->id]],
-                                ['label' => 'Materijalizacija', 'url' => ['/project-building-materials/update', 'id'=>$model->id]],
-                                ['label' => 'Izolacija', 'url' => ['/project-building-insulations/update', 'id'=>$model->id]],
-                                ['label' => 'Instalacije', 'url' => ['/project-building-services/update', 'id'=>$model->id]],
+                        'items' => [                                
+                            (Yii::$app->request->getUrl() == Url::toRoute(['/projects/view?id='.$model->id])) ? 
+                            ['label' => '<i class="fa fa-home"></i> '.$model->code, 'url' =>['/projects/view', 'id'=>$model->id]] : 
+                            ['label' => '<i class="fa fa-home"></i> '.$model->code, 'items' => [
+                                ['label' => '<i class="fa fa-home"></i> '.$model->code, 'url' => ['/projects/view', 'id'=>$model->id]],
                                 '<li class="divider"></li>',
-                                '<li class="dropdown-header">Numerička dokumentacija</li>',
-                                ['label' => '<i class="fa fa-calculator"></i> Predmer i predračun', 'url' => '#'],
-                                ['label' => '<i class="fa fa-calendar"></i> Šeme stolarije i bravarije', 'url' => '#'], 
+                                ['label' => 'Investitori projekta', 'url' => ['/projects/view', 'id'=>$model->id, '#'=>'w1-tab1']],
+                                ['label' => 'Dokumenti projekta', 'url' => ['/projects/view', 'id'=>$model->id, '#'=>'w1-tab2']],                                
+                                //'<li class="divider"></li>',
+                                //'<li class="dropdown-header">Tehnička dokumentacija</li>',
+                                //['label' => 'Sveske', 'url' => ['/projects/view', 'id'=>$model->id, '#'=>'w1-tab3'], 'linkOptions'=>['style'=>'']],
                             ]],
+                            // tehnička dokumentacija
+                            ['label' => '<i class="fa fa-book"></i> Sveske', 'url' => ['/project-volumes/index', 'ProjectVolumes[project_id]'=>$model->id], 'active'=>Yii::$app->request->getUrl() == Url::toRoute(['/project-volumes/index?ProjectVolumes%5Bproject_id%5D='.$model->id])],
+                            '<li class="divider-vertical"></li>',
+                            // parcela
+                            ['label' => '<i class="fa fa-map-marker"></i> Lokacija', 'url' => ['/project-lot/view', 'id'=>$model->id]],
+                            // objekat
+                            ['label' => '<i class="fa fa-home"></i> Objekat', 'items' => [
+                                ($model->work!='nova_gradnja') ? '<li class="dropdown-header">Postojeće stanje</li>' : '',
+                                ($model->work!='nova_gradnja') ? ['label' => $model->projectExBuilding->name. ' (postojeće stanje)', 'url' => ['/project-building/view', 'id'=>$model->projectExBuilding->id]] : '',
+                                ($model->work!='nova_gradnja') ? ['label' => 'Površine', 'url' => ['/project-building-storeys/index', 'id'=>$model->projectExBuilding->id, '#'=>'w10-tab1']] : '',                       
+
+                                ($model->work!='nova_gradnja') ? '<li class="divider"></li>' : '',
+                                ($model->work!='nova_gradnja') ? '<li class="dropdown-header">Predviđeno stanje</li>' : '',
+                                ($model->projectBuilding) ? ['label' => $model->projectBuilding->name. ' (predviđeno stanje)', 'url' => ['/project-building/view', 'id'=>$model->projectBuilding->id]] : '',
+                                ($model->projectBuilding) ? ['label' => 'Površine', 'url' => ['/project-building-storeys/index', 'id'=>$model->projectBuilding->id, '#'=>'w10-tab1']] : '',
+
+                            ], 'active'=>(($model->projectExBuilding and Yii::$app->request->getUrl() == Url::toRoute(['/project-building/view?id='.$model->projectExBuilding->id])) or ($model->projectBuilding and Yii::$app->request->getUrl() == Url::toRoute(['/project-building/view?id='.$model->projectBuilding->id])))],
+
+
+                            // jedinice
+                            ($model->work=='adaptacija') ?
+                            ['label' => '<i class="fa fa-key"></i> '.c($model->projectUnit->fullType), 'items' => [
+                                '<li class="dropdown-header">Postojeće stanje</li>',
+                                ['label' => c($model->projectExUnit->fullType). ' (postojeće stanje)', 'url' => ['/project-building-storey-parts/view', 'id'=>$model->projectExUnit->id]],
+                                '<li class="divider"></li>',                                 
+                                '<li class="dropdown-header">Predviđeno stanje</li>',
+                                ['label' => c($model->projectUnit->fullType). ' (predviđeno stanje)', 'url' => ['/project-building-storey-parts/view', 'id'=>$model->projectUnit->id]],
+                            ], 'active'=>(Yii::$app->request->getUrl() == Url::toRoute(['/project-building-storey-parts/view?id='.$model->projectUnit->id]) or Yii::$app->request->getUrl() == Url::toRoute(['/project-building-storey-parts/view?id='.$model->projectExUnit->id]))] : '',
+                          
+                            ['label' => '<i class="fa fa-calculator"></i> Predmer', 'url' => ['/project-building-storeys/index', 'id'=>$model->id, 'visible'=>($model->work!='promena_namene' or $model->work!='ozakonjenje')]],
                             
                         ]
                     ]);

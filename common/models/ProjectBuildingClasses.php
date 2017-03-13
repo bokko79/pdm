@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "project_building_classes".
  *
  * @property string $id
- * @property string $project_id
+ * @property string $project_building_id
  * @property string $building_id
  * @property string $percent
  * @property string $area
@@ -32,10 +32,10 @@ class ProjectBuildingClasses extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id', 'building_id'], 'required'],
-            [['project_id', 'building_id'], 'integer'],
+            [['project_building_id', 'building_id'], 'required'],
+            [['project_building_id', 'building_id'], 'integer'],
             [['percent', 'area'], 'number'],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
+            [['project_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuilding::className(), 'targetAttribute' => ['project_building_id' => 'id']],
             [['building_id'], 'exist', 'skipOnError' => true, 'targetClass' => Buildings::className(), 'targetAttribute' => ['building_id' => 'id']],
         ];
     }
@@ -47,7 +47,7 @@ class ProjectBuildingClasses extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_id' => Yii::t('app', 'Projekat'),
+            'project_building_id' => Yii::t('app', 'Objekat projekta'),
             'building_id' => Yii::t('app', 'Klasa objekta'),
             'percent' => Yii::t('app', 'Procenat'),
             'area' => Yii::t('app', 'Površina'),
@@ -57,9 +57,9 @@ class ProjectBuildingClasses extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProject()
+    public function getProjectBuilding()
     {
-        return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+        return $this->hasOne(ProjectBuilding::className(), ['id' => 'project_building_id']);
     }
 
     /**

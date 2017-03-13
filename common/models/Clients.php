@@ -43,6 +43,11 @@ class Clients extends \yii\db\ActiveRecord
                 'when' => function($model) {               
                     return $model->type == 'company';                 
                 },],*/
+            [['contact_person'], 'required', 'when' => function ($model) {
+                            return $model->type == 'company';
+                        }, 'whenClient' => "function (attribute, value) {
+                            return $('input[name=\"Clients[type]\"]:checked').val() == 'company';
+                        }"],
             [['location_id', 'tax_no', 'company_no'], 'integer'],
             [['type'], 'string'],
             [['name'], 'string', 'max' => 128],

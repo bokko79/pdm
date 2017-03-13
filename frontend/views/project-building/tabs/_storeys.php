@@ -13,7 +13,7 @@ use yii\bootstrap\Nav;
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
         <div class="head">Etaže objekta
-            <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cogs"></i> Upravljanje etažama', Url::to(['/project-building-storeys/index', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+            <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cogs"></i> Upravljanje etažama', Url::to(['/project-building-storeys/index', 'id'=>$model->id]), ['class' => 'btn btn-success btn-sm']) ?></div>
         </div>
         <div class="subhead">Bruto: <?= $model->grossArea ?> m<sup>2</sup>. Netto: <?= $model->netArea ?> m<sup>2</sup>. Redukovana netto: <?= $model->subNetArea ?> m<sup>2</sup></div>
     </div>

@@ -304,9 +304,9 @@ $futureDevs = $model->projectLotFutureDevelopments;
 		</div>
 
 		<h4 class="sub">Arhitektonsko oblikovanje</h4>
-			<?= $architecture->context ? '<h5 class="nopadd">Arhitektonski kontekst</h5><p>'.$architecture->access.'</p>' : null; ?>
-			<?= $architecture->architecture ? '<h5 class="nopadd">Arhitektonsko oblikovanje</h5><p>'.$architecture->access.'</p>' : null; ?>
-			<?= $architecture->style ? '<h5 class="nopadd">Arhitektonski stil i izraz</h5><p>'.$architecture->access.'</p>' : null; ?>
+			<?= $architecture->context ? '<h5 class="nopadd">Arhitektonski kontekst</h5><p>'.$architecture->context.'</p>' : null; ?>
+			<?= $architecture->architecture ? '<h5 class="nopadd">Arhitektonsko oblikovanje</h5><p>'.$architecture->architecture.'</p>' : null; ?>
+			<?= $architecture->style ? '<h5 class="nopadd">Arhitektonski stil i izraz</h5><p>'.$architecture->style.'</p>' : null; ?>
 			<?= $architecture->environment ? '<h5 class="nopadd">Odnos prema životnoj sredini</h5><p>'.$architecture->environment.'</p>' : null; ?>
 			<?= $architecture->lights ? '<h5 class="nopadd">Prirodno osvetljenje</h5><p>'.$architecture->lights.'</p>' : null; ?>
 			<?= $architecture->ventilation ? '<h5 class="nopadd">Provertravanje</h5><p>'.$architecture->ventilation.'</p>' : null; ?>

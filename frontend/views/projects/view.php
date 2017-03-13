@@ -12,7 +12,7 @@ use kartik\tabs\TabsX;
 /* @var $this yii\web\View */
 /* @var $model common\models\Projects */
 
-$this->title = $model->code. ': '.$model->name. ' ('.$model->projectBuilding->spratnost.')';
+$this->title = \yii\helpers\StringHelper::truncate($model->name, 50) . ($model->work!='adaptacija' ? ' ('.(($model->projectBuilding) ? $model->projectBuilding->spratnost : $model->projectExBuilding->spratnost).')' : null);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Projekti'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['project'] = $model;
@@ -22,11 +22,7 @@ $items = [
         'label'=>'Opšti podaci',
         'content'=>$this->render('tabs/_general', ['model'=>$model]),
         'active'=>true
-    ],
-    /*[
-        'label'=>'Tehnička dokumentacija',
-        'content'=>$this->render('tabs/_volumes', ['model'=>$model]),
-    ],*/
+    ],    
     [
         'label'=>'Investitori',
         'content'=>$this->render('tabs/_clients', ['model'=>$model]),
@@ -35,7 +31,11 @@ $items = [
         'label'=>'Dokumenti',
         'content'=>$this->render('tabs/_docs', ['model'=>$model]),
     ],
-    ];
+    /*[
+        'label'=>'Tehnička dokumentacija',
+        'content'=>$this->render('tabs/_volumes', ['model'=>$model]),
+    ],*/
+];
 ?>
 
 <div class="container-fluid">

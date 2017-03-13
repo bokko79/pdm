@@ -10,6 +10,7 @@ use kartik\widgets\ActiveField;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
+use yii\bootstrap\Nav;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectBuildingStoreyParts */
@@ -17,11 +18,18 @@ use yii\bootstrap\Modal;
 $this->title = c($model->name) . '  '. $model->mark. '@'.c($model->projectBuildingStorey->name);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Etaža objekta'), 'url' => ['/project-building-storeys/view', 'id'=>$model->project_building_storey_id]];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['project'] = $model->projectBuildingStorey->projectBuilding->project;
 ?>
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-12">
+         <div class="col-sm-3">
+            <?= $this->render('/project-building-storeys/_menu', [
+                    'model' => $model->projectBuildingStorey->projectBuilding,  
+                    'unit' => $model,
+                ]) ?>        
+        </div>
+        <div class="col-sm-9">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
                     <div class="head"><?= Html::a(c($model->projectBuildingStorey->name), Url::to(['/project-building-storeys/view', 'id'=>$model->project_building_storey_id])) ?> <i class="fa fa-arrow-circle-right hint small"></i> <?= c($model->name) ?> <?= $model->mark ?>: Lista prostorija
@@ -161,7 +169,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                     ];
                     echo GridView::widget([
-                        'id' => 'kv-grid-demo',
+                        'id' => 'kv-grid-parts',
                         'dataProvider'=>$projectBuildingStoreyPartRooms,
                         //'filterModel'=>$searchModel,
                         'columns'=>$gridColumns,
@@ -171,16 +179,53 @@ $this->params['breadcrumbs'][] = $this->title;
                         'pjax'=>true, // pjax is set to always true for this demo                        
                         'bordered'=>true,
                         'striped'=>true,
-                        'condensed'=>false,
+                        'condensed'=>true,
                         'responsive'=>true,
                         'hover'=>true,                        
-                        'persistResize'=>false,                        
+                        'persistResize'=>true,                        
                     ]);
                     ?>
                 </div>
             </div> 
         </div>
     </div>
+<?php if($model->projectBuildingStorey->projectBuilding->project->work=='adaptacija'): ?>
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3">
+            <?= $this->render('tabs/_characteristics', [
+                    'model' => $model,  
+                ]) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3">
+            <?= $this->render('tabs/_structure', [
+                    'model' => $model,  
+                ]) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3">
+            <?= $this->render('tabs/_materials', [
+                    'model' => $model,  
+                ]) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3">
+            <?= $this->render('tabs/_insulations', [
+                    'model' => $model,  
+                ]) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3">
+            <?= $this->render('tabs/_services', [
+                    'model' => $model,  
+                ]) ?>
+        </div>
+    </div>
+<?php endif; ?>
 </div>
 
 <?php

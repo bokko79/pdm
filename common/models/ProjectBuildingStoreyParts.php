@@ -41,7 +41,7 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_building_storey_id', 'type'], 'required'],
+            [['project_building_storey_id', 'type', 'mode'], 'required'],
             [['project_building_storey_id', 'same_as_id', 'qty', 'room_to_add'], 'integer'],
             [['type', 'structure', 'description'], 'string'],
             [['area'], 'number'],
@@ -79,6 +79,46 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
     public function getProjectBuildingStoreyPartRooms()
     {
         return $this->hasMany(ProjectBuildingStoreyPartRooms::className(), ['project_building_storey_part_id' => 'id'])->orderBy('CAST(mark as INTEGER)');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectBuildingStoreyPartCharacteristics()
+    {
+        return $this->hasOne(ProjectBuildingStoreyPartCharacteristics::className(), ['project_building_storey_part_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectBuildingStoreyPartInsulations()
+    {
+        return $this->hasOne(ProjectBuildingStoreyPartInsulations::className(), ['project_building_storey_part_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectBuildingStoreyPartMaterials()
+    {
+        return $this->hasOne(ProjectBuildingStoreyPartMaterials::className(), ['project_building_storey_part_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectBuildingStoreyPartServices()
+    {
+        return $this->hasOne(ProjectBuildingStoreyPartServices::className(), ['project_building_storey_part_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectBuildingStoreyPartStructure()
+    {
+        return $this->hasOne(ProjectBuildingStoreyPartStructure::className(), ['project_building_storey_part_id' => 'id']);
     }
 
     /**

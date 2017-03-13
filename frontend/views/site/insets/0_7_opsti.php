@@ -38,7 +38,7 @@ $building = $model->projectBuilding;
 						<td style="border-bottom: 1px dotted #777;"><small>klasifikaciona oznaka</small></td>
 					</tr>
 					<?php // foreach loop kroz sve delove objekta  ?>
-					<?php foreach($model->projectBuildingClasses as $class): ?>
+					<?php foreach($model->projectBuilding->projectBuildingClasses as $class): ?>
 					<tr>
 						<td class="titler" style="border-bottom: 1px dotted #777; border-right: 1px dotted #777;"><?= $formatter->format($class->percent, ['decimal',2]) ?> (<?= $formatter->format($class->area, ['decimal',2]) ?> m<sup>2</sup>)</td>
 						<td style="border-bottom: 1px dotted #777;"><?= $class->building->category. ' - '.$class->building->class. ': <i>'.$class->building->name ?></i></td>
@@ -204,7 +204,7 @@ nalazi priključak na javnu saobraćajnicu</small></td>
 		<tr>
 			<td class=""><small>visina objekta (venac, sleme, povučeni sprat i dr.) prema lokacijskim uslovima:</small></td>
 			<td class="content"><small>
-				<?php if($heights = $model->projectBuildingHeights){
+				<?php if($heights = $model->projectBuilding->projectBuildingHeights){
 					foreach($heights as $height){
 						echo '- '.$height->name. ': '. $formatter->format($height->absoluteHeight, ['decimal',2]).'<br>';
 					}
@@ -215,7 +215,7 @@ nalazi priključak na javnu saobraćajnicu</small></td>
 			<td class=""><small>apsolutna visinska kota (venac, sleme, povučeni sprat i dr.) prema lokacijskim
 uslovima:</small></td>
 			<td class="content"><small>
-				<?php if($heights = $model->projectBuildingHeights){
+				<?php if($heights = $model->projectBuilding->projectBuildingHeights){
 					foreach($heights as $height){
 						echo '- '.$height->name. ': '. $formatter->format($height->level, ['decimal',2]). ' (aps. '.$formatter->format($height->absoluteLevel, ['decimal',2]).')<br>';
 					}
@@ -244,7 +244,7 @@ uslovima:</small></td>
 			<td class="shorttitler" rowspan="4"><small>materijalizacija objekta:</small></td>
 			<td class=""><small>materijalizacija fasade:</small></td>
 			<td class="content">
-				<?= $model->projectBuildingMaterials->facade ?>
+				<?= $model->projectBuilding->projectBuildingMaterials->facade ?>
 			</td>
 		</tr>
 		<tr>
@@ -262,7 +262,7 @@ uslovima:</small></td>
 		<tr>
 			<td class=""><small>materijalizacija krova:</small></td>
 			<td class="content">
-				<?= $model->projectBuildingMaterials->roofing ?>
+				<?= $model->projectBuilding->projectBuildingMaterials->roofing ?>
 			</td>
 		</tr>
 		

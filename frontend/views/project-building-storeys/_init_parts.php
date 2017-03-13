@@ -10,7 +10,7 @@ use kartik\checkbox\CheckboxX;
 <div class="table-responsive container-fluid">
     <div class="row">       
         <div class="col-sm-12">
-            <p>Izaberite koje celine sadrži <?= Html::a($model->storey, ['/project-building-storeys/view', 'id' => $model->id]) ?></p>
+            <p class="bg-info" style="padding:20px;"><?= Html::a(c($model->storey), ['/project-building-storeys/view', 'id' => $model->id]) ?> ne sadrži nijednu celinu/jedinicu. Izaberite koje celine sadrži.</p>
             <?php $form = kartik\widgets\ActiveForm::begin([
                 'id' => 'form-horizontal',
                 'type' => ActiveForm::TYPE_HORIZONTAL,
@@ -21,9 +21,9 @@ use kartik\checkbox\CheckboxX;
             ]); ?>
 
 
-                <?= $form->field($model, 'stan')->input('number', ['min'=>0, 'max'=>16, 'style'=>'width:40%']) ?>
+                <?= $form->field($model, 'stan')->input('number', ['min'=>0, 'max'=>16, 'style'=>'width:40%'])->hint('Unesite broj stambenih jedinica, npr. apartmana, stanova, hotelskih soba, koje ova etaža ima.') ?>
 
-                <?= $form->field($model, 'biz')->input('number', ['min'=>0, 'max'=>16, 'style'=>'width:40%']) ?>
+                <?= $form->field($model, 'biz')->input('number', ['min'=>0, 'max'=>16, 'style'=>'width:40%'])->hint('Unesite broj poslovnih jedinica, npr. lokala, kancelarija, restorana, ordinacija, učionica itd, koje ova etaža ima.') ?>
 
                 <?= $form->field($model, 'stamb')->widget(CheckboxX::classname(), ['pluginOptions'=>['size'=>'md']]) ?>
 

@@ -11,14 +11,14 @@ use yii\bootstrap\Nav;
 ?>
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
-        <div class="head">Arhitektonske karakteristike objekta
-            <div class="action-area normal-case"><?= Html::a('<i class="fa fa-pencil"></i> Uredi karakteristike objekta', Url::to(['/project-building-characteristics/update', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+        <div class="head">Arhitektura <?= $model->stateGen ?> objekta
+            <div class="action-area normal-case"><?= Html::a('<i class="fa fa-pencil"></i> Uredi karakteristike objekta', Url::to(['/project-building/update', 'id'=>$model->id, '#'=>'w1-tab3']), ['class' => 'btn btn-success btn-sm']) ?></div>
         </div>
-        <div class="subhead">Lista arhitektonskih karakteristika predmetnog objekta.</div>
+        <div class="subhead">Lista arhitektonskih karakteristika <?= $model->stateGen ?> predmetnog objekta.</div>
     </div>
     <div class="secondary-context">
         <?= DetailView::widget([
-            'model' => $model->project->projectBuildingCharacteristics,
+            'model' => $model->projectBuildingCharacteristics,
             'attributes' => [
                 'function:ntext',
                 'access:ntext',

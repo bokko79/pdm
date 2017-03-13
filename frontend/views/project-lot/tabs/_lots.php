@@ -25,7 +25,9 @@ use yii\bootstrap\Nav;
             foreach($lots as $lot){
                 echo Html::a($lot->fullAddress, Url::to(['/location-lots/update', 'id'=>$lot->id]), ['class' => 'btn btn-default btn-sm']). '<hr>';
             }
-        } ?>
+        } else {
+            echo 'Nije uneta nijedna katastarska parcela.' . Html::a('<i class="fa fa-plus-circle"></i> Dodaj parcelu', Url::to(['/location-lots/create', 'LocationLots[location_id]'=>$model->project->location_id, 'LocationLots[type]'=>'object']), ['class' => 'btn btn-link btn-sm']);
+            } ?>
     </div>
     <div class="primary-context gray normal">
         <div class="head">Parcele instalacija
@@ -38,7 +40,9 @@ use yii\bootstrap\Nav;
             foreach($lots as $lot){
                 echo Html::a($lot->fullAddress, Url::to(['/location-lots/update', 'id'=>$lot->id]), ['class' => 'btn btn-default btn-sm']). '<hr>';
             }
-        } ?>
+        } else {
+            echo 'Nije uneta nijedna parcela instalacija.' . Html::a('<i class="fa fa-plus-circle"></i> Dodaj parcelu', Url::to(['/location-lots/create', 'LocationLots[location_id]'=>$model->project->location_id, 'LocationLots[type]'=>'service']), ['class' => 'btn btn-link btn-sm']);
+            } ?>
     </div>
     <div class="primary-context gray normal">
         <div class="head button_to_show_secondary">Parcele pristupa
@@ -51,6 +55,8 @@ use yii\bootstrap\Nav;
             foreach($lots as $lot){
                 echo Html::a($lot->fullAddress, Url::to(['/location-lots/update', 'id'=>$lot->id]), ['class' => 'btn btn-default btn-sm']). '<hr>';
             }
-        } ?>
+        } else {
+            echo 'Nije uneta nijedna parcela pristupa.' . Html::a('<i class="fa fa-plus-circle"></i> Dodaj parcelu', Url::to(['/location-lots/create', 'LocationLots[location_id]'=>$model->project->location_id, 'LocationLots[type]'=>'access']), ['class' => 'btn btn-link btn-sm']);
+            } ?>
     </div>
     </div>

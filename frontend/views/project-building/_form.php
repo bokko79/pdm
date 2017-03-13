@@ -15,8 +15,8 @@ if(!$model->building_line_dist) $model->building_line_dist = 0;
 <?php $form = kartik\widgets\ActiveForm::begin([
     'id' => 'form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
-    'fullSpan' => 7,      
-    'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
+    'fullSpan' => 12,      
+    'formConfig' => ['labelSpan' => 2, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
     'options' => ['enctype' => 'multipart/form-data'],
 ]); ?>
 <hr>
@@ -25,17 +25,44 @@ if(!$model->building_line_dist) $model->building_line_dist = 0;
             'data' => ArrayHelper::map(\common\models\Projects::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
-            'changeOnReset' => false,           
+            'changeOnReset' => false,    
+            'disabled' => true,       
         ]) ?>
+<div class="form-group">
+   <div class="col-sm-2">
+        <?= Html::activeLabel($model, 'name', ['label'=>'Naziv objekta: Postojeće/Novoprojektovano stanje', 'class'=>'control-label']) ?>
+    </div>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'name',['showLabels'=>false])->textInput(['maxlength' => true, 'placeholder'=>'npr. Stambeno-poslovni objekat'])->hint('Pun naziv objekta.') ?>
+    </div>
+    <div class="col-sm-4">
+        <?= $form->field($model_new, 'name',['showLabels'=>false])->textInput(['maxlength' => true, 'placeholder'=>'npr. Stambeno-poslovni objekat'])->hint('Pun naziv objekta.') ?>
+    </div>
+</div>
+    
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder'=>'npr. Stambeno-poslovni objekat'])->hint('Pun naziv objekta.') ?>
-
-    <?= $form->field($model, 'building_id')->widget(Select2::classname(), [
+<div class="form-group">
+   <div class="col-sm-2">
+        <?= Html::activeLabel($model, 'building_id', ['label'=>'Pretežna klasa', 'class'=>'control-label']) ?>
+    </div>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'building_id',['showLabels'=>false])->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Buildings::find()->all(), 'id', 'fullClass'),
-            'options' => ['placeholder' => 'Izaberite...'],
+            'options' => ['placeholder' => 'Izaberite...', 'id'=>'existing'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           
         ])->hint('Pretežna klasa objekta prema važećem Pravilniku o klasifikaciji objekata.') ?>
+    </div>
+    <div class="col-sm-4">
+        <?= $form->field($model_new, 'building_id',['showLabels'=>false])->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\Buildings::find()->all(), 'id', 'fullClass'),
+            'options' => ['placeholder' => 'Izaberite...', 'id'=>'new'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,           
+        ])->hint('Pretežna klasa objekta prema važećem Pravilniku o klasifikaciji objekata.') ?>
+    </div>
+</div>
+
 
     <?= $form->field($model, 'building_type_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\BuildingTypes::find()->all(), 'id', 'name'),

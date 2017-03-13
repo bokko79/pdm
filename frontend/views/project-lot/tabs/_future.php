@@ -17,9 +17,13 @@ use yii\bootstrap\Nav;
         </div>
     </div>
     <div class="secondary-context">
-        <?php if($developments = $model->project->projectLotFutureDevelopments);
-        foreach($developments as $development){
-            echo Html::a(c($development->buildingType->name.' '.$development->name), Url::to(['/project-lot-future-developments/update', 'id'=>$development->id]), ['class' => 'btn btn-default', 'style'=>'']).'<br>';
-        } ?>
+        <?php if($developments = $model->project->projectLotFutureDevelopments){
+            foreach($developments as $development){
+                echo Html::a(c($development->buildingType->name.' '.$development->name), Url::to(['/project-lot-future-developments/update', 'id'=>$development->id]), ['class' => 'btn btn-default', 'style'=>'']).'<br>';
+            }
+        } else {
+            echo 'Nije unet nijedan predviđeni objekat.' . Html::a('<i class="fa fa-plus-circle"></i> Dodaj predviđeni objekat', Url::to(['/project-lot-future-developments/create', 'ProjectLotFutureDevelopments[project_id]'=>$model->project_id]), ['class' => 'btn btn-link btn-sm']);
+            }
+         ?>
     </div>
 </div>

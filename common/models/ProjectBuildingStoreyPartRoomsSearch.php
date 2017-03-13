@@ -42,7 +42,7 @@ class ProjectBuildingStoreyPartRoomsSearch extends ProjectBuildingStoreyPartRoom
      */
     public function search($params)
     {
-        $query = ProjectBuildingStoreyPartRooms::find()/*->innerJoin('project_building_storey_parts as pbsp')->innerJoin('project_building_storeys as pbs')*/;
+        $query = ProjectBuildingStoreyPartRooms::find()->innerJoin('project_building_storey_parts as pbsp')->innerJoin('project_building_storeys as pbs');
 
         // add conditions that should always apply here
 
@@ -73,7 +73,7 @@ class ProjectBuildingStoreyPartRoomsSearch extends ProjectBuildingStoreyPartRoom
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'mark', $this->mark])
             ->andFilterWhere(['like', 'flooring', $this->flooring]);
-        $query->orderBy('project_building_storey_part_id, CAST(mark AS INTEGER)')->groupBy('id');
+        $query->orderBy('project_building_storey_part_id, CAST(project_building_storey_part_rooms.mark AS INTEGER)')->groupBy('id');
         return $dataProvider;
     }
 }

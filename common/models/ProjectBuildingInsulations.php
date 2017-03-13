@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "project_building_insulations".
  *
- * @property string $project_id
+ * @property string $project_building_id
  * @property string $thermal
  * @property string $sound
  * @property string $hidro
@@ -32,10 +32,10 @@ class ProjectBuildingInsulations extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id'], 'required'],
-            [['project_id'], 'integer'],
+            [['project_building_id'], 'required'],
+            [['project_building_id'], 'integer'],
             [['thermal', 'sound', 'hidro', 'fireproof', 'chemical'], 'string'],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
+            [['project_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuilding::className(), 'targetAttribute' => ['project_building_id' => 'id']],
         ];
     }
 
@@ -45,7 +45,7 @@ class ProjectBuildingInsulations extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'project_id' => Yii::t('app', 'Projekat'),
+            'project_building_id' => Yii::t('app', 'Objekat projekta'),
             'thermal' => Yii::t('app', 'Termička izolacija objekta'),
             'sound' => Yii::t('app', 'Zvukoizolacija objekta'),
             'hidro' => Yii::t('app', 'Hidroizolacija objekta'),
@@ -57,8 +57,8 @@ class ProjectBuildingInsulations extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProject()
+    public function getProjectBuilding()
     {
-        return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+        return $this->hasOne(ProjectBuilding::className(), ['id' => 'project_building_id']);
     }
 }

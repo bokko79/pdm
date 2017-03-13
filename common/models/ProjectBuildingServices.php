@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "project_building_services".
  *
- * @property string $project_id
+ * @property string $project_building_id
  * @property string $heating
  * @property string $ac
  * @property string $ventilation
@@ -46,10 +46,10 @@ class ProjectBuildingServices extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id'], 'required'],
-            [['project_id'], 'integer'],
+            [['project_building_id'], 'required'],
+            [['project_building_id'], 'integer'],
             [['heating', 'ac', 'ventilation', 'gas', 'sprinkler', 'water', 'sewage', 'phone', 'tv', 'electricity', 'catv', 'internet', 'lift', 'pool', 'geotech', 'traffic', 'construction', 'fire', 'special'], 'string'],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
+            [['project_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuilding::className(), 'targetAttribute' => ['project_building_id' => 'id']],
         ];
     }
 
@@ -59,7 +59,7 @@ class ProjectBuildingServices extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'project_id' => Yii::t('app', 'Projekat'),
+            'project_building_id' => Yii::t('app', 'Objekat projekta'),
             'heating' => Yii::t('app', 'Grejanje objekta'),
             'ac' => Yii::t('app', 'Klimatizacija objekta'),
             'ventilation' => Yii::t('app', 'Ventilacija objekta'),
@@ -85,8 +85,8 @@ class ProjectBuildingServices extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProject()
+    public function getProjectBuilding()
     {
-        return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+        return $this->hasOne(ProjectBuilding::className(), ['id' => 'project_building_id']);
     }
 }

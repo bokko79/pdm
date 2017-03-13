@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model common\models\ProjectBuildingParts */
 
 $this->title = Yii::t('app', 'Dodaj etažu predmetnog objekta');
-$this->params['breadcrumbs'][] = ['label' => $model->project->name, 'url' => ['/project-building/view', 'id' => $model->project_id]];
+$this->params['breadcrumbs'][] = ['label' => $model->projectBuilding->project->name, 'url' => ['/project-building/view', 'id' => $model->project_building_id]];
 ?>
 
     <h1><?= Html::encode($this->title) ?></h1>

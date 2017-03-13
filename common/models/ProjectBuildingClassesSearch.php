@@ -18,7 +18,7 @@ class ProjectBuildingClassesSearch extends ProjectBuildingClasses
     public function rules()
     {
         return [
-            [['id', 'project_id', 'building_id'], 'integer'],
+            [['id', 'project_building_id', 'building_id'], 'integer'],
             [['percent', 'area'], 'number'],
         ];
     }
@@ -60,7 +60,7 @@ class ProjectBuildingClassesSearch extends ProjectBuildingClasses
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'project_id' => $this->project_id,
+            'project_building_id' => $this->project_building_id,
             'building_id' => $this->building_id,
             'percent' => $this->percent,
             'area' => $this->area,

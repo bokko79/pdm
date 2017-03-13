@@ -38,16 +38,20 @@ class ProjectBuildingStoreyPartRoomsController extends Controller
     {
         $this->layout = 'project';
         
-        $project = $this->findProjectById($id);        
+        $projectBuilding = $this->findProjectBuildingById($id);        
         $searchModel = new ProjectBuildingStoreyPartRoomsSearch();
         
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        foreach($project->projectBuildingStoreys as $storey){
+        foreach($projectBuilding->projectBuildingStoreys as $storey){
             foreach($storey->projectBuildingStoreyParts as $part){
                 $dataProvider->query->orWhere('project_building_storey_part_id='.$part->id);
             }
         }
+        if ($st = Yii::$app->request->get('storey')) {
+            $dataProvider->query->andWhere('project_building_storey_parts.project_building_storey_id='.$st);
+        }
+
 
         // validate if there is a editable input saved via AJAX
         if (Yii::$app->request->post('hasEditable')) {
@@ -88,7 +92,7 @@ class ProjectBuildingStoreyPartRoomsController extends Controller
             return;
         }
         return $this->render('index', [
-            'project' => $project,
+            'projectBuilding' => $projectBuilding,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -210,9 +214,9 @@ class ProjectBuildingStoreyPartRoomsController extends Controller
      * @return ProjectBuildingStoreyPartRooms the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findProjectById($id)
+    protected function findProjectBuildingById($id)
     {
-        if (($model = \common\models\Projects::findOne($id)) !== null) {
+        if (($model = \common\models\ProjectBuilding::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

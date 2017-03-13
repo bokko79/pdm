@@ -9,7 +9,7 @@ use yii\data\ActiveDataProvider;
  * This is the model class for table "project_building_storeys".
  *
  * @property string $id
- * @property string $project_id
+ * @property string $project_building_id
  * @property string $storey
  * @property integer $order_no
  * @property string $sub_net_area
@@ -52,12 +52,12 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id', 'storey'], 'required'],
-            [['project_id', 'units_total', 'same_as_id', 'stan', 'biz', 'stamb', 'posl', 'garage', 'common', 'tech', 'external'], 'integer'],
+            [['project_building_id', 'storey'], 'required'],
+            [['project_building_id', 'units_total', 'same_as_id', 'stan', 'biz', 'stamb', 'posl', 'garage', 'common', 'tech', 'external'], 'integer'],
             [['storey', 'description', 'order_no'], 'string'],
             [['sub_net_area', 'net_area', 'gross_area', 'level', 'height'], 'number'],
             [['name'], 'string', 'max' => 64],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],            
+            [['project_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuilding::className(), 'targetAttribute' => ['project_building_id' => 'id']],            
         ];
     }
 
@@ -68,7 +68,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_id' => Yii::t('app', 'Naziv projekta'),
+            'project_building_id' => Yii::t('app', 'Objekat projekta'),
             'same_as_id' => Yii::t('app', 'Kopirana etaža'),
             'storey' => Yii::t('app', 'Etaža'),
             'order_no' => Yii::t('app', 'Redni broj'),
@@ -109,9 +109,9 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProject()
+    public function getProjectBuilding()
     {
-        return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+        return $this->hasOne(ProjectBuilding::className(), ['id' => 'project_building_id']);
     }
 
     /**
@@ -453,7 +453,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
      */
     public function getAbsoluteLevel()
     {
-        return $this->level+$this->project->projectBuilding->ground_floor_level;
+        return $this->level+$this->projectBuilding->ground_floor_level;
     }
 
     /**
@@ -552,7 +552,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     public function getOtherStoreysOfBuilding()
     {
         $storeys = [];
-        if($otherStoreys = $this->project->projectBuildingStoreys){
+        if($otherStoreys = $this->projectBuilding->projectBuildingStoreys){
             foreach($otherStoreys as $otherStorey){
                 if($otherStorey->id!=$this->id){
                     $storeys[] = $otherStorey;
@@ -568,7 +568,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     public function getOtherUniqueStoreysOfBuilding()
     {
         $storeys = [];
-        if($otherStoreys = $this->project->projectBuildingStoreys){
+        if($otherStoreys = $this->projectBuilding->projectBuildingStoreys){
             foreach($otherStoreys as $otherStorey){
                 if($otherStorey->id!=$this->id and $otherStorey->same_as_id==null){
                     $storeys[] = $otherStorey;

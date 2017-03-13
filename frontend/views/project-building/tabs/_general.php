@@ -9,10 +9,11 @@ use common\widgets\Alert;
 use yii\bootstrap\Nav;
 
 ?>
+
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
-        <div class="head"><i class="fa fa-plus-circle"></i> Osnovni podaci objekta
-        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog"></i> Uredi objekat', Url::to(['/project-building/update', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?>
+        <div class="head"><i class="fa fa-info-circle"></i> <?= ($model->project->work!='nova_gradnja' and $model->project->work!='promena_namene' and $model->project->work!='ozakonjenje') ? c($model->name) . ': ' . $model->state.' - Osnovni podaci' : 'Osnovni podaci objekta'; ?>
+        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog fa-lg"></i>', Url::to(['/project-building/update', 'id'=>$model->id]), ['class' => 'btn btn-success btn-lg']) ?>
             </div>
         </div>
         <div class="subhead">Predmetni objekat projekta. Ukupna bruto površina: <?= $model->grossArea ?> m<sup>2</sup></div>
@@ -23,6 +24,7 @@ use yii\bootstrap\Nav;
             'attributes' => [
                 'project.name',
                 'building.class',
+                'state',
                 'name',
                 'type',
                 'buildingType.name',

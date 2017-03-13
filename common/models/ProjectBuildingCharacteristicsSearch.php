@@ -18,7 +18,7 @@ class ProjectBuildingCharacteristicsSearch extends ProjectBuildingCharacteristic
     public function rules()
     {
         return [
-            [['project_id'], 'integer'],
+            [['project_building_id'], 'integer'],
             [['function', 'access', 'entrance', 'position', 'shape', 'architecture', 'style', 'context', 'ventilation', 'lights', 'orientation', 'adjacent', 'environment'], 'safe'],
         ];
     }
@@ -59,7 +59,7 @@ class ProjectBuildingCharacteristicsSearch extends ProjectBuildingCharacteristic
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'project_id' => $this->project_id,
+            'project_building_id' => $this->project_building_id,
         ]);
 
         return $dataProvider;

@@ -26,6 +26,8 @@ use yii\bootstrap\Nav;
                 echo Html::a('<i class="fa fa-file"></i> '.$projectFile->document. ' '.$thumb, Url::to(['/project-files/update', 'id'=>$projectFile->id]), ['class' => 'btn btn-default btn-sm']).'<hr>';
 
             }
-        } ?>
+        } else {
+            echo 'Nije unet nijedan dokument.' . Html::a('<i class="fa fa-plus-circle"></i> Dodaj dokument', Url::to(['/project-files/create', 'ProjectFiles[project_id]'=>$model->id]), ['class' => 'btn btn-link btn-sm']);
+            } ?>
     </div>            
 </div>

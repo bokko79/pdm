@@ -18,15 +18,29 @@ return [
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
-        'user' => [
+        /*'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+        ],*/
+        'user' => [
+            'identityCookie' => [
+                'name'     => '_frontendIdentity',
+                'path'     => '/',
+                'httpOnly' => true,
+            ],
         ],
         'session' => [
+            'name' => 'FRONTENDSESSID',
+            'cookieParams' => [
+                'httpOnly' => true,
+                'path'     => '/',
+            ],
+        ],
+       /* 'session' => [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',
-        ],
+        ],*/
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
@@ -95,13 +109,13 @@ return [
                 ]
             ]
         ],
-        /*'user' => [
-            // following line will restrict access to admin controller from frontend application
-            'as frontend' => 'dektrium\user\filters\FrontendFilter',
-        ],*/
         'gridview' =>  [
             'class' => '\kartik\grid\Module'
-        ]
+        ],
+        'user' => [
+            // following line will restrict access to admin controller from frontend application
+            'as frontend' => 'dektrium\user\filters\FrontendFilter',
+        ],
     ],
     'params' => $params,
 ];

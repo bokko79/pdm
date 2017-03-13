@@ -18,7 +18,7 @@ class ProjectBuildingMaterialsSearch extends ProjectBuildingMaterials
     public function rules()
     {
         return [
-            [['project_id'], 'integer'],
+            [['project_building_id'], 'integer'],
             [['access', 'foundation', 'wall_external', 'wall_bearing', 'wall_internal', 'facade', 'flooring', 'ceiling', 'door', 'window', 'tinwork', 'stair', 'woodwork', 'steelwork', 'roof', 'light', 'sanitary', 'electrical', 'plumbing', 'hvac', 'chimney', 'furniture', 'kitchen', 'bathroom', 'lift', 'roofing'], 'safe'],
         ];
     }
@@ -59,7 +59,7 @@ class ProjectBuildingMaterialsSearch extends ProjectBuildingMaterials
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'project_id' => $this->project_id,
+            'project_building_id' => $this->project_building_id,
         ]);
 
         $query->andFilterWhere(['like', 'access', $this->access])

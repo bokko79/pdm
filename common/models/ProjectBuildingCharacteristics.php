@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "project_building_characteristics".
  *
- * @property string $project_id
+ * @property string $project_building_id
  * @property string $function
  * @property string $access
  * @property string $entrance
@@ -40,10 +40,10 @@ class ProjectBuildingCharacteristics extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id'], 'required'],
-            [['project_id'], 'integer'],
+            [['project_building_id'], 'required'],
+            [['project_building_id'], 'integer'],
             [['function', 'access', 'entrance', 'position', 'shape', 'architecture', 'style', 'context', 'ventilation', 'lights', 'orientation', 'adjacent', 'environment'], 'string'],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
+            [['project_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuilding::className(), 'targetAttribute' => ['project_building_id' => 'id']],
         ];
     }
 
@@ -53,7 +53,7 @@ class ProjectBuildingCharacteristics extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'project_id' => Yii::t('app', 'Projekat'),
+            'project_building_id' => Yii::t('app', 'Objekat projekta'),
             'function' => Yii::t('app', 'Funkcija objekta'),
             'access' => Yii::t('app', 'Pristupi i prilazi objektu'),
             'entrance' => Yii::t('app', 'Ulazi u objekat'),
@@ -73,8 +73,8 @@ class ProjectBuildingCharacteristics extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProject()
+    public function getProjectBuilding()
     {
-        return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+        return $this->hasOne(ProjectBuilding::className(), ['id' => 'project_building_id']);
     }
 }

@@ -27,8 +27,8 @@ if(!$model->scale){$model->scale=50;}
 <hr>
 <h3>Osnovni podaci</h3>
 
-    <?= $form->field($model, 'project_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Projects::find()->all(), 'id', 'name'),
+    <?= $form->field($model, 'project_building_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\ProjectBuilding::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false, 

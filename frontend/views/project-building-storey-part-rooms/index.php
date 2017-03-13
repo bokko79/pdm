@@ -12,10 +12,10 @@ use kartik\editable\Editable;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Površine prostorija');
-$this->params['breadcrumbs'][] = ['label' => 'Objekat', 'url' => ['/project-building/view', 'id' => $project->id]];
-$this->params['breadcrumbs'][] = ['label' => 'Etaže', 'url' => ['/project-building-storeys/index', 'id' => $project->id]];
+$this->params['breadcrumbs'][] = ['label' => 'Objekat', 'url' => ['/project-building/view', 'id' => $projectBuilding->id]];
+$this->params['breadcrumbs'][] = ['label' => 'Etaže', 'url' => ['/project-building-storeys/index', 'id' => $projectBuilding->id]];
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['project'] = $project;
+$this->params['project'] = $projectBuilding->project;
 ?>
 
 <?php
@@ -28,7 +28,7 @@ $gridColumns = [
             return Html::a($data->projectBuildingStoreyPart->projectBuildingStorey->name, ['project-building-storeys/view', 'id' => $data->projectBuildingStoreyPart->project_building_storey_id]);
         },
         'filterType'=>GridView::FILTER_SELECT2,
-        'filter'=>\yii\helpers\ArrayHelper::map(\common\models\ProjectBuildingStoreys::find()->where('project_id='.$project->id)->orderBy('id')->asArray()->all(), 'id', 'name'), 
+        'filter'=>\yii\helpers\ArrayHelper::map(\common\models\ProjectBuildingStoreys::find()->where('project_building_id='.$projectBuilding->id)->orderBy('id')->asArray()->all(), 'id', 'name'), 
         'filterWidgetOptions'=>[
             'pluginOptions'=>['allowClear'=>true],
         ],
@@ -189,27 +189,40 @@ $gridColumns = [
         }
     ],
 ];
-echo GridView::widget([
-    'id' => 'kv-grid-demo',
-    'dataProvider'=>$dataProvider,
-    //'filterModel'=>$searchModel,
-    'columns'=>$gridColumns,
-    'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
-    'headerRowOptions'=>['class'=>'kartik-sheet-style'],
-    'filterRowOptions'=>['class'=>'kartik-sheet-style'],
-    'pjax'=>true,
-    'bordered'=>true,
-    'striped'=>true,
-    'condensed'=>true,
-    'responsive'=>true,
-    'hover'=>true,
-    'persistResize'=>false,
-    'toolbar'=> [
-        '{toggleData}',
-    ],
-    'panel'=>[
-        'type'=>GridView::TYPE_DEFAULT,
-        //'heading'=>$storey->storey,
-    ],
-]);
-?>
+ ?>
+<div class="table-responsive container-fluid">
+    <div class="row">
+        <div class="col-sm-3">
+            <?= $this->render('_menu', [
+                    'model' => $model,  
+                    'unit' => null,
+                ]) ?>        
+        </div>
+        <div class="col-sm-9">
+
+            <?= GridView::widget([
+                'id' => 'kv-grid-demo',
+                'dataProvider'=>$dataProvider,
+                //'filterModel'=>$searchModel,
+                'columns'=>$gridColumns,
+                'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
+                'headerRowOptions'=>['class'=>'kartik-sheet-style'],
+                'filterRowOptions'=>['class'=>'kartik-sheet-style'],
+                'pjax'=>true,
+                'bordered'=>true,
+                'striped'=>true,
+                'condensed'=>true,
+                'responsive'=>true,
+                'hover'=>true,
+                'persistResize'=>false,
+                'toolbar'=> [
+                    '{toggleData}',
+                ],
+                'panel'=>[
+                    'type'=>GridView::TYPE_DEFAULT,
+                    //'heading'=>$storey->storey,
+                ],
+            ]) ?>
+        </div>
+    </div>
+</div>

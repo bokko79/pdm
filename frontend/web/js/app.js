@@ -198,6 +198,17 @@ $(document).ready(function(){
   var hash = window.location.hash;
   $('ul.nav-tabs a[href="' + hash + '"]').tab('show');
 
+
+  $("select#work-id").on('change', function(){      
+      var selectVal = $(this).val();
+      
+      if ( selectVal == 'adaptacija' ) {
+          $('.adaptacija_part').show('');
+      } else {
+          $('.adaptacija_part').hide('');
+      }
+      
+    });
 });
 
 

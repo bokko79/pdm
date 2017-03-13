@@ -7,11 +7,11 @@ $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
 $formatter->nullDisplay = '--';
 $building = $model->projectBuilding;
-$architecture = $model->projectBuildingCharacteristics;
-$materials = $model->projectBuildingMaterials;
-$insulations = $model->projectBuildingInsulations;
-$services = $model->projectBuildingServices;
-$structure = $model->projectBuildingStructure;
+$architecture = $model->projectBuilding->projectBuildingCharacteristics;
+$materials = $model->projectBuilding->projectBuildingMaterials;
+$insulations = $model->projectBuilding->projectBuildingInsulations;
+$services = $model->projectBuilding->projectBuildingServices;
+$structure = $model->projectBuilding->projectBuildingStructure;
 $projectLot = $model->projectLot;
 $existingBuildings = $model->projectLotExistingBuildings;
 $futureDevs = $model->projectLotFutureDevelopments;
@@ -221,7 +221,7 @@ $futureDevs = $model->projectLotFutureDevelopments;
 			<?= $architecture->orientation ? '<h5 class="nopadd">Orjentacija objekta</h5><p>'.$architecture->orientation.'</p>' : null; ?>
 
 		<h4 class="nopadd">Prostorna struktura</h4>
-		<?php foreach($model->projectBuildingStoreys as $storey): ?>
+		<?php foreach($model->projectBuilding->projectBuildingStoreys as $storey): ?>
 		<p>Na koti <?= ($storey->level)==0 ? '&plusmn;' : null ?><?= ($storey->level)>0 ? '+' : null ?><?= $formatter->format($storey->level, ['decimal',2]) ?>  (aps. kota <?= ($storey->level+$projectLot->ground_level)>0 ? '+' : null ?><?= $formatter->format($storey->level+$projectLot->ground_level, ['decimal',2]) ?>) <b><?= $storey->name ?></b>, predviđene su sledeće prostorno-funkcionalne celine, odnosno jedinice:
 				<?php if($storey->brStanova){echo 'stambene jedinice ('.$storey->brStanova .'), ' ;} ?>
 				<?php if($storey->brPoslProstora){echo 'poslovni prostori ('.$storey->brPoslProstora .'), ';} ?>
@@ -238,7 +238,7 @@ $futureDevs = $model->projectLotFutureDevelopments;
 		<h4 class="sub">Prikaz površina</h4>
 		<div style="margin:0 40px 10px 40px;">
 			<table class="clear nopadd" style="width:70%;">
-			<?php foreach($model->projectBuildingStoreys as $storey): ?>
+			<?php foreach($model->projectBuilding->projectBuildingStoreys as $storey): ?>
 				<tr>
 					<td class="" style="width:40%; border-bottom:1px dotted #777; padding-top:20px;"><h4 class="uppercase"><?= $storey->name ?></h4></td>
 					<td style="border-bottom:1px dotted #777; width:160px;"></td>

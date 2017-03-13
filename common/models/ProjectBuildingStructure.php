@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "project_building_structure".
  *
- * @property string $project_id
+ * @property string $project_building_id
  * @property string $construction
  * @property string $foundation
  * @property string $wall_external
@@ -46,10 +46,10 @@ class ProjectBuildingStructure extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id'], 'required'],
-            [['project_id'], 'integer'],
+            [['project_building_id'], 'required'],
+            [['project_building_id'], 'integer'],
             [['construction', 'foundation', 'wall_external', 'wall_bearing', 'wall_internal', 'slab', 'columns', 'beam', 'truss', 'stair', 'arch', 'door', 'window', 'roof', 'chimney', 'facade', 'tinwork', 'woodwork', 'steelwork'], 'string'],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
+            [['project_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuilding::className(), 'targetAttribute' => ['project_building_id' => 'id']],
         ];
     }
 
@@ -59,7 +59,7 @@ class ProjectBuildingStructure extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'project_id' => Yii::t('app', 'Projekat'),
+            'project_building_id' => Yii::t('app', 'Objekat projekta'),
             'construction' => Yii::t('app', 'Konstrukcija i konstruktivni sistem objekta'),
             'foundation' => Yii::t('app', 'Temelji'),
             'wall_external' => Yii::t('app', 'Spoljašnji zidovi'),
@@ -79,8 +79,8 @@ class ProjectBuildingStructure extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProject()
+    public function getProjectBuilding()
     {
-        return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+        return $this->hasOne(ProjectBuilding::className(), ['id' => 'project_building_id']);
     }
 }

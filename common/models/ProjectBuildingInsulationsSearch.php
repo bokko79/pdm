@@ -18,7 +18,7 @@ class ProjectBuildingInsulationsSearch extends ProjectBuildingInsulations
     public function rules()
     {
         return [
-            [['project_id'], 'integer'],
+            [['project_building_id'], 'integer'],
             [['thermal', 'sound', 'hidro', 'fireproof', 'chemical'], 'safe'],
         ];
     }
@@ -59,7 +59,7 @@ class ProjectBuildingInsulationsSearch extends ProjectBuildingInsulations
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'project_id' => $this->project_id,
+            'project_building_id' => $this->project_building_ids,
         ]);
 
         $query->andFilterWhere(['like', 'thermal', $this->thermal])

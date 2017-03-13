@@ -18,7 +18,12 @@ $this->params['project'] = $model;
     </p>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-3">
+            <?= $this->render('_menu', [
+                    'model' => $model,  
+                ]) ?>        
+        </div>
+        <div class="col-sm-9">
           <div class="card_container record-full grid-item fadeInUp animated" id="">
             <div class="primary-context gray normal">
                 <div class="head"><i class="fa fa-file"></i> <?= Html::encode($this->title) ?> <i class="fa this-one fa-arrow-circle-right"></i>

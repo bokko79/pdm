@@ -36,19 +36,19 @@ class ProjectBuildingStoreyPartsController extends Controller
      */
     public function actionIndex($id)
     {
-        $project = $this->findProjectById($id);
+        $projectBuilding = $this->findProjectBuildingById($id);
 
         $searchModel = new ProjectBuildingStoreyPartsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        foreach($project->projectBuildingStoreys as $storey){            
+        foreach($projectBuilding->projectBuildingStoreys as $storey){            
             $dataProvider->query->orWhere('project_building_storey_id='.$storey->id);           
         }
 
         $dataProvider->query->innerJoin('project_building_storeys as pbs')->orderBy('pbs.level ASC')->groupBy('id');
 
         return $this->render('index', [
-            'project' => $project,
+            'projectBuilding' => $projectBuilding,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -61,6 +61,8 @@ class ProjectBuildingStoreyPartsController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = '/project';
+
         $model = $this->findModel($id);
         $query_cl = \common\models\ProjectBuildingStoreyPartRooms::find()->where(['project_building_storey_part_id' => $id]);
         $roomTypes = \common\models\RoomTypes::find()->all();
@@ -145,13 +147,88 @@ class ProjectBuildingStoreyPartsController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+
+        $modelCheck = $this->findModel($id);
+        $part = null;
+        if($modelCheck->projectBuildingStorey->projectBuilding->project->work=='adaptacija'){
+            if($modelCheck->mode=='new'){
+                $model = $this->findExModel($id);
+                $model_new = $modelCheck;
+                $part = [            
+                    'existing' => $this->findExModel($id),
+                    'new' => $modelCheck,
+                ];
+            } else {
+                $model = $modelCheck;
+                $model_new = $this->findNewModel($id);
+                $part = [            
+                    'existing' => $modelCheck,
+                    'new' => $this->findNewModel($id),
+                ];
+            }
+        } else {
+            $model = $this->findModel($id);
+        } 
+
+
+        $architecture = [            
+            'existing' => $model ? $model->projectBuildingStoreyPartCharacteristics : null,
+            'new' => $model_new ? $model_new->projectBuildingStoreyPartCharacteristics : null,
+        ];
+        $structure = [            
+            'existing' => $model ? $model->projectBuildingStoreyPartStructure : null,
+            'new' => $model_new ? $model_new->projectBuildingStoreyPartStructure : null,
+        ];
+        $materials = [            
+            'existing' => $model ? $model->projectBuildingStoreyPartMaterials : null,
+            'new' => $model_new ? $model_new->projectBuildingStoreyPartMaterials : null,
+        ];
+        $insulations = [            
+            'existing' => $model ? $model->projectBuildingStoreyPartInsulations : null,
+            'new' => $model_new ? $model_new->projectBuildingStoreyPartInsulations : null,
+        ];
+        $services = [            
+            'existing' => $model ? $model->projectBuildingStoreyPartServices : null,
+            'new' => $model_new ? $model_new->projectBuildingStoreyPartServices : null,
+        ];
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if (\yii\base\Model::loadMultiple($architecture, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($architecture)) {
+                foreach ($architecture as $architect) {
+                    $architect->save();
+                }               
+            }
+            if (\yii\base\Model::loadMultiple($structure, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($structure)) {
+                foreach ($structure as $struct) {
+                    $struct->save();
+                }               
+            }
+            if (\yii\base\Model::loadMultiple($materials, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($materials)) {
+                foreach ($materials as $material) {
+                    $material->save();
+                }               
+            }
+            if (\yii\base\Model::loadMultiple($insulations, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($insulations)) {
+                foreach ($insulations as $insulation) {
+                    $insulation->save();
+                }               
+            }
+            if (\yii\base\Model::loadMultiple($services, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($services)) {
+                foreach ($services as $service) {
+                    $service->save();
+                }               
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'model_new' => $model_new,
+                'part' => $part,
+                'architecture' => $architecture,
+                'structure' => $structure,
+                'materials' => $materials,
+                'insulations' => $insulations,
+                'services' => $services,
             ]);
         }
     }
@@ -258,15 +335,49 @@ class ProjectBuildingStoreyPartsController extends Controller
     }
 
     /**
+     * Finds the ProjectBuilding model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectBuilding the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findNewModel($id)
+    {
+        if (($model = ProjectBuildingStoreyParts::findOne($id)) !== null) {
+            $new = ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$model->project_building_storey_id .' and mode="new"')->one();
+            return $new;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectBuilding model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectBuilding the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findExModel($id)
+    {
+        if (($model = ProjectBuildingStoreyParts::findOne($id)) !== null) {
+            $new = ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$model->project_building_storey_id .' and mode="existing"')->one();
+            return $new;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
      * Finds the ProjectBuildingStoreyPartRooms model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
      * @return ProjectBuildingStoreyPartRooms the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findProjectById($id)
+    protected function findProjectBuildingById($id)
     {
-        if (($model = \common\models\Projects::findOne($id)) !== null) {
+        if (($model = \common\models\ProjectBuilding::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

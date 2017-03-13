@@ -12,13 +12,13 @@ use yii\bootstrap\Nav;
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
         <div class="head">Instalacije objekta
-            <div class="action-area normal-case"><?= Html::a('<i class="fa fa-pencil"></i> Uredi instalacije objekta', Url::to(['/project-building-services/update', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+            <div class="action-area normal-case"><?= Html::a('<i class="fa fa-pencil"></i> Uredi instalacije objekta', Url::to(['/project-building/update', 'id'=>$model->id, '#'=>'w1-tab15']), ['class' => 'btn btn-success btn-sm']) ?></div>
         </div>
         <div class="subhead">Lista instalacija predmetnog objekta.</div>
     </div>
     <div class="secondary-context">
         <?= DetailView::widget([
-            'model' => $model->project->projectBuildingServices,
+            'model' => $model->projectBuildingServices,
             'attributes' => [
                 'water:ntext',
                 'sewage:ntext',

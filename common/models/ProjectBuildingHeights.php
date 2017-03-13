@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "project_building_heights".
  *
  * @property string $id
- * @property string $project_id
+ * @property string $project_building_id
  * @property string $part
  * @property string $level
  *
@@ -30,11 +30,11 @@ class ProjectBuildingHeights extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id','part', 'level'], 'required'],
-            [['project_id'], 'integer'],
+            [['project_building_id','part', 'level'], 'required'],
+            [['project_building_id'], 'integer'],
             [['part', 'name'], 'string'],
             [['level'], 'number'],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
+            [['project_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuilding::className(), 'targetAttribute' => ['project_building_id' => 'id']],
         ];
     }
 
@@ -45,7 +45,7 @@ class ProjectBuildingHeights extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_id' => Yii::t('app', 'Projekat'),
+            'project_building_id' => Yii::t('app', 'Objekat projekta'),
             'part' => Yii::t('app', 'Deo objekta'),
             'level' => Yii::t('app', 'Visinska kota'),
         ];
@@ -54,9 +54,9 @@ class ProjectBuildingHeights extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProject()
+    public function getProjectBuilding()
     {
-        return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+        return $this->hasOne(ProjectBuilding::className(), ['id' => 'project_building_id']);
     }
 
     /**
@@ -64,7 +64,7 @@ class ProjectBuildingHeights extends \yii\db\ActiveRecord
      */
     public function getAbsoluteLevel()
     {
-        return $this->level+$this->project->projectBuilding->ground_floor_level;
+        return $this->level+$this->projectBuilding->ground_floor_level;
     }
 
     /**
@@ -72,6 +72,6 @@ class ProjectBuildingHeights extends \yii\db\ActiveRecord
      */
     public function getAbsoluteHeight()
     {
-        return $this->level+$this->project->projectLot->ground_level;
+        return $this->level+$this->projectBuilding->project->projectLot->ground_level;
     }
 }

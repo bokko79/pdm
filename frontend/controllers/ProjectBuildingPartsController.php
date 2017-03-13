@@ -65,11 +65,11 @@ class ProjectBuildingPartsController extends Controller
     {
         $model = new ProjectBuildingParts();
         if($p = Yii::$app->request->get('ProjectBuildingParts')){
-            $model->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
+            $model->project_building_id = !empty($p['project_building_id']) ? $p['project_building_id'] : null;
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/project-building/view', 'id' => $model->project_id]);
+            return $this->redirect(['/project-building/view', 'id' => $model->project_building_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -88,7 +88,7 @@ class ProjectBuildingPartsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/project-building/view', 'id' => $model->project_id]);
+            return $this->redirect(['/project-building/view', 'id' => $model->project_building_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -107,7 +107,7 @@ class ProjectBuildingPartsController extends Controller
         $model = $this->findModel($id);
         $this->findModel($id)->delete();
 
-        return $this->redirect(['/project-building/view', 'id' => $model->project_id]);
+        return $this->redirect(['/project-building/view', 'id' => $model->project_building_id]);
     }
 
     /**

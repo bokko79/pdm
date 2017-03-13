@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\FileInput;
 use dosamigos\tinymce\TinyMce;
 
-($model->isNewRecord) ? $model->percent = 100-$model->project->projectBuilding->getClassPercentageTotal() : null;
+($model->isNewRecord) ? $model->percent = 100-$model->projectBuilding->getClassPercentageTotal() : null;
 ?>
 
 <?php $form = kartik\widgets\ActiveForm::begin([
@@ -25,8 +25,8 @@ use dosamigos\tinymce\TinyMce;
 <hr>
 <h3>Osnovni podaci</h3>
 
-    <?= $form->field($model, 'project_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Projects::find()->all(), 'id', 'name'),
+    <?= $form->field($model, 'project_building_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\ProjectBuilding::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false, 

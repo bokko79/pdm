@@ -97,14 +97,14 @@ class ProjectsController extends Controller
             $model->time = time();
             if($model->save()){
                 // initialize project
-                $this->createProjectBuilding($model);
-                $this->createProjectBuildingClasses($model);
-                $this->createProjectBuildingCharacteristics($model);
-                $this->createProjectBuildingInsulations($model);
-                $this->createProjectBuildingMaterials($model);
-                $this->createProjectBuildingServices($model);
-                $this->createProjectBuildingStoreys($model);
-                $this->createProjectBuildingStructure($model);
+                $projectBuildings = $this->createProjectBuilding($model);
+                $this->createProjectBuildingClasses($model, $projectBuildings);
+                $this->createProjectBuildingCharacteristics($projectBuildings);
+                $this->createProjectBuildingInsulations($projectBuildings);
+                $this->createProjectBuildingMaterials($projectBuildings);
+                $this->createProjectBuildingServices($projectBuildings);
+                $this->createProjectBuildingStoreys($model, $projectBuildings);
+                $this->createProjectBuildingStructure($projectBuildings);
                 $this->createProjectClient($model);
                 $this->createProjectLot($model);
                 $this->createProjectVolume($model);
@@ -177,73 +177,187 @@ class ProjectsController extends Controller
 
     protected function createProjectBuilding($model)
     {
-        $new =  new \common\models\ProjectBuilding();
-        $new->project_id = $model->id;
-        $new->building_id = $model->building_id;
-        $new->save();
+        // creating existing and/or new projectBuilding
+        // depending of the type of works
+        $new = [];
+        if($model->checkIfNewBuilding){
+            $new[1] =  new \common\models\ProjectBuilding();
+            $new[1]->project_id = $model->id;
+            $new[1]->building_id = $model->building_id;
+            $new[1]->mode = 'new';
+            $new[1]->name = $model->building->buildingName;
+            $new[1]->save();
+        }
+        if($model->checkIfExistingBuilding){
+            $new[0] =  new \common\models\ProjectBuilding();
+            $new[0]->project_id = $model->id;
+            $new[0]->building_id = $model->building_id;
+            $new[0]->mode = 'existing';
+            $new[0]->name = $model->building->buildingName;
+            $new[0]->save();
+        }
+        return $new;
     }
 
-    protected function createProjectBuildingClasses($model)
+    protected function createProjectBuildingClasses($model, $projectBuildings)
     {
-        $projectBuildingClasses = new \common\models\ProjectBuildingClasses();
-        $projectBuildingClasses->project_id = $model->id;
-        $projectBuildingClasses->building_id = $model->building_id;
-        $projectBuildingClasses->percent = 100;
-        $projectBuildingClasses->save();
+        if($model and $projectBuildings){
+            foreach($projectBuildings as $key=>$projectBuilding){
+                $projectBuildingClasses[$key] = new \common\models\ProjectBuildingClasses();
+                $projectBuildingClasses[$key]->project_building_id = $projectBuilding->id;
+                $projectBuildingClasses[$key]->building_id = $model->building_id;
+                $projectBuildingClasses[$key]->percent = 100;
+                $projectBuildingClasses[$key]->save();
+            } 
+        }           
     }
 
-    protected function createProjectBuildingCharacteristics($model)
+    protected function createProjectBuildingCharacteristics($projectBuildings)
     {
-        $new =  new \common\models\ProjectBuildingCharacteristics();
-        $new->project_id = $model->id;
-        $new->save();
+        if($projectBuildings){
+            foreach($projectBuildings as $key=>$projectBuilding){
+                $new[$key] =  new \common\models\ProjectBuildingCharacteristics();
+                $new[$key]->project_building_id = $projectBuilding->id;
+                $new[$key]->save();
+            }
+        }
     }
 
-    protected function createProjectBuildingInsulations($model)
+    protected function createProjectBuildingInsulations($projectBuildings)
     {
-        $new =  new \common\models\ProjectBuildingInsulations();
-        $new->project_id = $model->id;
-        $new->save();
+        if($projectBuildings){
+            foreach($projectBuildings as $key=>$projectBuilding){
+                $new[$key] =  new \common\models\ProjectBuildingInsulations();
+                $new[$key]->project_building_id = $projectBuilding->id;
+                $new[$key]->save();
+            }
+        }
     }
 
-    protected function createProjectBuildingMaterials($model)
+    protected function createProjectBuildingMaterials($projectBuildings)
     {
-        $new =  new \common\models\ProjectBuildingMaterials();
-        $new->project_id = $model->id;
-        $new->save();
+        if($projectBuildings){
+            foreach($projectBuildings as $key=>$projectBuilding){
+                $new[$key] =  new \common\models\ProjectBuildingMaterials();
+                $new[$key]->project_building_id = $projectBuilding->id;
+                $new[$key]->save();
+            }
+        }
     }
 
-    protected function createProjectBuildingServices($model)
+    protected function createProjectBuildingServices($projectBuildings)
     {
-        $new =  new \common\models\ProjectBuildingServices();
-        $new->project_id = $model->id;
-        $new->save();
+        if($projectBuildings){
+            foreach($projectBuildings as $key=>$projectBuilding){
+                $new[$key] =  new \common\models\ProjectBuildingServices();
+                $new[$key]->project_building_id = $projectBuilding->id;
+                $new[$key]->save();
+            }
+        }
     }
 
-    protected function createProjectBuildingStoreys($model)
+    protected function createProjectBuildingStoreys($model, $projectBuildings)
     {
-        $new =  new \common\models\ProjectBuildingStoreys();
-        $new->project_id = $model->id;
-        $new->storey = 'prizemlje';
-        $new->level = 0.00;
-        $new->order_no = "1";
-        $new->save();
+        if($model and $projectBuildings){
+            foreach($projectBuildings as $key=>$projectBuilding){
+                $new[$key] =  new \common\models\ProjectBuildingStoreys();
+                $new[$key]->project_building_id = $projectBuilding->id;
+                $new[$key]->storey = $model->storey!='' ? $model->storey : 'prizemlje';
+                $new[$key]->level = 0.00;
+                $new[$key]->order_no = "1";
+                $new[$key]->save();
+                if($model->part_type){
+                    $new_ex_part[$key] = new \common\models\ProjectBuildingStoreyParts();
+                    $new_ex_part[$key]->project_building_storey_id = $new[$key]->id;
+                    $new_ex_part[$key]->mode = 'existing';
+                    $new_ex_part[$key]->type = $model->part_type;
+                    $new_ex_part[$key]->name = $new_ex_part[$key]->fullType;
+                    $new_ex_part[$key]->save();
+                    $this->createProjectBuildingStoreyPartCharacteristics($new_ex_part[$key]);
+                    $this->createProjectBuildingStoreyPartInsulations($new_ex_part[$key]);
+                    $this->createProjectBuildingStoreyPartMaterials($new_ex_part[$key]);
+                    $this->createProjectBuildingStoreyPartServices($new_ex_part[$key]);
+                    $this->createProjectBuildingStoreyPartStructure($new_ex_part[$key]);
+
+                    $new_part[$key] = new \common\models\ProjectBuildingStoreyParts();
+                    $new_part[$key]->project_building_storey_id = $new[$key]->id;
+                    $new_part[$key]->mode = 'new';
+                    $new_part[$key]->type = $model->part_type;
+                    $new_part[$key]->name = $new_part[$key]->fullType;
+                    $new_part[$key]->save();
+                    $this->createProjectBuildingStoreyPartCharacteristics($new_part[$key]);
+                    $this->createProjectBuildingStoreyPartInsulations($new_part[$key]);
+                    $this->createProjectBuildingStoreyPartMaterials($new_part[$key]);
+                    $this->createProjectBuildingStoreyPartServices($new_part[$key]);
+                    $this->createProjectBuildingStoreyPartStructure($new_part[$key]);
+                }
+            }
+        }
     }
 
-    protected function createProjectBuildingStructure($model)
+    protected function createProjectBuildingStructure($projectBuildings)
     {
-        $new =  new \common\models\ProjectBuildingStructure();
-        $new->project_id = $model->id;
-        $new->save();
+        if($projectBuildings){
+            foreach($projectBuildings as $key=>$projectBuilding){
+                $new[$key] =  new \common\models\ProjectBuildingStructure();
+                $new[$key]->project_building_id = $projectBuilding->id;
+                $new[$key]->save();
+            }
+        }
+    }
+
+    protected function createProjectBuildingStoreyPartCharacteristics($part)
+    {
+        if($part){            
+            $new =  new \common\models\ProjectBuildingStoreyPartCharacteristics();
+            $new->project_building_storey_part_id = $part->id;
+            $new->save();            
+        }
+    }
+
+    protected function createProjectBuildingStoreyPartInsulations($part)
+    {
+        if($part){            
+            $new =  new \common\models\ProjectBuildingStoreyPartInsulations();
+            $new->project_building_storey_part_id = $part->id;
+            $new->save();            
+        }
+    }
+
+    protected function createProjectBuildingStoreyPartMaterials($part)
+    {
+        if($part){            
+            $new =  new \common\models\ProjectBuildingStoreyPartMaterials();
+            $new->project_building_storey_part_id = $part->id;
+            $new->save();            
+        }
+    }
+
+    protected function createProjectBuildingStoreyPartServices($part)
+    {
+        if($part){            
+            $new =  new \common\models\ProjectBuildingStoreyPartServices();
+            $new->project_building_storey_part_id = $part->id;
+            $new->save();            
+        }
+    }
+
+    protected function createProjectBuildingStoreyPartStructure($part)
+    {
+        if($part){            
+            $new =  new \common\models\ProjectBuildingStoreyPartStructure();
+            $new->project_building_storey_part_id = $part->id;
+            $new->save();            
+        }
     }
 
     protected function createProjectClient($model)
     {
-        $new =  new \common\models\ProjectClients();
-        $new->project_id = $model->id;
-        $new->client_id = $model->client_id;
-        $new->status = 1;
-        $new->save();
+            $new =  new \common\models\ProjectClients();
+            $new->project_id = $model->id;
+            $new->client_id = $model->client_id;
+            $new->status = 1;
+            $new->save();
     }
 
     protected function createProjectLot($model)
@@ -279,5 +393,41 @@ class ProjectsController extends Controller
         $location_lot->lot = $location->lot;
         $location_lot->type = 'object';
         $location_lot->save();
+    }
+
+    public function actionEngineers() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $cat_id = $parents[0];
+                $res = \common\models\PracticeEngineers::find()->where('practice_id='.$cat_id)->all();            
+                foreach($res as $key=>$r){
+                    $out[$key]['id'] = $r->engineer_id;
+                    $out[$key]['name'] = $r->engineer->name;
+                }
+                echo \yii\helpers\Json::encode(['output'=>$out, 'selected'=>$out[0]['id']]);
+                return;
+            }
+        }
+        echo \yii\helpers\Json::encode(['output'=>'', 'selected'=>'']);
+    }
+
+    public function actionPhases() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $cat_id = $parents[0];
+                $res = \common\models\Projects::getPhasesOfWork($cat_id);            
+                foreach($res as $key=>$r){
+                    $out[$key]['id'] = $r;
+                    $out[$key]['name'] =\common\models\Projects::getProjectPhaseFullname($r);
+                }
+                echo \yii\helpers\Json::encode(['output'=>$out, 'selected'=>$out[0]['id']]);
+                return;
+            }
+        }
+        echo \yii\helpers\Json::encode(['output'=>'', 'selected'=>'']);
     }
 }

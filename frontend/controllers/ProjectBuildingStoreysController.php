@@ -39,13 +39,13 @@ class ProjectBuildingStoreysController extends Controller
         $this->layout = 'project';
         
         $model = $this->findBuildingById($id);
-        $storeys = $model->project->projectBuildingStoreys;
+        $storeys = $model->projectBuildingStoreys;
 
         if($same = Yii::$app->request->post('ProjectBuilding')){
             $st = $this->findStoreyById($same['copiedStorey']);
             $st->same_as_id = $same['sameStorey'];
             $st->save();
-            return $this->redirect(['index', 'id' => $model->project_id]);
+            return $this->redirect(['index', 'id' => $model->id]);
         }
         
         if($add_storey){
@@ -102,7 +102,8 @@ class ProjectBuildingStoreysController extends Controller
     public function actionGenerateParts($id)
     {
         if($parts_of_storey = Yii::$app->request->post('ProjectBuildingStoreys')){
-            $this->generateParts($id, $parts_of_storey);
+            $model = $this->findModel($id);
+            $this->generateParts($model, $parts_of_storey);
             return $this->redirect(['/project-building-storeys/view', 'id' => $id]);
         }
     }
@@ -114,6 +115,8 @@ class ProjectBuildingStoreysController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'project';
+        
         $model = $this->findModel($id);
         $query_cla = \common\models\ProjectBuildingStoreyPartRooms::find()->where('id=0');
         
@@ -162,7 +165,7 @@ class ProjectBuildingStoreysController extends Controller
     {
         $model = new ProjectBuildingStoreys();
         if($p = Yii::$app->request->get('ProjectBuildingStoreys')){
-            $model->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
+            $model->project_building_id = !empty($p['project_building_id']) ? $p['project_building_id'] : null;
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -185,7 +188,7 @@ class ProjectBuildingStoreysController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/project-building-storeys/index', 'id' => $model->project_id]);
+            return $this->redirect(['/project-building-storeys/index', 'id' => $model->project_building_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -244,7 +247,7 @@ class ProjectBuildingStoreysController extends Controller
     public function addStorey($model, $add_storey)
     {
         $new =  new \common\models\ProjectBuildingStoreys();
-        $new->project_id = $model->project_id;        
+        $new->project_building_id = $model->id;        
         $new->storey = $add_storey;
         $new->name = $add_storey;
         //$new->order_no = 1;
@@ -256,7 +259,7 @@ class ProjectBuildingStoreysController extends Controller
     {
         if($storey_to_copy = $this->findModel($copy_storey)){
             $new = new \common\models\ProjectBuildingStoreys();
-            $new->project_id = $storey_to_copy->project_id;
+            $new->project_building_id = $storey_to_copy->project_building_id;
             $new->same_as_id = $storey_to_copy->id;
             $new->storey = $storey_to_copy->storey;
             $new->order_no = $storey_to_copy->order_no;
@@ -328,15 +331,16 @@ class ProjectBuildingStoreysController extends Controller
      * @param string $id
      * @return mixed
      */
-    public function generateParts($id, $parts_of_storey)
+    public function generateParts($model, $parts_of_storey)
     {
         foreach($parts_of_storey as $key=>$count){
             if($count>0){
                 for($x = 0; $x < $count; $x++){
                     $new_part[$x] = new \common\models\ProjectBuildingStoreyParts();
-                    $new_part[$x]->project_building_storey_id = $id;
+                    $new_part[$x]->project_building_storey_id = $model->id;
                     $new_part[$x]->type = $key;
                     $new_part[$x]->name = $new_part[$x]->fullType;
+                    $new_part[$x]->mode = $model->projectBuilding->mode;
                     $new_part[$x]->mark = strval($x+1);
                     $new_part[$x]->save();                
                 }                   

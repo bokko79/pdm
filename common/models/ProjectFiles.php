@@ -47,6 +47,24 @@ class ProjectFiles extends \yii\db\ActiveRecord
             [['file_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['file_id' => 'id']],
             [['docFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif, pdf'],
         ];
+    }    
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('app', 'ID'),
+            'project_id' => Yii::t('app', 'Projekat'),
+            'type' => Yii::t('app', 'Vrsta dokumenta'),
+            'number' => Yii::t('app', 'Broj dokumenta'),
+            'date' => Yii::t('app', 'Datum dokumenta'),
+            'file_id' => Yii::t('app', 'File ID'),
+            'authority_id' => Yii::t('app', 'Nadležni organ/Izdavalac dokumenta'),
+            'docFile' => Yii::t('app', 'Dokument'),
+            'name' => Yii::t('app', 'Naziv dokumenta'),
+        ];
     }
 
     public function uploadFiles()
@@ -82,24 +100,6 @@ class ProjectFiles extends \yii\db\ActiveRecord
             return false;
         }
         return false;        
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => Yii::t('app', 'ID'),
-            'project_id' => Yii::t('app', 'Projekat'),
-            'type' => Yii::t('app', 'Vrsta dokumenta'),
-            'number' => Yii::t('app', 'Broj dokumenta'),
-            'date' => Yii::t('app', 'Datum dokumenta'),
-            'file_id' => Yii::t('app', 'File ID'),
-            'authority_id' => Yii::t('app', 'Nadležni organ/Izdavalac dokumenta'),
-            'docFile' => Yii::t('app', 'Dokument'),
-            'name' => Yii::t('app', 'Naziv dokumenta'),
-        ];
     }
 
     /**

@@ -18,7 +18,7 @@ class ProjectBuildingStructureSearch extends ProjectBuildingStructure
     public function rules()
     {
         return [
-            [['project_id'], 'integer'],
+            [['project_building_id'], 'integer'],
             [['construction', 'foundation', 'wall_external', 'wall_bearing', 'wall_internal', 'slab', 'columns', 'beam', 'truss', 'stair', 'arch', 'door', 'window', 'roof', 'chimney', 'facade', 'tinwork', 'woodwork', 'steelwork'], 'safe'],
         ];
     }
@@ -59,7 +59,7 @@ class ProjectBuildingStructureSearch extends ProjectBuildingStructure
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'project_id' => $this->project_id,
+            'project_building_id' => $this->project_building_id,
         ]);
 
         $query->andFilterWhere(['like', 'construction', $this->construction])

@@ -18,7 +18,7 @@ class ProjectBuildingDoorwinSearch extends ProjectBuildingDoorwin
     public function rules()
     {
         return [
-            [['id', 'pos_no', 'project_id', 'width', 'height', 'scale', 'file_id'], 'integer'],
+            [['id', 'pos_no', 'project_building_id', 'width', 'height', 'scale', 'file_id'], 'integer'],
             [['pos_type', 'type', 'name', 'description', 'frame', 'sash', 'opening_type', 'material', 'metal', 'note'], 'safe'],
         ];
     }
@@ -61,7 +61,7 @@ class ProjectBuildingDoorwinSearch extends ProjectBuildingDoorwin
         $query->andFilterWhere([
             'id' => $this->id,
             'pos_no' => $this->pos_no,
-            'project_id' => $this->project_id,
+            'project_building_id' => $this->project_building_id,
             'width' => $this->width,
             'height' => $this->height,
             'scale' => $this->scale,

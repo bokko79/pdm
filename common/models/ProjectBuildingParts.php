@@ -54,7 +54,7 @@ class ProjectBuildingParts extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'project_id' => Yii::t('app', 'Projekat'),
+            'project_building_id' => Yii::t('app', 'Objekat projekta'),
             'name' => Yii::t('app', 'Naziv dela/celine objekta'),
             'building_type_id' => Yii::t('app', 'Namena objekta'),
             'gross_area' => Yii::t('app', 'Bruto površina dela objekta'),
@@ -68,9 +68,9 @@ class ProjectBuildingParts extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProject()
+    public function getProjectBuilding()
     {
-        return $this->hasOne(Projects::className(), ['id' => 'project_id']);
+        return $this->hasOne(ProjectBuilding::className(), ['id' => 'project_building_id']);
     }
 
     /**
