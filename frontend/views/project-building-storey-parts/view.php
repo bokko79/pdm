@@ -11,6 +11,7 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\bootstrap\Nav;
+use common\widgets\Alert;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectBuildingStoreyParts */
@@ -24,16 +25,19 @@ $this->params['project'] = $model->projectBuildingStorey->projectBuilding->proje
 <div class="container-fluid">
     <div class="row">
          <div class="col-sm-3">
+         <?php if($model->projectBuildingStorey->projectBuilding->project->work!='adaptacija'): ?>
             <?= $this->render('/project-building-storeys/_menu', [
                     'model' => $model->projectBuildingStorey->projectBuilding,  
                     'unit' => $model,
                 ]) ?>        
+        <?php endif; ?>
         </div>
         <div class="col-sm-9">
+        <?= Alert::widget() ?>
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
-                    <div class="head"><?= Html::a(c($model->projectBuildingStorey->name), Url::to(['/project-building-storeys/view', 'id'=>$model->project_building_storey_id])) ?> <i class="fa fa-arrow-circle-right hint small"></i> <?= c($model->name) ?> <?= $model->mark ?>: Lista prostorija
-                        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cubes"></i>', Url::to(['']), ['class'=>'btn btn-primary btn-sm', 'style'=>'margin-right:10px;', 'data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#init-rooms-modal'.$model->id]) ?> <?= Html::a('<i class="glyphicon glyphicon-plus"></i> Dodaj prostoriju', Url::to(['/project-building-storey-part-rooms/create', 'ProjectBuildingStoreyPartRooms[project_building_storey_part_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?></div>
+                    <div class="head"><?= Html::a(c($model->projectBuildingStorey->name), Url::to(['/project-building-storeys/view', 'id'=>$model->project_building_storey_id])) ?> <i class="fa fa-arrow-circle-right hint small"></i> <?= c($model->name) ?> <?= $model->mark ?>: <?= $model->mode=='new' ? 'Predviđeno stanje' : 'Postojeće stanje'; ?>
+                        <div class="action-area normal-case"><?= ($model->projectBuildingStorey->projectBuilding->project->work=='adaptacija') ? Html::a('<i class="fa fa-cog"></i> Podesi jedinicu', Url::to(['update', 'id'=>$model->id]), ['class'=>'btn btn-success ', 'style'=>'margin-right:10px;']) : null ?> <?= Html::a('<i class="fa fa-cubes"></i>', Url::to(['']), ['class'=>'btn btn-primary btn-sm', 'style'=>'margin-right:10px;', 'data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#init-rooms-modal'.$model->id]) ?> <?= Html::a('<i class="glyphicon glyphicon-plus"></i> Dodaj prostoriju', Url::to(['/project-building-storey-part-rooms/create', 'ProjectBuildingStoreyPartRooms[project_building_storey_part_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?></div>
                     </div>
                 </div>
                 <div class="secondary-context">               

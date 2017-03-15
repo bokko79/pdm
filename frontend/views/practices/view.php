@@ -113,11 +113,11 @@ $this->params['breadcrumbs'][] = $this->title;
                    
                     <div class="card_container record-full grid-item fadeInUp animated">
                         <div class="primary-context gray normal">
-                            <div class="head ">Rešenje APR
+                            <div class="head">Rešenje APR
                             <div class="action-area normal-case">
                             <?= ($model->apr) ? Html::a('APR pdf', ['/site/download', 'path'=>'/images/legal_files/docs/'.$model->apr], ['class' => 'btn btn-link btn-sm']) : null ?>
                             <?= ($model->apr) ? Html::a('<i class="fa fa-cogs"></i> Promeni', Url::to(['/legal-files/update', 'id'=>$model->aprID->id]), ['class' => 'btn btn-success btn-sm']) : null ?>
-                            <?php if(!$model->apr): ?>><?= Html::a('<i class="fa fa-plus-circle"></i>', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'apr']), ['class' => 'btn btn-primary btn-sm']) ?><?php endif; ?>
+                            <?php if(!$model->apr): ?><?= Html::a('<i class="fa fa-plus-circle"></i>', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'apr']), ['class' => 'btn btn-primary btn-sm']) ?><?php endif; ?>
                             
                             </div>
                         </div>
@@ -148,7 +148,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 },
                             ],
                             'code',
-                            'projectPhase',
+                            //'projectPhase',
                             'projectTypeOfWorks',
                             [
                                 'attribute'=>'location_id',

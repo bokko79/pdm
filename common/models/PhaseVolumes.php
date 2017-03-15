@@ -36,7 +36,7 @@ class PhaseVolumes extends \yii\db\ActiveRecord
         return [
             [['phase', 'volume_id', 'no'], 'required'],
             [['phase', 'info'], 'string'],
-            [['volume_id', 'file_id'], 'integer'],
+            [['volume_id', 'file_id', 'requirement'], 'integer'],
             [['no'], 'string', 'max' => 4],
             [['volume_id'], 'exist', 'skipOnError' => true, 'targetClass' => Volumes::className(), 'targetAttribute' => ['volume_id' => 'id']],
             [['file_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['file_id' => 'id']],

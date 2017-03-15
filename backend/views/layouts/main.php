@@ -36,25 +36,27 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'Buildings', 
-            'items' => [
-                ['label' => 'Objekti', 'url' => ['/buildings/index']],
-                ['label' => 'Namene zgrada', 'url' => ['/building-types/index']],
-            ],
-        ],
-        ['label' => 'Cities', 
+        ['label' => 'Baza', 
             'items' => [
                 ['label' => 'Nadležni organi', 'url' => ['/authorities/index']],
                 ['label' => 'Gradovi', 'url' => ['/cities/index']],
                 ['label' => 'Katastarske opštine', 'url' => ['/counties/index']],
+                ['label' => 'Objekti', 'url' => ['/buildings/index']],
+                ['label' => 'Namene zgrada', 'url' => ['/building-types/index']],
             ],
         ],
-        ['label' => 'Docs', 
+        ['label' => 'Dokumenti', 
             'items' => [
-                ['label' => 'Delovi projekata', 'url' => ['/volumes/index']],
+                ['label' => 'Volumes', 'url' => ['/volumes/index']],
                 ['label' => 'Phase Volumes', 'url' => ['/phase-volumes/index']],
-                ['label' => 'Umetci delova projekata', 'url' => ['/insets/index']],
+                ['label' => 'Insets', 'url' => ['/insets/index']],
                 ['label' => 'Phase Volumes Insets', 'url' => ['/phase-volume-insets/index']],
+            ],
+        ],
+        ['label' => 'Članci', 
+            'items' => [
+                ['label' => 'Posts', 'url' => ['/posts/index']],
+                ['label' => 'Post Categories', 'url' => ['/post-categories/index']],
             ],
         ],
     ];

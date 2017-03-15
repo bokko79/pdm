@@ -31,12 +31,12 @@ $building = $model->projectBuilding;
 	<tr>
 		<td class="right">Lični pečat
 			<div style="padding:10px;">
-				<?= Html::img('@web/images/legal_files/licences/'.$vol->controlEngineerLicence->stamp->name, ['style'=>'max-width:180px; margin-top:20px;']) ?>
+				<?= Html::img('@web/images/legal_files/licences/'.$vol->controlEngineerLicence->stamp->name, ['style'=>'max-width:180px; max-height:140px; margin-top:20px;']) ?>
 			</div>
 		</td>
 		<td class="content">Potpis
 			<div>
-				<?= Html::img('@web/images/legal_files/signatures/'.$vol->controlEngineer->signature, ['style'=>'max-width:180px; margin-top:20px;']) ?>
+				<?= Html::img('@web/images/legal_files/signatures/'.$vol->controlEngineer->signature, ['style'=>'max-width:180px; max-height:140px; margin-top:20px;']) ?>
 			</div>
 		</td>
 	</tr>

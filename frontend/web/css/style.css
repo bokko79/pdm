@@ -190,6 +190,11 @@ body { background: #ECEFF1; color: #000000; font-family: 'Montserrat', Arial, sa
 .color-blue-gray-900 {color: #263238;}
 .bg-blue-gray-900 {background: #263238 !important;}
 
+.bg-primary {padding: 15px;}
+.bg-info {padding: 15px;}
+.bg-danger {padding: 15px;}
+.bg-success {padding: 15px;}
+
 /* ---------------------------
 	
 	2. TYPOGRAPHY 
@@ -216,6 +221,7 @@ h2.product-section-heading {font-size:18px; color:#999; margin:30px 0 15px;}
 p {font-size:13px; line-height:17px; margin-bottom: 20px; text-indent: 0px;}
 p.clear {margin-bottom: 0px;}
 p ul {text-indent: 20px;}
+
 
 blockquote {opacity:.6; font-style: italic; margin-bottom: 20px;}
 
@@ -254,7 +260,8 @@ strong {font-weight:700}
 /* lists */
 li ol, li ul {margin:0}
 ul {list-style-type:none}
-ul.disc {list-style-type:disc}
+ul.disc {list-style-type:disc;}
+ul.disc li {margin:10px 0 10px 30px;}
 
 .navpro-tabs:after,.navpro-tabs:before{display:table;line-height:0;content:""}
 .navpro-tabs:after{clear:both}
@@ -1067,4 +1074,6 @@ fieldset.no_data {margin: 0px 0 30px; padding: 40px; border:1px solid #ddd; bord
     color:#000; font-size: 15px; padding:3px 10px; margin:3px 0; font-weight: bold;}
 .box2 option:selected {background-color: white !important; 
     color:#000; font-size: 14px;}
+
+
 

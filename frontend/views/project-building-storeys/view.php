@@ -15,6 +15,7 @@ $this->title = $model->name. ' - ' . $model->storey;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Etaže objekta'), 'url' => ['/project-building-storeys/index', 'id'=>$model->project_building_id]];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['project'] = $model->projectBuilding->project;
+$work = $model->projectBuilding->project->work;
 ?>
 
 <div class="container">       

@@ -413,6 +413,60 @@ class ProjectsController extends Controller
         echo \yii\helpers\Json::encode(['output'=>'', 'selected'=>'']);
     }
 
+    public function actionControlEngineers() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $cat_id = $parents[0];
+                $res = \common\models\PracticeEngineers::find()->where('practice_id='.$cat_id)->all();            
+                foreach($res as $key=>$r){
+                    $out[$key]['id'] = $r->engineer_id;
+                    $out[$key]['name'] = $r->engineer->name;
+                }
+                echo \yii\helpers\Json::encode(['output'=>$out, 'selected'=>$out[0]['id']]);
+                return;
+            }
+        }
+        echo \yii\helpers\Json::encode(['output'=>'', 'selected'=>'']);
+    }
+
+    public function actionBuilderEngineers() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $cat_id = $parents[0];
+                $res = \common\models\PracticeEngineers::find()->where('practice_id='.$cat_id)->all();            
+                foreach($res as $key=>$r){
+                    $out[$key]['id'] = $r->engineer_id;
+                    $out[$key]['name'] = $r->engineer->name;
+                }
+                echo \yii\helpers\Json::encode(['output'=>$out, 'selected'=>$out[0]['id']]);
+                return;
+            }
+        }
+        echo \yii\helpers\Json::encode(['output'=>'', 'selected'=>'']);
+    }
+
+    public function actionSupervisionEngineers() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $cat_id = $parents[0];
+                $res = \common\models\PracticeEngineers::find()->where('practice_id='.$cat_id)->all();            
+                foreach($res as $key=>$r){
+                    $out[$key]['id'] = $r->engineer_id;
+                    $out[$key]['name'] = $r->engineer->name;
+                }
+                echo \yii\helpers\Json::encode(['output'=>$out, 'selected'=>$out[0]['id']]);
+                return;
+            }
+        }
+        echo \yii\helpers\Json::encode(['output'=>'', 'selected'=>'']);
+    }
+
     public function actionPhases() {
         $out = [];
         if (isset($_POST['depdrop_parents'])) {

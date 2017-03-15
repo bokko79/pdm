@@ -68,7 +68,6 @@ class ProjectBuildingStoreyPartMaterials extends \yii\db\ActiveRecord
         return [
             'project_building_storey_part_id' => Yii::t('app', 'Project Building Storey Part ID'),
             'access' => Yii::t('app', 'Prilazi objektu'),
-            'foundation' => Yii::t('app', 'Temelji'),
             'wall_external' => Yii::t('app', 'Spoljašnji i fasadni zidovi'),
             'wall_bearing' => Yii::t('app', 'Noseći konstruktivni zidovi'),
             'wall_internal' => Yii::t('app', 'Unutrašnji pregradni zidovi'),
@@ -102,5 +101,405 @@ class ProjectBuildingStoreyPartMaterials extends \yii\db\ActiveRecord
     public function getProjectBuildingStoreyPart()
     {
         return $this->hasOne(ProjectBuildingStoreyParts::className(), ['id' => 'project_building_storey_part_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintAccess()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintWallExternal()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintWallBearing()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintWallInternal()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintFacade()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintFlooring()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintCeiling()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintDoor()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintWindow()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintTinwork()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintStair()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintWoodwork()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintSteelwork()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintRoof()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintLight()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintSanitary()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintElectrical()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintPlumbing()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintHvac()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintChimney()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintFurniture()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintKitchen()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintBathroom()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintLift()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintRoofing()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderAccess()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderWallExternal()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderWallBearing()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderWallInternal()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderFacade()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderFlooring()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderCeiling()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderDoor()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderWindow()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderTinwork()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderStair()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderWoodwork()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderSteelwork()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderRoof()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderLight()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderSanitary()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderElectrical()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderPlumbing()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderHvac()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderChimney()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderFurniture()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderKitchen()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderBathroom()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderLift()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderRoofing()
+    {
+        return '';
     }
 }

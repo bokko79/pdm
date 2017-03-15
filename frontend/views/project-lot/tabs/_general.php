@@ -29,6 +29,8 @@ use yii\bootstrap\Nav;
                     },
                 ], 
                 'type',
+                'climate',
+                'seismic',
                 'area',
                 'width',
                 'length',

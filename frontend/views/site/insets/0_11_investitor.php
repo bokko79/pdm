@@ -12,14 +12,19 @@ $formatter->locale = 'sr-Latn';
 
 <h2 class="center" style="padding:30px 0; letter-spacing: 4px;">IZJAVLJUJEM</h2>
 
-<p>da prilikom izvođenja radova na izgradnji objekta <?= $model->projectBuilding->name ?> <?= $model->projectBuilding->spratnost ?> nije došlo do odstupanja od Projekta za izvođenje objekta, te da je izvedeno stanje jednako projektovanom stanju.</p>
+<p>da prilikom izvođenja radova na izgradnji objekta <?= $model->projectBuilding->name ?> <?= $model->projectBuilding->spratnost ?>, nije došlo do odstupanja od Projekta za izvođenje objekta, te da je izvedeno stanje jednako projektovanom stanju.</p>
 
 <table class="homepage" style="margin:20px 0">
 	<tr>
 		<td class="right titler">Investitor</td>
 		<td class="content">
-			<h3><b><?= $model->client->name ?></b></h3>
-			<p>ul. <?= $model->client->location->street. ' br. ' . $model->client->location->number . ' ' .$model->client->location->city->town; ?></p>
+			<?php if($projectClients = $model->projectClients){
+				foreach($projectClients as $projectClient){
+					$client = $projectClient->client; ?>
+					<h3><b><?= $client->name ?></b></h3>
+					<p><?= $client->location->fullAddress; ?></p>
+			<?php }
+			} ?>
 		</td>
 	</tr>
 	<tr>
@@ -99,6 +104,6 @@ $formatter->locale = 'sr-Latn';
 	</tr>
 	<tr>
 		<td class="right">Mesto i datum</td>
-		<td class="content"><p><?= $model->location->city->town ?>, <?= $formatter->asDate($model->time, 'php:mm Y') ?></p></td>
+		<td class="content"><p><?= $model->location->city->town ?>, <?= $formatter->asDate(time(), 'php:mm Y') ?></p></td>
 	</tr>
 </table>

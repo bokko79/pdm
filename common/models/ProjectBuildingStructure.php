@@ -83,4 +83,212 @@ class ProjectBuildingStructure extends \yii\db\ActiveRecord
     {
         return $this->hasOne(ProjectBuilding::className(), ['id' => 'project_building_id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintConstruction()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintFoundation()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintWallExternal()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintWallBearing()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintWallInternal()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintSlab()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintColumns()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintBeam()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintTruss()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintStair()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintArch()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintRoof()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintChimney()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderConstruction()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderFoundation()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderWallExternal()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderWallBearing()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderWallInternal()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderSlab()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderColumns()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderBeam()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderTruss()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderStair()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderArch()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderRoof()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderChimney()
+    {
+        return '';
+    }
 }

@@ -94,12 +94,12 @@ $building = $model->projectBuilding;
 	<tr>
 		<td class="right">Pečat
 			<div>
-				<?= ($model->controlPractice->stamp) ? Html::img('@web/images/legal_files/stamps/'.$model->controlPractice->stamp, ['style'=>'width:120px; margin-top:20px;']) : null ?>
+				<?= ($model->controlPractice->stamp) ? Html::img('@web/images/legal_files/stamps/'.$model->controlPractice->stamp, ['style'=>'width:120px;max-height:140px; margin-top:20px;']) : null ?>
 			</div>
 		</td>
 		<td class="content">Potpis
 			<div>
-				<?= ($model->controlPractice->stamp) ? Html::img('@web/images/legal_files/signatures/'.$model->controlPractice->signature, ['style'=>'width:180px; margin-top:20px;']) : null ?>
+				<?= ($model->controlPractice->stamp) ? Html::img('@web/images/legal_files/signatures/'.$model->controlPractice->signature, ['style'=>'width:180px; max-height:140px; margin-top:20px;']) : null ?>
 			</div>
 		</td>
 	</tr>

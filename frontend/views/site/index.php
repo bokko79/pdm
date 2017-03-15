@@ -14,7 +14,10 @@ $this->title = 'Project Documentation Manager';
 
         <p class="lead">Upravljanje građevinskom<br> projektno-tehničkom dokumentacijom.</p>
 
-        <p><?= Html::a(Yii::t('app', 'Projekti'), ['/projects'], ['class' => 'btn btn-lg btn-success']) ?></p>
+        <p><?= Html::a(Yii::t('app', 'Projekti'), ['/projects'], ['class' => 'btn btn-lg btn-info']) ?>
+            
+            <?= Html::a(Yii::t('app', 'Novi projekat'), ['/projects/create'], ['class' => 'btn btn-lg btn-default']) ?>
+        </p>
     
     </div>
 

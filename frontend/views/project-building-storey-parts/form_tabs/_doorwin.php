@@ -27,60 +27,60 @@ use kartik\checkbox\CheckboxX;
 
 <div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]door',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model, '[existing]door',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderDoor])->hint($model->hintDoor) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'door', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]door',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model_new, '[new]door',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderDoor])->hint($model->hintDoor) ?>
     </div>
 </div>
 
 <div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]window',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model, '[existing]window',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderWindow])->hint($model->hintWindow) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'window', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]window',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model_new, '[new]window',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderWindow])->hint($model->hintWindow) ?>
     </div>
 </div>
 
 <div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]woodwork',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model, '[existing]woodwork',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderWoodwork])->hint($model->hintWoodwork) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'woodwork', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]woodwork',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model_new, '[new]woodwork',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderWoodwork])->hint($model->hintWoodwork) ?>
     </div>
 </div>
 
 <div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]steelwork',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model, '[existing]steelwork',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderSteelwork])->hint($model->hintSteelwork) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'steelwork', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]steelwork',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model_new, '[new]steelwork',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderSteelwork])->hint($model->hintSteelwork) ?>
     </div>
 </div>
 
 <div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]tinwork',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model, '[existing]tinwork',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderTinwork])->hint($model->hintTinwork) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'tinwork', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]tinwork',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model_new, '[new]tinwork',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderTinwork])->hint($model->hintTinwork) ?>
     </div>
 </div>

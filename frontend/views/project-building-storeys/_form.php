@@ -53,7 +53,7 @@ if(!$model->name){$model->name = $model->storey;}
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">
             <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-            <?= (!$model->isNewRecord and !$model->copies and $model->storey!='prizemlje') ? Html::a(Yii::t('app', 'Ukloni'), ['delete', 'id' => $model->id], [
+            <?= (!$model->isNewRecord and !$model->copies and $model->storey!='prizemlje' and $model->projectBuilding->project->work!='adaptacija') ? Html::a(Yii::t('app', 'Ukloni'), ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu, sa svim prostorijama?'),

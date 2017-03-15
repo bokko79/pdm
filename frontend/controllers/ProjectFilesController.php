@@ -67,6 +67,7 @@ class ProjectFilesController extends Controller
         $model = new ProjectFiles();
         if($p = Yii::$app->request->get('ProjectFiles')){
             $model->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
+            $model->type = !empty($p['type']) ? $p['type'] : null;
         }
         
         if ($model->load(Yii::$app->request->post())) {

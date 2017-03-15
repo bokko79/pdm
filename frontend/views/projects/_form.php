@@ -93,8 +93,8 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
             'changeOnReset' => false,           
         ])->hint($model->hintPractice) ?>
 
-<?php if($model->isNewRecord): ?>
     <?= $form->field($model, 'engineer_id')->widget(DepDrop::classname(), [
+                'data'=> ($model->isNewRecord) ? [] : [$model->engineer_id=>$model->engineer->name],
                 'options'=>['id'=>'subcat-id'],
                 'pluginOptions'=>[
                     'depends'=>['cat-id'],
@@ -102,73 +102,71 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
                     'url'=>Url::to(['/projects/engineers'])
                 ]
             ]) ?>
-<?php else: ?>
-    <?= $form->field($model, 'engineer_id')->widget(DepDrop::classname(), [
-                'data'=> [$model->engineer_id=>$model->engineer->name],
-                'options'=>['id'=>'subcat-id'],
-                'pluginOptions'=>[
-                    'depends'=>['cat-id'],
-                    'placeholder'=>'Izaberi...',
-                    'url'=>Url::to(['/projects/engineers'])
-                ]
-            ]) ?>
-<?php endif; ?>
 
 
 <?php if(!$model->isNewRecord): ?>
+    <?php if($model->phase=='pgd'): ?>
 <hr>
 <h3>Tehnička kontrola</h3>
     <?= $form->field($model, 'control_practice_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
-            'options' => ['placeholder' => 'Izaberite...'],
+            'options' => ['placeholder' => 'Izaberite...', 'id'=>'catcont-id'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,
             'pluginOptions'=>['allowClear'=>true],
         ])->hint($model->hintControlPractice) ?>
 
-    <?= $form->field($model, 'control_engineer_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'id', 'name'),
-            'options' => ['placeholder' => 'Izaberite...'],
-            'language' => 'sr-Latn',
-            'changeOnReset' => false,
-            'pluginOptions'=>['allowClear'=>true],
-        ])->hint($model->hintControlEngineer) ?>
-
+        <?= $form->field($model, 'control_engineer_id')->widget(DepDrop::classname(), [
+                'data'=> ($model->control_engineer_id!='') ? [$model->control_engineer_id=>$model->controlEngineer->name] : [],
+                'options'=>['id'=>'subcatcont-id'],
+                'pluginOptions'=>[
+                    'depends'=>['catcont-id'],
+                    'placeholder'=>'Izaberi...',
+                    'url'=>Url::to(['/projects/control-engineers'])
+                ]
+            ])->hint($model->hintControlEngineer) ?>
+    <?php endif; ?>
+    <?php if($model->phase=='pio'): ?>
 <hr>
 <h3>Izvođač radova</h3>
     <?= $form->field($model, 'builder_practice_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
-            'options' => ['placeholder' => 'Izaberite...'],
+            'options' => ['placeholder' => 'Izaberite...', 'id'=>'catbuild-id'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,
             'pluginOptions'=>['allowClear'=>true],
-        ])->hint($model->hintControlPractice) ?>
+        ])->hint($model->hintBuilderPractice) ?>
 
-    <?= $form->field($model, 'builder_engineer_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'id', 'name'),
-            'options' => ['placeholder' => 'Izaberite...'],
-            'language' => 'sr-Latn',
-            'changeOnReset' => false,
-            'pluginOptions'=>['allowClear'=>true],
-        ])->hint($model->hintControlEngineer) ?>
+    <?= $form->field($model, 'builder_engineer_id')->widget(DepDrop::classname(), [
+                'data'=> ($model->builder_engineer_id!='') ? [$model->builder_engineer_id=>$model->builderEngineer->name] : [],
+                'options'=>['id'=>'subcatbuild-id'],
+                'pluginOptions'=>[
+                    'depends'=>['catbuild-id'],
+                    'placeholder'=>'Izaberi...',
+                    'url'=>Url::to(['/projects/builder-engineers'])
+                ]
+            ])->hint($model->hintBuilderEngineer) ?>
 
 <hr>
 <h3>Stručni nadzor</h3>
     <?= $form->field($model, 'supervision_practice_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
-            'options' => ['placeholder' => 'Izaberite...'],
+            'options' => ['placeholder' => 'Izaberite...', 'id'=>'catsuper-id'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,  
             'pluginOptions'=>['allowClear'=>true],
-        ])->hint($model->hintControlPractice) ?>
+        ])->hint($model->hintSupervisionPractice) ?>
 
-    <?= $form->field($model, 'supervision_engineer_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'id', 'name'),
-            'options' => ['placeholder' => 'Izaberite...'],
-            'language' => 'sr-Latn',
-            'changeOnReset' => false,
-            'pluginOptions'=>['allowClear'=>true],
-        ])->hint($model->hintControlEngineer) ?>
+    <?= $form->field($model, 'supervision_engineer_id')->widget(DepDrop::classname(), [
+                'data'=> ($model->supervision_engineer_id!='') ? [$model->supervision_engineer_id=>$model->supervisionEngineer->name] : [],
+                'options'=>['id'=>'subcatsupervision-id'],
+                'pluginOptions'=>[
+                    'depends'=>['catsuper-id'],
+                    'placeholder'=>'Izaberi...',
+                    'url'=>Url::to(['/projects/supervision-engineers'])
+                ]
+            ])->hint($model->hintSupervisionEngineer) ?>
+    <?php endif; ?>
 <?php endif; ?>
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

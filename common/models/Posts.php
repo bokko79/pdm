@@ -43,8 +43,8 @@ class Posts extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['profile_id', 'file_id', 'title', 'content', 'type', 'time'], 'required'],
-            [['profile_id', 'file_id', 'parent_id', 'comment_status', 'next_post', 'time', 'update_time'], 'integer'],
+            [['profile_id', 'title', 'content', 'type',], 'required'],
+            [['profile_id', 'file_id', 'category_id', 'comment_status', 'next_post', 'time', 'update_time'], 'integer'],
             [['content', 'type', 'status'], 'string'],
             [['lang_code'], 'string', 'max' => 2],
             [['title'], 'string', 'max' => 128],
@@ -61,7 +61,7 @@ class Posts extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'profile_id' => Yii::t('app', 'Profile ID'),
             'file_id' => Yii::t('app', 'File ID'),
-            'parent_id' => Yii::t('app', 'Parent ID'),
+            'category_id' => Yii::t('app', 'Kategorija'),
             'lang_code' => Yii::t('app', 'Lang Code'),
             'title' => Yii::t('app', 'Title'),
             'subtitle' => Yii::t('app', 'Subtitle'),
@@ -79,9 +79,9 @@ class Posts extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPostCategories()
+    public function getCategory()
     {
-        return $this->hasMany(PostCategories::className(), ['post_id' => 'id']);
+        return $this->hasOne(PostCategories::className(), ['id' => 'category_id']);
     }
 
     /**

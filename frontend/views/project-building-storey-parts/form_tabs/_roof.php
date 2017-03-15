@@ -24,38 +24,39 @@ use kartik\checkbox\CheckboxX;
     </div>
 </div>
 
-<div class="form-group">   	
+<div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]stair',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model, '[existing]stair',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderStair])->hint($model->hintStair) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'stair', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]stair',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model_new, '[new]stair',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderStair])->hint($model->hintStair) ?>
     </div>
 </div>
 
-<div class="form-group">   	
+
+<div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]arch',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model, '[existing]arch',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderArch])->hint($model->hintArch) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'arch', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]arch',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model_new, '[new]arch',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderArch])->hint($model->hintArch) ?>
     </div>
 </div>
 
-<div class="form-group">   	
+<div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]chimney',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model, '[existing]chimney',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderChimney])->hint($model->hintChimney) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'chimney', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]chimney',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model_new, '[new]chimney',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderChimney])->hint($model->hintChimney) ?>
     </div>
 </div>

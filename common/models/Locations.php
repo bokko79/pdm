@@ -145,16 +145,100 @@ class Locations extends \yii\db\ActiveRecord
      */
     public function getLotAddress($br=false)
     {
-        $address = (($this->street and $this->number) ? 'ul. '.$this->street . ' br. '.$this->number. ', ' : null).$this->city->town;
+        $address = $this->fullAddress;
         $lottext = 'kat.parc.br. ';
         if($lots = $this->locationLots and $this->county0){
             foreach($lots as $lot){
-                $lottext .= $lot .', ';
+                $lottext .= $lot->lot .', ';
             }
             $lottext .= 'K.O. '.$this->county0->name;
         }
-        return $address . ($br ? '<br>':null) . $lottext;
-    } 
+        return $address . ($br ? '<br>':', ') . $lottext;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLot($text=null)
+    {
+        if($text==1){
+            if(count($this->locationLots)>1){
+                $t = 'katastarske parcele broj';
+            } else {
+                $t = 'katastarska parcela broj';
+            }
+        }
+        if($text==2){
+            if(count($this->locationLots)>1){
+                $t = 'katastarskih parcela broj';
+            } else {
+                $t = 'katastarske parcele broj';
+            }
+        }
+        if($lots = $this->locationLots and $this->county0){
+            foreach($lots as $lot){
+                $lottext .= $lot->lot .', ';
+            }
+            $lottext .= 'K.O. '.$this->county0->name;
+        }
+        return $t . ' ' . $lottext;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getServiceLot($text=null)
+    {
+        if($text==1){
+            if(count($this->serviceLots)>1){
+                $t = 'katastarske parcele broj';
+            } else {
+                $t = 'katastarska parcela broj';
+            }
+        }
+        if($text==2){
+            if(count($this->serviceLots)>1){
+                $t = 'katastarskih parcela broj';
+            } else {
+                $t = 'katastarske parcele broj';
+            }
+        }
+        if($lots = $this->serviceLots and $this->county0){
+            foreach($lots as $lot){
+                $lottext .= $lot->lot .', ';
+            }
+            $lottext .= 'K.O. '.$this->county0->name;
+        }
+        return $t . ' ' . $lottext;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccessLot($text=null)
+    {
+        if($text==1){
+            if(count($this->accessLots)>1){
+                $t = 'katastarske parcele broj';
+            } else {
+                $t = 'katastarska parcela broj';
+            }
+        }
+        if($text==2){
+            if(count($this->accessLots)>1){
+                $t = 'katastarskih parcela broj';
+            } else {
+                $t = 'katastarske parcele broj';
+            }
+        }
+        if($lots = $this->accessLots and $this->county0){
+            foreach($lots as $lot){
+                $lottext .= $lot->lot .', ';
+            }
+            $lottext .= 'K.O. '.$this->county0->name;
+        }
+        return $t . ' ' . $lottext;
+    }
 
     /**
      * @return \yii\db\ActiveQuery

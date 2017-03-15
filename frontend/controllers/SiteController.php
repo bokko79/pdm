@@ -273,7 +273,7 @@ class SiteController extends Controller
         if($model->phase=='idp' or $model->phase=='pgd' or $model->phase=='pzi' or $model->phase=='pio'){
             $mpdf->WriteHTML($this->renderPartial('insets/0_4_izjava', ['model'=>$model, 'volume'=>$volume], true), 0);            
             $mpdf->AddPage();
-        }        
+        }       
 
         // 0.5. Sadržaj tehničke dokumentacije
         $mpdf->WriteHTML($this->renderPartial('insets/0_5_sadrzaj_tehdok', ['model'=>$model, 'volume'=>$volume], true), 0);
@@ -289,24 +289,29 @@ class SiteController extends Controller
 
         // 0.8. Sažeti tehnički opis 
         // Samo u IDP, PGD i PIO 
-        if($model->phase=='idp' or $model->phase=='pgd' or $model->phase=='pio'){
-            $mpdf->WriteHTML($this->renderPartial('insets/0_8_1_projektni', ['model'=>$model, 'volume'=>$volume], true), 0);            
-            $mpdf->AddPage();
-            $mpdf->WriteHTML($this->renderPartial('insets/0_8_tehopis', ['model'=>$model, 'volume'=>$volume], true), 0);            
-            $mpdf->AddPage();
+        if($model->phase=='idp' or $model->phase=='pgd' or $model->phase=='pio'){          
+            if($model->work=='adaptacija'){
+                $mpdf->WriteHTML($this->renderPartial('insets/0_8_02_tehopis_adap', ['model'=>$model, 'volume'=>$volume], true), 0);
+                $mpdf->AddPage();
+            } else {
+                $mpdf->WriteHTML($this->renderPartial('insets/0_8_1_projektni', ['model'=>$model, 'volume'=>$volume], true), 0);            
+                $mpdf->AddPage();
+                $mpdf->WriteHTML($this->renderPartial('insets/0_8_tehopis', ['model'=>$model, 'volume'=>$volume], true), 0);
+                $mpdf->AddPage();
+            }
         }
         
         // 0.9. Izjave ovlašćenih lica o merama za ispunjenje osnovnih zahteva za objekat 
         // Samo u IDP i PGD 
         if($model->checkIfElaborat and ($model->phase=='idp' or $model->phase=='pgd')) {
             $mpdf->WriteHTML($this->renderPartial('insets/0_9_ovl_lica', ['model'=>$model, 'volume'=>$volume], true), 0);
-            //$mpdf->AddPage();
+           // $mpdf->AddPage();
         }
 
         // insert lokacijskiUslovi.
-        if($model->lokacijskiUslovi){
+        if($model->lokacijskiUslovi->file){
             $mpdf->SetHeader('');
-            $pagecount = $mpdf->SetSourceFile('images/projects/'.$model->year.'/'.$id.'/'.$model->geodetski->file->name);
+            $pagecount = $mpdf->SetSourceFile('images/projects/'.$model->year.'/'.$id.'/'.$model->lokacijskiUslovi->file->name);
             for ($i=1; $i<=$pagecount; $i++) {
                 $mpdf->AddPage();
                 $import_page = $mpdf->ImportPage($i);
@@ -318,7 +323,6 @@ class SiteController extends Controller
         // Samo u PIO
         if($model->phase=='pio') {
             $mpdf->WriteHTML($this->renderPartial('insets/0_11_investitor', ['model'=>$model, 'volume'=>$volume], true), 0);
-            $mpdf->AddPage();
         }
 
         $mpdf->WriteHTML($this->renderPartial('pdf/_footer', ['model'=>$model, 'volume'=>$volume], true), 0);

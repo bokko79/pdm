@@ -8,7 +8,6 @@ use Yii;
  * This is the model class for table "post_categories".
  *
  * @property string $id
- * @property string $post_id
  * @property string $category
  * @property string $category_id
  *
@@ -30,10 +29,9 @@ class PostCategories extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['post_id', 'category', 'category_id'], 'required'],
-            [['post_id', 'category_id'], 'integer'],
+            [['category', 'category_id'], 'required'],
+            [['category_id'], 'integer'],
             [['category'], 'string'],
-            [['post_id'], 'exist', 'skipOnError' => true, 'targetClass' => Posts::className(), 'targetAttribute' => ['post_id' => 'id']],
         ];
     }
 
@@ -44,7 +42,6 @@ class PostCategories extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'post_id' => Yii::t('app', 'Post ID'),
             'category' => Yii::t('app', 'Category'),
             'category_id' => Yii::t('app', 'Category ID'),
         ];
@@ -53,8 +50,24 @@ class PostCategories extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPost()
+    public function getPostCategories()
     {
-        return $this->hasOne(Posts::className(), ['id' => 'post_id']);
+        return $this->hasMany(Posts::className(), ['post_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getChildren()
+    {
+        return $this->hasMany(PostCategories::className(), ['category_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent()
+    {
+        return $this->hasOne(PostCategories::className(), ['id' => 'category_id']);
     }
 }

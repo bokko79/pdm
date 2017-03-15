@@ -21,9 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
               </div>
               <div class="subhead">Lista Vaših projekata.</div>
           </div>              
-      </div>
-
-      <div class="card_container record-full grid-item fadeInUp animated" id="">
           <div class="secondary-context">
               
 

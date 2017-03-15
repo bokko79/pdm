@@ -27,36 +27,36 @@ use kartik\checkbox\CheckboxX;
 
 <div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]slab',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model, '[existing]slab',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderSlab])->hint($model->hintSlab) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'slab', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]slab',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model_new, '[new]slab',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderSlab])->hint($model->hintSlab) ?>
     </div>
 </div>
 
 <div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]columns',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model, '[existing]columns',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderColumns])->hint($model->hintColumns) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'columns', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]columns',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model_new, '[new]columns',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderColumns])->hint($model->hintColumns) ?>
     </div>
 </div>
 
 <div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]beam',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model, '[existing]beam',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderBeam])->hint($model->hintBeam) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'beam', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]beam',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
+        <?= $form->field($model_new, '[new]beam',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderBeam])->hint($model->hintBeam) ?>
     </div>
 </div>

@@ -101,8 +101,32 @@ $items = [
         'content'=>$this->render('form_tabs/_services', ['modelCheck'=>$modelCheck->projectBuildingServices, 'model'=>$services['existing'], 'model_new'=>$services['new'], 'form'=>$form]),
     ],
     ];
-} else {
+} else if($modelCheck->project->work=='adaptacija') {
 $items = [
+    [
+        'label'=>'Opšti podaci',
+        'content'=>$this->render('form_tabs/_general', ['modelCheck'=>$modelCheck, 'model'=>$building, 'form'=>$form]),
+        'active'=>true
+    ],
+    [
+        'label'=>'Numerički podaci',
+        'content'=>$this->render('form_tabs/_numeric', ['modelCheck'=>$modelCheck,  'model'=>$building, 'form'=>$form]),
+    ],
+    [
+        'label'=>'Funkcija',
+        'content'=>$this->render('form_tabs/_function', ['modelCheck'=>$modelCheck->projectBuildingCharacteristics, 'model'=>$architecture, 'form'=>$form]),
+    ],
+    [
+        'label'=>'Arhitektonsko rešenje',
+        'content'=>$this->render('form_tabs/_architecture', ['modelCheck'=>$modelCheck->projectBuildingCharacteristics, 'model'=>$architecture, 'form'=>$form]),
+    ],
+    [
+        'label'=>'Položaj i oblik',
+        'content'=>$this->render('form_tabs/_position', ['modelCheck'=>$modelCheck->projectBuildingCharacteristics, 'model'=>$architecture, 'form'=>$form]),
+    ],     
+    ];
+} else {
+    $items = [
     [
         'label'=>'Opšti podaci',
         'content'=>$this->render('form_tabs/_general', ['modelCheck'=>$modelCheck, 'model'=>$building, 'form'=>$form]),
@@ -169,7 +193,7 @@ $items = [
         'content'=>$this->render('form_tabs/_services', ['modelCheck'=>$modelCheck->projectBuildingServices, 'model'=>$services, 'form'=>$form]),
     ],
     ];
-}    
+}
 ?>
 
 <div class="container-fluid">

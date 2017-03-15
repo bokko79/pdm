@@ -19,3 +19,6 @@ use kartik\checkbox\CheckboxX;
 
     <?= $form->field($model, 'underwater_level', [
                 'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%'])->hint('Apsolutna visinska kota maksimalnih podzemnih voda.') ?>
+
+    <?= $form->field($model, 'underwater_level_min', [
+                'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%'])->hint('Apsolutna visinska kota minimalnih podzemnih voda.') ?>

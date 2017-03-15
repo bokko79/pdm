@@ -214,6 +214,8 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getDirector()
     {
-        return \common\models\PracticeEngineers::find()->where('position="direktor"')->one()->engineer;
+        $director = \common\models\PracticeEngineers::find()->where('practice_id='.$this->id.' and position="direktor"')->one();
+
+        return $director ? $director->engineer : null;
     }
 }

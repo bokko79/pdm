@@ -940,4 +940,255 @@ class ProjectBuilding extends \yii\db\ActiveRecord
         }
         return $state;
     }
+
+
+            
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintName()
+    {
+        return 'Pun naziv objekta.';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintType()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintGroundFloorLevel()
+    {
+        return 'Apsolutna visinska kota gotovog poda prizemlja objekta, npr. 81.60. Ova kota se koristi kao referentna kota za sve ostale visinke kote objekta.';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintBuildingType()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintBuildingLineDist()
+    {
+        return 'Osovinsko rastojanje između građevinske i regulacione linije parcele.';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintBuilding()
+    {
+        return 'Pretežna klasa objekta prema važećem Pravilniku o klasifikaciji objekata.';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintWidth()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintLength()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintGrossAreaPart()
+    {
+        return 'Samo u slučaju objekata iz člana 145. Pravilnika.';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintStorey()
+    {
+        return 'Samo u slučaju objekata iz člana 145. Pravilnika.';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintStoreyHeight()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintRidgeOrientation()
+    {
+        return 'Uneti orijenataciju slemena krova, ukoliko je krov objekta u nagibu. Uneti samo oznake strana sveta, npr. S za sever, J za jug, itd.';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintRoofPitch()
+    {
+        return 'Nagib krovnih ravni u stepenima. Npr. 30<sup>o</sup>';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintCharacteristics()
+    {
+        return 'Tekst koji će se pojaviti u glavnoj svesci, u prilogu 0.7: Ostale karakteristike objekta. Ukoliko postoje neke dodatne, specifične karakteristike objekta, uneti tekstualni opis.';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintCost()
+    {
+        return 'Ukupna predviđena građevinska investiciona vrednost objekta/radova na izgradnji objekta u RSD.';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintBuildFile()
+    {
+        return 'Nije obavezno.';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderName()
+    {
+        return 'npr. Stambeno-poslovni objekat';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderType()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderGroundFloorLevel()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderBuildingType()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderBuildingLineDist()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderWidth()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderLength()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderGrossAreaPart()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderStorey()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderStoreyHeight()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderRidgeOrientation()
+    {
+        return 'npr. S-J ili JZ-SI';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderRoofPitch()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderCharacteristics()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderCost()
+    {
+        return '';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaceholderBuildFile()
+    {
+        return '';
+    }
 }

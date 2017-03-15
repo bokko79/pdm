@@ -14,13 +14,12 @@ $building = $model->projectBuilding;
 			<td class="right titler">Investitor</td>
 			<td class="content">
 				<?php if($projectClients = $model->projectClients){
-					foreach($projectClients as $projectClient){
-						$client = $projectClient->client; ?>
-						<h3><b><?= $client->name ?></b></h3>
-						<p>ul. <?= $client->location->street. ' br. ' . $client->location->number . ', ' .$client->location->city->town; ?></p>
-						<?php
-					}
-				}?>
+				foreach($projectClients as $projectClient){
+					$client = $projectClient->client; ?>
+					<h3><b><?= $client->name ?></b></h3>
+					<p><?= $client->location->fullAddress; ?></p>
+			<?php }
+			} ?>
 			</td>
 		</tr>
 		<tr>

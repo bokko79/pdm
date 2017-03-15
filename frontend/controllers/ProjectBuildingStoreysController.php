@@ -188,7 +188,11 @@ class ProjectBuildingStoreysController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/project-building-storeys/index', 'id' => $model->project_building_id]);
+            if($model->projectBuilding->project->work=='adaptacija'){
+                return $this->redirect(['/project-building-storey-parts/view', 'id' => $model->projectBuildingStoreyParts[0]->id]);
+            } else {
+                return $this->redirect(['/project-building-storeys/index', 'id' => $model->project_building_id]);
+            }            
         } else {
             return $this->render('update', [
                 'model' => $model,

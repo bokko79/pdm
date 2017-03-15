@@ -374,25 +374,25 @@ class Projects extends \yii\db\ActiveRecord
         $phase = null;
         switch($this->phase){
             case 'gnp':
-                $phase = 'generalnog projekta';
+                $phase = 'generalnog projekta (GNP)';
                 break;
             case 'idr':
-                $phase = 'idejnog rešenja';
+                $phase = 'idejnog rešenja (IDR)';
                 break;
             case 'idp':
-                $phase = 'idejnog projekta';
+                $phase = 'idejnog projekta (IDP)';
                 break;
             case 'pgd':
-                $phase = 'projekta za građevinsku dozvolu';
+                $phase = 'projekta za građevinsku dozvolu (PGD)';
                 break;
             case 'pzi':
-                $phase = 'projekta za izvođenje';
+                $phase = 'projekta za izvođenje (PZI)';
                 break;
             case 'pio':
-                $phase = 'projekta izvedenog objekta';
+                $phase = 'projekta izvedenog objekta (PIO)';
                 break;
             default:
-                $phase = 'tehničke kontrole projekta';
+                $phase = 'tehničke kontrole projekta (TKP)';
                 break;
         }
         return $phase;
@@ -597,6 +597,38 @@ class Projects extends \yii\db\ActiveRecord
     public function getHintControlEngineer()
     {
         return 'Ovaj podatak je obavezan samo za Izvod iz projekta u fazi PGD. Odgovorno lice vršioca tehničke kontrole nije na listi? ' .\yii\helpers\Html::a('Dodaj novog projektanta', \yii\helpers\Url::to(['/engineers/create']), ['target'=>'_blank']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintBuilderPractice()
+    {
+        return 'Ovaj podatak je obavezan samo za Izvod iz projekta u fazi PGD. Izvođač radova nije na listi? ' .\yii\helpers\Html::a('Dodaj novog izvođača radova', \yii\helpers\Url::to(['/practices/create']), ['target'=>'_blank']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintBuilderEngineer()
+    {
+        return 'Ovaj podatak je obavezan samo za Izvod iz projekta u fazi PGD. Odgovorno lice izvođača radova nije na listi? ' .\yii\helpers\Html::a('Dodaj odgovorno lice izvođača', \yii\helpers\Url::to(['/engineers/create']), ['target'=>'_blank']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintSupervisionPractice()
+    {
+        return 'Ovaj podatak je obavezan samo za Projekat izvedenog objekta PIO. Vršilac stručnog nadzora nije na listi? ' .\yii\helpers\Html::a('Dodaj novog vršioca', \yii\helpers\Url::to(['/practices/create']), ['target'=>'_blank']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHintSupervisionEngineer()
+    {
+        return 'Ovaj podatak je obavezan samo za Izvod iz projekta u fazi PGD. Odgovorno lice vršioca stručnog nadzora nije na listi? ' .\yii\helpers\Html::a('Dodaj novog projektanta', \yii\helpers\Url::to(['/engineers/create']), ['target'=>'_blank']);
     }
 
     /**

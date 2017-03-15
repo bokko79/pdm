@@ -31,15 +31,7 @@ $building = $model->projectBuilding;
 			<td class="right">Objekat</td>
 			<td class="content">
 				<h3><b><?= $building->name ?></b></h3>
-				<p>ul. <?= $model->location->street. ' br. ' . $model->location->number . ' ' .$model->location->city->town ?></p>
-				<p>kat.parc.br. 
-				<?php if($lots = $model->location->locationLots){
-					foreach($lots as $lot){
-						
-						echo $lot->lot.', ';
-					}
-				}?>
-					<?= 'K.O. '.$model->location->county0->name; ?></p>
+				<p>ul. <?= $model->location->lotAddress; ?></p>
 			</td>
 		</tr>
 		<tr>
@@ -50,13 +42,13 @@ $building = $model->projectBuilding;
 					<li>Izjava vršioca tehničke kontrole</li>
 					<li>Glavna sveska projekta za građevinsku dozvolu</li>
 					<li>Grafički prilozi
-						<ol>
-							<li>Situacioni plan sa osnovom krova (R 1:200) </li>
-							<li>Situaciono nivelacioni plan sa osnovom prizemlja (R 1:200)</li>
-							<li>Situaciono nivelacioni plan sa prikazom saobraćajnog rešenja (R 1:200)</li>
-							<li>Situacioni plan sa prikazom sinhron-plana instalacija (R 1:200)</li>
-							<li>Osnova etaže na kojoj je obezbeđen pristup svetlarniku</li>
-						</ol>
+						<ul>
+							<?php if($drawings = $volume->projectVolumeDrawings){
+								foreach($drawings as $key=>$drawing){
+									echo '<li>4.'.($key+1).'. '.c($drawing->title).' (R 1:'.$drawing->scale.')</li>';
+								}
+							} ?>
+						</ul>
 					</li>
 				</ol>
 			</td>
@@ -79,13 +71,13 @@ $building = $model->projectBuilding;
 			<td class="right" style="padding:5px 20px 20px;">
 				<small>Lični pečat odgovornog projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
+					<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; max-height:140px; margin-top:10px;']) ?>
 				</div>
 			</td>
 			<td class="content" style="padding:5px 20px 20px;">
 				<small>Potpis odgovornog projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px;']) ?>
+					<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px; max-height:140px;']) ?>
 				</div>
 			</td>				
 		</tr>

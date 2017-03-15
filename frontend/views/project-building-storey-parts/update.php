@@ -12,7 +12,6 @@ use kartik\tabs\TabsX;
 $this->title = Yii::t('app', 'Podešavanje {modelClass}: ', [
     'modelClass' => 'jedinice',
 ]) . $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Jedinice'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
@@ -52,20 +51,16 @@ $items = [
         'content'=>$this->render('form_tabs/_architecture', ['model'=>$architecture['existing'], 'model_new'=>$architecture['new'], 'form'=>$form]),
     ], 
     [
-        'label'=>'Zidovi i platna',
+        'label'=>'Zidovi',
         'content'=>$this->render('form_tabs/_walls', ['model'=>$structure['existing'], 'model_new'=>$structure['new'], 'form'=>$form]),
     ],
     [
-        'label'=>'Ploče i međuspratne konstrukcije',
+        'label'=>'Ploče i međuspratna konstrukcija',
         'content'=>$this->render('form_tabs/_slabs', ['model'=>$structure['existing'], 'model_new'=>$structure['new'], 'form'=>$form]),
     ],
     [
-        'label'=>'Krov, stepenište i ostalo',
+        'label'=>'Stepenište i ostalo',
         'content'=>$this->render('form_tabs/_roof', ['model'=>$structure['existing'], 'model_new'=>$structure['new'], 'form'=>$form]),
-    ],
-    [
-        'label'=>'Spoljašnja obrada',
-        'content'=>$this->render('form_tabs/_external', ['model'=>$materials['existing'], 'model_new'=>$materials['new'], 'form'=>$form]),
     ],
     [
         'label'=>'Unutrašnja obrada',

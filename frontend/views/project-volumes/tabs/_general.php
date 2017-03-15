@@ -13,9 +13,13 @@ use yii\bootstrap\Nav;
     <div class="primary-context gray normal">
         <div class="head"><i class="fa fa-file"></i> <?= Html::encode($this->title) ?> <i class="fa this-one fa-arrow-circle-right"></i>
         <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-cog"></i>'), ['update', 'id' => $model->id], ['class' => 'btn btn-success']) ?> 
-        <?php if($model->volume->type!='drugo' or $model->volume_id==1): ?>
+        <?php /* if($model->volume->type!='drugo' or $model->volume_id==1): 
+          if($model->dataRequirement($model->dataReqs())): ?>
           <?= Html::a('<i class="fa fa-print"></i> PDF Sveske', Url::to(['/site/'.$sveska, 'id'=>$model->project_id, 'volume'=>$model->id]), ['class' => 'btn btn-primary', 'target'=>'_blank']) ?>
-        <?php endif; ?>
+          <?php else: ?>
+            <?= Html::button('<i class="fa fa-print"></i> PDF Sveske', ['class' => 'btn btn-disabled', 'disabled'=>true]) ?>
+          <?php endif; ?>
+        <?php endif; */?>
         <?= Html::a(Yii::t('app', '<i class="fa fa-power-off"></i>'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [

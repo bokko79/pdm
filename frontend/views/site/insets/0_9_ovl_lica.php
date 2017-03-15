@@ -10,8 +10,8 @@ $formatter->locale = 'sr-Latn';
 
 <?php if($volumes = $model->projectVolumes){
 		foreach ($volumes as $key=>$vol){
-			if($volume->volume->type == 'elaborat'): ?>
-			<p>Kao ovlašćeno lice koje je izradilo <?= $vol->volume->name ?> koji se prilaže projektu <b><?= $model->projectPhase ?></b> za objekat <b><?= $model->projectBuilding->name ?> <?= $model->projectBuilding->spratnost ?: null ?></b>, ulica <?= $model->location->street ?> br. <?= $model->location->number ?>, <?= $model->location->city->town ?>, kat.parc.br. <?php foreach($model->location->locationLots as $lot){echo $lot->lot.', ';} ?>K.O. <?= $model->location->county0->name ?></p>
+			if($vol->volume->type == 'elaborat'): ?>
+			<p>Kao ovlašćeno lice koje je izradilo <?= $vol->volume->name ?> koji se prilaže projektu <b><?= $model->projectPhase ?></b> za objekat <b><?= $model->projectBuilding->name ?> <?= $model->projectBuilding->spratnost ?: null ?></b>, <?= $model->location->getLotAddress() ?></p>
 
 			<p class="center" style="padding:30px 0 0;"><?= $vol->engineer->name .', '. $vol->engineer->title ?></p>
 

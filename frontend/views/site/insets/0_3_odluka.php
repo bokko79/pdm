@@ -5,6 +5,9 @@ use yii\helpers\Url;
 
 $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
+$engineer = $volume->engineer;
+$client = $model->client;
+$building = $model->projectBuilding ? $model->projectBuilding : $model->projectExBuilding;
 ?>
 <p class="times uppercase"><small>0.3. Odluka o određivanju glavnog projektanta</small></p>	
 
@@ -12,17 +15,12 @@ $formatter->locale = 'sr-Latn';
 
 <h2 class="center" style="padding:30px 0; letter-spacing: 4px;">GLAVNI PROJEKTANT</h2>
 
-<p>za izradu <?= c($model->projectPhaseGen) ?> za <?= $model->projectTypeOfWorksGen ?> za objekat <?= $model->name ?>, ulica <?= $model->location->street ?> br. <?= $model->location->number ?>, <?= $model->location->city->town ?>, kat.parc.br.
-	<?php if($lots = $model->location->locationLots){
-		foreach($lots as $lot){
-			echo $lot->lot. ', ';
-		}
-	} ?> K.O <?= $model->location->county0->name ?>, određuje se:</p>
+<p>za izradu <?= c($model->projectPhaseGen) ?> za <?= $model->projectTypeOfWorksGen ?> <?= $model->work=='adaptacija' ? ($model->projectUnit->type=='stan' ? 'stambene jedinice br. ' : 'poslovnog prostora') : 'objekta' ?> <?= $model->work=='adaptacija' ? $model->projectUnit->mark. ' ('.$model->projectUnit->projectBuildingStorey->name.') u okviru objekta' : '' ?> <?= $building->name ?> (<?= $model->work=='adaptacija' ? $building->storey : $building->spratnost ?>), <?= $model->location->lotAddress ?>, određuje se:</p>
 
 <div style="padding:20px 0 60px">
 	<table class="clear">
 		<tr>
-			<td class=""><span class="bold"><?= $volume->engineer->name .'</span>, '. $volume->engineer->title ?> ________________________________</td>
+			<td class="center"><span class="bold"><?= $engineer->name .'</span>, '. $engineer->title ?>  ____________________________</td>
 			<td class="right">licenca br. <?= $volume->engineerLicence->no ?></td>
 		</tr>
 	</table>
@@ -34,25 +32,31 @@ $formatter->locale = 'sr-Latn';
 	<tr>
 		<td class="right titler">Investitor</td>
 		<td class="content">
-			<h3><b><?= $model->client->name ?></b></h3>
-			<p>ul. <?= $model->client->location->street. ' br. ' . $model->client->location->number . ' ' .$model->client->location->city->town; ?></p>
+			<?php if($projectClients = $model->projectClients){
+				foreach($projectClients as $projectClient){ ?>
+					<h3><b><?= $projectClient->client->name ?></b></h3>
+					<p><?= $projectClient->client->location->fullAddress; ?></p>
+			<?php }
+			} ?>
 		</td>
 	</tr>
+	<?php if($model->work!='adaptacija'): ?>
 	<tr>
 		<td class="right">Odgovorno lice / zastupnik</td>
 		<td class="content">				
-			<p><?= $model->client->contact_person; ?></p>
+			<p><?= $client->contact_person; ?></p>
 		</td>
 	</tr>
+	<?php endif; ?>
 	<tr>
-		<td class="right">Pečat
+		<td class="right"><?= $model->work!='adaptacija' ? 'Pečat' : '' ?>
 			<div>
-				<?= ($model->client->stamp) ? Html::img('@web/images/legal_files/stamps/'.$model->client->stamp, ['style'=>'width:120px; margin-top:20px;']) : null ?>
+				<?= ($client->stamp) ? Html::img('@web/images/legal_files/stamps/'.$client->stamp, ['style'=>'width:120px; margin-top:20px;']) : null ?>
 			</div>
 		</td>
-		<td class="content">Potpis
+		<td class="content" style="height:140px !important;">Potpis
 			<div>
-				<?= ($model->client->stamp) ? Html::img('@web/images/legal_files/signatures/'.$model->client->signature, ['style'=>'width:180px; margin-top:20px;']) : null ?>
+				<?= ($client->stamp) ? Html::img('@web/images/legal_files/signatures/'.$client->signature, ['style'=>'width:180px; max-height:140x; margin-top:20px;']) : null ?>
 			</div>
 		</td>
 	</tr>
@@ -62,6 +66,6 @@ $formatter->locale = 'sr-Latn';
 	</tr>
 	<tr>
 		<td class="right">Mesto i datum</td>
-		<td class="content"><p><?= $model->client->location->city->town ?>, <?= $formatter->asDate(time(), 'php:mm Y') ?></p></td>
+		<td class="content"><p><?= $client->location->city->town ?>, <?= $formatter->asDate(time(), 'php:mm Y') ?></p></td>
 	</tr>
 </table>

@@ -67,6 +67,10 @@ class ProjectBuildingStoreyPartsController extends Controller
         $query_cl = \common\models\ProjectBuildingStoreyPartRooms::find()->where(['project_building_storey_part_id' => $id]);
         $roomTypes = \common\models\RoomTypes::find()->all();
 
+        if($model->projectBuildingStorey->name==''){
+            \Yii::$app->session->setFlash('danger', '<p><i class="fa fa-exclamation-circle"></i> Etaža na kojem se nalazi ova jedinica nije podešen. '.\yii\helpers\Html::a('<i class="fa fa-pencil"></i> Unesi naziv etaže.', \yii\helpers\Url::to(['/project-building-storeys/update', 'id'=>$model->projectBuildingStorey->id]), ['target'=>'_blank']). '</p>');
+        }
+
         // validate if there is a editable input saved via AJAX
         if (Yii::$app->request->post('hasEditable')) {
             // instantiate your book model for saving
@@ -193,6 +197,11 @@ class ProjectBuildingStoreyPartsController extends Controller
         ];
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if (\yii\base\Model::loadMultiple($part, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($part)) {
+                foreach ($part as $par) {
+                    $par->save();
+                }               
+            }
             if (\yii\base\Model::loadMultiple($architecture, Yii::$app->request->post()) && \yii\base\Model::validateMultiple($architecture)) {
                 foreach ($architecture as $architect) {
                     $architect->save();

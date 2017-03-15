@@ -11,9 +11,22 @@ $formatter->locale = 'sr-Latn';
 	<table class="other">
 	<?php if($volumes = $model->projectVolumes){
 		foreach ($volumes as $volume){ 
-			if($volume->volume->type=='projekat' or $volume->volume->type=='elaborat') { ?>
+			if($volume->volume->type=='projekat') { ?>
 			<tr>
 				<td class=""><?= $volume->number ?>.</td>
+				<td class="content uppercase">
+					<p><?= c($volume->name) ?></p>
+				</td>
+				<td>
+					br. <?= $volume->code ?>
+				</td>					
+			</tr>
+	<?php }
+		}
+		foreach ($volumes as $volume){ 
+			if($volume->volume->type=='elaborat') { ?>
+			<tr>
+				<td class=""></td>
 				<td class="content uppercase">
 					<p><?= c($volume->name) ?></p>
 				</td>

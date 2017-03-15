@@ -73,7 +73,7 @@ use kartik\checkbox\CheckboxX;
     </div>
 </div>
 <?php endif; ?>
-
+<?php /* ?>
 <div class="form-group">    
     <div class="col-sm-5">
         <?= $form->field($model, '[existing]description',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
@@ -85,3 +85,4 @@ use kartik\checkbox\CheckboxX;
         <?= $form->field($model_new, '[new]description',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>'']) ?>
     </div>
 </div>
+*/ ?>

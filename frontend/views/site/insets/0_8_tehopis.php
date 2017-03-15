@@ -6,12 +6,25 @@ use yii\helpers\Url;
 $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
 $formatter->nullDisplay = '--';
-$building = $model->projectBuilding;
-$architecture = $model->projectBuilding->projectBuildingCharacteristics;
-$materials = $model->projectBuilding->projectBuildingMaterials;
-$insulations = $model->projectBuilding->projectBuildingInsulations;
-$services = $model->projectBuilding->projectBuildingServices;
-$structure = $model->projectBuilding->projectBuildingStructure;
+$dual = false;
+$building = $model->projectBuilding ? $model->projectBuilding : $model->projectExBuilding;
+if($model->work=='rekonstrukcija' or $model->work=='sanacija' or $model->work=='dogradnja'){
+	$dual = true;
+	$building = $model->projectBuilding;
+	$exBuilding = $model->projectExBuilding;
+	$exArchitecture = $exBuilding->projectBuildingCharacteristics;
+	$exMaterials = $exBuilding->projectBuildingMaterials;
+	$exInsulations = $exBuilding->projectBuildingInsulations;
+	$exServices = $exBuilding->projectBuildingServices;
+	$exStructure = $exBuilding->projectBuildingStructure;
+}
+if($building){
+	$architecture = $building->projectBuildingCharacteristics;
+	$materials = $building->projectBuildingMaterials;
+	$insulations = $building->projectBuildingInsulations;
+	$services = $building->projectBuildingServices;
+	$structure = $building->projectBuildingStructure;	
+}
 $projectLot = $model->projectLot;
 $existingBuildings = $model->projectLotExistingBuildings;
 $futureDevs = $model->projectLotFutureDevelopments;
@@ -25,10 +38,9 @@ $futureDevs = $model->projectLotFutureDevelopments;
 			<td class="right titler"><b>Investitor</b></td>
 			<td class="content">
 				<?php if($projectClients = $model->projectClients){
-					foreach($projectClients as $projectClient){
-						$client = $projectClient->client; ?>
-						<b><?= $client->name ?></b>
-						<p>ul. <?= $client->location->street. ' br. ' . $client->location->number . ', ' .$client->location->city->town; ?></p>
+					foreach($projectClients as $projectClient){ ?>
+						<b><?= $projectClient->client->name ?></b>
+						<p><?= $projectClient->client->location->fullAddress ?></p>
 						<?php
 					}
 				}?>
@@ -37,23 +49,13 @@ $futureDevs = $model->projectLotFutureDevelopments;
 		<tr>
 			<td class="right"><b>Objekat</b></td>
 			<td class="content">
-				<?= $model->name ?> <?= $building->spratnost ?>
+				<?= $model->name ?> (<?= $building->spratnost ?>)
 			</td>
 		</tr>
 		<tr>
 			<td class="right"><b>Lokacija</b></td>
 			<td class="content">
-				<p>ul. <?= $model->location->street. ' br. ' . $model->location->number . ' ' .$model->location->city->town ?></p>
-				<p>kat.parc.br. 
-				<?php if($lots = $model->location->locationLots){
-					foreach($lots as $lot){
-						
-						echo $lot->lot.', ';
-					}
-				}?>
-					<?= 'K.O. '.$model->location->county0->name; ?>
-						
-					</p>
+				<p><?= $model->location->getLotAddress(true) ?></p>
 			</td>
 		</tr>
 		<tr>
@@ -66,12 +68,12 @@ $futureDevs = $model->projectLotFutureDevelopments;
  
 	<h3 class="sub">Opšti podaci i lokacija</h3>
 		<?php if($model->prostorniPlan): // ako postoji prostorni plan ?>
-			<h4 class="nopadd"><i class="fa fa-bars"></i> Prostorni plan</h4>
-				<p>Naziv plana kome pripada parcela na kojoj je predviđena izgradnja objekta je: <?= $model->prostorniPlan->name ?>.</p>
+			<h4 class="nopadd">Prostorni plan</h4>
+				<p>Naziv plana kome pripada parcela na kojoj je predviđena <?= $model->projectTypeOfWorks ?> objekta je: <?= $model->prostorniPlan->name ?>.</p>
 		<?php endif; ?>
 		<?php if($model->informacijaOLokaciji and $model->phase=='idr'): // ako postoji informacija o lokaciji ?>
 			<h4 class="nopadd"><i class="fa fa-bars"></i> Informacija o lokaciji</h4>
-				<p>Na osnovu Informacije o lokaciji br. <?= $model->informacijaOLokaciji->number ?> izdate od strane <?= $model->informacijaOLokaciji->authority->name ?>, dana <?= $formatter->asDate($model->informacijaOLokaciji->date, 'php:j.n.Y.') ?> godine, pristupa se izradi idejnog rešenja za objekat <?= $building->name ?>, u ul. <?= $model->location->street. ' br. ' . $model->location->number . ', ' .$model->location->city->town ?>.</p>
+				<p>Na osnovu Informacije o lokaciji br. <?= $model->informacijaOLokaciji->number ?> izdate od strane <?= $model->informacijaOLokaciji->authority->name ?>, dana <?= $formatter->asDate($model->informacijaOLokaciji->date, 'php:j.n.Y.') ?> godine, pristupa se izradi idejnog rešenja za objekat <?= $building->name ?>, u <?= $model->location->fullAddress ?>.</p>
 		<?php endif; ?>
 
 		<!-- PODACI O KATASTARSKOJ PARCELI -->
@@ -82,19 +84,16 @@ $futureDevs = $model->projectLotFutureDevelopments;
 			<?php endif; ?>
 
 				<!-- FORMIRANJE GRAĐEVINSKE PARCELE -->
-				<p>Predmetni objekat se nalazi na građevinskoj parceli koja je formirana od <?= (count($model->location->locationLots)==1) ? 'katastarske parcele broj '.$model->location->locationLots[0]->lot. ', ' : 'katastarskih parcela broj '; ?>
-			<?php if(count($model->location->locationLots)>1){
-					foreach($model->location->locationLots as $lot){
-						echo $lot->lot.', ';
-					}
-			} ?>K.O. <?= $model->location->county0->name ?>
+				<p>Predmetni objekat se nalazi na građevinskoj parceli koja je formirana od <?= $model->location->getLot(2) ?>
 			<?php if($model->resenjeOObelezavanjuParcele){
 				echo ', na osnovu Rešenja o obeležavanju građevinske parcele broj '.$model->resenjeOObelezavanjuParcele->number. ' od '.$formatter->asDate($model->resenjeOObelezavanjuParcele->date, 'php:j.n.Y.') . ' izdatog od strane '. $model->resenjeOObelezavanjuParcele->authority->name;
 			} ?>
 			<?php if($model->potvrdaOFormiranjuParcele){
 				if($model->resenjeOObelezavanjuParcele){echo ' i';}
 				echo ' na osnovu potvrde o formiranju građevinske parcele broj '.$model->potvrdaOFormiranjuParcele->number. ' od '.$formatter->asDate($model->potvrdaOFormiranjuParcele->date, 'php:j.n.Y.') . ' izdatog od strane '. $model->potvrdaOFormiranjuParcele->authority->name;
-			} ?>. Građevinska parcela se nalazi u ulici <?= $model->location->street. ' br. ' . $model->location->number . ', ' .$model->location->city->town ?>.</p>
+			} ?>. Građevinska parcela se nalazi u <?= $model->location->fullAddress ?>.</p>
+
+
 				<!-- OPIS PARCELE -->
 				<?= $projectLot->description ? '<p>'.$projectLot->description.'</p>' : null; ?>
 				<!-- POZICIJA GRAĐEVINSKE PARCELE -->
@@ -113,13 +112,14 @@ $futureDevs = $model->projectLotFutureDevelopments;
 					<li>kota terena: <?= $formatter->format($projectLot->ground_level, ['decimal',2]) ?> m,</li>
 					<li>kota nivelete: <?= $formatter->format($projectLot->road_level, ['decimal',2]) ?> m,</li>
 					<li>kota maksimalnih podzemnih voda: <?= $formatter->format($projectLot->underwater_level, ['decimal',2]) ?> m.</li>
+					<li>kota minimalnih podzemnih voda: <?= $formatter->format($projectLot->underwater_level_min, ['decimal',2]) ?> m.</li>
 				</ul>
 				<!-- PRAVNO-VLASNIČKA STRUKTURA PARCELE -->
 				<?= $projectLot->ownership ? '<p>'.$projectLot->ownership.'</p>' : null; ?>
 				<?= $projectLot->legal ? '<p>'.$projectLot->legal.'</p>' : null; ?>
 				<!-- OSTALE KARAKTERISTIKE GRAĐEVINSKE PARCELE -->
 				<?= $projectLot->note ? '<p>'.$projectLot->note.'</p>' : null; ?>
-
+			
 		<?php if($existingBuildings): ?>
 			<h4 class="nopadd">Postojeći objekti na parceli</h4>
 			<?php if(count($existingBuildings)==1): ?>
@@ -222,7 +222,7 @@ $futureDevs = $model->projectLotFutureDevelopments;
 
 		<h4 class="nopadd">Prostorna struktura</h4>
 		<?php foreach($model->projectBuilding->projectBuildingStoreys as $storey): ?>
-		<p>Na koti <?= ($storey->level)==0 ? '&plusmn;' : null ?><?= ($storey->level)>0 ? '+' : null ?><?= $formatter->format($storey->level, ['decimal',2]) ?>  (aps. kota <?= ($storey->level+$projectLot->ground_level)>0 ? '+' : null ?><?= $formatter->format($storey->level+$projectLot->ground_level, ['decimal',2]) ?>) <b><?= $storey->name ?></b>, predviđene su sledeće prostorno-funkcionalne celine, odnosno jedinice:
+		<p>Na koti <?= ($storey->level)==0 ? '&plusmn;' : null ?><?= ($storey->level)>0 ? '+' : null ?><?= $formatter->format($storey->level, ['decimal',2]) ?>  (aps. kota <?= ($storey->level+$projectLot->ground_level)>0 ? '+' : null ?><?= $formatter->format($storey->level+$projectLot->ground_level, ['decimal',2]) ?>) <b><?= $storey->name ?></b>, spratne visine <?= $formatter->format($storey->height, ['decimal',2]) ?>m, predviđene su sledeće prostorno-funkcionalne celine, odnosno jedinice:
 				<?php if($storey->brStanova){echo 'stambene jedinice ('.$storey->brStanova .'), ' ;} ?>
 				<?php if($storey->brPoslProstora){echo 'poslovni prostori ('.$storey->brPoslProstora .'), ';} ?>
 				<?php if($storey->c){echo $storey->c->fullType.' (';
@@ -304,12 +304,12 @@ $futureDevs = $model->projectLotFutureDevelopments;
 		</div>
 
 		<h4 class="sub">Arhitektonsko oblikovanje</h4>
-			<?= $architecture->context ? '<h5 class="nopadd">Arhitektonski kontekst</h5><p>'.$architecture->access.'</p>' : null; ?>
-			<?= $architecture->architecture ? '<h5 class="nopadd">Arhitektonsko oblikovanje</h5><p>'.$architecture->access.'</p>' : null; ?>
-			<?= $architecture->style ? '<h5 class="nopadd">Arhitektonski stil i izraz</h5><p>'.$architecture->access.'</p>' : null; ?>
+			<?= $architecture->context ? '<h5 class="nopadd">Arhitektonski kontekst</h5><p>'.$architecture->context.'</p>' : null; ?>
+			<?= $architecture->architecture ? '<h5 class="nopadd">Arhitektonsko oblikovanje</h5><p>'.$architecture->architecture.'</p>' : null; ?>
+			<?= $architecture->style ? '<h5 class="nopadd">Arhitektonski stil i izraz</h5><p>'.$architecture->style.'</p>' : null; ?>
 			<?= $architecture->environment ? '<h5 class="nopadd">Odnos prema životnoj sredini</h5><p>'.$architecture->environment.'</p>' : null; ?>
 			<?= $architecture->lights ? '<h5 class="nopadd">Prirodno osvetljenje</h5><p>'.$architecture->lights.'</p>' : null; ?>
-			<?= $architecture->ventilation ? '<h5 class="nopadd">Provertravanje</h5><p>'.$architecture->ventilation.'</p>' : null; ?>
+			<?= $architecture->ventilation ? '<h5 class="nopadd">Provetravanje</h5><p>'.$architecture->ventilation.'</p>' : null; ?>
 
 	<h3 class="sub">Konstrukcija</h3>
 		<?php if($structure->construction or $structure->foundation): ?>

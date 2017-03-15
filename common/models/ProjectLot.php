@@ -52,8 +52,8 @@ class ProjectLot extends \yii\db\ActiveRecord
     {
         return [
             [['project_id'], 'required'],
-            [['project_id', 'conditions', 'parking_spaces', 'parking_disabled'], 'integer'],
-            [['width', 'length', 'area', 'ground_level', 'road_level', 'underwater_level', 'green_area_reg', 'green_area', 'occupancy_reg', 'built_index_reg'], 'number'],
+            [['project_id', 'conditions', 'parking_spaces', 'parking_disabled', 'climate', 'seismic'], 'integer'],
+            [['width', 'length', 'area', 'ground_level', 'road_level', 'underwater_level', 'underwater_level_min', 'green_area_reg', 'green_area', 'occupancy_reg', 'built_index_reg'], 'number'],
             [['disposition', 'type', 'ground', 'access', 'ownership', 'adjacent_border', 'services', 'description', 'note', 'legal', 'parking'], 'string'],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
         ];
@@ -72,9 +72,12 @@ class ProjectLot extends \yii\db\ActiveRecord
             'disposition' => Yii::t('app', 'Pozicija i položaj parcele'),
             'type' => Yii::t('app', 'Vrsta parcele'),
             'area' => Yii::t('app', 'Površina parcele'),
+            'climate' => Yii::t('app', 'Klimatska zona'),
+            'seismic' => Yii::t('app', 'Seizmička zona'),
             'ground_level' => Yii::t('app', 'Kota terena'),
             'road_level' => Yii::t('app', 'Kota nivelete'),
             'underwater_level' => Yii::t('app', 'Kota maksimalnih podzemnih voda'),
+            'underwater_level_min' => Yii::t('app', 'Kota minimalnih podzemnih voda'),
             'ground' => Yii::t('app', 'Teren'),
             'access' => Yii::t('app', 'Pristup parceli'),
             'ownership' => Yii::t('app', 'Vlasnička struktura parcele'),

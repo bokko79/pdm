@@ -18,7 +18,7 @@ class PostsSearch extends Posts
     public function rules()
     {
         return [
-            [['id', 'profile_id', 'file_id', 'parent_id', 'comment_status', 'next_post', 'time', 'update_time'], 'integer'],
+            [['id', 'profile_id', 'file_id', 'category_id', 'comment_status', 'next_post', 'time', 'update_time'], 'integer'],
             [['lang_code', 'title', 'subtitle', 'content', 'excerpt', 'type', 'status'], 'safe'],
         ];
     }
@@ -62,7 +62,7 @@ class PostsSearch extends Posts
             'id' => $this->id,
             'profile_id' => $this->profile_id,
             'file_id' => $this->file_id,
-            'parent_id' => $this->parent_id,
+            'category_id' => $this->category_id,
             'comment_status' => $this->comment_status,
             'next_post' => $this->next_post,
             'time' => $this->time,

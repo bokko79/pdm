@@ -14,40 +14,52 @@ use kartik\widgets\FileInput;
 <hr>
 
 <?php if($model->project->work=='dogradnja' or $model->project->work=='sanacija' or $model->project->work=='rekonstrukcija'): ?>
+<div class="form-group" style="margin:40px; 0">
+    
+    <div class="col-sm-5 center">
+        <h4>Postojeće stanje</h4>
+    </div>
+    <div class="col-sm-2">
+        
+    </div>
+    <div class="col-sm-5 center">
+        <h4>Predviđeno stanje stanje</h4>
+    </div>
+</div>
 
 <div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]ridge_orientation',['showLabels'=>false])->textInput(['maxlength' => true, 'placeholder'=>'npr. S-J ili JZ-SI'])->hint('Uneti orijenataciju slemena krova, ukoliko je krov objekta u nagibu. Uneti samo oznake strana sveta, npr. S za sever, J za jug, itd.') ?>
+        <?= $form->field($model, '[existing]ridge_orientation',['showLabels'=>false])->textInput(['maxlength' => true, 'placeholder'=>$model->placeholderRidgeOrientation])->hint($model->hintRidgeOrientation) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'ridge_orientation', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]ridge_orientation',['showLabels'=>false])->textInput(['maxlength' => true, 'placeholder'=>'npr. S-J ili JZ-SI'])->hint('Uneti orijenataciju slemena krova, ukoliko je krov objekta u nagibu. Uneti samo oznake strana sveta, npr. S za sever, J za jug, itd.') ?>
+        <?= $form->field($model_new, '[new]ridge_orientation',['showLabels'=>false])->textInput(['maxlength' => true, 'placeholder'=>$model->placeholderRidgeOrientation])->hint($model->hintRidgeOrientation) ?>
     </div>
 </div>
 
 <div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]roof_pitch',['showLabels'=>false, 'addon' => ['prepend' => ['content'=>'<sup>o</sup>']]])->input('number', ['style'=>'width:100%'])->hint('Nagib krovnih ravni u stepenima. Npr. 30<sup>o</sup>') ?>
+        <?= $form->field($model, '[existing]roof_pitch',['showLabels'=>false, 'addon' => ['prepend' => ['content'=>'<sup>o</sup>']]])->input('number', ['style'=>'width:100%'])->hint($model->hintRoofPitch) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'roof_pitch', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]roof_pitch',['showLabels'=>false, 'addon' => ['prepend' => ['content'=>'<sup>o</sup>']]])->input('number', ['style'=>'width:100%'])->hint('Nagib krovnih ravni u stepenima. Npr. 30<sup>o</sup>') ?>
+        <?= $form->field($model_new, '[new]roof_pitch',['showLabels'=>false, 'addon' => ['prepend' => ['content'=>'<sup>o</sup>']]])->input('number', ['style'=>'width:100%'])->hint($model->hintRoofPitch) ?>
     </div>
 </div>
 
 <div class="form-group">    
     <div class="col-sm-5">
-        <?= $form->field($model, '[existing]characteristics',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>''])->hint('Tekst koji će se pojaviti u glavnoj svesci, u prilogu 0.7: Ostale karakteristike objekta. Ukoliko postoje neke dodatne, specifične karakteristike objekta, uneti tekstualni opis.') ?>
+        <?= $form->field($model, '[existing]characteristics',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderCharacteristics])->hint($model->hintCharacteristics) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'characteristics', []) ?>
     </div>
     <div class="col-sm-5">
-        <?= $form->field($model_new, '[new]characteristics',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>''])->hint('Tekst koji će se pojaviti u glavnoj svesci, u prilogu 0.7: Ostale karakteristike objekta. Ukoliko postoje neke dodatne, specifične karakteristike objekta, uneti tekstualni opis.') ?>
+        <?= $form->field($model_new, '[new]characteristics',['showLabels'=>false])->textarea(['rows' => 6, 'placeholder'=>$model->placeholderCharacteristics])->hint($model->hintCharacteristics) ?>
     </div>
 </div>
 
@@ -68,7 +80,7 @@ use kartik\widgets\FileInput;
                 'maxImageHeight'=> 60,
                 'resizePreference'=> 'width',
             ],
-        ])->hint('Nije obavezno.') ?>
+        ])->hint($model->hintBuildFile) ?>
     </div>
     <div class="col-sm-2 center">
         <?= Html::activeLabel($model, 'buildFile', []) ?>
@@ -89,7 +101,7 @@ use kartik\widgets\FileInput;
                 'maxImageHeight'=> 60,
                 'resizePreference'=> 'width',
             ],
-        ])->hint('Nije obavezno.') ?>
+        ])->hint($model->hintBuildFile) ?>
     </div>
 </div>
 
@@ -99,12 +111,12 @@ use kartik\widgets\FileInput;
 
 <?php else: ?>
 
-    <?= $form->field($model, 'ridge_orientation')->textInput(['maxlength' => true, 'placeholder'=>'npr. S-J ili JZ-SI'])->hint('Uneti orijenataciju slemena krova, ukoliko je krov objekta u nagibu. Uneti samo oznake strana sveta, npr. S za sever, J za jug, itd.') ?>
+    <?= $form->field($model, 'ridge_orientation')->textInput(['maxlength' => true, 'placeholder'=>$model->placeholderRidgeOrientation])->hint($model->hintRidgeOrientation) ?>
 
     <?= $form->field($model, 'roof_pitch', [
-                'addon' => ['prepend' => ['content'=>'<sup>o</sup>']]])->input('number', ['style'=>'width:30%'])->hint('Nagib krovnih ravni u stepenima. Npr. 30<sup>o</sup>') ?>
+                'addon' => ['prepend' => ['content'=>'<sup>o</sup>']]])->input('number', ['style'=>'width:30%'])->hint($model->hintRoofPitch) ?>
 
-    <?= $form->field($model, 'characteristics')->textarea(['rows' => 6, 'placeholder'=>''])->hint('Tekst koji će se pojaviti u glavnoj svesci, u prilogu 0.7: Ostale karakteristike objekta. Ukoliko postoje neke dodatne, specifične karakteristike objekta, uneti tekstualni opis.') ?>
+    <?= $form->field($model, 'characteristics')->textarea(['rows' => 6, 'placeholder'=>$model->placeholderCharacteristics])->hint($model->hintCharacteristics) ?>
 
     
 
@@ -123,6 +135,6 @@ use kartik\widgets\FileInput;
                 'maxImageHeight'=> 60,
                 'resizePreference'=> 'width',
             ],
-        ])->hint('Nije obavezno.') ?>
+        ])->hint($model->hintBuildFile) ?>
 
 <?php endif; ?>
