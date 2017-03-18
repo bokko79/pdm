@@ -88,12 +88,13 @@ class ProjectsController extends Controller
     {
         $model = new Projects();
         $location = new \common\models\Locations();
-
+        //print_r($model); die();
         if ($model->load(Yii::$app->request->post()) and $location->load(Yii::$app->request->post()) and $location->save()) {                
             $model->user_id = Yii::$app->user->id;
             $model->location_id = $location->id;
             $model->status = 'active';
             $model->year = date('Y');
+            //$model->exchange = 124.5;
             $model->time = time();
             if($model->save()){
                 // initialize project
@@ -113,6 +114,8 @@ class ProjectsController extends Controller
                 } 
                 \yii\helpers\FileHelper::createDirectory('images/projects/'.$model->year.'/'.$model->id);
                 return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                throw new NotFoundHttpException('The requested page does not exist.');
             }
                 
         } else {

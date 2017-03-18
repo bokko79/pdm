@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel common\models\EngineersSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Projektanti');
+$this->title = Yii::t('app', 'Inženjeri');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

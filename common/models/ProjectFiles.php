@@ -73,9 +73,9 @@ class ProjectFiles extends \yii\db\ActiveRecord
            
             $fileName = $this->id . '_' . time();            
             if($this->docFile->extension!='pdf'){
-                $this->docFile->saveAs('images/projects/'.date('Y').'/'.$this->project_id.'/'.$fileName . '1.' . $this->docFile->extension); 
+                $this->docFile->saveAs('images/projects/'.$this->project->year.'/'.$this->project_id.'/'.$fileName . '1.' . $this->docFile->extension); 
             } else {
-                $this->docFile->saveAs('images/projects/'.date('Y').'/'.$this->project_id.'/'.$fileName . '.' . $this->docFile->extension);
+                $this->docFile->saveAs('images/projects/'.$this->project->year.'/'.$this->project_id.'/'.$fileName . '.' . $this->docFile->extension);
             }        
             
             $image = new \common\models\Files();
@@ -84,8 +84,8 @@ class ProjectFiles extends \yii\db\ActiveRecord
             $image->time = time();
             
             if($this->docFile->extension!='pdf'){
-                $thumb = 'images/projects/'.date('Y').'/'.$this->project_id.'/'.$fileName.'1.'.$this->docFile->extension;
-                Image::thumbnail($thumb, 800, 640)->save(\Yii::getAlias('images/projects/'.date('Y').'/'.$this->project_id.'/'.$fileName.'.'.$this->docFile->extension), ['quality' => 80]); 
+                $thumb = 'images/projects/'.$this->project->year.'/'.$this->project_id.'/'.$fileName.'1.'.$this->docFile->extension;
+                Image::thumbnail($thumb, 800, 640)->save(\Yii::getAlias('images/projects/'.$this->project->year.'/'.$this->project_id.'/'.$fileName.'.'.$this->docFile->extension), ['quality' => 80]); 
                 unlink(\Yii::getAlias($thumb));
             }  
             $image->save();

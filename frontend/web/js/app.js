@@ -87,7 +87,13 @@ $(document).ready(function(){
       $(this).closest('.card_container').next('.this-one').toggleClass('fa-arrow-circle-down');
   });
 
- 
+function showSecondary() {
+  $(".button_to_show_secondary").click(function(){
+      $(this).closest('.primary-context').next().slideToggle();
+      $(this).closest('.card_container').next('.this-one').toggleClass('fa-arrow-circle-right');
+      $(this).closest('.card_container').next('.this-one').toggleClass('fa-arrow-circle-down');
+  });
+} 
 
   // reset animate !important
   $(window).bind('mousewheel', function() {
@@ -128,10 +134,17 @@ $(document).ready(function(){
   $("[id^='init-rooms-modal']").one("show.bs.modal", function(e) {
     var id = $(this).attr('id');
     var lastChar = id.replace('init-rooms-modal', '');
-    console.log(lastChar);
     $(this).find(".modal-body").load('/project-building-storey-parts/init-rooms?id=' + lastChar, function() {
       checkAllOrNone();
       selectRooms();
+    });
+  });
+  $("[id^='work-modal']").one("show.bs.modal", function(e) {
+    var id = $(this).attr('id');
+    var lastChar = id.replace('work-modal', '');
+    var word = lastChar.split("_");
+    $(this).find(".modal-body").load('/project-qs/init-works?id=' + word[0] + '&project=' + word[1], function() {
+      showSecondary();
     });
   });
  

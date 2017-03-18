@@ -16,10 +16,10 @@ use kartik\grid\GridView;
             <div class="head">Crteži
                 <div class="action-area normal-case">
                 <?php if($model->projectVolumeDrawings): ?>
-                  <?= Html::a('<i class="fa fa-print"></i> PDF Tablice', Url::to(['/site/tablice', 'id'=>$model->project_id, 'volume'=>$model->id]), ['class'=>'btn btn-primary', 'target'=>'_blank']) ?>
+                  <?= Html::a('<i class="fa fa-print"></i> PDF Tablice', Url::to(['/site/tablice', 'id'=>$model->project_id, 'volume'=>$model->id]), ['class'=>'btn btn-primary shadow', 'target'=>'_blank']) ?>
                   <?php endif; ?> 
                   <?php if($model->volume_id==2): ?>
-                  <?= Html::a('<i class="fa fa-print"></i> PDF Površine', Url::to(['/site/povrsine', 'id'=>$model->project_id, 'volume'=>$model->id]), ['class'=>'btn btn-warning', 'target'=>'_blank']) ?>
+                  <?= Html::a('<i class="fa fa-print"></i> PDF Površine', Url::to(['/site/povrsine', 'id'=>$model->project_id, 'volume'=>$model->id]), ['class'=>'btn btn-warning shadow', 'target'=>'_blank']) ?>
                   <?php endif; ?>   
                   </div>
             </div>
@@ -111,8 +111,8 @@ use kartik\grid\GridView;
                        'format' => 'raw',
                        'width' =>'50px',
                        'value'=>function ($data) {
-                            return Html::a('<i class="fa fa-cog"></i>', ['/project-volume-drawings/update', 'id'=>$data->id], ['class' => 'btn btn-success btn-sm']). ' '.Html::a(Yii::t('app', '<i class="fa fa-power-off"></i>'), ['/project-volume-drawings/delete', 'id' => $data->id], [
-                'class' => 'btn btn-danger btn-sm',
+                            return Html::a('<i class="fa fa-cog"></i>', ['/project-volume-drawings/update', 'id'=>$data->id], ['class' => 'btn btn-success btn-sm shadow']). ' '.Html::a(Yii::t('app', '<i class="fa fa-power-off"></i>'), ['/project-volume-drawings/delete', 'id' => $data->id], [
+                'class' => 'btn btn-danger btn-sm shadow',
                 'data' => [
                     'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
                     'method' => 'post',

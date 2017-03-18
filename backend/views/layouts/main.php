@@ -59,6 +59,13 @@ AppAsset::register($this);
                 ['label' => 'Post Categories', 'url' => ['/post-categories/index']],
             ],
         ],
+        ['label' => 'Predmer', 
+            'items' => [
+                ['label' => 'Podkategorije', 'url' => ['/qs-subworks/index']],
+                ['label' => 'Akcije', 'url' => ['/qs-actions/index']],
+                ['label' => 'Pozicije', 'url' => ['/qs-positions/index']],
+            ],
+        ],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];

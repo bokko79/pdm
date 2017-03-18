@@ -48,7 +48,7 @@ $v_id = [];
           <div class="card_container record-full grid-item fadeInUp animated" id="">
             <div class="primary-context gray normal">
                 <div class="head"><i class="fa fa-file"></i> <?= Html::encode($this->title) ?> <i class="fa this-one fa-arrow-circle-right"></i>
-                <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj svesku', ['create', 'ProjectVolumes[project_id]'=>$model->id], ['class' => 'btn btn-success']) ?>
+                <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj svesku', ['create', 'ProjectVolumes[project_id]'=>$model->id], ['class' => 'btn btn-success shadow']) ?>
                     </div>
                 </div>
                 <div class="subhead">Delovi projektne tehničke dokumentacije.</div>

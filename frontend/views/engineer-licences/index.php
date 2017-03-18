@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="card_container record-full transparent no-shadow grid-item fadeInUp animated" id="">
     <div class="primary-context  normal">
         <div class="head"><h1 style="display: inline;"><i class="fa fa-user-circle-o"></i> <?= Html::encode($this->title) ?></h1>
-        <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Novi licencni paket inženjera'), ['create', 'EngineerLicences[engineer_id]'=>$engineer->id], ['class' => 'btn btn-primary' ]) ?>
+        <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Novi licencni paket inženjera'), ['create', 'EngineerLicences[engineer_id]'=>$engineer->id], ['class' => 'btn btn-primary shadow' ]) ?>
             </div>
         </div>
         <div class="subhead">Lista licencnih paketa inženjera.</div>
@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="secondary-context none">
                     <?php                                
-                            echo Html::a('Podesi licencni paket', Url::to(['/engineer-licences/update', 'id'=>$engineerLicence->id]), ['class' => 'btn btn-success btn-sm right']).'<hr>';
+                            echo Html::a('Podesi licencni paket', Url::to(['/engineer-licences/update', 'id'=>$engineerLicence->id]), ['class' => 'btn btn-success btn-sm right shadow']).'<hr>';
                             echo $engineerLicence->copy ? Html::img('/images/legal_files/licences/'.$engineerLicence->copy->name) : null;
                             echo $engineerLicence->conf ? Html::img('/images/legal_files/licences/'.$engineerLicence->conf->name) : null;
                             echo $engineerLicence->stamp ? Html::img('/images/legal_files/licences/'.$engineerLicence->stamp->name) : null; ?>

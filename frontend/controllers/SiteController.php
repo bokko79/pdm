@@ -645,4 +645,24 @@ class SiteController extends Controller
         exit;
     }   
 
+
+    public function actionPredmer($id, $format='A4', $orientation='P')
+    {
+        $model = \common\models\Projects::findOne($id);
+        $positions = $model->projectQs;
+        $mpdf = new mpdf('utf-8', $format.'-'.$orientation);          
+        //$mpdf->tMargin = 35;           
+        $mpdf->backupSubsFont = array('arial', 'serif'); 
+        //$mpdf->defaultheaderline = 0; 
+        $mpdf->title = $model->code . ': Predmer i predračun radova';  
+
+       // $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$model->practice->memo, ['style'=>'margin-bottom:20px;']));
+
+        $mpdf->WriteHTML($this->renderPartial('pdf/_header', ['model'=>$model, 'volume'=>$volume], true), 0);
+        $mpdf->WriteHTML($this->renderPartial('qs/quantities', ['model'=>$model, 'volume'=>$volume], true), 0);
+        $mpdf->WriteHTML($this->renderPartial('pdf/_footer', ['model'=>$model, 'volume'=>$volume], true), 0);
+      
+        $mpdf->Output($model->code . ' - Tablice površina.pdf', 'I');
+        exit;
+    }
 }

@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                'attribute'=>'name',
-               'format' => 'html',
+               'format' => 'raw',
                'value'=>function ($data) {
                     return Html::a($data->name, ['/site/download', 'path'=>'/images/regulations/'.$data->id.'.pdf']);
                 },

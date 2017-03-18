@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="card_container record-full transparent no-shadow grid-item fadeInUp animated" id="">
     <div class="primary-context  normal">
         <div class="head"><h1 style="display: inline;"><i class="fa fa-building"></i> <?= Html::encode($this->title) ?></h1>
-        <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Novi investitor'), ['create'], ['class' => 'btn btn-success' ]) ?>
+        <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Novi investitor'), ['create'], ['class' => 'btn btn-success shadow' ]) ?>
             </div>
         </div>
         <div class="subhead">Lista registrovanih investitora.</div>

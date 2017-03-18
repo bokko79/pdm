@@ -90,7 +90,7 @@ class EngineerLicencesController extends Controller
                     $model->stamp_id = $imagestampFile;
                 }                
                 $model->save();
-                return $this->redirect(['index', 'engineer_id' => $model->engineer_id]);
+                return $this->redirect(['engineers/view', 'id' => $model->engineer_id, '#'=>'w4-tab4']);
             } 
         } else {
             return $this->render('create', [
@@ -115,19 +115,22 @@ class EngineerLicencesController extends Controller
             $model->stampFile = UploadedFile::getInstance($model, 'stampFile');
             if($model->save()){
                 if ($model->copyFile) {
+                    $model->copy ? unlink(\Yii::getAlias('images/legal_files/licences/'.$model->copy->name)) : null;
                     $imagecopyFile = $model->uploadCopyFile();
                     $model->copy_id = $imagecopyFile;
                 }                
                 if ($model->confFile) {
+                    $model->conf ? unlink(\Yii::getAlias('images/legal_files/licences/'.$model->conf->name)) : null;
                     $imageconfFile = $model->uploadConfFile();
                     $model->conf_id = $imageconfFile;
                 }                
                 if ($model->stampFile) {
+                    $model->stamp ? unlink(\Yii::getAlias('images/legal_files/licences/'.$model->stamp->name)) : null;
                     $imagestampFile = $model->uploadStampFile();
                     $model->stamp_id = $imagestampFile;
                 }                
                 $model->save();
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['engineers/view', 'id' => $model->engineer_id, '#'=>'w4-tab4']);
             } 
         } else {
             return $this->render('update', [
@@ -144,9 +147,15 @@ class EngineerLicencesController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
+
+        $model->copy ? unlink(\Yii::getAlias('images/legal_files/licences/'.$model->copy->name)) : null;
+        $model->conf ? unlink(\Yii::getAlias('images/legal_files/licences/'.$model->conf->name)) : null;
+        $model->stamp ? unlink(\Yii::getAlias('images/legal_files/licences/'.$model->stamp->name)) : null;
+
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['engineers/view', 'id' => $model->engineer_id, '#'=>'w4-tab4']);
     }
 
     /**

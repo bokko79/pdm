@@ -79,7 +79,7 @@ class LegalFilesController extends Controller
                         $model->file_id = $image;
                         $model->save();
                     }                    
-                    return $this->redirect(['view', 'id' => $model->id]);
+                    return $this->redirect([''.$model->entity.'s/view', 'id' => $model->entity_id, '#'=>'w4-tab3']);
                 }                    
             } else {
                 return $this->render('create', [
@@ -104,10 +104,14 @@ class LegalFilesController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->docFile = UploadedFile::getInstance($model, 'docFile');
             if($model->save()){
-                if ($model->docFile) {$image=$model->uploadFiles();}
-                $model->file_id = $image;
+                if ($model->docFile) {
+                    $model->file ? unlink(\Yii::getAlias('images/legal_files/'.$model->folder.'/'.$model->file->name)) : null;
+                    $image=$model->uploadFiles();
+                    $model->file_id = $image;
+                }
+                
                 $model->save();
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect([''.$model->entity.'s/view', 'id' => $model->entity_id, '#'=>'w4-tab3']);
             }                    
         } else {
             return $this->render('update', [
@@ -125,9 +129,11 @@ class LegalFilesController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
+        $model->file ? unlink(\Yii::getAlias('images/legal_files/'.$model->folder.'/'.$model->file->name)) : null;
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect([''.$model->entity.'s/view', 'id' => $model->entity_id, '#'=>'w4-tab3']);
     }
 
     /**

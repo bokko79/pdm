@@ -65,6 +65,8 @@ class PracticesController extends Controller
      */
     public function actionView($id)
     {
+        //$this->layout = 'profile';
+        
         $model = $this->findModel($id);
         $query_pe = \common\models\PracticeEngineers::find()->where(['practice_id' => $id]);
         $query = \common\models\Projects::find()->where(['practice_id' => $id]);

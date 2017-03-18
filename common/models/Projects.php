@@ -54,6 +54,8 @@ class Projects extends \yii\db\ActiveRecord
     public $storey;
     public $part_type;
 
+    public $exchange = 124.5;
+
     /**
      * @inheritdoc
      */
@@ -90,6 +92,7 @@ class Projects extends \yii\db\ActiveRecord
                                             }, 'whenClient' => "function (attribute, value) {
                                                 return $('#work-id').val() == 'adaptacija';
                                             }"],
+            [['exchange'], 'number'],
         ];
     }
 
@@ -228,6 +231,14 @@ class Projects extends \yii\db\ActiveRecord
     public function getProjectLotFutureDevelopments()
     {
         return $this->hasMany(ProjectLotFutureDevelopments::className(), ['project_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectQs()
+    {
+        return $this->hasMany(ProjectQs::className(), ['project_id' => 'id']);
     }
 
     /**
@@ -936,5 +947,90 @@ class Projects extends \yii\db\ActiveRecord
             $out[$key]['name'] =\common\models\Projects::getProjectPhaseFullname($r);
         }
         return $out;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjekatArhitekture()
+    {
+        $arh = \common\models\ProjectVolumes::find()->where('project_id='.$this->id.' and volume_id=2')->one();
+        return $arh ? $arh : null;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectQsWorks()
+    {
+        $pqw = [];
+
+        $works = \common\models\QsWorks::find()->all();
+        foreach($works as $work){
+            if(count($work->posOfProject($this->id))>0){
+                $pqw[] = $work;
+            }                           
+        }
+        return $pqw;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectDistinctWorks()
+    {
+        return \common\models\ProjectQs::find()->select('work_id')->where('project_id='.$this->id)->distinct()->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectDistinctSubworks($work)
+    {
+        return \common\models\ProjectQs::find()->select('subwork_id')->where('project_id='.$this->id. ' and work_id='.$work)->distinct()->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectDistinctPositions($subwork)
+    {
+        return \common\models\ProjectQs::find()->where('project_id='.$this->id. ' and subwork_id='.$subwork)->distinct()->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectWorkPositions($work)
+    {
+        return \common\models\ProjectQs::find()->where('project_id='.$this->id. ' and work_id='.$work)->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectWorkTotalPrice($work)
+    {
+        $total = 0;
+        if($this->getProjectWorkPositions($work)){
+            foreach ($this->getProjectWorkPositions($work) as $key => $pos) {
+                $total += ($pos->position->price*$this->exchange*$pos->qty);
+            }
+        }
+        return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectTotalPrice($work)
+    {
+        $total = 0;
+        if($t = $this->getProjectDistinctWorks()){
+            foreach ($t as $woo) {
+                $total += $this->getProjectWorkTotalPrice($woo->work_id);
+            }
+        }
+        return $total;
     }
 }

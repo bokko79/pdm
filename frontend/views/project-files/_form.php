@@ -100,7 +100,7 @@ use kartik\datecontrol\DateControl;
                 'maxImageHeight'=> 60,
                 'resizePreference'=> 'width',
             ],
-        ])->hint(($model->file) ? Html::img('/images/projects/files/'.$model->file->name, ['style'=>'max-height:100px;']) : 'Možete dodati skenirani dokument u formatu .PDF, .JPG, .PNG, .GIF.') ?>
+        ])->hint(($model->file) ? Html::img('/images/projects/'.$model->project->year.'/'.$model->project_id.'/'.$model->file->name, ['style'=>'max-height:100px;']) : 'Možete dodati skenirani dokument u formatu .PDF, .JPG, .PNG, .GIF.') ?>
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

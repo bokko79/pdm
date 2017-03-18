@@ -101,6 +101,7 @@ class ProjectFilesController extends Controller
             $model->docFile = UploadedFile::getInstance($model, 'docFile');
             if($model->save()){
                 if ($model->docFile) {
+                    $model->file ? unlink(\Yii::getAlias('images/projects/'.$model->project->year.'/'.$model->project_id.'/'.$model->file->name)) : null;
                     $image = $model->uploadFiles();
                     $model->file_id = $image;
                     $model->save();
@@ -123,9 +124,10 @@ class ProjectFilesController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
+        $model->file ? unlink(\Yii::getAlias('images/projects/'.$model->project->year.'/'.$model->project_id.'/'.$model->file->name)) : null;
         $this->findModel($id)->delete();
 
-        return $this->redirect(['/projects/view', 'id' => $model->project_id]);
+        return $this->redirect(['/projects/view', 'id' => $model->project_id, '#'=>'w1-tab2']);
     }
 
     /**

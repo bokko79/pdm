@@ -77,6 +77,8 @@ class PostsSearch extends Posts
             ->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'status', $this->status]);
 
+        $query->orderBy('time DESC');
+
         return $dataProvider;
     }
 }

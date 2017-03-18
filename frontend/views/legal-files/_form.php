@@ -38,6 +38,8 @@ use kartik\widgets\FileInput;
     <?php // $form->field($model, 'entity_id')->textInput(['maxlength' => true]) ?>
 
     <?php if($model->type!='licence_no'): ?>
+
+        <?= $model->file ? '<div class="col-md-offset-3"> Trenutni dokument:<br>'.Html::img('/images/legal_files/'.$model->folder.'/'.$model->file->name, ['style'=>'width:150px; margin:0 0 20px;']).'</div>' : null ?>
    <?= $form->field($model, 'docFile')->widget(FileInput::classname(), [
             'options' => [/*'multiple' => true,*/ 'accept' => 'image/*'],
             'pluginOptions' => [
@@ -60,6 +62,13 @@ use kartik\widgets\FileInput;
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">
             <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= (!$model->isNewRecord) ? Html::a(Yii::t('app', 'Ukloni'), ['delete', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                    'method' => 'post',
+                ],
+            ]) : null ?>
         </div>        
     </div>
 

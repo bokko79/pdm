@@ -420,7 +420,7 @@ class ProjectBuildingStoreysController extends Controller
         }
         $model->delete();
 
-        return $this->redirect(['/project-building-storeys/index', 'id' => $model->project_id]);
+        return $this->redirect(['/project-building-storeys/index', 'id' => $model->project_building_id]);
     }
 
     /**

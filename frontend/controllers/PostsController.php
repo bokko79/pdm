@@ -35,8 +35,14 @@ class PostsController extends Controller
      */
     public function actionIndex()
     {
+        $this->layout = 'post';
+
         $searchModel = new PostsSearch();
+        if($p = Yii::$app->request->get('PostsSearch')){
+            $searchModel->category_id = !empty($p['category_id']) ? $p['category_id'] : null;
+        }
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -51,6 +57,8 @@ class PostsController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'post';
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);

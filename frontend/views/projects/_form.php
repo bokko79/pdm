@@ -170,7 +170,7 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
 <?php endif; ?>
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">
-            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success shadow' : 'btn btn-primary shadow']) ?>
         </div>        
     </div>
 

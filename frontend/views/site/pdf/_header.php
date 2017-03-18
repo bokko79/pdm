@@ -53,6 +53,11 @@ table.clear td.storeys-right {border-right: 1px dotted #777 !important;}
 ol { counter-reset: item }
 li{ display: block }
 li:before { content: counters(item, ".") " "; counter-increment: item }
+
+table.predmer td {padding:10px 5px; font-size: 85%; vertical-align: bottom;}
+table.predmer td.top {vertical-align: top;}
+table.predmer td.total {border-bottom: 1px solid #aaa; border-top: 1px solid #aaa; margin:5px 0 10px;}
+
 	</style>
 }
 </head>

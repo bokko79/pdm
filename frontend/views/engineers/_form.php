@@ -28,7 +28,7 @@ use kartik\widgets\FileInput;
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">
-            <?= Html::submitButton($model->isNewRecord ? 'Dodaj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::submitButton($model->isNewRecord ? 'Dodaj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success shadow' : 'btn btn-primary shadow']) ?>
         </div>        
     </div>
 

@@ -7,7 +7,7 @@ return [
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
-        ],
+        ],        
     ],
     'modules' => [
 	    'user' => [

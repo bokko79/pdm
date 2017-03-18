@@ -48,16 +48,16 @@ $items = [
             <div class="" style="margin:20px 20px 40px;">
                 <?php if($model->volume->type!='drugo' or $model->volume_id==1): 
                   if($model->dataRequirement($model->dataReqs())): ?>
-                  <?= Html::a('<i class="fa fa-print"></i> '.c($model->name), Url::to(['/site/'.$sveska, 'id'=>$model->project_id, 'volume'=>$model->id]), ['class' => 'btn btn-primary btn-lg', 'target'=>'_blank']) ?>
+                  <?= Html::a('<i class="fa fa-print"></i> '.c($model->name), Url::to(['/site/'.$sveska, 'id'=>$model->project_id, 'volume'=>$model->id]), ['class' => 'btn btn-primary btn-lg shadow', 'target'=>'_blank']) ?>
                   <?php else: ?>
                     <?= Html::button('<i class="fa fa-print"></i> '.c($model->name), ['class' => 'btn btn-disabled btn-lg', 'disabled'=>true]) ?>
                   <?php endif; ?>
                 <?php endif; ?>
                 <?php if($model->projectVolumeDrawings): ?>
-                  <?= Html::a('<i class="fa fa-print"></i> Tablice crteža', Url::to(['/site/tablice', 'id'=>$model->project_id, 'volume'=>$model->id]), ['class'=>'btn btn-default btn-lg', 'target'=>'_blank']) ?>
+                  <?= Html::a('<i class="fa fa-print"></i> Tablice crteža', Url::to(['/site/tablice', 'id'=>$model->project_id, 'volume'=>$model->id]), ['class'=>'btn btn-default btn-lg shadow', 'target'=>'_blank']) ?>
                   <?php endif; ?> 
                   <?php if($model->volume_id==2): ?>
-                  <?= Html::a('<i class="fa fa-print"></i> Površine prostorija', Url::to(['/site/povrsine', 'id'=>$model->project_id, 'volume'=>$model->id]), ['class'=>'btn btn-default btn-lg', 'target'=>'_blank']) ?>
+                  <?= Html::a('<i class="fa fa-print"></i> Površine prostorija', Url::to(['/site/povrsine', 'id'=>$model->project_id, 'volume'=>$model->id]), ['class'=>'btn btn-default btn-lg shadow', 'target'=>'_blank']) ?>
                 <?php endif; ?>
             </div>
                 

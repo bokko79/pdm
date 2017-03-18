@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\imagine\Image;
 
 /**
  * This is the model class for table "posts".
@@ -29,6 +30,8 @@ use Yii;
  */
 class Posts extends \yii\db\ActiveRecord
 {
+    public $docFile;
+
     /**
      * @inheritdoc
      */
@@ -49,6 +52,7 @@ class Posts extends \yii\db\ActiveRecord
             [['lang_code'], 'string', 'max' => 2],
             [['title'], 'string', 'max' => 128],
             [['subtitle', 'excerpt'], 'string', 'max' => 256],
+            [['docFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
         ];
     }
 
@@ -62,18 +66,50 @@ class Posts extends \yii\db\ActiveRecord
             'profile_id' => Yii::t('app', 'Profile ID'),
             'file_id' => Yii::t('app', 'File ID'),
             'category_id' => Yii::t('app', 'Kategorija'),
-            'lang_code' => Yii::t('app', 'Lang Code'),
-            'title' => Yii::t('app', 'Title'),
+            'lang_code' => Yii::t('app', 'Jezik'),
+            'title' => Yii::t('app', 'Naslov'),
             'subtitle' => Yii::t('app', 'Subtitle'),
-            'content' => Yii::t('app', 'Content'),
-            'excerpt' => Yii::t('app', 'Excerpt'),
-            'type' => Yii::t('app', 'Type'),
+            'content' => Yii::t('app', 'Sadržaj'),
+            'excerpt' => Yii::t('app', 'Odlomak'),
+            'type' => Yii::t('app', 'Vrsta'),
             'status' => Yii::t('app', 'Status'),
-            'comment_status' => Yii::t('app', 'Comment Status'),
+            'comment_status' => Yii::t('app', 'Status komentara'),
             'next_post' => Yii::t('app', 'Next Post'),
             'time' => Yii::t('app', 'Time'),
             'update_time' => Yii::t('app', 'Update Time'),
         ];
+    }
+
+    public function uploadFiles()
+    {
+        if ($this->validate()) {
+           
+            $fileName = $this->id . '_' . time(); 
+                $this->docFile->saveAs('../../frontend/web/images/posts/'. $fileName . '1.' . $this->docFile->extension); 
+                   
+            
+            $image = new \common\models\Files();
+            $image->name = $fileName . '.' . $this->docFile->extension;
+            $image->type = 'jpg';
+            $image->time = time();
+            
+            
+                $thumb = '../../frontend/web/images/posts/'.$fileName.'1.'.$this->docFile->extension;
+                Image::thumbnail($thumb, 800, 640)->save(\Yii::getAlias('../../frontend/web/images/posts/'.$fileName.'.'.$this->docFile->extension), ['quality' => 80]); 
+                unlink(\Yii::getAlias($thumb));
+            
+            $image->save();
+
+            if($image->save()){
+                //$this->file_id = $image->id;
+                //$this->save();
+                $this->docFile = null;
+                return $image->id;
+            }
+            
+            return false;
+        }
+        return false;         
     }
 
     /**
@@ -95,8 +131,8 @@ class Posts extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPostFiles()
+    public function getFile()
     {
-        return $this->hasMany(PostFiles::className(), ['post_id' => 'id']);
+        return $this->hasOne(Files::className(), ['id' => 'file_id']);
     }
 }

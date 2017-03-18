@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><i class="fa fa-building"></i> <?= Html::encode($this->title) ?>
 
-        <?= Html::a(Yii::t('app', 'Izmeni'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary btn-sm']) ?>
+        <?= Html::a(Yii::t('app', 'Izmeni'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary btn-sm shadow']) ?>
     </h1>
 
 <div class="container">
@@ -47,30 +47,30 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
                     <div class="head button_to_show_secondary">Rešenje APR</div>
-                    <?php if(!$model->apr): ?><div class="subhead"><?= Html::a('Dodaj rešenje APR', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'client', 'LegalFilesSearch[type]'=>'apr']), ['class' => 'btn btn-success btn-sm']) ?></div><?php endif; ?>
+                    <?php if(!$model->apr): ?><div class="subhead"><?= Html::a('Dodaj rešenje APR', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'client', 'LegalFilesSearch[type]'=>'apr']), ['class' => 'btn btn-success btn-sm shadow']) ?></div><?php endif; ?>
                 </div>
                 <div class="secondary-context none">
-                    <?= ($model->apr) ? Html::a('APR pdf', ['/site/download', 'path'=>'/images/legal_files/docs/'.$model->apr]) .'<br>'.Html::a('Izmeni', Url::to(['/legal-files/update', 'id'=>$model->aprID->id]), ['class' => 'btn btn-default btn-sm']) : null ?>
+                    <?= ($model->apr) ? Html::a('APR pdf', ['/site/download', 'path'=>'/images/legal_files/docs/'.$model->apr]) .'<br>'.Html::a('Izmeni', Url::to(['/legal-files/update', 'id'=>$model->aprID->id]), ['class' => 'btn btn-default btn-sm shadow']) : null ?>
                 </div>
             </div>
 
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
                     <div class="head button_to_show_secondary">Potpis ovlašćenog lica</div>
-                    <?php if(!$model->signature): ?><div class="subhead"><?= Html::a('Dodaj potpis ovlašćenog lica', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'client', 'LegalFilesSearch[type]'=>'signature']), ['class' => 'btn btn-success btn-sm']) ?></div><?php endif; ?>
+                    <?php if(!$model->signature): ?><div class="subhead"><?= Html::a('Dodaj potpis ovlašćenog lica', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'client', 'LegalFilesSearch[type]'=>'signature']), ['class' => 'btn btn-success btn-sm shadow']) ?></div><?php endif; ?>
                 </div>
                 <div class="secondary-context none">
-                    <?= ($model->signature) ? Html::img('/images/legal_files/signatures/'.$model->signature) .'<br>'.Html::a('Izmeni', Url::to(['/legal-files/update', 'id'=>$model->signatureID->id]), ['class' => 'btn btn-default btn-sm']) : null ?>
+                    <?= ($model->signature) ? Html::img('/images/legal_files/signatures/'.$model->signature) .'<br>'.Html::a('Izmeni', Url::to(['/legal-files/update', 'id'=>$model->signatureID->id]), ['class' => 'btn btn-default btn-sm shadow']) : null ?>
                 </div>
             </div>
 
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
                     <div class="head button_to_show_secondary">Pečat</div>
-                    <?php if(!$model->stamp): ?><div class="subhead"><?= Html::a('Dodaj pečat', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'client', 'LegalFilesSearch[type]'=>'company_stamp']), ['class' => 'btn btn-success btn-sm']) ?></div><?php endif; ?>
+                    <?php if(!$model->stamp): ?><div class="subhead"><?= Html::a('Dodaj pečat', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'client', 'LegalFilesSearch[type]'=>'company_stamp']), ['class' => 'btn btn-success btn-sm shadow']) ?></div><?php endif; ?>
                 </div>
                 <div class="secondary-context none">
-                    <?= ($model->stamp) ? Html::img('/images/legal_files/stamps/'.$model->stamp) .'<br>'.Html::a('Izmeni', Url::to(['/legal-files/update', 'id'=>$model->stampID->id]), ['class' => 'btn btn-default btn-sm']) : null ?>
+                    <?= ($model->stamp) ? Html::img('/images/legal_files/stamps/'.$model->stamp) .'<br>'.Html::a('Izmeni', Url::to(['/legal-files/update', 'id'=>$model->stampID->id]), ['class' => 'btn btn-default btn-sm shadow']) : null ?>
                 </div>
             </div>            
         </div>
