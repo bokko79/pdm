@@ -79,7 +79,8 @@ class LegalFilesController extends Controller
                         $model->file_id = $image;
                         $model->save();
                     }                    
-                    return $this->redirect([''.$model->entity.'s/view', 'id' => $model->entity_id, '#'=>'w4-tab3']);
+                    //return $this->redirect([''.$model->entity.'s/view', 'id' => $model->entity_id, '#'=>'w4-tab3']);
+                    return \Yii::$app->user->client!=null ? $this->redirect(['user/settings/document-client']) : $this->redirect(['user/settings/document-setup']);
                 }                    
             } else {
                 return $this->render('create', [
@@ -111,7 +112,7 @@ class LegalFilesController extends Controller
                 }
                 
                 $model->save();
-                return $this->redirect([''.$model->entity.'s/view', 'id' => $model->entity_id, '#'=>'w4-tab3']);
+                return \Yii::$app->user->client!=null ? $this->redirect(['user/settings/document-client']) : $this->redirect(['user/settings/document-setup']);
             }                    
         } else {
             return $this->render('update', [
@@ -133,7 +134,7 @@ class LegalFilesController extends Controller
         $model->file ? unlink(\Yii::getAlias('images/legal_files/'.$model->folder.'/'.$model->file->name)) : null;
         $this->findModel($id)->delete();
 
-        return $this->redirect([''.$model->entity.'s/view', 'id' => $model->entity_id, '#'=>'w4-tab3']);
+        return $this->redirect(['user/settings/document-setup']);
     }
 
     /**

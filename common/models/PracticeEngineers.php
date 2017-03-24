@@ -59,7 +59,7 @@ class PracticeEngineers extends \yii\db\ActiveRecord
      */
     public function getPractice()
     {
-        return $this->hasOne(Practices::className(), ['id' => 'practice_id']);
+        return $this->hasOne(Practices::className(), ['engineer_id' => 'practice_id']);
     }
 
     /**
@@ -67,6 +67,6 @@ class PracticeEngineers extends \yii\db\ActiveRecord
      */
     public function getEngineer()
     {
-        return $this->hasOne(Engineers::className(), ['id' => 'engineer_id']);
+        return $this->hasOne(Engineers::className(), ['user_id' => 'engineer_id']);
     }
 }

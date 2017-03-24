@@ -18,7 +18,7 @@ class EngineersSearch extends Engineers
     public function rules()
     {
         return [
-            [['id', 'user_id'], 'integer'],
+            [['user_id'], 'integer'],
             [['name', 'title', 'phone', 'email'], 'safe'],
         ];
     }
@@ -59,7 +59,6 @@ class EngineersSearch extends Engineers
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
             'user_id' => $this->user_id,
         ]);
 

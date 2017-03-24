@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Projekti'), 'url' =>
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['project'] = $model;
 
-$items = [
+$items = [    
     [
         'label'=>'Opšti podaci',
         'content'=>$this->render('tabs/_general', ['model'=>$model]),
@@ -28,8 +28,12 @@ $items = [
         'content'=>$this->render('tabs/_clients', ['model'=>$model]),
     ],
     [
-        'label'=>'Dokumenti',
+        'label'=>'Dokumenti i podloge',
         'content'=>$this->render('tabs/_docs', ['model'=>$model]),
+    ],
+    [
+        'label'=>'<i class="fa fa-envelope-o"></i> Poruke',
+        'content'=>$this->render('tabs/_todo', ['model'=>$model]),
     ],
     /*[
         'label'=>'Tehnička dokumentacija',
@@ -51,3 +55,14 @@ $items = [
         </div>  
     </div>
 </div>
+
+
+<?php
+\yii\bootstrap\Modal::begin([
+    'header' => '<h2>Podestnik projekta</h2>',
+    'id'=>'todolist',
+]);
+
+echo 'Napravi podsetnik.';
+
+\yii\bootstrap\Modal::end();

@@ -19,7 +19,7 @@ use kartik\widgets\FileInput;
 ]); ?>
 
     <?= $form->field($model, 'practice_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
+            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'engineer_id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,   
@@ -27,7 +27,7 @@ use kartik\widgets\FileInput;
         ]) ?>
 
     <?= $form->field($model, 'engineer_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'id', 'name'),
+            'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'user_id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           

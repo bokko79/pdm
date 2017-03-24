@@ -26,7 +26,8 @@ use common\widgets\Alert;
                <div class="card_container record-full grid-item transparent no-shadow no-margin fadeInUp animated" id="">
                     <div class="primary-context normal">
                         <div class="head grand thin"><i class="fa fa-file-powerpoint-o"></i> <?= \yii\helpers\StringHelper::truncate($model->name, 50) . ($model->work!='adaptacija' ? ' ('.(($model->projectBuilding) ? $model->projectBuilding->spratnost : $model->projectExBuilding->spratnost).')' : null) ?>
-                    
+                            <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-bell-o"></i> Podsetnik'), Url::to(), ['class'=>'btn btn-default shadow', 'data-toggle'=>'modal', 'data-backdrop'=>false,  'data-target'=>'#todolist']) ?>
+                            </div>
                         </div>
                         <div class="subhead">Podaci projekta.</div>
                     </div>

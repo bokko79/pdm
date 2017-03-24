@@ -113,6 +113,7 @@ class ProjectsController extends Controller
                     $this->createLocationLot($location);                    
                 } 
                 \yii\helpers\FileHelper::createDirectory('images/projects/'.$model->year.'/'.$model->id);
+
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
                 throw new NotFoundHttpException('The requested page does not exist.');
@@ -265,7 +266,7 @@ class ProjectsController extends Controller
             foreach($projectBuildings as $key=>$projectBuilding){
                 $new[$key] =  new \common\models\ProjectBuildingStoreys();
                 $new[$key]->project_building_id = $projectBuilding->id;
-                $new[$key]->storey = $model->storey!='' ? $model->storey : 'prizemlje';
+                $new[$key]->storey = 'prizemlje';
                 $new[$key]->level = 0.00;
                 $new[$key]->order_no = "1";
                 $new[$key]->save();

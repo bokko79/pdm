@@ -32,7 +32,8 @@
         "kartik-v/yii2-editable": "@dev",
         "kartik-v/yii2-tabs-x": "*",
         "softark/yii2-dual-listbox": "dev-master",
-        "philippfrenzel/yii2masonry": "*"
+        "philippfrenzel/yii2masonry": "*",
+        "kartik-v/yii2-label-inplace": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

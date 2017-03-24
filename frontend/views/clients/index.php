@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'name',
                  'format' => 'raw',
                 'value'=>function ($data) {
-                        return Html::a($data->name, ['/clients/view', 'id'=>$data->id]);
+                        return Html::a($data->name, ['/clients/view', 'id'=>$data->user_id]);
                 },
             ],
             'location.city.town',

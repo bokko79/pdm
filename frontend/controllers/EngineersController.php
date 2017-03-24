@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
+use yii\web\UploadedFile;
 
 /**
  * EngineersController implements the CRUD actions for Engineers model.
@@ -24,12 +25,17 @@ class EngineersController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'view', 'update', 'delete'],
+                'only' => [/*'index', 'view',*/ 'update'],
                 'rules' => [
-                    [
-                        'actions' => ['index', 'view', 'update', 'delete'],
+                    /*[
+                        'actions' => ['index', 'view'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],*/
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['engineer'],
                     ],
                 ],
             ],
@@ -49,7 +55,7 @@ class EngineersController extends Controller
     public function actionIndex()
     {
         $searchModel = new EngineersSearch();
-        $searchModel->user_id = Yii::$app->user->id;
+        //$searchModel->user_id = Yii::$app->user->id;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -116,13 +122,33 @@ class EngineersController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if(\Yii::$app->user->can('updateOwnEngineerProfile', ['engineer'=>$model])){
+            if ($model->load(Yii::$app->request->post())) {
+                $model->avatarFile = UploadedFile::getInstance($model, 'avatarFile');
+                $model->coverFile = UploadedFile::getInstance($model, 'coverFile');
+                
+                if($model->save()){
+                    if ($model->avatarFile) {
+                        $model->aFile ? unlink(\Yii::getAlias('images/profiles/'.$model->aFile->name)) : null;
+                        $imageavatarFile = $model->uploadAvatar();
+                        $model->avatar = $imageavatarFile;
+                        $model->save();
+                    } 
+                    if ($model->coverFile) {
+                        $model->cFile ? unlink(\Yii::getAlias('images/profiles/'.$model->cFile->name)) : null;
+                        $imagecoverFile = $model->uploadÇover();
+                        $model->cover_photo = $imagecoverFile;
+                        $model->save();
+                    }                    
+                    return $this->redirect(['view', 'id' => $model->user_id]);
+                }                    
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            throw new \yii\web\ForbiddenHttpException('Nemate prava da pristupite ovoj stranici.');
         }
     }
 
@@ -132,12 +158,15 @@ class EngineersController extends Controller
      * @param string $id
      * @return mixed
      */
-    public function actionDelete($id)
+   /* public function actionDelete($id)
     {
+        $model = $this->findModel($id);
+        $model->aFile ? unlink(\Yii::getAlias('images/profiles/'.$model->aFile->name)) : null;
+        $model->cFile ? unlink(\Yii::getAlias('images/profiles/'.$model->cFile->name)) : null;
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
-    }
+        return $this->redirect(['/user/security/home', 'username'=>$model->user->username]);
+    }*/
 
     /**
      * Finds the Engineers model based on its primary key value.

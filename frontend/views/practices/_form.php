@@ -17,6 +17,14 @@ use kartik\widgets\FileInput;
     'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
     'options' => ['enctype' => 'multipart/form-data'],
 ]); ?>
+    
+    <?= $form->field($model, 'engineer_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'user_id', 'name'),
+            'options' => ['placeholder' => 'Izaberite...'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,
+            'disabled' => true,           
+        ]) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true])->hint('Pun poslovni naziv preduzeća. Npr: Preduzeće d.o.o. Beograd') ?>
 
@@ -41,13 +49,6 @@ use kartik\widgets\FileInput;
 <hr> 
 <h4>Poslovni podaci</h4>   
 
-    <?= $form->field($model, 'engineer_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'id', 'name'),
-            'options' => ['placeholder' => 'Izaberite...'],
-            'language' => 'sr-Latn',
-            'changeOnReset' => false,           
-        ])->hint($model->hintEngineer) ?>
-
     <?= $form->field($model, 'tax_no')->input(['number']) ?>
 
     <?= $form->field($model, 'company_no')->input(['number']) ?>
@@ -55,6 +56,44 @@ use kartik\widgets\FileInput;
     <?= $form->field($model, 'account_no')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'bank')->textInput(['maxlength' => true]) ?>
+<hr>
+<?= $form->field($model, 'about')->textarea(['rows' => 6]) ?>
+<hr>
+<?= $model->aFile ? '<div class="col-md-offset-3"> Trenutni avatar:<br>'.Html::img('/images/profiles/'.$model->aFile->name, ['style'=>'width:150px; margin:0 0 20px;']).'</div>' : null ?>
+<?= $form->field($model, 'avatarFile')->widget(FileInput::classname(), [
+            'options' => [/*'multiple' => true,*/ 'accept' => 'image/*'],
+            'pluginOptions' => [
+                'previewFileType' => 'any',
+                'showCaption' => false,
+                'showUpload' => false,
+                'browseClass' => 'btn btn-info shadow',
+                'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
+                'browseLabel' =>  Yii::t('app', 'Izaberite profilnu sliku'),
+                'removeLabel' =>  Yii::t('app', 'Izbaci sve'),
+                'resizeImage'=> true,
+                'maxImageWidth'=> 60,
+                'maxImageHeight'=> 60,
+                'resizePreference'=> 'width',
+            ],
+        ]) ?>
+<hr>
+        <?= $model->cFile ? '<div class="col-md-offset-3"> Trenutni baner:<br>'.Html::img('/images/profiles/'.$model->cFile->name, ['style'=>'width:150px; margin:0 0 20px;']).'</div>' : null ?>
+    <?= $form->field($model, 'coverFile')->widget(FileInput::classname(), [
+            'options' => [/*'multiple' => true,*/ 'accept' => 'image/*'],
+            'pluginOptions' => [
+                'previewFileType' => 'any',
+                'showCaption' => false,
+                'showUpload' => false,
+                'browseClass' => 'btn btn-info shadow',
+                'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
+                'browseLabel' =>  Yii::t('app', 'Izaberite svoj baner'),
+                'removeLabel' =>  Yii::t('app', 'Izbaci sve'),
+                'resizeImage'=> true,
+                'maxImageWidth'=> 60,
+                'maxImageHeight'=> 60,
+                'resizePreference'=> 'width',
+            ],
+        ]) ?>
 <hr>
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

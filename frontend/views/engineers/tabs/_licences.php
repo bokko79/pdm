@@ -12,8 +12,8 @@ use yii\bootstrap\Nav;
 
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
-        <div class="head"><?= Html::a('<i class="fa fa-stamp"></i> Licencni paketi', Url::to(['/engineer-licences/index', 'engineer_id'=>$model->id]), ['class' => '']) ?>
-        <div class="action-area"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj licencni paket', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?></div></div>
+        <div class="head"><?= Html::a('<i class="fa fa-stamp"></i> Licencni paketi', Url::to(['/engineer-licences/index', 'engineer_id'=>$model->user_id]), ['class' => '']) ?>
+        <div class="action-area"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj licencni paket', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->user_id]), ['class' => 'btn btn-primary btn-sm']) ?></div></div>
         
         <div class="subhead">Licencni paketi inžerenja. Paket podrazumeva broj licence, kao i kopiju, potvrdu i lični petat.</div>
     </div>    

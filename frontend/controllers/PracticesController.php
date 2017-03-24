@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
+use yii\web\UploadedFile;
 
 /**
  * PracticesController implements the CRUD actions for Practices model.
@@ -24,10 +25,10 @@ class PracticesController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'view', 'update', 'delete'],
+                'only' => ['update'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'update', 'delete'],
+                        'actions' => ['update'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -49,7 +50,7 @@ class PracticesController extends Controller
     public function actionIndex()
     {
         $searchModel = new PracticesSearch();
-        $searchModel->user_id = Yii::$app->user->id;
+        //$searchModel->user_id = Yii::$app->user->id;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -65,11 +66,18 @@ class PracticesController extends Controller
      */
     public function actionView($id)
     {
-        //$this->layout = 'profile';
+        $this->layout = 'profile';
         
         $model = $this->findModel($id);
         $query_pe = \common\models\PracticeEngineers::find()->where(['practice_id' => $id]);
         $query = \common\models\Projects::find()->where(['practice_id' => $id]);
+
+        /* \Yii::$app->mailer->compose(['html' => '/user/mail/new_password', 'text' => '/user/mail/text/new_password'], ['user' => $model->engineer->user])
+                ->setFrom([\Yii::$app->params['supportEmail'] => 'Masterplan ARC d.o.o.'])
+                ->setTo('bojan.grozdanic@gmail.com')
+                ->setSubject('Novi pregled firme' )
+                ->send();*/
+
 
         return $this->render('view', [
             'model' => $model,
@@ -91,12 +99,32 @@ class PracticesController extends Controller
     {
         $model = new Practices();
         $location = new \common\models\Locations();
-
+        if($p = Yii::$app->request->get('Practices')){
+            $model->engineer_id = !empty($p['engineer_id']) ? $p['engineer_id'] : null;
+        }
         if ($model->load(Yii::$app->request->post()) and $location->load(Yii::$app->request->post()) and $location->save()) {
-            $model->user_id = Yii::$app->user->id;
+            $model->engineer_id = Yii::$app->user->id;
             $model->location_id = $location->id;
+            $model->avatarFile = UploadedFile::getInstance($model, 'avatarFile');
+            $model->coverFile = UploadedFile::getInstance($model, 'coverFile');
             if($model->save()){
-                return $this->redirect(['view', 'id' => $model->id]);
+                if ($model->avatarFile) {
+                    $imageavatarFile = $model->uploadAvatar();
+                    $model->avatar = $imageavatarFile;
+                    $model->save();
+                } 
+                if ($model->coverFile) {
+                    $imagecoverFile = $model->uploadÇover();
+                    $model->cover_photo = $imagecoverFile;
+                    $model->save();
+                }
+                $practice_engineer = new \common\models\PracticeEngineers();
+                $practice_engineer->practice_id = $model->engineer_id;
+                $practice_engineer->engineer_id = Yii::$app->user->id;
+                $practice_engineer->position = 'direktor';
+                $practice_engineer->save();
+
+                return $this->redirect(['/user/settings/practice-setup']);
             }
         } else {
             return $this->render('create', [
@@ -116,14 +144,33 @@ class PracticesController extends Controller
     {
         $model = $this->findModel($id);
         $location = $model->location;
-
-        if ($model->load(Yii::$app->request->post()) && $model->save() and $location->load(Yii::$app->request->post()) and $location->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if(\Yii::$app->user->can('updateOwnPractice', ['practice_engineer'=>$model])){
+            if ($model->load(Yii::$app->request->post()) and $location->load(Yii::$app->request->post()) and $location->save()) {
+                $model->avatarFile = UploadedFile::getInstance($model, 'avatarFile');
+                $model->coverFile = UploadedFile::getInstance($model, 'coverFile');
+                if($model->save()){
+                    if ($model->avatarFile) {
+                        $model->aFile ? unlink(\Yii::getAlias('images/profiles/'.$model->aFile->name)) : null;
+                        $imageavatarFile = $model->uploadAvatar();
+                        $model->avatar = $imageavatarFile;
+                        $model->save();
+                    } 
+                    if ($model->coverFile) {
+                        $model->cFile ? unlink(\Yii::getAlias('images/profiles/'.$model->cFile->name)) : null;
+                        $imagecoverFile = $model->uploadÇover();
+                        $model->cover_photo = $imagecoverFile;
+                        $model->save();
+                    }                    
+                    return $this->redirect(['/user/settings/practice-setup']);
+                } 
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                    'location' => $location,
+                ]);
+            }
         } else {
-            return $this->render('update', [
-                'model' => $model,
-                'location' => $location,
-            ]);
+            throw new \yii\web\ForbiddenHttpException('Nemate prava da pristupite ovoj stranici.');
         }
     }
 
@@ -133,12 +180,15 @@ class PracticesController extends Controller
      * @param string $id
      * @return mixed
      */
-    public function actionDelete($id)
+   /* public function actionDelete($id)
     {
+        $model = $this->findModel($id);
+        $model->aFile ? unlink(\Yii::getAlias('images/profiles/'.$model->aFile->name)) : null;
+        $model->cFile ? unlink(\Yii::getAlias('images/profiles/'.$model->cFile->name)) : null;
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
-    }
+        return $this->redirect(['user/settings/practice-setup']);
+    }*/
 
     /**
      * Finds the Practices model based on its primary key value.

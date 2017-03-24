@@ -64,7 +64,7 @@ class Clients extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
+            'user_id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Naziv/ime investitora'),
             'location_id' => Yii::t('app', 'Adresa'),
             'phone' => Yii::t('app', 'Telefon'),
@@ -89,9 +89,17 @@ class Clients extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getUser()
+    {
+        return $this->hasOne(UserAccount::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getProjectClients()
     {
-        return $this->hasMany(ProjectClients::className(), ['client_id' => 'id']);
+        return $this->hasMany(ProjectClients::className(), ['client_id' => 'user_id']);
     }
 
     /**
@@ -99,7 +107,7 @@ class Clients extends \yii\db\ActiveRecord
      */
     public function getLegalFiles()
     {
-        return \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'client']);
+        return \common\models\LegalFiles::find()->where(['entity_id' => $this->user_id, 'entity' => 'client']);
     }
 
     /**
@@ -107,7 +115,7 @@ class Clients extends \yii\db\ActiveRecord
      */
     public function getMemo()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'client', 'type' => 'memo-header'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->user_id, 'entity' => 'client', 'type' => 'memo-header'])->one();
         return $doc ? $doc->file->name : false;
     }
 
@@ -116,7 +124,7 @@ class Clients extends \yii\db\ActiveRecord
      */
     public function getStamp()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'client', 'type' => 'company_stamp'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->user_id, 'entity' => 'client', 'type' => 'company_stamp'])->one();
         return $doc ? $doc->file->name : false;
     }
 
@@ -125,7 +133,7 @@ class Clients extends \yii\db\ActiveRecord
      */
     public function getSignature()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'client', 'type' => 'signature'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->user_id, 'entity' => 'client', 'type' => 'signature'])->one();
         return $doc ? $doc->file->name : false;
     }
 
@@ -134,7 +142,7 @@ class Clients extends \yii\db\ActiveRecord
      */
     public function getApr()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'client', 'type' => 'apr'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->user_id, 'entity' => 'client', 'type' => 'apr'])->one();
         return $doc ? $doc->file->name : false;
     }
 
@@ -143,7 +151,7 @@ class Clients extends \yii\db\ActiveRecord
      */
     public function getMemoID()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'client', 'type' => 'memo-header'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->user_id, 'entity' => 'client', 'type' => 'memo-header'])->one();
         return $doc ? $doc : false;
     }
 
@@ -152,7 +160,7 @@ class Clients extends \yii\db\ActiveRecord
      */
     public function getStampID()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'client', 'type' => 'company_stamp'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->user_id, 'entity' => 'client', 'type' => 'company_stamp'])->one();
         return $doc ? $doc : false;
     }
 
@@ -161,7 +169,7 @@ class Clients extends \yii\db\ActiveRecord
      */
     public function getSignatureID()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'client', 'type' => 'signature'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->user_id, 'entity' => 'client', 'type' => 'signature'])->one();
         return $doc ? $doc : false;
     }
 
@@ -170,7 +178,7 @@ class Clients extends \yii\db\ActiveRecord
      */
     public function getAprID()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'client', 'type' => 'apr'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->user_id, 'entity' => 'client', 'type' => 'apr'])->one();
         return $doc ? $doc : false;
     }
 

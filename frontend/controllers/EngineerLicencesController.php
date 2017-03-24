@@ -90,7 +90,7 @@ class EngineerLicencesController extends Controller
                     $model->stamp_id = $imagestampFile;
                 }                
                 $model->save();
-                return $this->redirect(['engineers/view', 'id' => $model->engineer_id, '#'=>'w4-tab4']);
+                return $this->redirect(['user/settings/licence-setup']);
             } 
         } else {
             return $this->render('create', [
@@ -130,7 +130,8 @@ class EngineerLicencesController extends Controller
                     $model->stamp_id = $imagestampFile;
                 }                
                 $model->save();
-                return $this->redirect(['engineers/view', 'id' => $model->engineer_id, '#'=>'w4-tab4']);
+                //return $this->redirect(['engineers/view', 'id' => $model->engineer_id, '#'=>'w4-tab4']);
+                return $this->redirect(['user/settings/licence-setup']);
             } 
         } else {
             return $this->render('update', [
@@ -155,7 +156,8 @@ class EngineerLicencesController extends Controller
 
         $this->findModel($id)->delete();
 
-        return $this->redirect(['engineers/view', 'id' => $model->engineer_id, '#'=>'w4-tab4']);
+        //return $this->redirect(['engineers/view', 'id' => $model->engineer_id, '#'=>'w4-tab4']);
+        return $this->redirect(['user/settings/licence-setup']);
     }
 
     /**

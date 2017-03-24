@@ -57,10 +57,10 @@ class ProjectVolumes extends \yii\db\ActiveRecord
             [['control_text'], 'string'],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
             [['volume_id'], 'exist', 'skipOnError' => true, 'targetClass' => Volumes::className(), 'targetAttribute' => ['volume_id' => 'id']],
-            [['practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['practice_id' => 'id']],
-            [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'id']],
-            [['control_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['control_practice_id' => 'id']],
-            [['control_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['control_engineer_id' => 'id']],
+            [['practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['practice_id' => 'engineer_id']],
+            [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'user_id']],
+            [['control_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['control_practice_id' => 'engineer_id']],
+            [['control_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['control_engineer_id' => 'user_id']],
             [['engineer_licence_id'], 'exist', 'skipOnError' => true, 'targetClass' => EngineerLicences::className(), 'targetAttribute' => ['engineer_licence_id' => 'id']],
             [['control_engineer_licence_id'], 'exist', 'skipOnError' => true, 'targetClass' => EngineerLicences::className(), 'targetAttribute' => ['control_engineer_licence_id' => 'id']],
         ];
@@ -110,7 +110,7 @@ class ProjectVolumes extends \yii\db\ActiveRecord
      */
     public function getPractice()
     {
-        return $this->hasOne(Practices::className(), ['id' => 'practice_id']);
+        return $this->hasOne(Practices::className(), ['engineer_id' => 'practice_id']);
     }
 
     /**
@@ -127,7 +127,7 @@ class ProjectVolumes extends \yii\db\ActiveRecord
      */
     public function getControlPractice()
     {
-        return $this->hasOne(Practices::className(), ['id' => 'control_practice_id']);
+        return $this->hasOne(Practices::className(), ['engineer_id' => 'control_practice_id']);
     }
 
     /**
@@ -297,12 +297,12 @@ class ProjectVolumes extends \yii\db\ActiveRecord
         } else {
             // podaci projektanta
             if(!$this->practice->stamp){
-                $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nedostaje pečat projektanta. '.Html::a('<i class="fa fa-wrench"></i> Dodaj pečat projektanta.', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$this->practice->id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'company_stamp']), ['target'=>'_blank']). '</p>';
+                $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nedostaje pečat projektanta. '.Html::a('<i class="fa fa-wrench"></i> Dodaj pečat projektanta.', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$this->practice->engineer_id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'company_stamp']), ['target'=>'_blank']). '</p>';
                 //return false;
                 $check = false;
             }
             if(!$this->practice->signature){
-                $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nedostaje potpis odgovornog licenca projektanta. '.Html::a('<i class="fa fa-wrench"></i> Dodaj potpis odgovornog lica projektanta.', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$this->practice->id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'signature']), ['target'=>'_blank']). '</p>';
+                $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nedostaje potpis odgovornog licenca projektanta. '.Html::a('<i class="fa fa-wrench"></i> Dodaj potpis odgovornog lica projektanta.', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$this->practice->engineer_id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'signature']), ['target'=>'_blank']). '</p>';
                 //return false;
                 $check = false;
             }
@@ -329,7 +329,7 @@ class ProjectVolumes extends \yii\db\ActiveRecord
             // podaci glavnog projektanta
             // licenca
             if(!$this->engineer_licence_id){
-                $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Licenca glavnog projektanta ne postoji. '.Html::a('<i class="fa fa-wrench"></i> Dodaj licence glavnog projektanta.', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$this->engineer->id]), ['target'=>'_blank']). '</p>';
+                $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Licenca glavnog projektanta ne postoji. '.Html::a('<i class="fa fa-wrench"></i> Dodaj licence glavnog projektanta.', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$this->engineer->user_id]), ['target'=>'_blank']). '</p>';
                 //return false;
                 $check = false;
             } else {

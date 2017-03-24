@@ -18,7 +18,7 @@ class PracticesSearch extends Practices
     public function rules()
     {
         return [
-            [['id', 'user_id', 'location_id', 'engineer_id'], 'integer'],
+            [['location_id', 'engineer_id'], 'integer'],
             [['name', 'phone', 'email', 'fax'], 'safe'],
         ];
     }
@@ -59,8 +59,6 @@ class PracticesSearch extends Practices
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'user_id' => $this->user_id,
             'location_id' => $this->location_id,
             'engineer_id' => $this->engineer_id,
         ]);

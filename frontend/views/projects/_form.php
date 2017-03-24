@@ -27,7 +27,7 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
 <h3>Osnovni podaci</h3>
     
     <?= $form->field($model, 'client_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Clients::find()->all(), 'id', 'name'),
+            'data' => ArrayHelper::map(\common\models\Clients::find()->all(), 'user_id', 'name'),
             'options' => ['placeholder' => 'Izaberite glavnog investitora'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           
@@ -87,7 +87,7 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
 <h3>Projektanti</h3>
 
      <?= $form->field($model, 'practice_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
+            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'engineer_id', 'name'),
             'options' => ['placeholder' => 'Izaberite...', 'id'=>'cat-id'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           
@@ -109,7 +109,7 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
 <hr>
 <h3>Tehnička kontrola</h3>
     <?= $form->field($model, 'control_practice_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
+            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'engineer_id', 'name'),
             'options' => ['placeholder' => 'Izaberite...', 'id'=>'catcont-id'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,
@@ -130,7 +130,7 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
 <hr>
 <h3>Izvođač radova</h3>
     <?= $form->field($model, 'builder_practice_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
+            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'engineer_id', 'name'),
             'options' => ['placeholder' => 'Izaberite...', 'id'=>'catbuild-id'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,
@@ -150,7 +150,7 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
 <hr>
 <h3>Stručni nadzor</h3>
     <?= $form->field($model, 'supervision_practice_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
+            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'engineer_id', 'name'),
             'options' => ['placeholder' => 'Izaberite...', 'id'=>'catsuper-id'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,  

@@ -20,7 +20,7 @@ use yii\bootstrap\Nav;
        <?= DetailView::widget([
             'model' => $model,
             'attributes' => [
-                'id',
+                //'id',
                 'name',
                 'title',
                 'phone',

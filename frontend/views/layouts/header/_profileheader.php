@@ -11,7 +11,8 @@ use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
 
 ?>
-<div class="header-wrapper profile" style="">
+<div class="header-wrapper profile" style="<?= $model->cFile ? 'background: url(\'/images/profiles/'.$model->cFile->name.'\');' : 'background: url(\'/images/profiles/back.jpg\');' ?> background-size: cover; margin-top: -72px;">
+<div style="background: rgba(0,0,0,.3); margin-top: -72px;">
     
 
     <div class="container">
@@ -26,16 +27,29 @@ use common\widgets\Alert;
 
         <div class="row">
             <div class="col-sm-12">
-               <div class="card_container record-full grid-item transparent no-shadow no-margin fadeInUp animated" id="">
-                    <div class="primary-context normal">
-                        <div class="head grand thin"><i class="fa fa-file-powerpoint-o"></i> <?= c($model->name) ?>
-                            <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Podesi'), ['update', 'id' => $model->id], ['class' => 'btn btn-success btn-sm shadow' ]) ?>
+                <div class="card_container record-full transparent no-shadow fadeInUp animated" id="card_container" style="">
+                    <div class="primary-context overflow-hidden low-margin">
+                        <div class="avatar60 round">
+                            <?= ($model->aFile) ? Html::img('/images/profiles/'.$model->aFile->name, ['style'=>'max-height:180px;']) : Html::img('/images/profiles/back.jpg', ['style'=>'max-height:180px;']) ?>
+                        </div>
+                        <div class="title">
+                            <div class="head colos regular" style="line-height: 22px; color: white; text-shadow: 1px 1px 3px #000">
+                                <?= c($model->name) ?>
+                                <span class="fs_11 muted">[<?= $model->email ?>]</span> 
+                            </div>
+                            <div class="subhead" style="line-height: 22px; color: #eee; text-shadow: 1px 1px 3px #000">
+                                
+                                <?= (1==1) ? '<div class="label label-success fs_11 thin"><i class="fa fa-check"></i> '.$model->title.'</div>' : null ?>
                             </div>
                         </div>
-                        <div class="subhead">Profil inženjera.</div>
+                        <div class="subaction">
+                            <?= (\Yii::$app->user->can('updateOwnEngineerProfile', ['engineer'=>$model])) ? Html::a(Yii::t('app', '<i class="fa fa-cogs"></i> Podesi profil'), ['update', 'id' => $model->user_id], ['class' => 'btn btn-default btn-sm ' ]) : null ?>           
+                        </div>          
                     </div>
-                </div> 
+                </div>
+               
             </div>
         </div>
     </div>
+</div>
 </div>

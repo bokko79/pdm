@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model common\models\LegalFiles */
 
 $this->title = Yii::t('app', 'Kreiranje dokumenata');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', $entity->name.': Pravni dokumenti'), 'url' => [$model->entity.'s/view', 'id'=>$entity->id]];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', $entity->name.': Pravni dokumenti'), 'url' => [$model->entity.'s/view', 'id'=>Yii::$app->user->id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="legal-files-create">

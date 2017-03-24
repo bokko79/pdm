@@ -3,11 +3,11 @@
 namespace common\models;
 
 use Yii;
+use yii\imagine\Image;
 
 /**
  * This is the model class for table "practices".
  *
- * @property string $id
  * @property string $name
  * @property string $location_id
  * @property string $phone
@@ -26,6 +26,9 @@ use Yii;
  */
 class Practices extends \yii\db\ActiveRecord
 {
+    public $avatarFile;
+    public $coverFile;
+
     /**
      * @inheritdoc
      */
@@ -41,13 +44,15 @@ class Practices extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'location_id', 'engineer_id'], 'required'],
-            [['location_id', 'engineer_id', 'tax_no', 'company_no'], 'integer'],
+            [['location_id', 'engineer_id', 'tax_no', 'company_no', 'avatar', 'cover_photo'], 'integer'],
             [['name'], 'string', 'max' => 128],
             [['phone', 'fax'], 'string', 'max' => 25],
             [['email'], 'string', 'max' => 64],
+            [['about'], 'string'],
             [['account_no', 'bank'], 'string', 'max' => 32],
             [['location_id'], 'exist', 'skipOnError' => true, 'targetClass' => Locations::className(), 'targetAttribute' => ['location_id' => 'id']],
-            [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'id']],
+            [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'user_id']],
+            [['avatarFile', 'coverFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
         ];
     }
 
@@ -57,7 +62,6 @@ class Practices extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Naziv preduzeća'),
             'location_id' => Yii::t('app', 'Adresa'),
             'phone' => Yii::t('app', 'Telefon'),
@@ -68,7 +72,70 @@ class Practices extends \yii\db\ActiveRecord
             'company_no' => Yii::t('app', 'Matični broj'),
             'account_no' => Yii::t('app', 'Broj računa'),
             'bank' => Yii::t('app', 'Banka'),
+            'avatar' => Yii::t('app', 'Dokument'),
+            'cover_photo' => Yii::t('app', 'Dokument'),
+            'avatarFile' => Yii::t('app', 'Profilna slika'),
+            'coverFile' => Yii::t('app', 'Baner slika'),
+            'about' => Yii::t('app', 'O firmi'),
         ];
+    }
+
+    public function uploadAvatar()
+    {
+        if ($this->validate()) {
+           
+            $fileName = $this->engineer_id . '_' . time(); 
+            $thumb = 'images/profiles/'.$fileName.'1.'.$this->avatarFile->extension;
+
+            $this->avatarFile->saveAs($thumb); 
+            
+            $image = new \common\models\Files();
+            $image->name = $fileName . '.' . $this->avatarFile->extension;
+            $image->type = 'jpg';
+            $image->time = time();
+            
+                
+            Image::thumbnail($thumb, 200, 200)->save(\Yii::getAlias('images/profiles/'.$fileName.'.'.$this->avatarFile->extension), ['quality' => 80]); 
+            unlink(\Yii::getAlias($thumb));
+            $image->save();
+
+            if($image->save()){
+                $this->avatarFile = null;
+                return $image->id;
+            }
+            
+            return false;
+        }
+        return false;        
+    }
+
+    public function uploadÇover()
+    {
+        if ($this->validate()) {
+           
+            $fileName = $this->engineer_id . '_' . time(); 
+            $thumb = 'images/profiles/'.$fileName.'1.'.$this->coverFile->extension;
+
+            $this->coverFile->saveAs($thumb); 
+            
+            $image = new \common\models\Files();
+            $image->name = $fileName . '.' . $this->coverFile->extension;
+            $image->type = 'jpg';
+            $image->time = time();
+            
+                
+            Image::thumbnail($thumb, 1200, 480)->save(\Yii::getAlias('images/profiles/'.$fileName.'.'.$this->coverFile->extension), ['quality' => 80]); 
+            unlink(\Yii::getAlias($thumb));
+            $image->save();
+
+            if($image->save()){
+                $this->coverFile = null;
+                return $image->id;
+            }
+            
+            return false;
+        }
+        return false;        
     }
 
     /**
@@ -76,7 +143,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getPracticeEngineers()
     {
-        return $this->hasMany(PracticeEngineers::className(), ['practice_id' => 'id']);
+        return $this->hasMany(PracticeEngineers::className(), ['practice_id' => 'engineer_id']);
     }
 
     /**
@@ -92,7 +159,23 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getEngineer()
     {
-        return $this->hasOne(Engineers::className(), ['id' => 'engineer_id']);
+        return $this->hasOne(Engineers::className(), ['user_id' => 'engineer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAFile()
+    {
+        return $this->hasOne(Files::className(), ['id' => 'avatar']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCFile()
+    {
+        return $this->hasOne(Files::className(), ['id' => 'cover_photo']);
     }
 
     /**
@@ -100,7 +183,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getProjectVolumes()
     {
-        return $this->hasMany(ProjectVolumes::className(), ['practice_id' => 'id']);
+        return $this->hasMany(ProjectVolumes::className(), ['practice_id' => 'engineer_id']);
     }
 
     /**
@@ -108,7 +191,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getLegalFiles()
     {
-        return \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice']);
+        return \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice']);
     }
 
     /**
@@ -116,7 +199,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getMemo()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'memo-header'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'memo-header'])->one();
         return $doc ? $doc->file->name : false;
     }
 
@@ -125,7 +208,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getStamp()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'company_stamp'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'company_stamp'])->one();
         return $doc ? $doc->file->name : false;
     }
 
@@ -134,7 +217,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getSignature()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'signature'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'signature'])->one();
         return $doc ? $doc->file->name : false;
     }
 
@@ -143,7 +226,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getApr()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'apr'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'apr'])->one();
         return $doc ? $doc->file->name : false;
     }
 
@@ -152,7 +235,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getLogo()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'logo'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'logo'])->one();
         return $doc ? $doc->file->name : false;
     }
 
@@ -161,7 +244,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getLogoID()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'logo'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'logo'])->one();
         return $doc ? $doc : false;
     }
 
@@ -170,7 +253,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getMemoID()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'memo-header'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'memo-header'])->one();
         return $doc ? $doc : false;
     }
 
@@ -179,7 +262,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getStampID()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'company_stamp'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'company_stamp'])->one();
         return $doc ? $doc : false;
     }
 
@@ -188,7 +271,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getSignatureID()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'signature'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'signature'])->one();
         return $doc ? $doc : false;
     }
 
@@ -197,7 +280,7 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getAprID()
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->id, 'entity' => 'practice', 'type' => 'apr'])->one();
+        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'apr'])->one();
         return $doc ? $doc : false;
     }
 
@@ -214,8 +297,53 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getDirector()
     {
-        $director = \common\models\PracticeEngineers::find()->where('practice_id='.$this->id.' and position="direktor"')->one();
+        $director = \common\models\PracticeEngineers::find()->where('practice_id='.$this->engineer_id.' and position="direktor"')->one();
 
         return $director ? $director->engineer : null;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCertificates()
+    {
+        $doc = \common\models\ProfilePortfolio::find()->where(['profile_id' => $this->user_id, 'profile_type' => 'practice', 'portfolio_type' => 'certificate'])->all();
+        return $doc ? $doc : false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPatents()
+    {
+        $doc = \common\models\ProfilePortfolio::find()->where(['profile_id' => $this->user_id, 'profile_type' => 'practice', 'portfolio_type' => 'patent'])->all();
+        return $doc ? $doc : false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPublications()
+    {
+        $doc = \common\models\ProfilePortfolio::find()->where(['profile_id' => $this->user_id, 'profile_type' => 'practice', 'portfolio_type' => 'publication'])->all();
+        return $doc ? $doc : false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPortfolioProjects()
+    {
+        $doc = \common\models\ProfilePortfolio::find()->where(['profile_id' => $this->user_id, 'profile_type' => 'practice', 'portfolio_type' => 'projects'])->all();
+        return $doc ? $doc : false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPortfolioLicences()
+    {
+        $doc = \common\models\ProfilePortfolio::find()->where(['profile_id' => $this->user_id, 'profile_type' => 'practice', 'portfolio_type' => 'licence'])->all();
+        return $doc ? $doc : false;
     }
 }

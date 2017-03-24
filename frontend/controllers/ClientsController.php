@@ -26,10 +26,20 @@ class ClientsController extends Controller
                 'class' => AccessControl::className(),
                 'only' => ['index', 'view', 'update', 'delete'],
                 'rules' => [
-                    [
-                        'actions' => ['index', 'view', 'update', 'delete'],
+                    /*[
+                        'actions' => ['create'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['?'],
+                    ],*/
+                    [
+                        'actions' => ['index', 'view'],
+                        'allow' => true,
+                        'roles' => ['engineer', 'client'],
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['client'],
                     ],
                 ],
             ],
@@ -49,7 +59,7 @@ class ClientsController extends Controller
     public function actionIndex()
     {
         $searchModel = new ClientsSearch();
-        $searchModel->user_id = Yii::$app->user->id;
+        //$searchModel->user_id = Yii::$app->user->id;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [

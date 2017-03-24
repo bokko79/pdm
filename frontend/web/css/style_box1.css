@@ -63,6 +63,8 @@ html, body {
 .card_container .label {/*font-size: 24px;*/}
 .card_container .avatar {float:left;width: 40px;}
 .card_container .avatar img {width: 40px; height: 40px; border-radius: 3px;}
+.card_container .avatar60 {float:left;width: 60px;}
+.card_container .avatar60 img {width: 60px; height: 60px; border-radius: 3px;}
 .card_container .avatar.round img {width: 40px; height: 40px; border-radius: 20px;}
 .card_container .title {float:left; padding-left: 16px;}
 .card_container .subaction {float:right; font-size: 11px; color:#aaa; font-weight: 400;}
@@ -207,3 +209,4 @@ tr.strikeout td.line.right:before { left: -5px; }
 .header-wrapper.hover a:hover {color: #2196F3; }
 
 .header-wrapper.profile a {color: black;}
+.header-wrapper.dash {background: #222222;}

@@ -76,17 +76,17 @@ class Projects extends \yii\db\ActiveRecord
             [['phase', 'work', 'status'], 'string'],
             [['name'], 'string', 'max' => 128],
             [['code'], 'string', 'max' => 20],
-            [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::className(), 'targetAttribute' => ['client_id' => 'id']],
+            [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::className(), 'targetAttribute' => ['client_id' => 'user_id']],
             [['location_id'], 'exist', 'skipOnError' => true, 'targetClass' => Locations::className(), 'targetAttribute' => ['location_id' => 'id']],
             [['building_id'], 'exist', 'skipOnError' => true, 'targetClass' => Buildings::className(), 'targetAttribute' => ['building_id' => 'id']],
-            [['practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['practice_id' => 'id']],
-            [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'id']],
-            [['control_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['control_practice_id' => 'id']],
-            [['control_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['control_engineer_id' => 'id']],
-            [['builder_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['builder_practice_id' => 'id']],
-            [['builder_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['builder_engineer_id' => 'id']],
-            [['supervision_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['supervision_practice_id' => 'id']],
-            [['supervision_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['supervision_engineer_id' => 'id']],
+            [['practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['practice_id' => 'engineer_id']],
+            [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'user_id']],
+            [['control_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['control_practice_id' => 'engineer_id']],
+            [['control_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['control_engineer_id' => 'user_id']],
+            [['builder_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['builder_practice_id' => 'engineer_id']],
+            [['builder_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['builder_engineer_id' => 'user_id']],
+            [['supervision_practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['supervision_practice_id' => 'engineer_id']],
+            [['supervision_engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['supervision_engineer_id' => 'user_id']],
             [['storey', 'part_type'], 'required', 'when' => function ($model) {
                                                 return $model->work == 'adaptacija';
                                             }, 'whenClient' => "function (attribute, value) {
@@ -262,7 +262,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getClient()
     {
-        return $this->hasOne(Clients::className(), ['id' => 'client_id']);
+        return $this->hasOne(Clients::className(), ['user_id' => 'client_id']);
     }
 
     /**
@@ -286,7 +286,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getPractice()
     {
-        return $this->hasOne(Practices::className(), ['id' => 'practice_id']);
+        return $this->hasOne(Practices::className(), ['engineer_id' => 'practice_id']);
     }
 
     /**
@@ -294,7 +294,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getEngineer()
     {
-        return $this->hasOne(Engineers::className(), ['id' => 'engineer_id']);
+        return $this->hasOne(Engineers::className(), ['user_id' => 'engineer_id']);
     }
 
     /**
@@ -302,7 +302,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getControlPractice()
     {
-        return $this->hasOne(Practices::className(), ['id' => 'control_practice_id']);
+        return $this->hasOne(Practices::className(), ['engineer_id' => 'control_practice_id']);
     }
 
     /**
@@ -310,7 +310,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getControlEngineer()
     {
-        return $this->hasOne(Engineers::className(), ['id' => 'control_engineer_id']);
+        return $this->hasOne(Engineers::className(), ['user_id' => 'control_engineer_id']);
     }
 
     /**
@@ -318,7 +318,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getBuilderPractice()
     {
-        return $this->hasOne(Practices::className(), ['id' => 'builder_practice_id']);
+        return $this->hasOne(Practices::className(), ['engineer_id' => 'builder_practice_id']);
     }
 
     /**
@@ -326,7 +326,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getBuilderEngineer()
     {
-        return $this->hasOne(Engineers::className(), ['id' => 'builder_engineer_id']);
+        return $this->hasOne(Engineers::className(), ['user_id' => 'builder_engineer_id']);
     }
 
     /**
@@ -334,7 +334,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getSupervisionPractice()
     {
-        return $this->hasOne(Practices::className(), ['id' => 'supervision_practice_id']);
+        return $this->hasOne(Practices::className(), ['engineer_id' => 'supervision_practice_id']);
     }
 
     /**
@@ -342,7 +342,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getSupervisionEngineer()
     {
-        return $this->hasOne(Engineers::className(), ['id' => 'supervision_engineer_id']);
+        return $this->hasOne(Engineers::className(), ['user_id' => 'supervision_engineer_id']);
     }
 
     /**

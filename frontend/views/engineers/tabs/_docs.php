@@ -13,7 +13,7 @@ use yii\bootstrap\Nav;
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
         <div class="head">Dokumenti
-        <div class="action-area"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj dokument', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->id, 'LegalFilesSearch[entity]'=>'engineer']), ['class' => 'btn btn-primary btn-sm']) ?></div>
+        <div class="action-area"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj dokument', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->user_id, 'LegalFilesSearch[entity]'=>'engineer']), ['class' => 'btn btn-primary btn-sm']) ?></div>
         </div>
         <div class="subhead"></div>
     </div>

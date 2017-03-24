@@ -1,6 +1,6 @@
 <?php
 return [
-    'adminEmail' => 'servicemapp@gmail.com',
-    'supportEmail' => 'servicemapp@gmail.com',
+    'adminEmail' => 'masterplan.arc@gmail.com',
+    'supportEmail' => 'masterplan.arc@gmail.com',
     'user.passwordResetTokenExpire' => 3600,
 ];

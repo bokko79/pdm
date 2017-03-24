@@ -31,6 +31,9 @@ return [
                 'path'     => '/',
                 'httpOnly' => true,
             ],
+            'class' => 'common\components\User',
+            'identityClass' => '\common\models\UserAccount',
+            'enableAutoLogin' => true,
         ],
         'session' => [
             'name' => 'BACKENDSESSID',

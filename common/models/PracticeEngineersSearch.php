@@ -64,6 +64,8 @@ class PracticeEngineersSearch extends PracticeEngineers
             'status' => $this->status,
         ]);
 
+        $query->groupBy('practice_id');
+        
         return $dataProvider;
     }
 }

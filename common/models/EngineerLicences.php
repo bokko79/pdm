@@ -45,11 +45,12 @@ class EngineerLicences extends \yii\db\ActiveRecord
             [['engineer_id', 'no', ], 'required'],
             [['engineer_id', 'type', 'copy_id', 'conf_id', 'stamp_id'], 'integer'],
             [['no'], 'string', 'max' => 12],
-            [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'id']],
+            [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'user_id']],
             [['copy_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['copy_id' => 'id']],
             [['conf_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['conf_id' => 'id']],
             [['stamp_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['stamp_id' => 'id']],
             [['copyFile', 'confFile', 'stampFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
+            [[ 'stampFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg, gif'],
         ];
     }
 
@@ -165,7 +166,7 @@ class EngineerLicences extends \yii\db\ActiveRecord
      */
     public function getEngineer()
     {
-        return $this->hasOne(Engineers::className(), ['id' => 'engineer_id']);
+        return $this->hasOne(Engineers::className(), ['user_id' => 'engineer_id']);
     }
 
     /**

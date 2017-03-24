@@ -52,7 +52,7 @@ $model->control_engineer_id = $model->control_engineer_id ?: $model->project->co
 <h3>Projektant</h3>
 
     <?= $form->field($model, 'practice_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
+            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'engineer_id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           
@@ -78,7 +78,7 @@ $model->control_engineer_id = $model->control_engineer_id ?: $model->project->co
 <h3>Tehnička kontrola</h3>
 
     <?= $form->field($model, 'control_practice_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'id', 'name'),
+            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'engineer_id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           

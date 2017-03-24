@@ -78,6 +78,25 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
+
+    /**
+     * Displays homepage.
+     *
+     * @return mixed
+     */
+    public function actionInvite()
+    {
+        $model = new \common\models\Invite();
+        if ($model->load(Yii::$app->request->post()) && $model->invite()) {
+            return $this->goBack();
+        } else {
+            return $this->render('invite', [
+                'model' => $model,
+            ]);
+        }
+        
+    }
+
     /**
      * Logs in a user.
      *
