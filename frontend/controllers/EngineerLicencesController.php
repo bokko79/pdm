@@ -86,10 +86,11 @@ class EngineerLicencesController extends Controller
                     $model->conf_id = $imageconfFile;
                 }                
                 if ($model->stampFile) {
-                    $imagestampFile = $model->uploadStampFile();
+                    $imagestampFile = $model->uploadStampFile();                    
                     $model->stamp_id = $imagestampFile;
+                    $model->save();
                 }                
-                $model->save();
+                
                 return $this->redirect(['user/settings/licence-setup']);
             } 
         } else {
@@ -118,16 +119,20 @@ class EngineerLicencesController extends Controller
                     $model->copy ? unlink(\Yii::getAlias('images/legal_files/licences/'.$model->copy->name)) : null;
                     $imagecopyFile = $model->uploadCopyFile();
                     $model->copy_id = $imagecopyFile;
+                    $model->save();
                 }                
                 if ($model->confFile) {
                     $model->conf ? unlink(\Yii::getAlias('images/legal_files/licences/'.$model->conf->name)) : null;
                     $imageconfFile = $model->uploadConfFile();
                     $model->conf_id = $imageconfFile;
+                    $model->save();
                 }                
                 if ($model->stampFile) {
                     $model->stamp ? unlink(\Yii::getAlias('images/legal_files/licences/'.$model->stamp->name)) : null;
                     $imagestampFile = $model->uploadStampFile();
                     $model->stamp_id = $imagestampFile;
+                    //print_r($imagestampFile); die();
+                    $model->save();
                 }                
                 $model->save();
                 //return $this->redirect(['engineers/view', 'id' => $model->engineer_id, '#'=>'w4-tab4']);

@@ -10,9 +10,10 @@ use yii\bootstrap\Nav;
 ?>
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
-        <div class="head"><i class="fa fa-plus-circle"></i> Osnovni podaci predmetne parcele <i class="fa this-one fa-arrow-circle-right"></i>
+        <div class="head">
         <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog"></i> Uredi parcelu', Url::to(['/project-lot/update', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?>
             </div>
+            <i class="fa fa-info-circle"></i> Osnovni podaci predmetne parcele
         </div>
         <div class="subhead">Predmetna parcela projekta.</div>
     </div>

@@ -34,14 +34,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
 
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-3" style="z-index:1">
         <?= $this->render('_menu') ?>
     </div>
     <div class="col-md-9">
         <div class="card_container record-full grid-item fadeInUp animated" id="">
             <div class="primary-context gray normal">
                 <div class="head colos thin"><?= Html::encode($this->title) ?>
-                <div class="action-area"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj licencni paket', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->user_id]), ['class' => 'btn btn-primary btn-sm']) ?></div></div>
+                <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj licencni paket', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->user_id]), ['class' => 'btn btn-primary btn-sm']) ?></div></div>
                 
                 <div class="subhead">Licencni paketi inžerenja. Paket podrazumeva broj licence, kao i kopiju, potvrdu i lični pečat.</div>
             </div>    
@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'label'=>'Broj licence',
                             'format' => 'raw',
                             'value'=>function ($data) {
-                                return Html::a($data->no, ['engineer-licences/update', 'id' => $data->id]);
+                                return Html::a($data->no, ['/engineer-licences/update', 'id' => $data->id]);
                             },
                         ],
 

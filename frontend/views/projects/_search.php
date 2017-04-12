@@ -1,29 +1,40 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\helpers\Url;
+use kartik\widgets\ActiveForm;
+use kartik\widgets\DatePicker;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\ProjectsSearch */
-/* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="projects-search">
+<?php $form = kartik\widgets\ActiveForm::begin([
+    'id' => 'form-horizontal',
+    'type' => ActiveForm::TYPE_VERTICAL,
+    //'fullSpan' => 7,      
+    //'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
+    'options' => ['enctype' => 'multipart/form-data', 'style'=>'margin-top:0 !important;'],
+    //'enableAjaxValidation' => true,
+    'action' => ['index'],
+    'method' => 'get',
+    //'enableClientValidation' => true,
+]); ?>
 
-    <?php $form = ActiveForm::begin([
-        'action' => ['index'],
-        'method' => 'get',
-    ]); ?>
-
-    <?= $form->field($model, 'id') ?>
+    <?php // echo $form->field($model, 'id') ?>
 
     <?= $form->field($model, 'name') ?>
 
-    <?= $form->field($model, 'code') ?>
+    <?php // echo $form->field($model, 'code') ?>
 
-    <?= $form->field($model, 'client_id') ?>
+    <?php // echo $form->field($model, 'client_id') ?>
 
-    <?= $form->field($model, 'building_id') ?>
+    <?= $form->field($model, 'building_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\Buildings::find()->all(), 'id', 'fullname'),
+            'options' => ['placeholder' => 'Izaberite...'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,
+        ])->hint($model->hintBuilding) ?>
 
     <?php // echo $form->field($model, 'location_id') ?>
 
@@ -32,6 +43,13 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'phase') ?>
 
     <?php // echo $form->field($model, 'practice_id') ?>
+    <?= $form->field($model, 'practice_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'engineer_id', 'name'),
+            'options' => ['placeholder' => 'Izaberite...', 'id'=>'catcont-id'],
+            'language' => 'sr-Latn',
+            'changeOnReset' => false,
+            'pluginOptions'=>['allowClear'=>true],
+        ])->hint('') ?>
 
     <?php // echo $form->field($model, 'engineer_id') ?>
 
@@ -46,10 +64,10 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'time') ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary shadow']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Traži'), ['class' => 'btn btn-primary shadow']) ?>
         <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default shadow']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
-</div>
+

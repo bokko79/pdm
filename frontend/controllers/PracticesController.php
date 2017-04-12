@@ -70,7 +70,7 @@ class PracticesController extends Controller
         
         $model = $this->findModel($id);
         $query_pe = \common\models\PracticeEngineers::find()->where(['practice_id' => $id]);
-        $query = \common\models\Projects::find()->where(['practice_id' => $id]);
+        $query = \common\models\Projects::find()->where('practice_id='. $id.' or control_practice_id='.$id);
 
         /* \Yii::$app->mailer->compose(['html' => '/user/mail/new_password', 'text' => '/user/mail/text/new_password'], ['user' => $model->engineer->user])
                 ->setFrom([\Yii::$app->params['supportEmail'] => 'Masterplan ARC d.o.o.'])

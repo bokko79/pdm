@@ -17,9 +17,11 @@ $this->title = Yii::t('app', 'Izmeni {modelClass}: ', [
 $this->params['breadcrumbs'][] = ['label' => $modelCheck->project->name, 'url' => ['projects/view', 'id' => $modelCheck->project_id]];
 $this->params['breadcrumbs'][] = ['label' => $modelCheck->building->class, 'url' => ['view', 'id' => $modelCheck->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Izmeni');
-?>
 
-    <h1><?= Html::encode($this->title) ?></h1>
+$this->params['project'] = $modelCheck->project;
+?>
+<?php /*
+    <h1><?= Html::encode($this->title) ?></h1> */ ?>
 
     <?php /* $this->render('_form', [
         'model' => $model,
@@ -43,6 +45,14 @@ $items = [
     [
         'label'=>'Numerički podaci',
         'content'=>$this->render('form_tabs/_numeric', ['modelCheck'=>$modelCheck, 'model'=>$building['existing'], 'model_new'=>$building['new'], 'form'=>$form]),
+    ],
+    [
+        'label'=>'Klase',
+        'content'=>$this->render('tabs/_classes', ['modelCheck'=>$modelCheck, 'model'=>$model, 'model_new'=>$building['new'], 'projectBuildingClasses'=>$projectBuildingClasses, 'projectBuildingClasses_new'=>$projectBuildingClasses_new]),
+    ],
+    [
+        'label'=>'Visine',
+        'content'=>$this->render('tabs/_heights', ['modelCheck'=>$modelCheck, 'model'=>$model, 'model_new'=>$building['new'], 'projectBuildingHeights'=>$projectBuildingHeights, 'projectBuildingHeights_new'=>$projectBuildingHeights_new]),
     ],
     [
         'label'=>'Karakteristike',
@@ -135,6 +145,14 @@ $items = [
     [
         'label'=>'Numerički podaci',
         'content'=>$this->render('form_tabs/_numeric', ['modelCheck'=>$modelCheck,  'model'=>$building, 'form'=>$form]),
+    ],
+    [
+        'label'=>'Klase',
+        'content'=>$this->render('tabs/_classes', ['modelCheck'=>$modelCheck, 'model'=>$modelCheck, 'projectBuildingClasses'=>$projectBuildingClasses]),
+    ],
+    [
+        'label'=>'Visine',
+        'content'=>$this->render('tabs/_heights', ['modelCheck'=>$modelCheck, 'model'=>$modelCheck, 'projectBuildingHeights'=>$projectBuildingHeights]),
     ],
     [
         'label'=>'Karakteristike',

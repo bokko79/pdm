@@ -41,13 +41,10 @@ $model = isset($this->params['profile']) ? $this->params['profile'] : [];
     ]);
     $menuItems = [
         
-        ['label' => '<i class="fa fa-article"></i> Blog', 'url' => ['/posts']],
-        ['label' => '<i class="fa fa-user-circle-o"></i> Profili',
-            'items' => [
-                ['label' => '<i class="fa fa-shield"></i> Firme', 'url' => ['/practices']],
-                ['label' => '<i class="fa fa-user-circle-o"></i> Inženjeri', 'url' => ['/engineers']],
-            ],
-        ],
+        //['label' => '<i class="fa fa-article"></i> Blog', 'url' => ['/posts']],
+        ['label' => '<i class="fa fa-file-o"></i> Projekti', 'url' => ['/projects']],
+        ['label' => '<i class="fa fa-shield"></i> Firme', 'url' => ['/practices']],
+        ['label' => '<i class="fa fa-user-circle-o"></i> Inženjeri', 'url' => ['/engineers']],
     ];
     
     echo Nav::widget([

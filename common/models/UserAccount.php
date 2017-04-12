@@ -302,13 +302,31 @@ class UserAccount extends BaseUser
     {  
         $model = $this;
         $content = ['info'=>'', 'success'=>'', 'danger'=>'', 'warning'=>''];
+        $engineer = $model->engineer;
+        $practice = $engineer->practice;
 
-        if($engineer = $model->engineer and $engineer->practiceEngineers==null){          
+
+        if(!$engineer){          
+          $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> '.Html::a('Morate se prijaviti kao inženjer/projektant. ', Url::to(['/user/registration/register']), ['target'=>'_blank']).'</p>';
+        }
+
+        if($engineer and $engineer->practiceEngineers==null){          
           $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Trenutno nemate prijavljeno preduzeće. Da biste mogli da kreirate projekte, '.Html::a('registrujte svoju firmu kao direktor', Url::to(['/practices/create', 'engineer_id'=>$model->engineer->user_id]), ['target'=>'_blank']).' ili se '.Html::a('prijavite u postojeću', Url::to(['/practices/index']), ['target'=>'_blank']).' kao zaposleni ili partner.</p>';
         }
-        if($engineer = $model->engineer and $engineer->engineerLicences==null){
-          $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Niste uneli licencne pakete. '.Html::a('Unesi', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->engineer->user_id]), ['target'=>'_blank']).'</p>';
+        if($engineer and $engineer->expertees_id != 31 and $engineer->engineerLicences==null){
+          $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Morate uneti svoje projektantske licencne pakete da bi kreirali projekte. '.Html::a('Unesi', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->engineer->user_id]), ['target'=>'_blank']).'</p>';
         }
+        if($engineer and $engineer->expertees_id != 31 and $engineer->engSignature==null){
+          $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Morate uneti skenirani potpis u .jpg ili .png formatu da bi kreirali projekte. '.Html::a('Unesi', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->engineer->user_id, 'LegalFilesSearch[entity]'=>'engineer', 'LegalFilesSearch[type]'=>'signature']), ['target'=>'_blank']).'</p>';
+        }
+        if(!$practice){
+
+        } else {
+            if($practice->director->engSignature==null or $practice->name==''){
+              $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Morate podesiti podatke Vašeg preduzeća. '.Html::a('Podesi', Url::to(['/practices/update', 'id'=>$model->engineer->user_id]), ['target'=>'_blank']).'</p>';
+            }
+        }
+            
         return $content;
 
     }

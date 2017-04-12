@@ -24,36 +24,36 @@ use yii\bootstrap\Nav;
     <div class="primary-context gray normal">
         <div class="head button_to_show_secondary">Logo
             <div class="action-area normal-case">
-                <?= ($model->logo) ? Html::a('<i class="fa fa-cogs"></i>', Url::to(['/legal-files/update', 'id'=>$model->logoID->id]), ['class' => 'btn btn-success btn-sm']) : null ?>
+                <?= ($model->logo) ? Html::a('<i class="fa fa-cogs"></i>', Url::to(['/practices/update', 'id'=>$model->engineer_id]), ['class' => 'btn btn-success btn-sm']) : null ?>
                  <?php if(!$model->logo): ?><?= Html::a('<i class="fa fa-plus-circle"></i>', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->engineer_id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'logo']), ['class' => 'btn btn-primary btn-sm']) ?><?php endif; ?>
             </div>
         </div>
        
     </div>
     <div class="secondary-context ">
-        <?= ($model->logo) ? Html::img('/images/legal_files/visual/'.$model->logo, ['style'=>'max-height:180px;']) : null ?>
+        <?= $model->logo ?>
     </div>
 </div>
 
 <div class="card_container record-full grid-item fadeInUp animated" id="" style="height:300px;">
     <div class="primary-context gray normal">
         <div class="head button_to_show_secondary">Pečat
-            <div class="action-area normal-case"><?= ($model->stamp) ? Html::a('<i class="fa fa-cogs"></i> Promeni', Url::to(['/legal-files/update', 'id'=>$model->stampID->id]), ['class' => 'btn btn-success btn-sm']) : Html::a('<i class="fa fa-plus-circle"></i> Dodaj pečat', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->engineer_id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'company_stamp']), ['class' => 'btn btn-primary btn-sm']) ?></div>
+            <div class="action-area normal-case"><?php /* ($model->stamp) ? Html::a('<i class="fa fa-cogs"></i> Promeni', Url::to(['/legal-files/update', 'id'=>$model->stampID->id]), ['class' => 'btn btn-success btn-sm']) : Html::a('<i class="fa fa-plus-circle"></i> Dodaj pečat', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->engineer_id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'company_stamp']), ['class' => 'btn btn-primary btn-sm']) */ ?></div>
         </div>
     </div>
     <div class="secondary-context ">
-        <?= ($model->stamp) ? Html::img('/images/legal_files/stamps/'.$model->stamp, ['style'=>'max-height:180px;']) : null ?>
+        <?= ($model->stamp) ? Html::img('/images/legal_files/stamps/'.$model->sFile->name, ['style'=>'max-height:180px;']) : null ?>
     </div>
 </div> 
                     
 <div class="card_container record-full grid-item fadeInUp animated" id="" style="height:300px;">
     <div class="primary-context gray normal">
         <div class="head button_to_show_secondary">Potpis ovl. lica
-            <div class="action-area normal-case"><?= ($model->signature) ? Html::a('<i class="fa fa-cogs"></i> Promeni', Url::to(['/legal-files/update', 'id'=>$model->signatureID->id]), ['class' => 'btn btn-success btn-sm']) :  Html::a('<i class="fa fa-plus-circle"></i> Dodaj potpis ovlašćenog lica', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->engineer_id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'signature']), ['class' => 'btn btn-primary btn-sm']) ?></div>
+            <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cogs"></i> Promeni', Url::to(['/engineers/update', 'id'=>$model->engineer_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
         </div>
     </div>
     <div class="secondary-context">
-        <?= ($model->signature) ? Html::img('/images/legal_files/signatures/'.$model->signature, ['style'=>'max-height:180px;']) : null ?>
+        <?= $model->director->engSignature ?>
     </div>
 </div> 
 

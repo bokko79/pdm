@@ -100,9 +100,9 @@ use kartik\checkbox\CheckboxX;
 
     <?= $form->field($model, 'legal')->textarea(['rows' => 6, 'placeholder'=>'']) ?>    
 
-    <div class="row" style="margin:20px;">
-        <div class="col-md-offset-3">
-            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    <div class="row" style="margin:20px 0;">
+        <div class="col-md-offset-3 col-md-4">
+            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success btn-block shadow' : 'btn btn-primary btn-block shadow']) ?>
         </div>        
     </div>
 

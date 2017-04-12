@@ -34,7 +34,7 @@ class ProjectClients extends \yii\db\ActiveRecord
             [['project_id', 'client_id'], 'required'],
             [['project_id', 'client_id', 'status'], 'integer'],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
-            [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::className(), 'targetAttribute' => ['client_id' => 'user_id']],
+            [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::className(), 'targetAttribute' => ['client_id' => 'id']],
         ];
     }
 
@@ -64,7 +64,7 @@ class ProjectClients extends \yii\db\ActiveRecord
      */
     public function getClient()
     {
-        return $this->hasOne(Clients::className(), ['user_id' => 'client_id']);
+        return $this->hasOne(Clients::className(), ['id' => 'client_id']);
     }
 
     /**

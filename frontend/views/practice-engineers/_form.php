@@ -30,11 +30,12 @@ use kartik\widgets\FileInput;
             'data' => ArrayHelper::map(\common\models\Engineers::find()->all(), 'user_id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
-            'changeOnReset' => false,           
+            'changeOnReset' => false, 
+            'disabled' => $model->engineer_id ? true  : false,          
         ]) ?>
 
 
-    <?= $form->field($model, 'position')->dropDownList([ 'direktor' => 'direktor', 'zaposleni' => 'zaposleni', 'partner' => 'partner', 'drugo' => 'drugo',], ['prompt' => '']) ?>
+    <?= $form->field($model, 'position')->dropDownList([ /*'direktor' => 'direktor',*/ 'zaposleni' => 'zaposleni', 'partner' => 'partner', /*'drugo' => 'drugo',*/ ], ['prompt' => '']) ?>
 
     <div class="row" style="margin:20px;">
         <div class="col-md-offset-3">

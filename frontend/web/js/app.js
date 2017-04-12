@@ -211,6 +211,8 @@ function showSecondary() {
   var hash = window.location.hash;
   $('ul.nav-tabs a[href="' + hash + '"]').tab('show');
 
+  $('ul.nav-tabs').tabCollapse();
+
 
   $("select#work-id").on('change', function(){      
       var selectVal = $(this).val();
@@ -219,6 +221,30 @@ function showSecondary() {
           $('.adaptacija_part').show('');
       } else {
           $('.adaptacija_part').hide('');
+      }
+      
+    });
+
+   $("select#engineers-expertees_id").on('change', function(){      
+      var selectVal = $(this).val();
+      
+      if ( selectVal != 31 ) {
+          $('.expertees_part').show('');
+      } else {
+          $('.expertees_part').hide('');
+      }
+      
+    });
+
+   $("select#register-form-practice_join").on('change', function(){      
+      var selectVal = $(this).val();
+      
+      if ( selectVal == 0 ) {
+          $('.new_practice').show('');
+          $('.join_practice').hide('');
+      } else {
+          $('.join_practice').show('');
+          $('.new_practice').hide('');
       }
       
     });

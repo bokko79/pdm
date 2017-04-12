@@ -117,10 +117,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container-fluid">
 <div class="row" style="margin:40px 0;">
     <div class="col-sm-6">
-    <?= Html::a('Registruj se kao inženjer', ['/user/registration/register'], ['class'=>'btn btn-primary btn-lg shadow']); ?>
+        <?= Html::a('Standardna registracija', ['/user/registration/register-client'], ['class'=>'btn btn-default btn-lg shadow']); ?>
     </div>
-    <div class="col-sm-6">
-        <?= Html::a('Registruj se kao investitor', ['/user/registration/register-client'], ['class'=>'btn btn-default btn-lg shadow']); ?>
+    <div class="col-sm-6">        
+        <?= Html::a('Registracija inženjera', ['/user/registration/register'], ['class'=>'btn btn-primary btn-lg shadow']); ?>
     </div>
 </div>
 </div>

@@ -10,16 +10,16 @@ use yii\imagine\Image;
  *
  * @property string $id
  * @property string $engineer_id
- * @property integer $type
+ * @property string $licence_id
  * @property string $no
  * @property string $copy_id
  * @property string $conf_id
  * @property string $stamp_id
  *
- * @property Engineers $engineer
  * @property Files $copy
  * @property Files $conf
  * @property Files $stamp
+ * @property Licences $licence
  * @property ProjectVolumes[] $projectVolumes
  * @property ProjectVolumes[] $projectVolumes0
  */
@@ -42,15 +42,14 @@ class EngineerLicences extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['engineer_id', 'no', ], 'required'],
-            [['engineer_id', 'type', 'copy_id', 'conf_id', 'stamp_id'], 'integer'],
+            [['engineer_id', 'no', 'licence_id'], 'required'],
+            [['engineer_id', 'licence_id', 'copy_id', 'conf_id', 'stamp_id'], 'integer'],
             [['no'], 'string', 'max' => 12],
             [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'user_id']],
             [['copy_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['copy_id' => 'id']],
             [['conf_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['conf_id' => 'id']],
             [['stamp_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['stamp_id' => 'id']],
             [['copyFile', 'confFile', 'stampFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
-            [[ 'stampFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg, gif'],
         ];
     }
 
@@ -62,7 +61,7 @@ class EngineerLicences extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'engineer_id' => Yii::t('app', 'Inženjer'),
-            'type' => Yii::t('app', 'Vrsta licence'),
+            'licence_id' => Yii::t('app', 'Vrsta licence'),
             'no' => Yii::t('app', 'Broj licence'),
             'copy_id' => Yii::t('app', 'Kopija licence'),
             'conf_id' => Yii::t('app', 'Potvrda licence'),
@@ -137,15 +136,15 @@ class EngineerLicences extends \yii\db\ActiveRecord
         if ($this->validate()) {
            
             $fileName = $this->id . '_' . time();            
-
-            $this->stampFile->saveAs('images/legal_files/licences/'. $fileName . '1.' . $this->stampFile->extension);         
+            $thumb = 'images/legal_files/licences/'.$fileName.'1.'.$this->stampFile->extension;
+            $this->stampFile->saveAs($thumb);         
             
             $image = new \common\models\Files();
             $image->name = $fileName . '.' . $this->stampFile->extension;
             $image->type = 'jpg';
             $image->time = time();
             
-            $thumb = 'images/legal_files/licences/'.$fileName.'1.'.$this->stampFile->extension;
+            
             Image::thumbnail($thumb, 800, 640)->save(\Yii::getAlias('images/legal_files/licences/'.$fileName.'.'.$this->stampFile->extension), ['quality' => 80]); 
             unlink(\Yii::getAlias($thumb));
             
@@ -167,6 +166,14 @@ class EngineerLicences extends \yii\db\ActiveRecord
     public function getEngineer()
     {
         return $this->hasOne(Engineers::className(), ['user_id' => 'engineer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLicence()
+    {
+        return $this->hasOne(Licences::className(), ['id' => 'licence_id']);
     }
 
     /**

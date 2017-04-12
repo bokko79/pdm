@@ -28,7 +28,7 @@ R 1:<?= $drawing->scale ?></span>
 
 <table class="sheet" style="width:550px !important;">	
 	<tr>
-		<td class="" rowspan="5" style="margin:0; padding:0; border-right:1px solid #aaa"><?= Html::img('@web/images/legal_files/visual/'.$practice->logo, ['style'=>'width:100px; height:180px;']) ?></td>
+		<td class="" rowspan="5" style="margin:0; padding:0; border-right:1px solid #aaa"><?= $practice->getLogo(100,180) ?></td>
 		<td colspan="2" class="middle" bgcolor="#eee">
 			<table class="clear nopadd" style="">
 				<tr>

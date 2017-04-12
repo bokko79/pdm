@@ -221,7 +221,7 @@ $futureDevs = $model->projectLotFutureDevelopments;
 			<?= $architecture->orientation ? '<h5 class="nopadd">Orjentacija objekta</h5><p>'.$architecture->orientation.'</p>' : null; ?>
 
 		<h4 class="nopadd">Prostorna struktura</h4>
-		<?php foreach($model->projectBuilding->projectBuildingStoreys as $storey): ?>
+		<?php foreach($building->projectBuildingStoreys as $storey): ?>
 		<p>Na koti <?= ($storey->level)==0 ? '&plusmn;' : null ?><?= ($storey->level)>0 ? '+' : null ?><?= $formatter->format($storey->level, ['decimal',2]) ?>  (aps. kota <?= ($storey->level+$projectLot->ground_level)>0 ? '+' : null ?><?= $formatter->format($storey->level+$projectLot->ground_level, ['decimal',2]) ?>) <b><?= $storey->name ?></b>, spratne visine <?= $formatter->format($storey->height, ['decimal',2]) ?>m, predviđene su sledeće prostorno-funkcionalne celine, odnosno jedinice:
 				<?php if($storey->brStanova){echo 'stambene jedinice ('.$storey->brStanova .'), ' ;} ?>
 				<?php if($storey->brPoslProstora){echo 'poslovni prostori ('.$storey->brPoslProstora .'), ';} ?>
@@ -238,7 +238,7 @@ $futureDevs = $model->projectLotFutureDevelopments;
 		<h4 class="sub">Prikaz površina</h4>
 		<div style="margin:0 40px 10px 40px;">
 			<table class="clear nopadd" style="width:70%;">
-			<?php foreach($model->projectBuilding->projectBuildingStoreys as $storey): ?>
+			<?php foreach($building->projectBuildingStoreys as $storey): ?>
 				<tr>
 					<td class="" style="width:40%; border-bottom:1px dotted #777; padding-top:20px;"><h4 class="uppercase"><?= $storey->name ?></h4></td>
 					<td style="border-bottom:1px dotted #777; width:160px;"></td>
@@ -286,7 +286,7 @@ $futureDevs = $model->projectLotFutureDevelopments;
 				</tr>
 				<tr>
 					<td class="" style=""><h4 class="uppercase">PROSEČNA VELIČINA STANA</h4></td>
-					<td class="right" style=""><?= $formatter->format($building->netAreaStan/$building->brStanova, ['decimal',2]) ?> m<sup>2</sup></td>
+					<td class="right" style=""><?= $building->brStanova!=0 ? $formatter->format($building->netAreaStan/$building->brStanova, ['decimal',2]) : 0 ?> m<sup>2</sup></td>
 				</tr>
 				<tr>
 					<td class="" style=""><h4 class="uppercase">UKUPNA POSLOVNA POVRŠINA</h4></td>
@@ -437,7 +437,7 @@ $futureDevs = $model->projectLotFutureDevelopments;
 			</td>
 			<td class="right" style="width:60%;">
 				<small>Sastavio:</small><br>
-				<?= $volume->engineer->name. ', '.$volume->engineer->title ?><br>
+				<?= $volume->engineer->name. ', '.$volume->engineer->expertees->short ?><br>
 				<small>br. licence:<?= $volume->engineerLicence->no ?></small>
 				<div style="width:300px; height: 0px; border-bottom: 1px solid #777;"></div>
 				<br>

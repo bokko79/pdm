@@ -18,7 +18,7 @@ class ClientsSearch extends Clients
     public function rules()
     {
         return [
-            [['user_id', 'location_id'], 'integer'],
+            [['practice_id', 'location_id'], 'integer'],
             [['name', 'phone', 'email', 'type', 'contact_person'], 'safe'],
         ];
     }
@@ -59,7 +59,7 @@ class ClientsSearch extends Clients
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'user_id' => $this->user_id,
+            'practice_id' => $this->practice_id,
             'location_id' => $this->location_id,
         ]);
 

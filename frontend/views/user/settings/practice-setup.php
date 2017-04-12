@@ -32,9 +32,17 @@ $this->params['breadcrumbs'][] = $this->title;
 if($practice){
     $items = [
         [
-            'label'=>'<i class="fa fa-shield"></i> Profil',
+            'label'=>'<i class="fa fa-shield"></i> Podaci firme',
             'content'=>$this->render('tabs/_general', ['model'=>$practice]),
             'active'=>true
+        ],        
+        [
+            'label'=>'<i class="fa fa-tags"></i> Inženjeri',
+            'content'=>$this->render('tabs/_staff', ['model'=>$practice, 'practiceEngineers' => $practiceEngineers]),
+        ],
+        [
+            'label'=>'<i class="fa fa-tags"></i> Investitori',
+            'content'=>$this->render('tabs/_clients', ['model'=>$practice, 'clients' => $clients, 'dataProvider' => $dataProvider]),
         ],
         [
             'label'=>'<i class="fa fa-user-circle-o"></i> Portfolio',
@@ -43,10 +51,6 @@ if($practice){
         [
             'label'=>'<i class="fa fa-file-text"></i> Dokumenti',
             'content'=>$this->render('tabs/_docs', ['model'=>$practice]),
-        ],
-        [
-            'label'=>'<i class="fa fa-tags"></i> Osoblje',
-            'content'=>$this->render('tabs/_staff', ['model'=>$practice, 'practiceEngineers' => $practiceEngineers]),
         ],
     ];
 } else {
@@ -59,11 +63,11 @@ if($practice){
 <?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
 
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-3" style="z-index: 1">
         <?= $this->render('_menu') ?>
     </div>
     <div class="col-md-9">
-        <div class="card_container record-full grid-item fadeInUp animated" id="">
+        <div class="card_container record-full grid-item fadeInUp no-shadow transparent no-margin animated" id="">
             <div class="primary-context gray normal">
                 <div class="head colos thin"><?= Html::encode($this->title) ?>
                 <div class="action-area normal-case"><?= ($practice) ? Html::a('<i class="fa fa-cogs"></i> Podešavanje detalja firme', Url::to(['/practices/update', 'id'=>$model->user_id]), ['class' => 'btn btn-success btn-sm shadow']) : Html::a('<i class="fa fa-plus-circle"></i> Kreiraj svoju firmu', Url::to(['/practices/create', 'Practices[engineer_id]'=>$model->user_id]), ['class' => 'btn btn-primary btn-sm shadow']) ?></div></div>

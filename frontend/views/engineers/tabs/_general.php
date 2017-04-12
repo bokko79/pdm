@@ -22,7 +22,7 @@ use yii\bootstrap\Nav;
             'attributes' => [
                 //'id',
                 'name',
-                'title',
+                'expertees.name',
                 'phone',
                 'email:email',
             ],

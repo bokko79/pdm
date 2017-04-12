@@ -9,6 +9,8 @@ use yii\widgets\Pjax;
 
 $this->title = Yii::t('app', 'Project Building Doorwins');
 $this->params['breadcrumbs'][] = $this->title;
+
+$this->params['project'] = $model->project;
 ?>
 <div class="project-building-doorwin-index">
 

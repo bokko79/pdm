@@ -21,23 +21,26 @@ $this->title = Yii::t('app', 'Podešavanje {modelClass} ', [
 ]) . $model->project->code;
 $this->params['breadcrumbs'][] = ['label' => 'Parcela@'.$model->project->name, 'url' => ['/project-lot/view', 'id' => $model->project_id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Podešavanje');
+
+$this->params['project'] = $model->project;
+
 ?>
-<div class="project-lot-update">
+<h1 class="col-md-offset-3"><?= Html::encode($this->title) ?></h1>
+<?php /* 
+    
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?php /* $this->render('_form', [
+    $this->render('_form', [
         'model' => $model,
     ]) */ ?>
 
-</div>
+
 <?php
 $form = kartik\widgets\ActiveForm::begin([
     //'id' => 'form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
     'fullSpan' => 10,      
    	'formConfig' => ['labelSpan' => 4, 'deviceSize' => ActiveForm::SIZE_SMALL],
-    'options' => ['enctype' => 'multipart/form-data'],
+    'options' => ['enctype' => 'multipart/form-data', /*'style'=>'margin-top:0px !important;'*/],
 ]);
 
 $items = [
@@ -67,6 +70,12 @@ $items = [
 ?>
 
 <div class="container-fluid">
+    <div class="row"">
+
+        <div class="col-md-offset-9 col-md-3 right">
+            <?= Html::submitButton('<i class="fa fa-save"></i> Sačuvaj', ['class' => 'btn btn-success  btn-sm']) ?>
+        </div>        
+    </div>
     <div class="row">
         <div class="col-sm-12">
             <?php
@@ -83,9 +92,9 @@ $items = [
     </div>
     <div class="row"">
 
-        <div class="col-md-offset-6">
+        <div class="col-md-offset-6 col-md-4">
         	<hr>
-            <?= Html::submitButton('<i class="fa fa-save"></i> Sačuvaj', ['class' => 'btn btn-success btn-lg']) ?>
+            <?= Html::submitButton('<i class="fa fa-save"></i> Sačuvaj', ['class' => 'btn btn-success btn-block btn-lg']) ?>
         </div>        
     </div>
 </div>

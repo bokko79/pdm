@@ -78,7 +78,7 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
      */
     public function getProjectBuildingStoreyPartRooms()
     {
-        return $this->hasMany(ProjectBuildingStoreyPartRooms::className(), ['project_building_storey_part_id' => 'id'])->orderBy('CAST(mark as INTEGER)');
+        return $this->hasMany(ProjectBuildingStoreyPartRooms::className(), ['project_building_storey_part_id' => 'id'])->orderBy('mark');
     }
 
     /**

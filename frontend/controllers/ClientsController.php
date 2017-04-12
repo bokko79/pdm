@@ -96,10 +96,10 @@ class ClientsController extends Controller
         $location = new \common\models\Locations();
 
         if ($model->load(Yii::$app->request->post()) and $location->load(Yii::$app->request->post()) and $location->save()) {
-            $model->user_id = Yii::$app->user->id;
+            $model->practice_id = Yii::$app->user->id;
             $model->location_id = $location->id;
             if($model->save()){
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['/user/settings/practice-setup', '#' => 'w5-tab2']);
             }
         } else {
             return $this->render('create', [

@@ -13,51 +13,20 @@ $this->title = Yii::t('app', 'Firme');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="card_container record-full transparent no-shadow grid-item fadeInUp animated" id="">
-    <div class="primary-context  normal">
-        <div class="head">
-            <h1 style="display: inline;"><i class="fa fa-shield"></i> <?= Html::encode($this->title) ?></h1>
-            <div class="action-area normal-case">
-                <?= (\Yii::$app->user->can('engineer') and \Yii::$app->user->engineer and \Yii::$app->user->engineer->practice) ? Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Nova firma'), ['create'], ['class' => 'btn btn-success' ]) : null ?>
-                <div style="width: ;">
-   <?php echo $this->render('_search', ['model' => $searchModel]); ?> 
-</div>
-            </div>
-        </div>
-        <div class="subhead">Lista registrovanih preduzeća.</div>
-    </div>              
-</div>
-<hr>
 
-<?php /* Pjax::begin(); ?>    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            //'id',
-            [
-               'label'=>'Naziv firme',
-               'format' => 'raw',
-               'value'=>function ($data) {
-                    return Html::a($data->name, ['/practices/view', 'id'=>$data->engineer_id]);
-                },
-            ],
-            'name',
-            'location_id',
-            'phone',
-            'email:email',
-            'engineer.name',
-            // 'fax',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-<?php Pjax::end(); */ ?>
-
-
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3">
+        <h5><i class="fa fa-filter"></i> Filter</h5><br>
+        <?= $this->render('_search', ['model' => $searchModel]); ?>
+    </div>
+    <div class="col-sm-9">
+        <h1><i class="fa fa-shield"></i> <?= $this->title ?></h1>
         <?= ListView::widget([
             'dataProvider' => $dataProvider,
             'itemView' => '_practice',
             'itemOptions' => [],
         ]) ?>
+    </div>
+ </div>
+</div>

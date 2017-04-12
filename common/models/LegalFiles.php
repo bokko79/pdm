@@ -35,7 +35,7 @@ class LegalFiles extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'entity', 'entity_id'], 'required'],
+            [['type', 'entity', 'entity_id', 'docFile'], 'required'],
             [['type', 'entity'], 'string'],
             [['entity_id', 'file_id'], 'integer'],
             [['value'], 'string', 'max' => 64],

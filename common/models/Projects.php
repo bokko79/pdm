@@ -16,13 +16,22 @@ use Yii;
  * @property string $engineer_id
  * @property string $control_practice_id
  * @property string $control_engineer_id
+ * @property string $builder_practice_id
+ * @property string $builder_engineer_id
+ * @property string $supervision_practice_id
+ * @property string $supervision_engineer_id
  * @property string $name
  * @property string $code
  * @property string $phase
  * @property string $work
  * @property string $status
  * @property string $time
- * @property string $year
+ * @property integer $year
+ * @property string $type
+ * @property integer $visible
+ * @property string $secret
+ * @property string $start_date
+ * @property string $end_date
  *
  * @property ProjectBuilding $projectBuilding
  * @property ProjectBuildingCharacteristics $projectBuildingCharacteristics
@@ -54,6 +63,8 @@ class Projects extends \yii\db\ActiveRecord
     public $storey;
     public $part_type;
 
+    public $address;
+
     public $exchange = 124.5;
 
     /**
@@ -71,12 +82,15 @@ class Projects extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'code', 'user_id', 'client_id', 'building_id', 'practice_id', 'engineer_id', 'phase', 'work'], 'required'],
-            [['client_id', 'building_id', 'location_id', 'practice_id', 'engineer_id', 'control_practice_id', 'control_engineer_id', 'builder_practice_id', 'builder_engineer_id', 'supervision_practice_id', 'supervision_engineer_id', 'time', 'year'], 'integer'],
+            [['client_id', 'building_id', 'location_id', 'practice_id', 'engineer_id', 'control_practice_id', 'control_engineer_id', 'builder_practice_id', 'builder_engineer_id', 'supervision_practice_id', 'supervision_engineer_id', 'time', 'year', 'visible'], 'integer'],
             [['code'], 'unique', 'targetAttribute' => 'code'],
-            [['phase', 'work', 'status'], 'string'],
+            [['phase', 'work', 'status', 'type'], 'string'],
+            [['address'], 'safe'],
+            [['start_date', 'end_date'], 'safe'],
             [['name'], 'string', 'max' => 128],
             [['code'], 'string', 'max' => 20],
-            [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::className(), 'targetAttribute' => ['client_id' => 'user_id']],
+            [['secret'], 'string', 'max' => 6],
+            [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::className(), 'targetAttribute' => ['client_id' => 'id']],
             [['location_id'], 'exist', 'skipOnError' => true, 'targetClass' => Locations::className(), 'targetAttribute' => ['location_id' => 'id']],
             [['building_id'], 'exist', 'skipOnError' => true, 'targetClass' => Buildings::className(), 'targetAttribute' => ['building_id' => 'id']],
             [['practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['practice_id' => 'engineer_id']],
@@ -121,6 +135,12 @@ class Projects extends \yii\db\ActiveRecord
             'supervision_practice_id' => Yii::t('app', 'Stručni nadzor'),
             'supervision_engineer_id' => Yii::t('app', 'Odgovorno lice stručnog nadzora'),
             'time' => Yii::t('app', 'Datum'),
+            'type' => Yii::t('app', 'Tip'),
+            'visible' => Yii::t('app', 'Visible'),
+            'secret' => Yii::t('app', 'Secret'),
+            'start_date' => Yii::t('app', 'Start Date'),
+            'end_date' => Yii::t('app', 'End Date'),
+            'year' => Yii::t('app', 'Godina'),
 
             'storey' => Yii::t('app', 'Etaža jedinice'),
             'part_type' => Yii::t('app', 'Vrsta jedinice'),
@@ -262,7 +282,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getClient()
     {
-        return $this->hasOne(Clients::className(), ['user_id' => 'client_id']);
+        return $this->hasOne(Clients::className(), ['id' => 'client_id']);
     }
 
     /**
@@ -344,6 +364,14 @@ class Projects extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Engineers::className(), ['user_id' => 'supervision_engineer_id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAvatar($w=160, $h=120)
+    {
+        return $this->projectFiles ? \yii\helpers\Html::img('@web/images/projects/'.$this->year.'/'.$this->id.'/'.$this->projectFiles[0]->file->name, ['style'=>'width:'.$w.'px; max-height:'.$h.'px;']) : \yii\helpers\Html::img('@web/images/no_pic_image.png');
+    }    
 
     /**
      * @return \yii\db\ActiveQuery

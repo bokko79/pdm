@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model common\models\Clients */
 
 $this->title = Yii::t('app', 'Dodavanje novog investitora');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Investitori'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Moji investitori'), 'url' => ['/user/settings/practice-setup', '#'=>'w5-tab2']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="clients-create">

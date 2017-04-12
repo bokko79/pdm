@@ -18,7 +18,7 @@ class ProjectsSearch extends Projects
     public function rules()
     {
         return [
-            [['id', 'user_id', 'client_id', 'building_id', 'location_id', 'practice_id', 'engineer_id', 'time'], 'integer'],
+            [['id', 'user_id', 'client_id', 'building_id', 'location_id', 'practice_id', 'engineer_id', 'time', 'visible'], 'integer'],
             [['name', 'code', 'work', 'phase', 'status'], 'safe'],
         ];
     }
@@ -67,6 +67,7 @@ class ProjectsSearch extends Projects
             'practice_id' => $this->practice_id,
             'engineer_id' => $this->engineer_id,
             'time' => $this->time,
+            'visible' => $this->visible,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
@@ -74,6 +75,7 @@ class ProjectsSearch extends Projects
             ->andFilterWhere(['like', 'work', $this->work])
             ->andFilterWhere(['like', 'phase', $this->phase])
             ->andFilterWhere(['like', 'status', $this->status]);
+
 
         return $dataProvider;
     }

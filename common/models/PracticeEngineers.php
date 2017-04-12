@@ -33,10 +33,10 @@ class PracticeEngineers extends \yii\db\ActiveRecord
     {
         return [
             [['practice_id', 'engineer_id'], 'required'],
-            [['practice_id', 'engineer_id', 'status'], 'integer'],
-            [['position'], 'string'],
-            [['practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['practice_id' => 'id']],
-            [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'id']],
+            [['practice_id', 'engineer_id', 'time'], 'integer'],
+            [['position', 'status'], 'string'],
+            [['practice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Practices::className(), 'targetAttribute' => ['practice_id' => 'engineer_id']],
+            [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'user_id']],
         ];
     }
 
@@ -50,7 +50,7 @@ class PracticeEngineers extends \yii\db\ActiveRecord
             'practice_id' => Yii::t('app', 'Firma'),
             'engineer_id' => Yii::t('app', 'Inženjer'),
             'position' => Yii::t('app', 'Pozicija'),
-            'status' => Yii::t('app', 'Status'),
+            'status' => Yii::t('app', 'Status'), // to_join, invited, joined
         ];
     }
 

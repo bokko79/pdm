@@ -61,7 +61,7 @@ class ProjectVolumesController extends Controller
         $this->layout = 'project';
         
         $model = $this->findModel($id);
-        $query_cla = \common\models\ProjectVolumeDrawings::find()->where('project_volume_id='.$id)->orderBy('CAST(number AS INTEGER)');
+        $query_cla = \common\models\ProjectVolumeDrawings::find()->where('project_volume_id='.$id)/*->orderBy('CAST("number" AS INTEGER)')*/;
         $model->dataReqFlash($model->dataReqs());
         // validate if there is a editable input saved via AJAX
         if (Yii::$app->request->post('hasEditable')) {

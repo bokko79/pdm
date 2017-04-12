@@ -18,7 +18,7 @@ class EngineerLicencesSearch extends EngineerLicences
     public function rules()
     {
         return [
-            [['id', 'engineer_id', 'type'], 'integer'],
+            [['id', 'engineer_id', 'licence_id'], 'integer'],
         ];
     }
 
@@ -60,7 +60,7 @@ class EngineerLicencesSearch extends EngineerLicences
         $query->andFilterWhere([
             'id' => $this->id,
             'engineer_id' => $this->engineer_id,
-            'type' => $this->type,
+            'licence_id' => $this->licence_id,
         ]);
 
         return $dataProvider;

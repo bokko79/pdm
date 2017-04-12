@@ -26,7 +26,12 @@ use kartik\widgets\FileInput;
             'disabled' => true,          
         ]) ?>
 
-    <?php // $form->field($model, 'type')->textInput() ?>
+    <?= $form->field($model, 'licence_id')->widget(Select2::classname(), [
+                        'data' => ArrayHelper::map(\common\models\Licences::find()->all(), 'id', 'fullname'),
+                        'options' => ['placeholder' => 'Izaberite...'],
+                        'language' => 'sr-Latn',
+                        'changeOnReset' => false,           
+                    ]) ?>
 
     <?= $form->field($model, 'no')->textInput() ?>
 

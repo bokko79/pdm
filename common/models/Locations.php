@@ -41,6 +41,7 @@ class Locations extends \yii\db\ActiveRecord
         return [
             [['city_id'], 'required'],
             [['county_id'], 'integer'],
+            [['lat', 'lng'], 'number'],
             [['name'], 'string', 'max' => 100],
             [['street'], 'string', 'max' => 80],
             [['number', 'lot'], 'string', 'max' => 20],
@@ -135,9 +136,9 @@ class Locations extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getFullAddress()
+    public function getFullAddress($br=false)
     {
-        return (($this->street and $this->number) ? 'ul. '.$this->street . ' br. '.$this->number. ', ' : null).$this->city->town;
+        return (($this->street and $this->number) ? 'ul. '.$this->street . ' br. '.$this->number. ', ' : null).($br ? '<br>' : null).$this->city->town;
     } 
 
     /**

@@ -17,7 +17,8 @@ class AppAsset extends AssetBundle
         'css/style.css',
         'css/style_box1.css',
     ];
-    public $js = [
+    public $js = [        
+        'js/bootstrap-tabcollapse.js',
         'js/app.js',
     ];
     public $depends = [

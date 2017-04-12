@@ -80,7 +80,7 @@ class LegalFilesController extends Controller
                         $model->save();
                     }                    
                     //return $this->redirect([''.$model->entity.'s/view', 'id' => $model->entity_id, '#'=>'w4-tab3']);
-                    return \Yii::$app->user->client!=null ? $this->redirect(['user/settings/document-client']) : $this->redirect(['user/settings/document-setup']);
+                    return $this->redirect(['user/settings/document-setup']);
                 }                    
             } else {
                 return $this->render('create', [
@@ -112,7 +112,7 @@ class LegalFilesController extends Controller
                 }
                 
                 $model->save();
-                return \Yii::$app->user->client!=null ? $this->redirect(['user/settings/document-client']) : $this->redirect(['user/settings/document-setup']);
+                return $this->redirect(['user/settings/document-setup']);
             }                    
         } else {
             return $this->render('update', [

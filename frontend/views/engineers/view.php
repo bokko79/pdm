@@ -38,6 +38,23 @@ $items = [
     ],
 ];
 ?>
+<div class="row">
+    <div class="col-md-3" style="z-index:1">
+        <?= $this->render('_menu', ['model'=>$model, 'projects'=>$projects]) ?>
+    </div>
+    <div class="col-md-9">
+        <div class="card_container record-full grid-item fadeInUp no-shadow animated-not " id="">
+          <div class="secondary-context">
+            <div class="head major">
+              <div class="subhead uppercase hint" style="margin-bottom: 5px;">Opis</div>                               
+            </div>  
+            <?= $model->about ?>             
+          </div>
+        </div> 
+        <?= $this->render('tabs/_projects', ['model'=>$model, 'projects'=>$projects]) ?>
+        <?php /* (Yii::$app->user->client!=null) ? $this->render('tabs/_requests', ['model'=>$model->client, 'requests'=>$requests]) : null */ ?>
+    </div>
+</div>
 
 <div class="container-fluid">
     <div class="row">

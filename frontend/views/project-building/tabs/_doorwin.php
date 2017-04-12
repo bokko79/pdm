@@ -9,6 +9,12 @@ use common\widgets\Alert;
 use yii\bootstrap\Nav;
 
 ?>
+
+<?php if($modelCheck->project->work=='dogradnja' or $modelCheck->project->work=='sanacija' or $modelCheck->project->work=='rekonstrukcija'): ?>
+
+
+<?php else: ?>
+
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
         <div class="head">Stolarija i bravarija objekta
@@ -36,3 +42,5 @@ use yii\bootstrap\Nav;
         ]); ?>
     </div>
 </div>
+
+<?php endif; ?>

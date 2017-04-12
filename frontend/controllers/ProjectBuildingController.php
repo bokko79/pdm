@@ -55,82 +55,72 @@ class ProjectBuildingController extends Controller
     {
         $this->layout = 'project';
 
-        $model = $this->findModel($id);
+        /*$model = $this->findModel($id);
         $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_building_id' => $id]);
         $query_st = \common\models\ProjectBuildingStoreys::find()->where(['project_building_id' => $id])->orderBy('level');
         $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_building_id' => $id]);
         $query_pa = \common\models\ProjectBuildingParts::find()->where(['project_building_id' => $id]);
-        $query_dw = \common\models\ProjectBuildingDoorwin::find()->where(['project_building_id' => $id]);
+        $query_dw = \common\models\ProjectBuildingDoorwin::find()->where(['project_building_id' => $id]);*
         $searchModel = new \common\models\ProjectBuildingStoreyPartRoomsSearch();
-        $rooms = $searchModel->search(Yii::$app->request->queryParams);
-        
-        // validate if there is a editable input saved via AJAX
-        if (Yii::$app->request->post('hasEditable')) {
-            // instantiate your book model for saving
-            $roomId = Yii::$app->request->post('editableKey');
-            $model = \common\models\ProjectBuildingStoreyPartRooms::findOne($roomId);
+        $rooms = $searchModel->search(Yii::$app->request->queryParams);*/
 
-            // store a default json response as desired by editable
-            $out = \yii\helpers\Json::encode(['output'=>'', 'message'=>'']);
-
-            // fetch the first entry in posted data (there should only be one entry 
-            // anyway in this array for an editable submission)
-            // - $posted is the posted data for Book without any indexes
-            // - $post is the converted array for single model validation
-            $posted = current($_POST['ProjectBuildingStoreyPartRooms']);
-            $post = ['ProjectBuildingStoreyPartRooms' => $posted];
-
-            // load model like any single model validation
-            if ($model->load($post)) {
-                // can save model or do something before saving model
-                $model->save();
-
-                // custom output to return to be displayed as the editable grid cell
-                // data. Normally this is empty - whereby whatever value is edited by
-                // in the input by user is updated automatically.
-                $output = '';
-
-                // specific use case where you need to validate a specific
-                // editable column posted when you have more than one
-                // EditableColumn in the grid view. We evaluate here a
-                // check to see if buy_amount was posted for the Book model
-                /*if (isset($posted['buy_amount'])) {
-                    $output = Yii::$app->formatter->asDecimal($model->buy_amount, 2);
-                }*/
-
-                // similarly you can check if the name attribute was posted as well
-                // if (isset($posted['name'])) {
-                // $output = ''; // process as you need
-                // }
-                $out = \yii\helpers\Json::encode(['output'=>$output, 'message'=>'']);
-            }
-            // return ajax json encoded response and exit
-            echo $out;
-            return;
+        $modelCheck = $this->findModel($id);
+        $model = null;
+        $model_new = null;
+        $building = null;
+        if($modelCheck->project->work=='dogradnja' or $modelCheck->project->work=='sanacija' or $modelCheck->project->work=='rekonstrukcija'){
+            if($modelCheck->mode=='new'){
+                $model = $this->findExModel($id);
+                $model_new = $modelCheck;  
+                              
+            } else {
+                $model = $modelCheck;
+                $model_new = $this->findNewModel($id);             
+            }            
+            $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_building_id' => $model->id]);
+            $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_building_id' => $model->id]);
+            $query_cl_new = \common\models\ProjectBuildingClasses::find()->where(['project_building_id' => $model_new->id]);
+            $query_he_new = \common\models\ProjectBuildingHeights::find()->where(['project_building_id' => $model_new->id]);
+        } else {          
+            $modelCheck = $this->findModel($id);
+            $model = $this->findModel($id);  
+            $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_building_id' => $id]);
+            $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_building_id' => $id]);
+            $query_cl_new = null;
+            $query_he_new = null;
         }
+        
 
         return $this->render('view', [
             'model' => $model,
+            'model_new' => $model_new,
+            'modelCheck' => $modelCheck,
             'projectBuildingClasses' => new ActiveDataProvider([
                 'query' => $query_cl,
             ]),
-            'projectBuildingStoreys' => new ActiveDataProvider([
-                'query' => $query_st,
+            'projectBuildingClasses_new' => new ActiveDataProvider([
+                'query' => $query_cl_new,
             ]),
+            /*'projectBuildingStoreys' => new ActiveDataProvider([
+                'query' => $query_st,
+            ]),*/
             'projectBuildingHeights' => new ActiveDataProvider([
                 'query' => $query_he,
             ]),
-            'projectBuildingParts' => new ActiveDataProvider([
+            'projectBuildingHeights_new' => new ActiveDataProvider([
+                'query' => $query_he_new,
+            ]),
+            /*'projectBuildingParts' => new ActiveDataProvider([
                 'query' => $query_pa,
             ]),
             'projectBuildingDoorwin' => new ActiveDataProvider([
                 'query' => $query_dw,
-            ]),
+            ]),*/
            /*'rooms' => new ActiveDataProvider([
                 'query' => $rooms,
             ]),*/
-            'rooms' => $rooms,
-            'searchModel' => $searchModel,
+            /*'rooms' => $rooms,
+            'searchModel' => $searchModel,*/
         ]);
     }
 
@@ -179,6 +169,8 @@ class ProjectBuildingController extends Controller
      */
     public function actionUpdate($id)
     {
+        $this->layout = 'project';
+        
         $modelCheck = $this->findModel($id);
         $model = null;
         $model_new = null;
@@ -219,6 +211,10 @@ class ProjectBuildingController extends Controller
                 'existing' => $model ? $model->projectBuildingServices : null,
                 'new' => $model_new ? $model_new->projectBuildingServices : null,
             ];
+            $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_building_id' => $model->id]);
+            $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_building_id' => $model->id]);
+            $query_cl_new = \common\models\ProjectBuildingClasses::find()->where(['project_building_id' => $model_new->id]);
+            $query_he_new = \common\models\ProjectBuildingHeights::find()->where(['project_building_id' => $model_new->id]);
         } else {
             $building = $modelCheck;
             $architecture = $modelCheck->projectBuildingCharacteristics;
@@ -226,6 +222,10 @@ class ProjectBuildingController extends Controller
             $materials = $modelCheck->projectBuildingMaterials;
             $insulations = $modelCheck->projectBuildingInsulations;
             $services = $modelCheck->projectBuildingServices;
+            $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_building_id' => $id]);
+            $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_building_id' => $id]);
+            $query_cl_new = null;
+            $query_he_new = null;
         }
 
         if ($modelCheck->load(Yii::$app->request->post())){
@@ -252,6 +252,18 @@ class ProjectBuildingController extends Controller
                 'materials' => $materials,
                 'insulations' => $insulations,
                 'services' => $services,
+                'projectBuildingClasses' => new ActiveDataProvider([
+                    'query' => $query_cl,
+                ]),
+                'projectBuildingHeights' => new ActiveDataProvider([
+                    'query' => $query_he,
+                ]),
+                'projectBuildingClasses_new' => new ActiveDataProvider([
+                    'query' => $query_cl_new,
+                ]),
+                'projectBuildingHeights_new' => new ActiveDataProvider([
+                    'query' => $query_he_new,
+                ]),
             ]);
         }
            /* } else {

@@ -71,7 +71,7 @@ class EngineersController extends Controller
      */
     public function actionView($id)
     {
-        $this->layout = 'profile'; 
+        //$this->layout = 'profile'; 
         
         $model = $this->findModel($id);
         $query_files = \common\models\LegalFiles::find()->where(['entity_id' => $id, 'entity' => 'engineer']);

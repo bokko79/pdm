@@ -14,6 +14,7 @@ $this->title = Yii::t('app', 'Predmer i predračun radova projekta');
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['project'] = $model;
 ?>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-3">

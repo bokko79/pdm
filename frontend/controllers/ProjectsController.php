@@ -25,10 +25,10 @@ class ProjectsController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'view', 'update', 'activate'],
+                'only' => [/*'view', */'update', 'activate', 'create'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'update', 'activate'],
+                        'actions' => [/*'view',*/ 'update', 'activate', 'create'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -51,7 +51,8 @@ class ProjectsController extends Controller
     {
         $searchModel = new ProjectsSearch();
         $searchModel->status = 'active';
-        $searchModel->user_id = Yii::$app->user->id;
+        $searchModel->visible = 1;
+        //$searchModel->user_id = Yii::$app->user->id;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -67,7 +68,7 @@ class ProjectsController extends Controller
      */
     public function actionView($id)
     {
-        $this->layout = 'project';
+        $this->layout = 'projectview';
         
         $model = $this->findModel($id);
         $query = \common\models\ProjectBuilding::find()->where(['project_id' => $id]);
@@ -93,7 +94,8 @@ class ProjectsController extends Controller
             $model->user_id = Yii::$app->user->id;
             $model->location_id = $location->id;
             $model->status = 'active';
-            $model->year = date('Y');
+            $model->secret = randomKey(6);            
+            //$model->year = date('Y');
             //$model->exchange = 124.5;
             $model->time = time();
             if($model->save()){
@@ -135,6 +137,8 @@ class ProjectsController extends Controller
      */
     public function actionUpdate($id)
     {
+        $this->layout = 'project';
+        
         $model = $this->findModel($id);
         $location = $model->location;
 

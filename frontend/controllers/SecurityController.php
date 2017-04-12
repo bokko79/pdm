@@ -80,6 +80,8 @@ class SecurityController extends SecController
      */
     public function actionLogin()
     {
+        $this->layout= '../../../../../frontend/views/layouts/blank';
+        
         if (!\Yii::$app->user->isGuest) {
             $this->goHome();
         }
@@ -136,7 +138,7 @@ class SecurityController extends SecController
                 return $this->render('home', [
                     'model' => $model,
                     'projects' => new ActiveDataProvider([
-                        'query' => $query,
+                        'query' => $query->orderBy('time DESC'),
                     ]),
                     'requests' => new ActiveDataProvider([
                         'query' => $query_req,

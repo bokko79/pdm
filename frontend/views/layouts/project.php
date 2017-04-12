@@ -8,10 +8,10 @@ use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use frontend\assets\AppAsset;
+use frontend\assets\GeoAsset;
 use common\widgets\Alert;
 
-AppAsset::register($this);
+GeoAsset::register($this);
 
 $model = isset($this->params['project']) ? $this->params['project'] : [];
 ?>
@@ -24,6 +24,7 @@ $model = isset($this->params['project']) ? $this->params['project'] : [];
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <script src="https://use.fontawesome.com/f6ceb1ff95.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCKwIZE-aiLFaqHRxnhI5w5fR-60dl1GMI&amp;libraries=places&amp;language=hr"></script>
     <?php $this->head() ?>
 </head>
 <body>

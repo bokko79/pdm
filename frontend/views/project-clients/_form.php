@@ -28,7 +28,7 @@ use kartik\checkbox\CheckboxX;
         ]) ?>
 
     <?= $form->field($model, 'client_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Clients::find()->all(), 'user_id', 'name'),
+            'data' => ArrayHelper::map(\common\models\Clients::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,         

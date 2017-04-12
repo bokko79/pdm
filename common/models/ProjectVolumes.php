@@ -160,7 +160,7 @@ class ProjectVolumes extends \yii\db\ActiveRecord
      */
     public function getProjectVolumeDrawings()
     {
-        return $this->hasMany(ProjectVolumeDrawings::className(), ['project_volume_id' => 'id'])->orderBy('CAST(number AS INTEGER)');
+        return $this->hasMany(ProjectVolumeDrawings::className(), ['project_volume_id' => 'id'])/*->orderBy('CAST("number" AS INTEGER)')*/;
     }
 
     /**
@@ -280,7 +280,7 @@ class ProjectVolumes extends \yii\db\ActiveRecord
                 //return false;
                 $check = false;
             }
-            if(!$project->client->type=='company' and $project->client->contact_person){
+            if($project->client->type=='company' and !$project->client->contact_person){
                 $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Odgovorno lice investitora mora biti navedeno. '.Html::a('<i class="fa fa-wrench"></i> Podešavanje.', Url::to(['/clients/update', 'id'=>$project->client_id]), ['target'=>'_blank']). '</p>';
                 //return false;
                 $check = false;
@@ -296,27 +296,34 @@ class ProjectVolumes extends \yii\db\ActiveRecord
             $check = false;
         } else {
             // podaci projektanta
-            if(!$this->practice->stamp){
+            if($this->practice->seal==null){
                 $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nedostaje pečat projektanta. '.Html::a('<i class="fa fa-wrench"></i> Dodaj pečat projektanta.', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$this->practice->engineer_id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'company_stamp']), ['target'=>'_blank']). '</p>';
                 //return false;
                 $check = false;
-            }
-            if(!$this->practice->signature){
-                $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nedostaje potpis odgovornog licenca projektanta. '.Html::a('<i class="fa fa-wrench"></i> Dodaj potpis odgovornog lica projektanta.', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$this->practice->engineer_id, 'LegalFilesSearch[entity]'=>'practice', 'LegalFilesSearch[type]'=>'signature']), ['target'=>'_blank']). '</p>';
+            }                
+            if(!$this->practice->location){
+                $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nije navedena adresa projektanta. '.Html::a('<i class="fa fa-wrench"></i> Podešavanje.', Url::to(['/practices/update', 'id'=>$this->practice_id]), ['target'=>'_blank']). '</p>';
                 //return false;
                 $check = false;
-            }
-            if(!$this->practice->location->city){
-                $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Adresa projektanta mora sadržati bar grad. '.Html::a('<i class="fa fa-wrench"></i> Podešavanje.', Url::to(['/practices/update', 'id'=>$this->practice_id]), ['target'=>'_blank']). '</p>';
-                //return false;
-                $check = false;
+            } else {
+                if(!$this->practice->location->city){
+                    $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Adresa projektanta mora sadržati bar grad. '.Html::a('<i class="fa fa-wrench"></i> Podešavanje.', Url::to(['/practices/update', 'id'=>$this->practice_id]), ['target'=>'_blank']). '</p>';
+                    //return false;
+                    $check = false;
+                }
             }
             if(!$this->practice->director){
                 $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Odgovorno lice projektanta nije navedeno. '.Html::a('<i class="fa fa-wrench"></i> Podešavanje.', Url::to(['/practices/update', 'id'=>$this->practice_id]), ['target'=>'_blank']). '</p>';
                 //return false;
                 $check = false;
+            } else {
+                if($this->practice->director->engSignature==null){
+                    $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nedostaje potpis odgovornog licenca projektanta. '.Html::a('<i class="fa fa-wrench"></i> Dodaj potpis odgovornog lica projektanta.', Url::to(['/engineers/update', 'id'=>$this->engineer->user_id]), ['target'=>'_blank']). '</p>';
+                    //return false;
+                    $check = false;
+                }
             }
-            if($this->practice->stamp and $this->practice->signature and $this->practice->location->city and $this->practice->director){
+            if($this->practice->seal and $this->practice->director->engSignature and $this->practice->location->city and $this->practice->director){
                 $content['success'] .= '<p><i class="fa fa-check-circle"></i> Podaci o projektantu su OK.</p>';
             }
         }
@@ -341,6 +348,11 @@ class ProjectVolumes extends \yii\db\ActiveRecord
                 } else {                    
                     $content['success'] .= '<p><i class="fa fa-check-circle"></i> Podaci o odgovornom projektantu su OK.</p>';
                 }
+            }
+            if($this->engineer->engSignature==null){
+                $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nedostaje potpis odgovornog projektanta. '.Html::a('<i class="fa fa-wrench"></i> Dodaj potpis odgovornog projektanta.', Url::to(['/engineers/update', 'id'=>$this->engineer->user_id]), ['target'=>'_blank']). '</p>';
+                //return false;
+                $check = false;
             }
         }
         if($this->volume_id==1 or $this->volume_id==2){ // ako je glavna sveska
@@ -490,12 +502,12 @@ class ProjectVolumes extends \yii\db\ActiveRecord
                     $check = false;
                 }
                 if(!$project->projectLot->green_area_reg){
-                    $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nije naveden zahtevani procenat zelenih površina za predmetnu parcelu. '.Html::a('<i class="fa fa-wrench"></i> Unesi procenat.', Url::to(['/project-lot/update', 'id'=>$project->projectLot->project_id, '#'=>'w1-tab2']), ['target'=>'_blank']). '</p>';
+                    $content['warning'] .= '<p><i class="fa fa-exclamation-circle"></i> Nije naveden zahtevani procenat zelenih površina za predmetnu parcelu. '.Html::a('<i class="fa fa-wrench"></i> Unesi procenat.', Url::to(['/project-lot/update', 'id'=>$project->projectLot->project_id, '#'=>'w1-tab2']), ['target'=>'_blank']). '</p>';
                     //return false;
                     $check = false;
                 }
                 if(!$project->projectLot->green_area){
-                    $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nije navedena ostvarena površina zelenih površina za predmetnu parcelu. '.Html::a('<i class="fa fa-wrench"></i> Unesi projektovanu površinu zelenih površina.', Url::to(['/project-lot/update', 'id'=>$project->projectLot->project_id, '#'=>'w1-tab2']), ['target'=>'_blank']). '</p>';
+                    $content['warning'] .= '<p><i class="fa fa-exclamation-circle"></i> Nije navedena ostvarena površina zelenih površina za predmetnu parcelu. '.Html::a('<i class="fa fa-wrench"></i> Unesi projektovanu površinu zelenih površina.', Url::to(['/project-lot/update', 'id'=>$project->projectLot->project_id, '#'=>'w1-tab2']), ['target'=>'_blank']). '</p>';
                     //return false;
                     $check = false;
                 }

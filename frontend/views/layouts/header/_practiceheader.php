@@ -11,9 +11,9 @@ use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
 
 ?>
-<div class="header-wrapper profile" style="<?= $model->cFile ? 'background: url(\'/images/profiles/'.$model->cFile->name.'\');' : 'background: url(\'/images/profiles/back.jpg\');' ?> background-size: cover; margin-top: -72px;">
+<div class="header-wrapper profile" style="<?= $model->cFile ? 'background: url(\'/images/profiles/'.$model->cFile->name.'\');' : 'background: url(\'/images/profiles/back.jpg\');' ?> background-size: cover;">
     
-<div style="background: rgba(0,0,0,.3); margin-top: -72px;">
+<div style="background: rgba(0,0,0,.3);">
     
 
     <div class="container">

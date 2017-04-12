@@ -258,14 +258,16 @@ class SiteController extends Controller
         $model = \common\models\Projects::findOne($id);
         $volume = \common\models\ProjectVolumes::findOne($volume);
         $mpdf = new mpdf();  
-        $mpdf->tMargin = 35;           
+        $mpdf->tMargin = $volume->practice->memo ? 35 : 15;           
         $mpdf->backupSubsFont = array('arial', 'serif'); 
         $mpdf->defaultheaderline = 0; 
         $mpdf->title = $volume->code . ': 0 - Glavna sveska';  
         
+        if($volume->practice->memo){
+            $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$volume->practice->memo, ['style'=>'margin-bottom:20px;']));                   
+        }
 
-        $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$volume->practice->memo, ['style'=>'margin-bottom:20px;']));
-        $mpdf->WriteHTML($this->renderPartial('pdf/_header_gl', ['model'=>$model, 'volume'=>$volume], true), 0);       
+        $mpdf->WriteHTML($this->renderPartial('pdf/_header_gl', ['model'=>$model, 'volume'=>$volume], true), 0); 
         
         $mpdf->SetWatermarkText('PRIMERAK');
 
@@ -313,8 +315,10 @@ class SiteController extends Controller
                 $mpdf->WriteHTML($this->renderPartial('insets/0_8_02_tehopis_adap', ['model'=>$model, 'volume'=>$volume], true), 0);
                 $mpdf->AddPage();
             } else {
-                $mpdf->WriteHTML($this->renderPartial('insets/0_8_1_projektni', ['model'=>$model, 'volume'=>$volume], true), 0);            
-                $mpdf->AddPage();
+                if($model->work!='promena_namene'){
+                    $mpdf->WriteHTML($this->renderPartial('insets/0_8_1_projektni', ['model'=>$model, 'volume'=>$volume], true), 0);            
+                    $mpdf->AddPage();
+                }                
                 $mpdf->WriteHTML($this->renderPartial('insets/0_8_tehopis', ['model'=>$model, 'volume'=>$volume], true), 0);
                 $mpdf->AddPage();
             }

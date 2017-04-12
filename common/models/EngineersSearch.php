@@ -19,7 +19,7 @@ class EngineersSearch extends Engineers
     {
         return [
             [['user_id'], 'integer'],
-            [['name', 'title', 'phone', 'email'], 'safe'],
+            [['name', 'expertees_id', 'phone', 'email'], 'safe'],
         ];
     }
 
@@ -63,7 +63,7 @@ class EngineersSearch extends Engineers
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'expertees_id', $this->expertees_id])
             ->andFilterWhere(['like', 'phone', $this->phone])
             ->andFilterWhere(['like', 'email', $this->email]);
 

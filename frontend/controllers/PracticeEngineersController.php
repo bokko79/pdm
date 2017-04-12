@@ -67,6 +67,8 @@ class PracticeEngineersController extends Controller
         if($pe = Yii::$app->request->get('PracticeEngineersSearch')){
             $model->practice_id = !empty($pe['practice_id']) ? $pe['practice_id'] : null;
             $model->engineer_id = !empty($pe['engineer_id']) ? $pe['engineer_id'] : null;
+            $model->position = !empty($pe['position']) ? $pe['position'] : null;
+            $model->status = !empty($pe['status']) ? $pe['status'] : null;
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

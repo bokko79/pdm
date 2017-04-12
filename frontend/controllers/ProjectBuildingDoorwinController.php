@@ -35,12 +35,18 @@ class ProjectBuildingDoorwinController extends Controller
      */
     public function actionIndex()
     {
+        $this->layout = 'project';
+        if($p = Yii::$app->request->get('ProjectBuildingDoorwin')){
+            $project_building_id = !empty($p['project_building_id']) ? $p['project_building_id'] : null;
+            $model = $this->findBuildingById($project_building_id);
+        }
         $searchModel = new ProjectBuildingDoorwinSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'model' => $model,
         ]);
     }
 
@@ -120,6 +126,22 @@ class ProjectBuildingDoorwinController extends Controller
     protected function findModel($id)
     {
         if (($model = ProjectBuildingDoorwin::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectBuildingDoorwin model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectBuildingDoorwin the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findBuildingById($id)
+    {
+        if (($model = \common\models\ProjectBuilding::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

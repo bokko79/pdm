@@ -9,8 +9,11 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\FileInput;
 use kartik\widgets\DepDrop;
+use kartik\checkbox\CheckboxX;
+use kartik\datecontrol\DateControl;
 
 $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : null;
+$model->year = date('Y');
 ?>
 
 <?php $form = kartik\widgets\ActiveForm::begin([
@@ -18,16 +21,23 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
     'type' => ActiveForm::TYPE_HORIZONTAL,
     'fullSpan' => 7,      
     'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
-    'options' => ['enctype' => 'multipart/form-data'],
+    'options' => ['enctype' => 'multipart/form-data', 'style'=>'margin-top:0 !important;'],
     //'enableAjaxValidation' => true,
     'enableClientValidation' => true,
 ]); ?>
 
-<hr>
-<h3>Osnovni podaci</h3>
+<?php if(!$model->isNewRecord): ?>
+    <?php
+        //$model->status = $model->status=='active' ? 1 : 0;
+        $model->visible = $model->visible ? 1 : 0;
+         ?>
+    <?= $form->field($model, 'status')->radioList([ 'active' => 'Aktivan', 'deleted' => 'Obrisan', ], []) ?>
+    <?= $form->field($model, 'visible')->widget(CheckboxX::classname(), ['pluginOptions'=>['size'=>'sm']])->hint('Ukoliko je čekirano, prezentacija projekta će biti  u Listi projekata, dostupna svim korisnicima za pregled, a vidljivi će biti samo osnovni podaci projekta (ime, slike, projektant i investitor).') ?> 
     
+<?php endif; ?>
+<h3 class="col-md-offset-3 margin-20">Osnovni podaci<hr></h3>
     <?= $form->field($model, 'client_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\common\models\Clients::find()->all(), 'user_id', 'name'),
+            'data' => ArrayHelper::map(\common\models\Clients::find()->where('practice_id='.Yii::$app->user->id)->orderBy('name ASC')->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite glavnog investitora'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,           
@@ -65,8 +75,39 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
                 <?= $form->field($model, 'storey')->dropDownList([ 'suteren' => 'Suteren', 'galerija' => 'Galerija', 'prizemlje' => 'Prizemlje', 'sprat' => 'Sprat', 'povucenisprat' => 'Povucenisprat', 'potkrovlje' => 'Potkrovlje', 'mansarda' => 'Mansarda'], ['prompt' => ''])->hint('Etaža na kojoj se nalazi predmetna jedinica koja se adaptira.') ?>
                 <?= $form->field($model, 'part_type')->dropDownList([ 'stan' => 'Stan', 'biz' => 'Poslovni prostor - lokal', ], ['prompt' => ''])->hint('Vrsta jedinice koja se adaptira.') ?>
             </div>
+<?php if(!$model->isNewRecord): ?>
+    <?= $form->field($model, 'start_date')->widget(DateControl::classname(), [
+                            'language' => 'rs-latin',
+                            'type' => 'date',
+                            'options'=> [
+                                'type'=>2,
+                                'size' => 'lg',
+                                'pickerButton'=>['title'=>'Izaberite datum'],
+                                'pluginOptions' => [                        
+                                    'autoclose' => true,
+                                    'todayHighlight' => true,
+                                    //'startDate'=>date('Y-m-d'),                      
+                                ],
+                            ],                                
+                    ]) ?> 
+    <?= $form->field($model, 'end_date')->widget(DateControl::classname(), [
+                            'language' => 'rs-latin',
+                            'type' => 'date',
+                            'options'=> [
+                                'type'=>2,
+                                'size' => 'lg',
+                                'pickerButton'=>['title'=>'Izaberite datum'],
+                                'pluginOptions' => [                        
+                                    'autoclose' => true,
+                                    'todayHighlight' => true,
+                                    //'startDate'=>date('Y-m-d'),                      
+                                ],
+                            ],                                
+                    ]) ?>  
+<?php endif; ?>
 <hr>
-<h3>Adresa</h3>
+<h3 class="col-md-offset-3 margin-20">Adresa<hr></h3>  
+
     <?= $form->field($location, 'street')->textInput(['maxlength' => true]) ?>
     <?= $form->field($location, 'number')->textInput(['maxlength' => true]) ?>
     <?= $form->field($location, 'city_id')->widget(Select2::classname(), [
@@ -84,7 +125,7 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
         ]) ?>    
 
 <hr>
-<h3>Projektanti</h3>
+<h3 class="col-md-offset-3 margin-20">Projektanti<hr></h3>
 
      <?= $form->field($model, 'practice_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'engineer_id', 'name'),
@@ -107,7 +148,7 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
 <?php if(!$model->isNewRecord): ?>
     <?php if($model->phase=='pgd'): ?>
 <hr>
-<h3>Tehnička kontrola</h3>
+<h3 class="col-md-offset-3 margin-20">Tehnička kontrola<hr></h3>
     <?= $form->field($model, 'control_practice_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'engineer_id', 'name'),
             'options' => ['placeholder' => 'Izaberite...', 'id'=>'catcont-id'],
@@ -128,7 +169,7 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
     <?php endif; ?>
     <?php if($model->phase=='pio'): ?>
 <hr>
-<h3>Izvođač radova</h3>
+<h3 class="col-md-offset-3 margin-20">Izvođač radova<hr></h3>
     <?= $form->field($model, 'builder_practice_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'engineer_id', 'name'),
             'options' => ['placeholder' => 'Izaberite...', 'id'=>'catbuild-id'],
@@ -148,7 +189,7 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
             ])->hint($model->hintBuilderEngineer) ?>
 
 <hr>
-<h3>Stručni nadzor</h3>
+<h3 class="col-md-offset-3 margin-20">Stručni nadzor<hr></h3>
     <?= $form->field($model, 'supervision_practice_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Practices::find()->all(), 'engineer_id', 'name'),
             'options' => ['placeholder' => 'Izaberite...', 'id'=>'catsuper-id'],
@@ -168,9 +209,12 @@ $location->lot = ($model->location) ? $model->location->locationLots[0]->lot : n
             ])->hint($model->hintSupervisionEngineer) ?>
     <?php endif; ?>
 <?php endif; ?>
-    <div class="row" style="margin:20px;">
-        <div class="col-md-offset-3">
-            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success shadow' : 'btn btn-primary shadow']) ?>
+<hr>
+<?= $form->field($model, 'year')->input('number', ['style'=>'width:50%'])->hint('Godina izrade projekta.') ?>
+
+    <div class="row" style="margin:20px 0;">
+        <div class="col-md-offset-3 col-md-4">
+            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success shadow' : 'btn btn-primary btn-block shadow']) ?>
         </div>        
     </div>
 

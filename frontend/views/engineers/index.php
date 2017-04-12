@@ -11,7 +11,22 @@ use yii\widgets\ListView;
 $this->title = Yii::t('app', 'Inženjeri');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3">
+        <h5><i class="fa fa-filter"></i> Filter</h5><br>
+        <?= $this->render('_search', ['model' => $searchModel]); ?>
+    </div>
+    <div class="col-sm-9">
+        <h1><?= $this->title ?></h1>
+        <?php echo ListView::widget([
+                'dataProvider' => $dataProvider,
+                'itemView' => '_engineer',
+            ]); ?>
+    </div>
+ </div>
+</div>
+    <?php /*
 <div class="card_container record-full transparent no-shadow grid-item fadeInUp animated" id="">
     <div class="primary-context  normal">
         <div class="head">
@@ -39,11 +54,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::a($data->name, ['/engineers/view', 'id'=>$data->user_id]);
                 },
             ],
-            'title',
+            'expertees.name',
             'phone',
             'email:email',
 
             //['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-<?php Pjax::end(); ?>
+<?php Pjax::end(); ?>*/

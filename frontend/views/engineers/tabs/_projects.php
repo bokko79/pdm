@@ -11,7 +11,7 @@ use yii\bootstrap\Nav;
 ?>
 
 
-<div class="card_container record-full grid-item fadeInUp animated" id="">
+<div class="card_container record-full grid-item fadeInUp no-shadow" id="">
     <div class="primary-context gray normal">
         <div class="head">Projekti</div>
         <div class="subhead">Projekti na kojima je inženjer glavni projektant.</div>

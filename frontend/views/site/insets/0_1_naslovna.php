@@ -62,19 +62,19 @@ $building = $model->projectBuilding ? $model->projectBuilding : $model->projectE
 	<tr>
 		<td class="right" style="padding:5px 20px;">Odgovorno lice projektanta</td>
 		<td class="content" style="padding:5px 20px;">
-			<?= $practice->director->name . ($practice->director ? ', '. $practice->director->title : null) ?></td>			
+			<?= $practice->director->name . ($practice->director ? ', '. $practice->director->expertees->short : null) ?></td>			
 	</tr>
 	<tr>
 		<td class="right" style="padding:5px 20px;">
 			<small>Pečat projektanta</small> 
 			<div>
-				<?= Html::img('@web/images/legal_files/stamps/'.$practice->stamp, ['style'=>'width:120px; max-height:120px; margin-top:10px;']) ?>
+				<?= $practice->seal ?>
 			</div>
 		</td>
 		<td class="content" style="padding:5px 20px;">
 			<small>Potpis odgovornog lica projektanta</small> 
 			<div>
-				<?= Html::img('@web/images/legal_files/signatures/'.$practice->signature, ['style'=>'width:160px; max-height:120px;']) ?>
+				<?= $practice->director->engSignature ?>
 			</div>
 		</td>			
 	</tr>
@@ -95,7 +95,7 @@ $building = $model->projectBuilding ? $model->projectBuilding : $model->projectE
 		<td class="content" style="padding:5px 20px 20px;">
 			<small>Potpis glavnog projektanta</small> 
 			<div>
-				<?= Html::img('@web/images/legal_files/signatures/'.$engineer->signature, ['style'=>'width:160px; max-height:120px;']) ?>
+				<?= $engineer->EngSignature ?>
 			</div>
 		</td>				
 	</tr>
@@ -105,6 +105,6 @@ $building = $model->projectBuilding ? $model->projectBuilding : $model->projectE
 	</tr>
 	<tr>
 		<td class="right">Mesto i datum</td>
-		<td class="content"><p><?= $practice->location->city->town ?>, <?= $formatter->asDate(time(), 'php:mm Y') ?></p></td>
+		<td class="content"><p><?= $practice->location->city->town ?>, <?= $formatter->asDate(time(), 'php:F Y.') ?></p></td>
 	</tr>
 </table>

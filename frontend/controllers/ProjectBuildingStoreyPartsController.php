@@ -119,7 +119,7 @@ class ProjectBuildingStoreyPartsController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
             'projectBuildingStoreyPartRooms' => new ActiveDataProvider([
-                'query' => $query_cl->orderBy('CAST(mark AS INTEGER)'),
+                'query' => $query_cl->orderBy('mark'),
             ]),
             'roomTypes' => $roomTypes,
         ]);

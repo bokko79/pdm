@@ -26,6 +26,8 @@ class RegistrationForm extends BaseRegistrationForm
      * @var string Password
      */
     public $location;
+    public $practice_join;
+    public $practice_id;
 
     /**
      * @inheritdoc
@@ -34,7 +36,12 @@ class RegistrationForm extends BaseRegistrationForm
     {
         $rules = parent::rules();        
 
-        $rules['locationRule'] = ['location', 'safe'];
+        $rules['locationRule'] = [['location', 'practice_join'], 'safe'];
+        $rules['practiceRule'] = [['practice_id'], 'required', 'when' => function ($model) {
+                        return $model->practice_join == 1;
+                    }, 'whenClient' => "function (attribute, value) {
+                        return $('#register-form-practice_join').val() == '1';
+                    }"];
         
         return $rules;
     }
@@ -47,6 +54,7 @@ class RegistrationForm extends BaseRegistrationForm
         return [
             'username' => Yii::t('app', 'Korisničko ime'),
             'password' => Yii::t('app', 'Lozinka'),
+            'practice_join' => Yii::t('app', 'Moja firma'),
         ];
     }
 

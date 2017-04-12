@@ -10,8 +10,9 @@ use yii\bootstrap\Nav;
 ?>
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
-        <div class="head">Postojeći objekti na parceli <i class="fa this-one fa-arrow-circle-right"></i>
+        <div class="head">
             <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj postojeći objekat', Url::to(['/project-lot-existing-buildings/create', 'ProjectLotExistingBuildings[project_id]'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?></div>
+            Postojeći objekti na parceli
         </div>
         <div class="subhead">Lista postojećih objekata na predmetnoj parceli.
         </div>

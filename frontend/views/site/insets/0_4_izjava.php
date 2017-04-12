@@ -14,7 +14,7 @@ $engineer = $volume->engineer;
 	<?= c($model->projectPhaseGen) ?> za <?= $model->projectTypeOfWorksGen ?> <?= $model->work=='adaptacija' ? ($model->projectUnit->type=='stan' ? 'stambene jedinice br. ' : 'poslovnog prostora') : 'objekta' ?> <?= $model->work=='adaptacija' ? $model->projectUnit->mark. ' ('.$model->projectUnit->projectBuildingStorey->name.') u okviru objekta' : '' ?> <?= $building->name ?> (<?= $model->work=='adaptacija' ? $building->storey : $building->spratnost ?>), <?= $model->location->lotAddress ?>
 </p>
 
-<p class="center" style="padding:30px 0 0;"><?= $engineer->name .', '. $engineer->title ?></p>
+<p class="center" style="padding:30px 0 0;"><?= $engineer->name .', '. $engineer->expertees->short ?></p>
 
 <h2 class="center" style="padding:30px 0; letter-spacing: 4px;">IZJAVLJUJEM</h2>
 
@@ -57,7 +57,7 @@ odgovaraju sadržini projekta i da su u projektu priloženi odgovarajući elabor
 	<tr>
 		<td class="right titler">Glavni projektant <?= $model->projectPhaseGen ?></td>
 		<td class="content">
-			<p><?= $engineer->name .', '. $engineer->title ?></p>
+			<p><?= $engineer->name .', '. $engineer->expertees->short ?></p>
 		</td>
 	</tr>
 	<tr>

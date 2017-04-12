@@ -117,6 +117,9 @@ class SettingsController extends BaseSettingsController
 
         $model = $settings->user->engineer;
         $practice = $model->practice;
+        $clients = new \common\models\ClientsSearch();
+        $clients->practice_id = $practice->engineer_id;
+        $dataProvider = $clients->search(Yii::$app->request->queryParams);
         $query_pe = $practice ? \common\models\PracticeEngineers::find()->where(['practice_id' => $practice->engineer_id]) : null;
 
         return $this->render('practice-setup', [
@@ -124,7 +127,9 @@ class SettingsController extends BaseSettingsController
             'practice' => $practice,
             'practiceEngineers' => new ActiveDataProvider([
                 'query' => $query_pe,
-            ])
+            ]),
+            'clients' => $clients,
+            'dataProvider' => $dataProvider,
         ]);
     }
 

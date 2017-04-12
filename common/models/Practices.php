@@ -28,6 +28,8 @@ class Practices extends \yii\db\ActiveRecord
 {
     public $avatarFile;
     public $coverFile;
+    public $stampFile;
+    public $memoFile;
 
     /**
      * @inheritdoc
@@ -44,7 +46,7 @@ class Practices extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'location_id', 'engineer_id'], 'required'],
-            [['location_id', 'engineer_id', 'tax_no', 'company_no', 'avatar', 'cover_photo'], 'integer'],
+            [['location_id', 'engineer_id', 'tax_no', 'company_no', 'avatar', 'cover_photo', 'stamp', 'memo'], 'integer'],
             [['name'], 'string', 'max' => 128],
             [['phone', 'fax'], 'string', 'max' => 25],
             [['email'], 'string', 'max' => 64],
@@ -52,7 +54,7 @@ class Practices extends \yii\db\ActiveRecord
             [['account_no', 'bank'], 'string', 'max' => 32],
             [['location_id'], 'exist', 'skipOnError' => true, 'targetClass' => Locations::className(), 'targetAttribute' => ['location_id' => 'id']],
             [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'user_id']],
-            [['avatarFile', 'coverFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
+            [['avatarFile', 'coverFile', 'stampFile', 'memoFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
         ];
     }
 
@@ -138,12 +140,78 @@ class Practices extends \yii\db\ActiveRecord
         return false;        
     }
 
+    public function uploadStamp()
+    {
+        if ($this->validate()) {
+           
+            $fileName = $this->engineer_id . '_' . time(); 
+            $thumb = 'images/legal_files/stamps/'.$fileName.'1.'.$this->stampFile->extension;
+
+            $this->stampFile->saveAs($thumb); 
+            
+            $image = new \common\models\Files();
+            $image->name = $fileName . '.' . $this->stampFile->extension;
+            $image->type = 'jpg';
+            $image->time = time();
+            
+                
+            Image::thumbnail($thumb, 200, 200)->save(\Yii::getAlias('images/legal_files/stamps/'.$fileName.'.'.$this->stampFile->extension), ['quality' => 80]); 
+            unlink(\Yii::getAlias($thumb));
+            $image->save();
+
+            if($image->save()){
+                $this->stampFile = null;
+                return $image->id;
+            }
+            
+            return false;
+        }
+        return false;        
+    }
+
+    public function uploadMemo()
+    {
+        if ($this->validate()) {
+           
+            $fileName = $this->engineer_id . '_' . time(); 
+            $thumb = 'images/legal_files/visual/'.$fileName.'1.'.$this->memoFile->extension;
+
+            $this->memoFile->saveAs($thumb); 
+            
+            $image = new \common\models\Files();
+            $image->name = $fileName . '.' . $this->memoFile->extension;
+            $image->type = 'jpg';
+            $image->time = time();
+            
+                
+            Image::thumbnail($thumb, 1200, 480)->save(\Yii::getAlias('images/legal_files/visual/'.$fileName.'.'.$this->memoFile->extension), ['quality' => 80]); 
+            unlink(\Yii::getAlias($thumb));
+            $image->save();
+
+            if($image->save()){
+                $this->memoFile = null;
+                return $image->id;
+            }
+            
+            return false;
+        }
+        return false;        
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getPracticeEngineers()
     {
         return $this->hasMany(PracticeEngineers::className(), ['practice_id' => 'engineer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getClients()
+    {
+        return $this->hasMany(Clients::className(), ['practice_id' => 'engineer_id']);
     }
 
     /**
@@ -181,6 +249,22 @@ class Practices extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getSFile()
+    {
+        return $this->hasOne(Files::className(), ['id' => 'stamp']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMemoFile()
+    {
+        return $this->hasOne(Files::className(), ['id' => 'memo']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getProjectVolumes()
     {
         return $this->hasMany(ProjectVolumes::className(), ['practice_id' => 'engineer_id']);
@@ -197,28 +281,36 @@ class Practices extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getMemo()
+    /*public function getMemo()
     {
         $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'memo-header'])->one();
         return $doc ? $doc->file->name : false;
-    }
+    }*/
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getStamp()
+   /*public function getStamp()
     {
         $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'company_stamp'])->one();
         return $doc ? $doc->file->name : false;
-    }
+    }*/
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSignature()
+    /*public function getSignature()
     {
         $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'signature'])->one();
         return $doc ? $doc->file->name : false;
+    }*/
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSeal($w=120, $h=120)
+    {        
+        return $this->sFile ? \yii\helpers\Html::img('@web/images/legal_files/stamps/'.$this->sFile->name, ['style'=>'width:'.$w.'px; max-height:'.$h.'px;']) : false;
     }
 
     /**
@@ -233,10 +325,9 @@ class Practices extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLogo()
+    public function getLogo($w=120, $h=120)
     {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->engineer_id, 'entity' => 'practice', 'type' => 'logo'])->one();
-        return $doc ? $doc->file->name : false;
+        return $this->aFile ? \yii\helpers\Html::img('@web/images/profiles/'.$this->aFile->name, ['style'=>'width:'.$w.'px; max-height:'.$h.'px;']) : false;
     }
 
     /**

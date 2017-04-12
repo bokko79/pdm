@@ -10,7 +10,7 @@ use yii\widgets\Pjax;
 $this->title = Yii::t('app', 'Investitori');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="clients-index">
+
 
 <div class="card_container record-full transparent no-shadow grid-item fadeInUp animated" id="">
     <div class="primary-context  normal">
@@ -44,4 +44,4 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-<?php Pjax::end(); ?></div>
+<?php Pjax::end(); ?>

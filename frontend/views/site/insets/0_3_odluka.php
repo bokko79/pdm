@@ -20,7 +20,7 @@ $building = $model->projectBuilding ? $model->projectBuilding : $model->projectE
 <div style="padding:20px 0 60px">
 	<table class="clear">
 		<tr>
-			<td class="center"><span class="bold"><?= $engineer->name .'</span>, '. $engineer->title ?>  ____________________________</td>
+			<td class="center"><span class="bold"><?= $engineer->name .'</span>, '. $engineer->expertees->short ?>  ____________________________</td>
 			<td class="right">licenca br. <?= $volume->engineerLicence->no ?></td>
 		</tr>
 	</table>

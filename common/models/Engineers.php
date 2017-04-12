@@ -8,20 +8,26 @@ use yii\imagine\Image;
 /**
  * This is the model class for table "engineers".
  *
- * @property string $id
+ * @property string $user_id
  * @property string $name
- * @property string $title
+ * @property string $expertees_id
  * @property string $phone
  * @property string $email
+ * @property string $avatar
+ * @property string $cover_photo
+ * @property string $about
  *
- * @property PracticeEngineers[] $practiceEngineers
- * @property Practices[] $practices
- * @property ProjectVolumes[] $projectVolumes
+ * @property User $user
+ * @property Files $avatar0
+ * @property Files $coverPhoto
+ * @property Expertees $expertees
+ * @property Practices $practices
  */
 class Engineers extends \yii\db\ActiveRecord
 {
     public $avatarFile;
     public $coverFile;
+    public $signatureFile;
     /**
      * @inheritdoc
      */
@@ -36,13 +42,12 @@ class Engineers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'title'], 'required'],
-            [['name', 'email'], 'string', 'max' => 64],
-            [['title'], 'string', 'max' => 20],
+            [['user_id', 'name', 'expertees_id'], 'required'],
+            [['user_id', 'expertees_id', 'avatar', 'cover_photo', 'signature'], 'integer'],
             [['about'], 'string'],
-            [['avatar', 'cover_photo'], 'integer'],
+            [['name', 'email'], 'string', 'max' => 64],
             [['phone'], 'string', 'max' => 25],
-            [['avatarFile', 'coverFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
+            [['avatarFile', 'coverFile', 'signatureFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
         ];
     }
 
@@ -54,7 +59,7 @@ class Engineers extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Ime inženjera'),
-            'title' => Yii::t('app', 'Titula'),
+            'expertees_id' => Yii::t('app', 'Titula'),
             'phone' => Yii::t('app', 'Telefon'),
             'email' => Yii::t('app', 'Email'),
             'about' => Yii::t('app', 'O meni'),
@@ -62,6 +67,7 @@ class Engineers extends \yii\db\ActiveRecord
             'cover_photo' => Yii::t('app', 'Dokument'),
             'avatarFile' => Yii::t('app', 'Profilna slika'),
             'coverFile' => Yii::t('app', 'Baner slika'),
+            'signatureFile' => Yii::t('app', 'Skinarni potpis'),
         ];
     }
 
@@ -80,7 +86,7 @@ class Engineers extends \yii\db\ActiveRecord
             $image->time = time();
             
                 
-            Image::thumbnail($thumb, 200, 200)->save(\Yii::getAlias('images/profiles/'.$fileName.'.'.$this->avatarFile->extension), ['quality' => 80]); 
+            Image::thumbnail($thumb, 262,262)->save(\Yii::getAlias('images/profiles/'.$fileName.'.'.$this->avatarFile->extension), ['quality' => 80]); 
             unlink(\Yii::getAlias($thumb));
             $image->save();
 
@@ -123,6 +129,35 @@ class Engineers extends \yii\db\ActiveRecord
         return false;        
     }
 
+    public function uploadSign()
+    {
+        if ($this->validate()) {
+           
+            $fileName = $this->user_id . '_' . time(); 
+            $thumb = 'images/legal_files/signatures/'.$fileName.'1.'.$this->signatureFile->extension;
+
+            $this->signatureFile->saveAs($thumb); 
+            
+            $image = new \common\models\Files();
+            $image->name = $fileName . '.' . $this->signatureFile->extension;
+            $image->type = 'jpg';
+            $image->time = time();
+            
+                
+            Image::thumbnail($thumb, 1200, 480)->save(\Yii::getAlias('images/legal_files/signatures/'.$fileName.'.'.$this->signatureFile->extension), ['quality' => 80]); 
+            unlink(\Yii::getAlias($thumb));
+            $image->save();
+
+            if($image->save()){
+                $this->signatureFile = null;
+                return $image->id;
+            }
+            
+            return false;
+        }
+        return false;        
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -137,6 +172,14 @@ class Engineers extends \yii\db\ActiveRecord
     public function getCFile()
     {
         return $this->hasOne(Files::className(), ['id' => 'cover_photo']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSignFile()
+    {
+        return $this->hasOne(Files::className(), ['id' => 'signature']);
     }
 
     /**
@@ -174,10 +217,34 @@ class Engineers extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getExpertees()
+    {
+        return $this->hasOne(Expertees::className(), ['id' => 'expertees_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getProjectVolumes()
     {
         return $this->hasMany(ProjectVolumes::className(), ['engineer_id' => 'user_id']);
     }  
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTitle()
+    {
+        return $this->expertees ? $this->expertees->short : null;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLongTitle()
+    {
+        return $this->expertees ? $this->expertees->name : null;
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -190,10 +257,9 @@ class Engineers extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSignature()
-    {
-        $doc = \common\models\LegalFiles::find()->where(['entity_id' => $this->user_id, 'entity' => 'engineer', 'type' => 'signature'])->one();
-        return $doc ? $doc->file->name : false;
+    public function getEngSignature($w=160, $h=120)
+    {        
+        return $this->signFile ? \yii\helpers\Html::img('@web/images/legal_files/signatures/'.$this->signFile->name, ['style'=>'width:'.$w.'px; max-height:'.$h.'px;']) : false;
     }
 
     /**

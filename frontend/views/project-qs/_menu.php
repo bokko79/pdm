@@ -6,12 +6,13 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Nav;
 
 $items = [];
+$items[] = ['label' => 'Predmer: Početna strana', 'url' =>['/project-qs/index', 'ProjectQs[project_id]'=>$model->id]];
 if($works = \common\models\QsWorks::find()->all()){
     foreach($works as $work){
         $subitems = [];
-        
+        $items[] = ['label' => count($work->posOfProject($model->id))>0 ? c($work->name). ' ('.count($work->posOfProject($model->id)).')' : '<span class="hint"><i>'.c($work->name).'</i></span>', 'url' =>['/project-qs/works', 'p'=>$model->id, 'w'=>$work->id]];
 
-        $items[] = ['label' => count($work->posOfProject($model->id))>0 ? c($work->name). ' ('.count($work->posOfProject($model->id)).')' : '<span class="hint"><i>'.c($work->name).'</i></span>', 'url' =>['/project-qs/works', 'p'=>$model->id, 'w'=>$work->id]];                            
+                                    
     }
 }
 ?>

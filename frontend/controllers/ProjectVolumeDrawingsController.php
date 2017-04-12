@@ -66,7 +66,7 @@ class ProjectVolumeDrawingsController extends Controller
         $model = new ProjectVolumeDrawings();
         if($p = Yii::$app->request->get('ProjectVolumeDrawings')){
             $model->project_volume_id = !empty($p['project_volume_id']) ? $p['project_volume_id'] : null;
-            $storeys = $this->findVolume($p['project_volume_id'])->project->projectBuildingStoreys;
+            $storeys = $this->findVolume($p['project_volume_id'])->project->projectBuilding->projectBuildingStoreys;
         }
         if ($model->load(Yii::$app->request->post())) {
             
@@ -97,7 +97,7 @@ class ProjectVolumeDrawingsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $storeys = $model->projectVolume->project->projectBuildingStoreys;
+        $storeys = $model->projectVolume->project->projectBuilding->projectBuildingStoreys;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['/project-volumes/view', 'id' => $model->project_volume_id]);
         } else {

@@ -16,9 +16,13 @@ $this->params['project'] = $model->project;
 
 $items = [
     [
+        'label'=>'Adresa i lokacija projekta',
+        'content'=>$this->render('tabs/_location', ['model'=>$model]),
+        'active'=>true
+    ],
+    [
         'label'=>'Opšti podaci parcele',
         'content'=>$this->render('tabs/_general', ['model'=>$model]),
-        'active'=>true
     ],
     [
         'label'=>'Katastarske parcele',
