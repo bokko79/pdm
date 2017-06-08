@@ -49,6 +49,13 @@ foreach(\common\models\Projects::find()->where('status="active" and visible="1"'
     <div class="col-sm-3">
     	<h5><i class="fa fa-filter"></i> Filter</h5><br>
     	<?= $this->render('_search', ['model' => $searchModel]); ?>
+      <div class="card_container record-full grid-item fadeInUp no-shadow animated-not " id="">
+        <div class="secondary-context no-padding">
+          <div class="media-screen no-margin" id="gmap0-map-canvas">                   
+            <?php $map->display() ?>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-sm-9">
     	<h1><?= $this->title ?></h1>
@@ -58,13 +65,7 @@ foreach(\common\models\Projects::find()->where('status="active" and visible="1"'
           //'itemOptions' => ['style'=>'float:left;'],
 
 			]); ?>
-<div class="card_container record-full grid-item fadeInUp no-shadow animated-not " id="">
-      <div class="secondary-context no-padding">
-        <div class="media-screen no-margin" id="gmap0-map-canvas">                   
-          <?php $map->display() ?>
-        </div>
-      </div>
-    </div>
+    
 </div>
     <?php /*
       <div class="card_container record-full grid-item fadeInUp animated" id="">

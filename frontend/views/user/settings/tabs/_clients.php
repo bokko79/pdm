@@ -11,7 +11,7 @@ use yii\widgets\Pjax;
 <div class="card_container record-full grid-item fadeInUp animated" id="">
     <div class="primary-context gray normal">
         <div class="head"><i class="fa fa-building"></i> Investitori firme
-        <div class="action-area normal-case"><?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Novi investitor'), ['/clients/create'], ['class' => 'btn btn-primary btn-sm shadow' ]) ?>
+        <div class="subaction"><?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Novi investitor'), ['/clients/create'], ['class' => 'btn btn-primary shadow' ]) ?>
             </div>
         </div>
         <div class="subhead">Lista registrovanih investitora.</div>

@@ -46,10 +46,7 @@ class EngineerLicences extends \yii\db\ActiveRecord
             [['engineer_id', 'licence_id', 'copy_id', 'conf_id', 'stamp_id'], 'integer'],
             [['no'], 'string', 'max' => 12],
             [['engineer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Engineers::className(), 'targetAttribute' => ['engineer_id' => 'user_id']],
-            [['copy_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['copy_id' => 'id']],
-            [['conf_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['conf_id' => 'id']],
-            [['stamp_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['stamp_id' => 'id']],
-            [['copyFile', 'confFile', 'stampFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
+            [['copyFile', 'confFile', 'stampFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
         ];
     }
 
@@ -68,7 +65,7 @@ class EngineerLicences extends \yii\db\ActiveRecord
             'stamp_id' => Yii::t('app', 'Lični pečat inženjera'),
             'copyFile' => Yii::t('app', 'Kopija licence'),
             'confFile' => Yii::t('app', 'Potvrda licence'),
-            'stampFile' => Yii::t('app', 'Lični pečat inženjera'),
+            'stampFile' => Yii::t('app', 'Licencni pečat'),
 
         ];
     }

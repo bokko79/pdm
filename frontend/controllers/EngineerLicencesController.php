@@ -15,6 +15,7 @@ use yii\web\UploadedFile;
  */
 class EngineerLicencesController extends Controller
 {
+    public $layout = 'dashboard';
     /**
      * @inheritdoc
      */
@@ -34,7 +35,7 @@ class EngineerLicencesController extends Controller
      * Lists all EngineerLicences models.
      * @return mixed
      */
-    public function actionIndex($engineer_id)
+    /*public function actionIndex($engineer_id)
     {
         $engineer = $this->findEngineer($engineer_id);
         $searchModel = new EngineerLicencesSearch();
@@ -46,6 +47,29 @@ class EngineerLicencesController extends Controller
             'dataProvider' => $dataProvider,
             'engineer' => $engineer,
         ]);
+    }*/
+
+    /**
+     * Lists all PracticeEngineers models.
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        if($id = Yii::$app->request->get('id')){
+            $engineer = $id ? $this->findEngineer($id) : null;
+        }
+
+        if($engineer){
+            if($engineer->engineerLicences){
+                return $this->redirect(['update', 'id' => $engineer->engineerLicences[0]->id]);
+            } else {
+                return $this->render('index', [
+                    'engineer'=>$engineer,
+                ]);
+            } 
+        } else {
+            return $this->redirect(['/home']);
+        }
     }
 
     /**
@@ -67,29 +91,30 @@ class EngineerLicencesController extends Controller
      */
     public function actionCreate()
     {
+        
         $model = new EngineerLicences();
         if($el = Yii::$app->request->get('EngineerLicences')){
             $model->engineer_id = !empty($el['engineer_id']) ? $el['engineer_id'] : null;
         }
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->copyFile = UploadedFile::getInstance($model, 'copyFile');
-            $model->confFile = UploadedFile::getInstance($model, 'confFile');
+            //$model->copyFile = UploadedFile::getInstance($model, 'copyFile');
+            //$model->confFile = UploadedFile::getInstance($model, 'confFile');
             $model->stampFile = UploadedFile::getInstance($model, 'stampFile');
             if($model->save()){
-                if ($model->copyFile) {
+               /* if ($model->copyFile) {
                     $imagecopyFile = $model->uploadCopyFile();
                     $model->copy_id = $imagecopyFile;
                 }                
                 if ($model->confFile) {
                     $imageconfFile = $model->uploadConfFile();
                     $model->conf_id = $imageconfFile;
-                }                
+                }     */           
                 if ($model->stampFile) {
                     $imagestampFile = $model->uploadStampFile();                    
                     $model->stamp_id = $imagestampFile;
                     $model->save();
-                }                
+                }                   
                 
                 return $this->redirect(['user/settings/licence-setup']);
             } 
@@ -111,11 +136,11 @@ class EngineerLicencesController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->copyFile = UploadedFile::getInstance($model, 'copyFile');
-            $model->confFile = UploadedFile::getInstance($model, 'confFile');
+            //$model->copyFile = UploadedFile::getInstance($model, 'copyFile');
+            //$model->confFile = UploadedFile::getInstance($model, 'confFile');
             $model->stampFile = UploadedFile::getInstance($model, 'stampFile');
             if($model->save()){
-                if ($model->copyFile) {
+                /*if ($model->copyFile) {
                     $model->copy ? unlink(\Yii::getAlias('images/legal_files/licences/'.$model->copy->name)) : null;
                     $imagecopyFile = $model->uploadCopyFile();
                     $model->copy_id = $imagecopyFile;
@@ -126,15 +151,17 @@ class EngineerLicencesController extends Controller
                     $imageconfFile = $model->uploadConfFile();
                     $model->conf_id = $imageconfFile;
                     $model->save();
-                }                
+                }   */             
                 if ($model->stampFile) {
                     $model->stamp ? unlink(\Yii::getAlias('images/legal_files/licences/'.$model->stamp->name)) : null;
+                    $file = $model->stamp ?: null;
                     $imagestampFile = $model->uploadStampFile();
                     $model->stamp_id = $imagestampFile;
                     //print_r($imagestampFile); die();
                     $model->save();
+                    $file ? $file->delete() : null;
                 }                
-                $model->save();
+                //$model->save();
                 //return $this->redirect(['engineers/view', 'id' => $model->engineer_id, '#'=>'w4-tab4']);
                 return $this->redirect(['user/settings/licence-setup']);
             } 

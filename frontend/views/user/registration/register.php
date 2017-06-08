@@ -71,7 +71,7 @@ $config = ['template'=>"{input}\n{error}\n{hint}"]; // config to deactivate labe
                     <?php endif ?>
 
                 <hr>
-                <h5>Osnovni podaci inženjera</h5>
+                <h6 style="margin:10px 0;">Osnovni podaci inženjera</h6>
                 <?= $form->field($engineer, 'name', $config)->widget(LabelInPlace::classname(), ['defaultIndicators'=>false,])->hint('Vaše puno ime i prezime.') ?>
 
                 <?= $form->field($engineer, 'phone', $config)->widget(LabelInPlace::classname(), ['defaultIndicators'=>false,])->hint('Kontakt telefon inženjera.') ?>
@@ -91,7 +91,7 @@ $config = ['template'=>"{input}\n{error}\n{hint}"]; // config to deactivate labe
                             'showUpload' => false,
                             'browseClass' => 'btn btn-info btn-block shadow',
                             'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
-                            'browseLabel' =>  Yii::t('app', 'Izaberite svoj potpis'),
+                            'browseLabel' =>  Yii::t('app', 'Prikačite svoj potpis'),
                             'removeLabel' =>  Yii::t('app', 'Izbaci sve'),
                             'resizeImage'=> true,
                             'maxImageWidth'=> 60,
@@ -147,7 +147,7 @@ $config = ['template'=>"{input}\n{error}\n{hint}"]; // config to deactivate labe
 
                 <hr>
 
-                <?= $form->field($model, 'practice_join')->dropDownList([0 => 'Imam svoju firmu',  1 => 'Nemam svoju firmu', ], ['prompt' => 'Izaberite...'])->hint('Ukoliko ste direktor firme, izaberi "Imam svoju firmu" i napravi profil firme. Ukoliko ste zaposleni ili partner, izaberite "Nemam svoju firmu" i izaberite registrovanu firmu iz liste.') ?>
+                <?= $form->field($model, 'practice_join')->radioList([0 => 'Direktor, u svojoj firmi',  1 => 'Zaposlen/partner postojeće firme', ], ['prompt' => 'Izaberite...'])->hint('Ukoliko ste direktor firme, izaberite "Direktor, u svojoj firmi" i napravi profil firme u sledećem koraku registracije. Ukoliko ste zaposleni ili partner, izaberite "zaposleni/partner" i izaberite već registrovanu firmu iz liste.') ?>
 <?php /*
             <div class="new_practice" style="display:none">
                 <?= $form->field($practice, 'name', $config)->widget(LabelInPlace::classname(), ['defaultIndicators'=>false,]) ?>
@@ -209,7 +209,7 @@ Adresa
                         'options' => ['placeholder' => 'Izaberite...'],
                         'language' => 'sr-Latn',
                         'changeOnReset' => false,           
-                    ])->hint('') ?>
+                    ])->hint('Izaberite firmu u kojoj ste zaposleni ili čiji ste partner. Ukoliko firma nije na listi, molimo Vas posavetujete direktora navedene firme o registraciji na masterplan.rs, a zatim se nakon uspešne registracije prijavite se kao zaposleni/partner te firme.') ?>
             </div>
 
                

@@ -8,6 +8,7 @@ use common\models\ProjectBuildingSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use yii\web\UploadedFile;
 
@@ -28,22 +29,18 @@ class ProjectBuildingController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['update', 'storeys', 'view'],
+                'rules' => [
+                    [
+                        'actions' => ['update', 'storeys', 'view'],
+                        'allow' => true,
+                        'roles' => ['engineer'],
+                    ],
+                ],
+            ],
         ];
-    }
-
-    /**
-     * Lists all ProjectBuilding models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new ProjectBuildingSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
     }
 
     /**
@@ -134,30 +131,75 @@ class ProjectBuildingController extends Controller
         $this->layout = 'project';
         
         $model = $this->findModel($id);        
-        $storeys = $model->projectBuildingStoreys;
+        $storeys = $model->orderedStoreys;
+        $spratovi = $model->storeys;
+
+        // Check if there is an Editable ajax request
+        if (Yii::$app->request->post('hasEditable')) {
+            // instantiate your book model for saving
+            $posId = Yii::$app->request->post('editableKey');
+            $edit = Yii::$app->request->post('editableIndex');
+            $story = \common\models\ProjectBuildingStoreys::findOne($posId);
+
+            $st = Yii::$app->request->post('ProjectBuildingStoreys');
+            if(isset($st[$edit]['height'])){
+                $story->height = $st[$edit]['height'];
+                if($story->copies){
+                    foreach($story->copies as $copy){
+                        $copy->height = $st[$edit]['height'];
+                        $copy->save();
+                    }
+                }
+            }
+            if(isset($st[$edit]['name'])){
+                $story->name = $st[$edit]['name'];
+            }
+            if(isset($st[$edit]['gross_area'])){
+                $story->gross_area = $st[$edit]['gross_area'];
+                if($story->copies){
+                    foreach($story->copies as $copy){
+                        $copy->gross_area = $st[$edit]['gross_area'];
+                        $copy->save();
+                    }
+                }
+            }                
+            // can save model or do something before saving model
+            $story->save();
+
+            $out = \yii\helpers\Json::encode(['output'=>'', 'message'=>'']);
+            echo $out;
+            return;
+
+        }  
+
+        foreach($model->projectBuildingStoreys as $stry){
+            $stry->generateLevel();
+        }      
 
         if($same = Yii::$app->request->post('ProjectBuilding')){
             $st = $this->findStoreyById($same['copiedStorey']);
             $st->same_as_id = $same['sameStorey'];
             $st->save();
-            return $this->redirect(['/project-building-storeys/index', 'id' => $model->id]);
+            return $this->redirect(['/project-building/storeys', 'id'=>$id]);
         }
         
         if($add_storey){
             $link = $this->addStorey($model, $add_storey);             
-            return $this->redirect(['/project-building-storeys/update', 'id' => $link]);
+            return $this->redirect(['/project-building/storeys', 'id'=>$id]);
         }
         if($copy_storey){
             $link = $this->copyStorey($copy_storey);  
-            return $this->redirect(['/project-building-storeys/update', 'id' => $link]);
+            return $this->redirect(['/project-building/storeys', 'id'=>$id]);
         }
         if($remove_storey){
             $this->removeStorey($remove_storey);
-            return $this->redirect(['/project-building-storeys/index', 'id' => $id]);     
-        }        
+            return $this->redirect(['/project-building/storeys', 'id'=>$id]); 
+        }       
+
         return $this->render('storeys', [
             'model' => $model,
             'storeys' => $storeys,
+            'spratovi' => $spratovi,
         ]);
     }
 
@@ -171,7 +213,7 @@ class ProjectBuildingController extends Controller
     {
         $this->layout = 'project';
         
-        $modelCheck = $this->findModel($id);
+        $modelCheck = $this->findModel($id);        
         $model = null;
         $model_new = null;
         $building = null;
@@ -182,7 +224,9 @@ class ProjectBuildingController extends Controller
                 $building = [            
                     'existing' => $this->findExModel($id),
                     'new' => $modelCheck,
-                ];
+                ];        
+                $building['existing']->scenario = 'building_update';   
+                $building['new']->scenario = 'building_update';     
             } else {
                 $model = $modelCheck;
                 $model_new = $this->findNewModel($id);
@@ -190,6 +234,8 @@ class ProjectBuildingController extends Controller
                     'existing' => $modelCheck,
                     'new' => $this->findNewModel($id),
                 ];
+                $building['existing']->scenario = 'building_update';
+                $building['new']->scenario = 'building_update'; 
             }
             $architecture = [            
                 'existing' => $model ? $model->projectBuildingCharacteristics : null,
@@ -211,10 +257,6 @@ class ProjectBuildingController extends Controller
                 'existing' => $model ? $model->projectBuildingServices : null,
                 'new' => $model_new ? $model_new->projectBuildingServices : null,
             ];
-            $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_building_id' => $model->id]);
-            $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_building_id' => $model->id]);
-            $query_cl_new = \common\models\ProjectBuildingClasses::find()->where(['project_building_id' => $model_new->id]);
-            $query_he_new = \common\models\ProjectBuildingHeights::find()->where(['project_building_id' => $model_new->id]);
         } else {
             $building = $modelCheck;
             $architecture = $modelCheck->projectBuildingCharacteristics;
@@ -222,23 +264,39 @@ class ProjectBuildingController extends Controller
             $materials = $modelCheck->projectBuildingMaterials;
             $insulations = $modelCheck->projectBuildingInsulations;
             $services = $modelCheck->projectBuildingServices;
-            $query_cl = \common\models\ProjectBuildingClasses::find()->where(['project_building_id' => $id]);
-            $query_he = \common\models\ProjectBuildingHeights::find()->where(['project_building_id' => $id]);
-            $query_cl_new = null;
-            $query_he_new = null;
         }
 
         if ($modelCheck->load(Yii::$app->request->post())){
             if($modelCheck->project->work=='dogradnja' or $modelCheck->project->work=='sanacija' or $modelCheck->project->work=='rekonstrukcija'){
 
                 $this->validateMultipleBuilding($building, $architecture, $structure, $materials, $insulations, $services);
-                return $this->redirect(['view', 'id' => $modelCheck->id]);
+                        
+                foreach ($building as $build) {
+                    if($build){
+                        foreach($build->projectBuildingStoreys as $stry){
+                            $stry->generateLevel();
+                        }
+                    }                    
+                }
+                if(\Yii::$app->request->post('step_form')){
+                    $modelCheck->project->setup_status = 'storeys_ex';
+                    $modelCheck->project->save();
+                    return $this->redirect($modelCheck->project->setupRedirect);
+                }
+                return $this->refresh();
 
             } else {
 
                 $this->validateBuilding($building, $architecture, $structure, $materials, $insulations, $services);
-                return $this->redirect(['view', 'id' => $modelCheck->id]);
-
+                foreach($building->projectBuildingStoreys as $stry){
+                    $stry->generateLevel();
+                }
+                if(\Yii::$app->request->post('step_form')){
+                    $modelCheck->project->setup_status = ($building->mode=='existing') ? 'storeys_ex' : 'storeys_new';
+                    $modelCheck->project->save();
+                    return $this->redirect($modelCheck->project->setupRedirect);
+                }
+                return $this->refresh();
             }                  
             
         } else {
@@ -252,21 +310,9 @@ class ProjectBuildingController extends Controller
                 'materials' => $materials,
                 'insulations' => $insulations,
                 'services' => $services,
-                'projectBuildingClasses' => new ActiveDataProvider([
-                    'query' => $query_cl,
-                ]),
-                'projectBuildingHeights' => new ActiveDataProvider([
-                    'query' => $query_he,
-                ]),
-                'projectBuildingClasses_new' => new ActiveDataProvider([
-                    'query' => $query_cl_new,
-                ]),
-                'projectBuildingHeights_new' => new ActiveDataProvider([
-                    'query' => $query_he_new,
-                ]),
             ]);
         }
-           /* } else {
+            /* } else {
                 // promena, ozakonjenje, adaptacija
                 if ($model->load(Yii::$app->request->post())) {                    
                     $model->save();
@@ -307,18 +353,6 @@ class ProjectBuildingController extends Controller
                 }
         }*/
         
-        /*if ($model->load(Yii::$app->request->post()) or $model_new->load(Yii::$app->request->post())) {
-            $model->buildFile = UploadedFile::getInstance($model, 'buildFile');
-            if ($model->buildFile) {
-                    $image = $model->uploadFiles();
-                    $model->file_id = $image;                    
-                }
-                $model->save();
-                $model_new->save(); */  
-            
-            //return $this->redirect(['view', 'id' => $model->id]);
-             
-        
     }
 
     public function addStorey($model, $add_storey)
@@ -326,7 +360,29 @@ class ProjectBuildingController extends Controller
         $new =  new \common\models\ProjectBuildingStoreys();
         $new->project_building_id = $model->id;
         $new->storey = $add_storey;
-        //$new->order_no = 1;
+        $new->height = $model->sp ? $model->sp[0]->height : 3;
+        $new->gross_area = $model->sp ? $model->sp[0]->gross_area : 0;
+        // order_no
+        if($add_storey=='sprat'){
+            $new->order_no = count($model->sp)+1;
+            $new->name = (count($model->sp)+1).'. '.$add_storey;
+        } elseif($add_storey=='podrum') {
+            $new->order_no = count($model->po)+1;
+            $new->name = $add_storey. ' '.(count($model->po)+1);
+        } elseif($add_storey=='potkrovlje') {
+            $new->order_no = count($model->pk)+1;
+            $new->name = $add_storey. ' '.(count($model->pk)+1);
+        } elseif($add_storey=='povucenisprat') {
+            $new->order_no = count($model->ps)+1;
+            $new->name = $add_storey. ' '.(count($model->ps)+1);
+        } elseif($add_storey=='mansarda') {
+            $new->order_no = count($model->m)+1;
+            $new->name = $add_storey. ' '.(count($model->m)+1);
+        } else {
+            $new->order_no = 1;
+            $new->name = $add_storey;
+        }
+            
         $new->save();
 
         \Yii::$app->session->setFlash('info', '<i class="fa fa-bell"></i> Etaža '.$add_storey. ' je uspešno dodata. Podesi naziv etaže, visinu, visinsku kotu i bruto površinu etaže.');
@@ -336,14 +392,34 @@ class ProjectBuildingController extends Controller
     public function copyStorey($copy_storey)
     {
         if($storey_to_copy = $this->findStoreyById($copy_storey)){
+            $model = $storey_to_copy->projectBuilding;
             $new = new \common\models\ProjectBuildingStoreys();
             $new->project_building_id = $storey_to_copy->project_building_id;
             $new->same_as_id = $storey_to_copy->id;
             $new->storey = $storey_to_copy->storey;
-            $new->order_no = $storey_to_copy->order_no;
-            $new->name = $storey_to_copy->name.'_kopija';
+            //$new->order_no = $storey_to_copy->order_no;
+            //$new->name = $storey_to_copy->name.'_kopija';
+            if($storey_to_copy->storey=='sprat'){
+                $new->order_no = count($model->sp)+1;
+                $new->name = (count($model->sp)+1).'. '.$storey_to_copy->storey;
+            } elseif($storey_to_copy->storey=='podrum') {
+                $new->order_no = count($model->po)+1;
+                $new->name = $storey_to_copy->storey. ' '.(count($model->po)+1);
+            } elseif($storey_to_copy->storey=='potkrovlje') {
+                $new->order_no = count($model->pk)+1;
+                $new->name = $storey_to_copy->storey. ' '.(count($model->pk)+1);
+            } elseif($storey_to_copy->storey=='povucenisprat') {
+                $new->order_no = count($model->ps)+1;
+                $new->name = $storey_to_copy->storey. ' '.(count($model->ps)+1);
+            } elseif($storey_to_copy->storey=='mansarda') {
+                $new->order_no = count($model->m)+1;
+                $new->name = $storey_to_copy->storey. ' '.(count($model->m)+1);
+            } else {
+                $new->order_no = 1;
+                $new->name = $storey_to_copy->storey;
+            }
             $new->gross_area = $storey_to_copy->gross_area;
-            $new->level = $storey_to_copy->level+$storey_to_copy->height;
+            //$new->level = $storey_to_copy->level+$storey_to_copy->height;
             $new->height = $storey_to_copy->height;
             $new->description = $storey_to_copy->description;
             $new->save();
@@ -380,8 +456,8 @@ class ProjectBuildingController extends Controller
                     }
                 }
             } 
-            \Yii::$app->session->setFlash('info', '<i class="fa fa-bell"></i> Etaža '.$copy_storey. ' je uspešno kopirana.'); 
-            return $new->id;
+            //\Yii::$app->session->setFlash('info', '<i class="fa fa-bell"></i> Etaža '.$copy_storey. ' je uspešno kopirana.'); 
+            //return $new->id;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }                 
@@ -417,7 +493,7 @@ class ProjectBuildingController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/project-building/storeys', 'id'=>$id]);
     }
 
     /**
@@ -499,6 +575,11 @@ class ProjectBuildingController extends Controller
             foreach ($building as $build) {
                 if($build){
                     $build->save();
+                    if($build->storey and $build->storey_init==0){
+                        $this->generateBuildingStoreys($build);
+                        $build->storey_init = 1;
+                        $build->save();
+                    }
                 }                    
             }               
         }
@@ -549,7 +630,12 @@ class ProjectBuildingController extends Controller
     protected function validateBuilding($building, $architecture, $structure, $materials, $insulations, $services)
     {
         if ($building->load(Yii::$app->request->post())) {             
-            $building->save();                            
+            $building->save();  
+            if($building->storey and $building->storey_init==0){
+                $this->generateBuildingStoreys($building);
+                $building->storey_init = 1;
+                $building->save();
+            }                              
         }
         if ($architecture->load(Yii::$app->request->post())) { 
             //print "<pre>";print_r($architecture); print "</pre>";die();
@@ -567,5 +653,82 @@ class ProjectBuildingController extends Controller
         if ($services->load(Yii::$app->request->post())) { 
             $services->save();                            
         }
+    }
+
+    public function generateBuildingStoreys($model)
+    {
+        $storey_marks = explode("+", $model->storey);
+        if($storey_marks){
+            foreach($storey_marks as $key=>$storey_mark){
+                if(!is_numeric($storey_mark)){
+                    $new[$key] = new \common\models\ProjectBuildingStoreys();
+                    $new[$key]->project_building_id = $model->id;
+                    $new[$key]->order_no = 1;
+                    $new[$key]->height = $model->storey_height ?: 3;
+                    $new[$key]->gross_area = $model->gross_area_average ?: 0;
+                    switch ($storey_mark) {
+                        case 'Po': 
+                            $new[$key]->storey = 'podrum';
+                            $new[$key]->name = 'podrum';                        
+                            break;
+                        case 'Su': 
+                            $new[$key]->storey = 'suteren';
+                            $new[$key]->name = 'suteren';                        
+                            break;
+                        case 'G': 
+                            $new[$key]->storey = 'galerija';
+                            $new[$key]->name = 'galerija';                        
+                            break;
+                        case 'Ps': 
+                            $new[$key]->storey = 'povucenisprat';
+                            $new[$key]->name = 'povučeni sprat';                        
+                            break;
+                        case 'Pk': 
+                            $new[$key]->storey = 'potkrovlje';
+                            $new[$key]->name = 'potkrovlje';                        
+                            break;
+                        case 'M': 
+                            $new[$key]->storey = 'mansarda';
+                            $new[$key]->name = 'mansarda';                        
+                            break;
+                        case 'T': 
+                            $new[$key]->storey = 'tavan';
+                            $new[$key]->name = 'tavan';                        
+                            break;
+                    }
+                    $new[$key]->save();
+                    if(!$model->canHaveUnits()){
+                        // generate part (unit)
+                        $new_part[$key] = new \common\models\ProjectBuildingStoreyParts();
+                        $new_part[$key]->project_building_storey_id = $new[$key]->id;
+                        $new_part[$key]->mode = $model->mode;
+                        $new_part[$key]->type = 'whole';
+                        $new_part[$key]->name = 'prostorije';
+                        $new_part[$key]->save();
+                    }
+                } else { // ako je broj, onda označava broj spratova
+                    for ($x = 1; $x <= $storey_mark; $x++) {
+                        $new[$key][$x] = new \common\models\ProjectBuildingStoreys();
+                        $new[$key][$x]->project_building_id = $model->id;
+                        $new[$key][$x]->storey = 'sprat';
+                        $new[$key][$x]->name = $x . '. sprat';  
+                        $new[$key][$x]->order_no = $x;
+                        $new[$key][$x]->height = $model->storey_height ?: 3;
+                        $new[$key][$x]->gross_area = $model->gross_area_average ?: 0;
+                        $new[$key][$x]->same_as_id = $x>1 ? $new[$key][1]->id : null;
+                        $new[$key][$x]->save();
+                        if(!$model->canHaveUnits()){
+                            // generate part (unit)
+                            $new_part[$key][$x] = new \common\models\ProjectBuildingStoreyParts();
+                            $new_part[$key][$x]->project_building_storey_id = $new[$key][$x]->id;
+                            $new_part[$key][$x]->mode = $model->mode;
+                            $new_part[$key][$x]->type = 'whole';
+                            $new_part[$key][$x]->name = 'prostorije';
+                            $new_part[$key][$x]->save();
+                        }
+                    }                        
+                }
+            }
+        }        
     }
 }

@@ -12,6 +12,9 @@ use kartik\tabs\TabsX;
 $this->title = $model->username;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Podešavanja'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$this->params['page_title'] = 'Profil';
+
 $this->params['model'] = $model;
 
 $items = [

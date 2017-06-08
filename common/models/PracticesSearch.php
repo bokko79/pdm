@@ -46,7 +46,7 @@ class PracticesSearch extends Practices
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $query->orderBy('name, engineer_id DESC'),
         ]);
 
         $this->load($params);

@@ -17,7 +17,7 @@ $formatter->locale = 'sr-Latn';
 						<td class="shorttitler">Projektant</td>
 						<td class="content">
 							<p><?= $vol->practice->name ?></p>
-							<p>ul. <?= $volume->practice->location->street. ' br. ' . $vol->practice->location->number . ' ' .$vol->practice->location->city->town; ?></p>
+							<p><?= $volume->practice->location->fullAddress ?></p>
 						</td>					
 					</tr>
 					<tr>
@@ -42,7 +42,7 @@ $formatter->locale = 'sr-Latn';
 						<td class="content">
 							Potpis
 							<div>
-								<?= Html::img('@web/images/legal_files/signatures/'.$vol->engineer->signature, ['style'=>'width:160px; max-height:140px;']) ?>
+								<?= $vol->engineer->EngSignature ?>
 							</div>
 						</td>				
 					</tr>
@@ -64,7 +64,7 @@ $formatter->locale = 'sr-Latn';
 						<td class="shorttitler">Izrađivač</td>
 						<td class="content">
 							<p><?= $vole->practice->name ?></p>
-							<p>ul. <?= $vole->practice->location->street. ' br. ' . $vole->practice->location->number . ' ' .$vole->practice->location->city->town; ?></p>
+							<p><?= $vole->practice->location->fullAddress ?></p>
 						</td>					
 					</tr>
 					<tr>
@@ -89,7 +89,7 @@ $formatter->locale = 'sr-Latn';
 						<td class="content">
 							Potpis
 							<div>
-								<?= Html::img('@web/images/legal_files/signatures/'.$vole->engineer->signature, ['style'=>'width:160px; max-height:140px;']) ?>
+								<?= $vole->engineer->EngSignature ?>
 							</div>
 						</td>				
 					</tr>

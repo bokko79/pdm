@@ -42,10 +42,11 @@ class Invite extends Model
     public function invite()
     {
         if ($this->validate()) {
-            \Yii::$app->mailer->compose(['html' => '/user/mail/invite'])
+            $current_engineer = \common\models\Engineers::find()->where('user_id='.Yii::$app->user->id)->one();
+            \Yii::$app->mailer->compose(['html' => '/user/mail/invite'], ['engineer'=>$current_engineer, 'email'=>$this->email])
                 ->setFrom([\Yii::$app->params['supportEmail'] => 'Masterplan ARC d.o.o.'])
                 ->setTo($this->email)
-                ->setSubject('Poziv na Masterplan.rs' )
+                ->setSubject('Poziv na Masterplan.rs')
                 ->send();
         } else {
             return false;

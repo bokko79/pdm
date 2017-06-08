@@ -11,18 +11,19 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\FileInput;
 use dosamigos\tinymce\TinyMce;
 use kartik\checkbox\CheckboxX;
+
+$model->storeys = 'P';
 ?>
 
 <?php $form = kartik\widgets\ActiveForm::begin([
     'id' => 'form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
-    'fullSpan' => 7,      
-    'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
+    'fullSpan' => 10,      
+    'formConfig' => ['labelSpan' => 4, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
     'options' => ['enctype' => 'multipart/form-data'],
 ]); ?>
 
-<hr>
-<h3>Osnovni podaci</h3>
+<h5>Osnovni podaci</h5>
 
     <?= $form->field($model, 'project_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Projects::find()->all(), 'id', 'name'),
@@ -49,7 +50,7 @@ use kartik\checkbox\CheckboxX;
     <?= $form->field($model, 'removal')->widget(CheckboxX::classname(), ['pluginOptions'=>['size'=>'sm']]) ?>
 
 <hr>
-<h3>Opis</h3>    
+<h5>Opis</h5>    
 
     <?= $form->field($model, 'conditions')->textarea(['rows' => 6]) ?>
 
@@ -59,13 +60,13 @@ use kartik\checkbox\CheckboxX;
 
     <?= $form->field($model, 'file_id')->textInput(['maxlength' => true]) ?>
 
-    <div class="row" style="margin:20px;">
-        <div class="col-md-offset-3">
-            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    <div class="row" style="margin:20px 0;">
+        <div class="col-md-offset-4">
+            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Sačuvaj izmene', ['class' => !$model->isNewRecord ? 'btn btn-success shadow' : 'btn btn-block btn-primary shadow']) ?>
             <?= (!$model->isNewRecord) ? Html::a(Yii::t('app', 'Ukloni'), ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
-                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                    'confirm' => Yii::t('app', 'Da li želite da ukonite postojeći objekat na parceli?'),
                     'method' => 'post',
                 ],
             ]) : null ?>
@@ -73,3 +74,23 @@ use kartik\checkbox\CheckboxX;
     </div>
 
 <?php ActiveForm::end(); ?>
+
+<?php if($project->setup_status=='existing_buildings'): ?>
+
+    <?php $form = kartik\widgets\ActiveForm::begin([
+        'id' => 'step-form',
+        'type' => ActiveForm::TYPE_HORIZONTAL,
+        'fullSpan' => 10,      
+        'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
+        'options' => ['enctype' => 'multipart/form-data'],
+    ]); ?>
+
+        <div class="row" style="margin:50px 0 0;">
+            
+            <div class="col-md-offset-6 col-md-6">
+                <p>Kada završite unos postojećih objekata na parceli, ukoliko ih ima, pređite na sledeći korak. Ukoliko ih nema, odmah pređite na sledeći korak.</p>
+                <?= Html::submitButton('Sledeći korak <i class="fa fa-arrow-right fa-lg"></i>', ['class' => 'btn btn-success shadow btn-block btn-lg', 'name' => 'step_form', 'value' => 'next_step']) ?>
+            </div>            
+        </div>
+    <?php ActiveForm::end(); ?>
+<?php endif; ?>

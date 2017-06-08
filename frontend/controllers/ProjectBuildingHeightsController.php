@@ -14,6 +14,7 @@ use yii\filters\VerbFilter;
  */
 class ProjectBuildingHeightsController extends Controller
 {
+    public $layout = 'project';
     /**
      * @inheritdoc
      */
@@ -33,7 +34,7 @@ class ProjectBuildingHeightsController extends Controller
      * Lists all ProjectBuildingHeights models.
      * @return mixed
      */
-    public function actionIndex()
+    /*public function actionIndex()
     {
         $searchModel = new ProjectBuildingHeightsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -42,6 +43,28 @@ class ProjectBuildingHeightsController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }*/
+
+    /**
+     * Lists all LocationLots models.
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        if($p = Yii::$app->request->get('ProjectBuildingHeights')){
+            $projectBuilding = !empty($p['project_building_id']) ? $this->findProjectBuildingById($p['project_building_id']) : null;
+        }
+
+        if($projectBuilding){
+            if($projectBuilding->projectBuildingHeights){
+                return $this->redirect(['update', 'id' => $projectBuilding->projectBuildingHeights[0]->id]);
+            } else {
+                return $this->redirect(['create', 'ProjectBuildingHeights[project_building_id]' => $projectBuilding->id]);
+            } 
+        } else {
+            return $this->redirect(['/home']);
+        }
+                       
     }
 
     /**
@@ -66,6 +89,7 @@ class ProjectBuildingHeightsController extends Controller
         $model = new ProjectBuildingHeights();
         if($p = Yii::$app->request->get('ProjectBuildingHeights')){
             $model->project_building_id = !empty($p['project_building_id']) ? $p['project_building_id'] : null;
+            $projectBuilding = !empty($p['project_building_id']) ? $this->findProjectBuildingById($p['project_building_id']) : null;
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -73,6 +97,7 @@ class ProjectBuildingHeightsController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'projectBuilding' => $projectBuilding,
             ]);
         }
     }
@@ -120,6 +145,22 @@ class ProjectBuildingHeightsController extends Controller
     protected function findModel($id)
     {
         if (($model = ProjectBuildingHeights::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectBuildingClasses model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectBuildingClasses the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findProjectBuildingById($id)
+    {
+        if (($model = \common\models\ProjectBuilding::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -63,7 +63,7 @@ class Posts extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'profile_id' => Yii::t('app', 'Profile ID'),
+            'user_id' => Yii::t('app', 'Autor'),
             'file_id' => Yii::t('app', 'File ID'),
             'category_id' => Yii::t('app', 'Kategorija'),
             'lang_code' => Yii::t('app', 'Jezik'),
@@ -134,5 +134,13 @@ class Posts extends \yii\db\ActiveRecord
     public function getFile()
     {
         return $this->hasOne(Files::className(), ['id' => 'file_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(UserAccount::className(), ['id' => 'user_id']);
     }
 }

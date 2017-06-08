@@ -29,17 +29,16 @@ $marker = new Marker([
 // Add marker to the map
 $map->addOverlay($marker);
 ?>
-<div class="card_container record-full grid-item fadeInUp animated" id="">
-    <div class="primary-context gray normal">
+<div class="card_container record-full grid-item fadeInUp no-margin animated-not" id="location" >
+  <?php /*  <div class="primary-context gray normal">
         <div class="head">
-        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog"></i> Uredi lokaciju', Url::to(['/project-lot/location', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?>
+        <div class="subaction"><?= Html::a('<i class="fa fa-cog"></i> Uredi lokaciju', Url::to(['/project-lot/location', 'id'=>$model->project_id]), ['class' => 'btn btn-success btn-sm']) ?>
             </div>
             <i class="fa fa-map-marker"></i> Lokacija projekta
         </div>
         <div class="subhead"><?= $model->project->location->getLotAddress(false) ?></div>
-    </div>
+    </div> */ ?>
     
-      <hr style="margin:0">
       <div class="secondary-context no-padding">
         <div class="media-screen no-margin" id="gmap0-map-canvas">                   
           <?php $map->display() ?>

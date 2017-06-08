@@ -10,48 +10,33 @@ use kartik\tabs\TabsX;
 /* @var $model common\models\ProjectLot */
 
 $this->title = 'Parcela projekta';
-$this->params['breadcrumbs'][] = ['label' => $model->project->code. ': Projekat', 'url' => ['/projects/view', 'id' => $model->project_id]];
-$this->params['breadcrumbs'][] = $this->title;
+
+$this->params['page_title'] = 'Lokacija';
+
+$this->params['breadcrumbs'][] = ['label' => '<i class="fa fa-map-marker"></i> Lokacija projekta', 'url' => null];
+
 $this->params['project'] = $model->project;
-
-$items = [
-    [
-        'label'=>'Adresa i lokacija projekta',
-        'content'=>$this->render('tabs/_location', ['model'=>$model]),
-        'active'=>true
-    ],
-    [
-        'label'=>'Opšti podaci parcele',
-        'content'=>$this->render('tabs/_general', ['model'=>$model]),
-    ],
-    [
-        'label'=>'Katastarske parcele',
-        'content'=>$this->render('tabs/_lots', ['model'=>$model]),
-    ],
-    [
-        'label'=>'Postojeći objekti',
-        'content'=>$this->render('tabs/_existing', ['model'=>$model]),
-    ],
-    [
-        'label'=>'Predviđeni objekti',
-        'content'=>$this->render('tabs/_future', ['model'=>$model]),
-    ],
-    ];
 ?>
+<?php /*
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-12">
-            <?php
-                echo kartik\tabs\TabsX::widget([
-                    'items'=>$items,
-                    'position'=>TabsX::POS_LEFT,
-                    'encodeLabels'=>false,
-                    'containerOptions'=>[
-                        'style' => 'width:100%;',
-                    ],
-                ]);
-            ?>
-        </div>  
-    </div>
-</div>
+        <div class="index" style="">
+            <nav class="" id="myScrollspy">
+                <ul class="nav nav-pills nav-stacked left" data-spy="affix" data-offset-top="180" style="top:70px;">
+                    <li><a href="#location">Adresa</a></li>
+                    <li><a href="#lot">Parcela</a></li>
+                    <li><a href="#location-lots">Katastarske parcele</a></li>
+                    <li><a href="#existing">Postojeći objekti</a></li>
+                    <li><a href="#future">Predviđeni objekti</a></li>                
+                </ul>  
+            </nav>   
+
+        </div> */ ?>
+    
+            <?= $this->render('tabs/_location', ['model'=>$model]) ?>
+            <?= $this->render('tabs/_general', ['model'=>$model]) ?>
+            <?php /* $this->render('tabs/_lots', ['model'=>$model]) ?>
+            <?= $this->render('tabs/_existing', ['model'=>$model]) ?>
+            <?= $this->render('tabs/_future', ['model'=>$model]) */ ?>
+
+
+

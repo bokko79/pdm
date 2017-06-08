@@ -8,12 +8,15 @@ use common\models\LocationLotsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * LocationLotsController implements the CRUD actions for LocationLots model.
  */
 class LocationLotsController extends Controller
 {
+    public $layout = 'project';
+    
     /**
      * @inheritdoc
      */
@@ -26,6 +29,17 @@ class LocationLotsController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['update', 'create', 'index'],
+                'rules' => [
+                    [
+                        'actions' => ['update', 'create', 'index'],
+                        'allow' => true,
+                        'roles' => ['engineer'],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -35,25 +49,35 @@ class LocationLotsController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new LocationLotsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if($ll = Yii::$app->request->get('LocationLots')){
+            $project = $ll['project_id'] ? $this->findProjectById($ll['project_id']) : null;
+        }
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single LocationLots model.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        /*if($project){
+            if($project->location->locationLots){
+                return $this->redirect(['update', 'id' => $project->location->locationLots[0]->id]);
+            } else {
+                return $this->render('index', [
+                    'project'=>$project,
+                ]);
+            } 
+        } else {
+            return $this->redirect(['/home']);
+        }*/
+        if(\Yii::$app->user->can('viewProject', ['project'=>$project])){
+            if(\Yii::$app->request->post('step_form')){
+                $project->setup_status = 'existing_buildings';
+                $project->save();
+                return $this->redirect($project->setupRedirect);
+            } else {
+                return $this->render('index', [
+                        'project'=>$project,
+                    ]);
+            }
+        } else {
+            throw new \yii\web\ForbiddenHttpException('Nemate prava da pristupite ovoj stranici.');
+        }           
+                       
     }
 
     /**
@@ -67,15 +91,20 @@ class LocationLotsController extends Controller
         if($ll = Yii::$app->request->get('LocationLots')){
             $model->location_id = $ll['location_id'] ? $ll['location_id'] : null;
             $model->type = $ll['type'] ? $ll['type'] : null;
+            $location = $this->findLocationById($ll['location_id']);
         }
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $project = $model->location->project;
-            return $this->redirect(['project-lot/view', 'id' => $project->id]);
+        // access control
+        if(\Yii::$app->user->can('viewProject', ['project'=>$location->project])){
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                $project = $model->location->project;
+                return $this->redirect(['index', 'LocationLots[project_id]' => $project->id]);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            throw new \yii\web\ForbiddenHttpException('Nemate prava da pristupite ovoj stranici.');
         }
     }
 
@@ -89,12 +118,17 @@ class LocationLotsController extends Controller
     {
         $model = $this->findModel($id);
         $project = $model->location->project;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['project-lot/view', 'id' => $project->id]);
+        // access control
+        if(\Yii::$app->user->can('viewProject', ['project'=>$project])){
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['index', 'LocationLots[project_id]' => $project->id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            throw new \yii\web\ForbiddenHttpException('Nemate prava da pristupite ovoj stranici.');
         }
     }
 
@@ -108,7 +142,7 @@ class LocationLotsController extends Controller
     {
         $model = $this->findModel($id);
         $model->delete();
-        return $this->redirect(['project-lot/view', 'id' => $model->location->project->id]);
+        return $this->redirect(['index', 'LocationLots[project_id]' => $model->location->project->id]);
     }
 
     /**
@@ -121,6 +155,38 @@ class LocationLotsController extends Controller
     protected function findModel($id)
     {
         if (($model = LocationLots::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the LocationLots model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return LocationLots the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findProjectById($id)
+    {
+        if (($model = \common\models\Projects::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the LocationLots model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return LocationLots the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findLocationById($id)
+    {
+        if (($model = \common\models\Locations::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

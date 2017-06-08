@@ -7,8 +7,8 @@ use yii\widgets\DetailView;
 /* @var $model common\models\PracticeEngineers */
 
 $this->title = $model->engineer->name. '@'.$model->practice->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Zaposleni u firmi'), 'url' => ['practices/view', 'id' => $model->practice_id]];
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Zaposleni u firmi'), 'url' => ['practices/view', 'id' => $model->practice_id]];
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="practice-engineers-view">
 

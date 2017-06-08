@@ -160,7 +160,7 @@ class ProjectVolumes extends \yii\db\ActiveRecord
      */
     public function getProjectVolumeDrawings()
     {
-        return $this->hasMany(ProjectVolumeDrawings::className(), ['project_volume_id' => 'id'])/*->orderBy('CAST("number" AS INTEGER)')*/;
+        return $this->hasMany(ProjectVolumeDrawings::className(), ['project_volume_id' => 'id'])->orderBy('CAST(number AS UNSIGNED)');
     }
 
     /**
@@ -266,12 +266,12 @@ class ProjectVolumes extends \yii\db\ActiveRecord
         } else {
             // podaci investitora nedostaju
             if($project->client->type=='company' and !$project->client->stamp and ($project->phase=='idp' or $project->phase=='pgd' or $project->phase=='pzi' or $project->phase=='pio')){
-                $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nedostaje pečat investitora. '.Html::a('<i class="fa fa-wrench"></i> Dodaj pečat investitora.', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$project->client->id, 'LegalFilesSearch[entity]'=>'client', 'LegalFilesSearch[type]'=>'company_stamp']), ['target'=>'_blank']). '</p>';
+                $content['info'] .= '<p><i class="fa fa-exclamation-circle"></i> Nedostaje pečat investitora. '.Html::a('<i class="fa fa-wrench"></i> Dodaj pečat investitora.', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$project->client->id, 'LegalFilesSearch[entity]'=>'client', 'LegalFilesSearch[type]'=>'company_stamp']), ['target'=>'_blank']). '</p>';
                 //return false;
                 $check = false;
             }
             if(!$project->client->signature){
-                $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Nedostaje potpis investitora. '.Html::a('<i class="fa fa-wrench"></i> Dodaj potpis investitora.', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$project->client->id, 'LegalFilesSearch[entity]'=>'client', 'LegalFilesSearch[type]'=>'signature']), ['target'=>'_blank']). '</p>';
+                $content['info'] .= '<p><i class="fa fa-exclamation-circle"></i> Nedostaje potpis investitora. '.Html::a('<i class="fa fa-wrench"></i> Dodaj potpis investitora.', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$project->client->id, 'LegalFilesSearch[entity]'=>'client', 'LegalFilesSearch[type]'=>'signature']), ['target'=>'_blank']). '</p>';
                 //return false;
                 $check = false;
             }

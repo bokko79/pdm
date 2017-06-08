@@ -54,7 +54,8 @@ class RegistrationForm extends BaseRegistrationForm
         return [
             'username' => Yii::t('app', 'Korisničko ime'),
             'password' => Yii::t('app', 'Lozinka'),
-            'practice_join' => Yii::t('app', 'Moja firma'),
+            'practice_join' => Yii::t('app', 'Zaposlenje'),
+            'practice_id' => Yii::t('app', 'Firma gde ste zaposleni/partner'),
         ];
     }
 

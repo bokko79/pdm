@@ -96,7 +96,9 @@ class UserAccount extends BaseUser
     const NEW_EMAIL_CONFIRMED = 0b10;
 
     /** @var string Plain password. Used for model validation. */
-    public $password;
+    public $password; 
+
+    public $avatarFile;   
 
     /** @var Profile|null */
     private $_profile;
@@ -233,6 +235,14 @@ class UserAccount extends BaseUser
         return $this->hasOne(\common\models\Locations::className(), ['id' => 'current_location']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAFile()
+    {
+        return $this->hasOne(Files::className(), ['id' => 'avatar']);
+    }
+
     public function afterCreate($event){        
         return;
     }
@@ -301,34 +311,80 @@ class UserAccount extends BaseUser
     public function dataReqs()
     {  
         $model = $this;
-        $content = ['info'=>'', 'success'=>'', 'danger'=>'', 'warning'=>''];
+        $content = ['info'=>'', 'success'=>'', 'danger'=>'', 'warning'=>'', 'setup'=>0];
         $engineer = $model->engineer;
         $practice = $engineer->practice;
 
+        // User types:
+        // 1. User: can create requests and estates and posts (if editors)
+        // 2. Engineer: can create everything user can plus can create engineer profile, practice and projects/presentations
 
-        if(!$engineer){          
-          $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> '.Html::a('Morate se prijaviti kao inženjer/projektant. ', Url::to(['/user/registration/register']), ['target'=>'_blank']).'</p>';
-        }
-
-        if($engineer and $engineer->practiceEngineers==null){          
-          $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Trenutno nemate prijavljeno preduzeće. Da biste mogli da kreirate projekte, '.Html::a('registrujte svoju firmu kao direktor', Url::to(['/practices/create', 'engineer_id'=>$model->engineer->user_id]), ['target'=>'_blank']).' ili se '.Html::a('prijavite u postojeću', Url::to(['/practices/index']), ['target'=>'_blank']).' kao zaposleni ili partner.</p>';
-        }
-        if($engineer and $engineer->expertees_id != 31 and $engineer->engineerLicences==null){
-          $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Morate uneti svoje projektantske licencne pakete da bi kreirali projekte. '.Html::a('Unesi', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->engineer->user_id]), ['target'=>'_blank']).'</p>';
-        }
-        if($engineer and $engineer->expertees_id != 31 and $engineer->engSignature==null){
-          $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Morate uneti skenirani potpis u .jpg ili .png formatu da bi kreirali projekte. '.Html::a('Unesi', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->engineer->user_id, 'LegalFilesSearch[entity]'=>'engineer', 'LegalFilesSearch[type]'=>'signature']), ['target'=>'_blank']).'</p>';
-        }
-        if(!$practice){
-
+        // User data:
+        // --- username, email, avatar
+        // Engineer data:
+        // --- name, expertees, email, phone, signature, cover_photo, about
+        // --- #licences, #practices, #portfolio
+        // Practices data:
+        // --- name, #location (street, number, city), phone, email, fax, tax_no, company_no, account_no, bank, avatar, cover_photo, stamp, memo, about
+        // --- #engineers, #partners, #portfolio
+        if(!$model->username or !$model->email){
+            $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> '.Html::a('Morate se ispravno registrovati! ', Url::to(['/user/registration/register']), ['target'=>'_blank']).'</p>';
         } else {
-            if($practice->director->engSignature==null or $practice->name==''){
-              $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Morate podesiti podatke Vašeg preduzeća. '.Html::a('Podesi', Url::to(['/practices/update', 'id'=>$model->engineer->user_id]), ['target'=>'_blank']).'</p>';
+            if(!$engineer){
+              $content['info'] .= '<p><i class="fa fa-info-circle"></i> '.Html::a('Prijavite se kao inženjer/projektant. ', Url::to(['/user/registration/register']), ['target'=>'_blank']).'</p>';
+            } else {
+                if($engineer->practiceEngineers==null){          
+                  $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Trenutno niste prijavljeni ni u jednoj firmi. Da biste mogli da kreirate projekte, '.Html::a('registrujte svoju firmu kao direktor', Url::to(['/practices/create', 'engineer_id'=>$model->engineer->user_id]), ['target'=>'_blank']).' ili se '.Html::a('prijavite u postojeću', Url::to(['/practices']), ['target'=>'_blank']).' kao zaposleni ili saradnik te firme.</p>';
+                } else {
+                    foreach($engineer->practiceEngineers as $peng){
+                        if($peng->status=='invited'){
+                            $content['info'] .= '<p><i class="fa fa-info-circle"></i> Pozvani ste u članstvo u firmi <b>'.$peng->practice->name.'</b> kao '.$peng->position.'. '.Html::a('Potvrdite članstvo', Url::to(['/practice-engineers/confirm', 'id'=>$peng->id]), ['target'=>'_blank']).'.</p>';
+                        }
+                    }
+                }
+                if($engineer and $engineer->expertees_id != 31 and $engineer->engineerLicences==null){
+                  $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Unesite svoje projektantske licencne pakete da biste kreirali projekte. '.Html::a('Unesi', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->engineer->user_id]), ['target'=>'_blank']).'</p>';
+                }
+                if($engineer and $engineer->expertees_id != 31 and $engineer->engSignature==null){
+                  $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Unesite skenirani potpis u .jpg ili .png formatu da biste kreirali projekte. '.Html::a('Unesi', Url::to(['/legal-files/create', 'LegalFilesSearch[entity_id]'=>$model->engineer->user_id, 'LegalFilesSearch[entity]'=>'engineer', 'LegalFilesSearch[type]'=>'signature']), ['target'=>'_blank']).'</p>';
+                }
             }
-        }
+
+                
+            if(!$practice){
+
+            } else {
+                if($practice->director->engSignature==null or $practice->name==''){
+                  $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Morate podesiti podatke Vašeg preduzeća. '.Html::a('Podesi', Url::to(['/practices/update', 'id'=>$model->engineer->user_id]), ['target'=>'_blank']).'</p>';
+                }
+                if($practice->practiceEngineers==null){          
+                  $content['danger'] .= '<p><i class="fa fa-exclamation-circle"></i> Trenutno niste prijavljeni ni u jednom preduzeće. Da biste mogli da kreirate projekte, '.Html::a('registrujte svoju firmu kao direktor', Url::to(['/practices/create', 'engineer_id'=>$model->engineer->user_id]), ['target'=>'_blank']).' ili se '.Html::a('prijavite u postojeću', Url::to(['/practices']), ['target'=>'_blank']).' kao zaposleni ili saradnik.</p>';
+                } else {
+                    foreach($practice->practiceEngineers as $peng){                   
+                        if($peng->status=='to_join'){
+                            $content['info'] .= '<p><i class="fa fa-info-circle"></i> Inženjer <b>'.$peng->engineer->name.'</b> Vam je poslao zahtev za članstvo u Vašoj firmi '.$peng->practice->name.' kao '.$peng->position.'. '.Html::a('Potvrdite članstvo', Url::to(['/practice-engineers/confirm', 'id'=>$peng->id]), ['target'=>'_blank']).'.</p>';
+                        }
+                    }
+                }
+                if($practice->practicePartners==null){          
+                  
+                } else {
+                    foreach($practice->practicePartners as $ppartner){                   
+                        if($ppartner->status=='invited'){
+                            if($ppartner->practice_id!=$model->id){
+                                //
+                                $content['info'] .= '<p><i class="fa fa-info-circle"></i> Firma <b>'.$ppartner->practice->name.'</b> Vam je poslala zahtev za partnerstvo sa Vašom firmom '.$ppartner->practice->name.'. '.Html::a('Potvrdite partnerstvo', Url::to(['/practice-partners/confirm', 'id'=>$ppartner->id]), ['target'=>'_blank']).'.</p>';
+                            } else {
+                                $content['info'] .= '<p><i class="fa fa-info-circle"></i> Poslali ste zahtev za partnerstvo firmi <b>'.$ppartner->partner->name.'</b></p>';
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }      
             
         return $content;
-
     }
 
     /**
@@ -340,6 +396,15 @@ class UserAccount extends BaseUser
         $content['warning'] ? \Yii::$app->session->setFlash('warning', $content['warning']) : null;
         $content['info'] ? \Yii::$app->session->setFlash('info', $content['info']) : null;
         $content['success'] ? \Yii::$app->session->setFlash('success', $content['success']) : null;
+        //return false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function setupMeter($content)
+    {  
+        return $content['setup'];
         //return false;
     }
 }

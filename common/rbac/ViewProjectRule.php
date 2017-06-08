@@ -28,12 +28,12 @@ class ViewProjectRule extends Rule
         // control engineers
         if(isset($params['project'])) {
             $project = $params['project'];
-            if($project->engineer_id==$user or $project->client_id==$user or $project->control_engineer_id==$user  or $project->builder_engineer_id==$user  or $project->supervision_engineer_id==$user){
+            if($project->engineer_id==$user or $project->practice_id==$user or $project->client_id==$user or $project->control_engineer_id==$user or $project->builder_engineer_id==$user or $project->supervision_engineer_id==$user){
                 return true;
             }
             if($volumes = $project->projectVolumes){
                 foreach($volumes as $volume){
-                    if($volume->engineer_id==$user or $volume->control_engineer_id==$user){
+                    if($volume->engineer_id==$user or $volume->practice_id==$user or $volume->control_engineer_id==$user or $volume->control_practice_id==$user){
                         return true;
                         break;
                     }

@@ -11,36 +11,15 @@ use frontend\assets\AppAsset;
 use common\widgets\Alert;
 
 AppAsset::register($this);?>
-<?php $this->beginPage() ?>
-<!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
-<head>
-    <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
-    <script src="https://use.fontawesome.com/f6ceb1ff95.js"></script>
-    <?php $this->head() ?>
-</head>
-<body>
-<?php $this->beginBody() ?>
+<?php $this->beginContent('@frontend/views/layouts/html/html.php'); ?>
 
 <div class="wrap">
 
   <?= $this->render('header/_blankheader') ?>  
 
-    <div class="container">
+    <div class="container" style="padding-top:20px;">
         <?= $content ?>
     </div>
 </div>
 
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left"><?= Html::img('/images/logo2-small.png', ['style'=>'width:100px; margin-right:20px;']) ?>Masterplan ARC d.o.o. &copy; <?= date('Y') ?></p>
-    </div>
-</footer>
-
-<?php $this->endBody() ?>
-</body>
-</html>
-<?php $this->endPage() ?>
+<?php $this->endContent(); // HTML ?>

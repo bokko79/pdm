@@ -29,7 +29,7 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
+                'only' => ['logout', 'signup', 'invite'],
                 'rules' => [
                     [
                         'actions' => ['signup'],
@@ -40,6 +40,11 @@ class SiteController extends Controller
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['invite'],
+                        'allow' => true,
+                        'roles' => ['engineer'],
                     ],
                 ],
             ],
@@ -75,7 +80,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $this->layout = 'landing';
+        if(Yii::$app->user->isGuest){
+            return $this->render('index');
+        } else {
+            return $this->redirect(['/home']);
+        }
+            
     }
 
 
@@ -87,14 +98,15 @@ class SiteController extends Controller
     public function actionInvite()
     {
         $model = new \common\models\Invite();
-        if ($model->load(Yii::$app->request->post()) && $model->invite()) {
-            return $this->goBack();
-        } else {
-            return $this->render('invite', [
-                'model' => $model,
-            ]);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->invite();
+            return $this->redirect(['/home']);
         }
-        
+
+        return $this->render('invite', [
+            'model' => $model,
+        ]);       
     }
 
     /**
@@ -258,20 +270,20 @@ class SiteController extends Controller
         $model = \common\models\Projects::findOne($id);
         $volume = \common\models\ProjectVolumes::findOne($volume);
         $mpdf = new mpdf();  
-        $mpdf->tMargin = $volume->practice->memo ? 35 : 15;           
+        $mpdf->tMargin = $volume->practice->memorandum ? 35 : 15;           
         $mpdf->backupSubsFont = array('arial', 'serif'); 
         $mpdf->defaultheaderline = 0; 
         $mpdf->title = $volume->code . ': 0 - Glavna sveska';  
         
-        if($volume->practice->memo){
-            $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$volume->practice->memo, ['style'=>'margin-bottom:20px;']));                   
+        if($volume->practice->memorandum){
+            $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$volume->practice->memorandum->name, ['style'=>'margin-bottom:20px;']));
         }
 
         $mpdf->WriteHTML($this->renderPartial('pdf/_header_gl', ['model'=>$model, 'volume'=>$volume], true), 0); 
         
         $mpdf->SetWatermarkText('PRIMERAK');
 
-        $mpdf->showWatermarkText = true;
+        $mpdf->showWatermarkText = false;
         // 0.1. Naslovna strana glavne sveske
         // Obavezno u svim slučajevima
         $mpdf->WriteHTML($this->renderPartial('insets/0_1_naslovna', ['model'=>$model, 'volume'=>$volume], true), 0);        
@@ -306,33 +318,35 @@ class SiteController extends Controller
 
         // 0.7. Opšti podaci o objektu
         $mpdf->WriteHTML($this->renderPartial('insets/0_7_opsti', ['model'=>$model, 'volume'=>$volume], true), 0);
-        $mpdf->AddPage();
+        if($model->phase=='idp' or $model->phase=='pgd' or $model->phase=='pio'){$mpdf->AddPage();}
+        
 
         // 0.8. Sažeti tehnički opis 
         // Samo u IDP, PGD i PIO 
         if($model->phase=='idp' or $model->phase=='pgd' or $model->phase=='pio'){          
             if($model->work=='adaptacija'){
-                $mpdf->WriteHTML($this->renderPartial('insets/0_8_02_tehopis_adap', ['model'=>$model, 'volume'=>$volume], true), 0);
-                $mpdf->AddPage();
+                $mpdf->WriteHTML($this->renderPartial('insets/0_8_02_tehopis_adap', ['model'=>$model, 'volume'=>$volume], true), 0);                
             } else {
                 if($model->work!='promena_namene'){
                     $mpdf->WriteHTML($this->renderPartial('insets/0_8_1_projektni', ['model'=>$model, 'volume'=>$volume], true), 0);            
                     $mpdf->AddPage();
                 }                
                 $mpdf->WriteHTML($this->renderPartial('insets/0_8_tehopis', ['model'=>$model, 'volume'=>$volume], true), 0);
-                $mpdf->AddPage();
+                
             }
         }
         
         // 0.9. Izjave ovlašćenih lica o merama za ispunjenje osnovnih zahteva za objekat 
         // Samo u IDP i PGD 
         if($model->checkIfElaborat and ($model->phase=='idp' or $model->phase=='pgd')) {
+            $mpdf->AddPage();
             $mpdf->WriteHTML($this->renderPartial('insets/0_9_ovl_lica', ['model'=>$model, 'volume'=>$volume], true), 0);
            // $mpdf->AddPage();
         }
 
         // insert lokacijskiUslovi.
         if($model->lokacijskiUslovi->file){
+            $mpdf->AddPage();
             $mpdf->SetHeader('');
             $pagecount = $mpdf->SetSourceFile('images/projects/'.$model->year.'/'.$id.'/'.$model->lokacijskiUslovi->file->name);
             for ($i=1; $i<=$pagecount; $i++) {
@@ -345,12 +359,13 @@ class SiteController extends Controller
         // 0.11. Izjava investitora, vršioca stručnog nadzora i izvođača radova
         // Samo u PIO
         if($model->phase=='pio') {
+            $mpdf->AddPage();
             $mpdf->WriteHTML($this->renderPartial('insets/0_11_investitor', ['model'=>$model, 'volume'=>$volume], true), 0);
         }
 
         $mpdf->WriteHTML($this->renderPartial('pdf/_footer', ['model'=>$model, 'volume'=>$volume], true), 0);
 
-        $mpdf->Output($volume->code . ': 0 - Glavna sveska.pdf', 'I');
+        $mpdf->Output($volume->code . ': 0.Glavna sveska.pdf', 'I');
         exit;
     }
 
@@ -359,7 +374,7 @@ class SiteController extends Controller
         $model = \common\models\Projects::findOne($id);
         $volume = \common\models\ProjectVolumes::findOne($volume);
         $mpdf = new mpdf();  
-        $mpdf->tMargin = 35;
+        $mpdf->tMargin = $volume->practice->memorandum ? 35 : 0;
         $mpdf->lMargin = 100;            
         $mpdf->backupSubsFont = array('arial', 'serif'); 
         $mpdf->defaultheaderline = 0; 
@@ -367,13 +382,17 @@ class SiteController extends Controller
       
         $mpdf->SetImportUse();        
 
-        $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$volume->practice->memo, ['style'=>'margin-bottom:20px;']));
+        if($volume->practice->memorandum){
+            $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$volume->practice->memorandum->name, ['style'=>'margin-bottom:20px;']));
+        }
+
         $mpdf->WriteHTML($this->renderPartial('pdf/_header', ['model'=>$model, 'volume'=>$volume], true), 0);       
         // 1.1. Naslovna strana projekta
         // Obavezno u svim slučajevima
         $mpdf->SetWatermarkText('PRIMERAK');
 
-        $mpdf->showWatermarkText = true;
+        $mpdf->showWatermarkText = false;
+        
         $mpdf->WriteHTML($this->renderPartial('insets/1_1_naslovna', ['model'=>$model, 'volume'=>$volume], true), 0);        
         $mpdf->AddPage();
         // 1.1.1 Potvrda tehničke kontrole da se projekat prihvata
@@ -411,33 +430,37 @@ class SiteController extends Controller
 
         // 1.6. Numerička dokumentacija - naslovna
         $mpdf->WriteHTML($this->renderPartial('insets/1_6_numericka_naslovna', ['model'=>$model, 'volume'=>$volume], true), 0);
-        $mpdf->AddPage();
+        //$mpdf->AddPage();
             if($volume->volume_id==2){
                 // 1.6.1 Obračun površina
                 $mpdf->SetHeader('');
                 $mpdf->AddPageByArray(['orientation'=>'L', 'sheet-size'=>'A2']);
                 $mpdf->WriteHTML($this->renderPartial('insets/1_6_1_povrsine', ['model'=>$model, 'volume'=>$volume], true), 0);
-                $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$volume->practice->memo, ['style'=>'margin-bottom:20px;']));
+                if($volume->practice->memorandum){
+                    $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$volume->practice->memorandum->name, ['style'=>'margin-bottom:20px;']));
+                }
                 $mpdf->AddPageByArray(['orientation'=>'P', 'sheet-size'=>'A4']);
                 $mpdf->WriteHTML($this->renderPartial('insets/1_6_1_povrsine_SRPS', ['model'=>$model, 'volume'=>$volume], true), 0);
                 $mpdf->AddPageByArray(['orientation'=>'P', 'sheet-size'=>'A4']);
 
                 // 1.6.2 Predviđena vrednost objekta
-                $mpdf->WriteHTML($this->renderPartial('insets/1_6_2_pivo', ['model'=>$model, 'volume'=>$volume], true), 0);
-                $mpdf->AddPage();
+                /*$mpdf->WriteHTML($this->renderPartial('insets/1_6_2_pivo', ['model'=>$model, 'volume'=>$volume], true), 0);
+                $mpdf->AddPage();*/
 
-                // 1.6.3 Predmer i predračun radova
-                $mpdf->WriteHTML($this->renderPartial('qs/quantities', ['model'=>$model, 'volume'=>$volume], true), 0);
-                $mpdf->AddPage();
+                if($model->phase!='idp' and $model->phase!='idr'){
+                    // 1.6.3 Predmer i predračun radova
+                    $mpdf->WriteHTML($this->renderPartial('qs/quantities', ['model'=>$model, 'volume'=>$volume], true), 0);
+                    $mpdf->AddPage();
 
-                // 1.6.4 Šeme stolarije i bravarije, samo u projektu arhitekture
-                $mpdf->WriteHTML($this->renderPartial('insets/1_6_4_scheme', ['model'=>$model, 'volume'=>$volume], true), 0);
-                $mpdf->AddPage();
+                    // 1.6.4 Šeme stolarije i bravarije, samo u projektu arhitekture
+                    $mpdf->WriteHTML($this->renderPartial('insets/1_6_4_scheme', ['model'=>$model, 'volume'=>$volume], true), 0);
+                    $mpdf->AddPage();
+                }
             }
 
         // 1.7. Grafička dokumentacija - naslovna
         $mpdf->WriteHTML($this->renderPartial('insets/1_7_graficka_naslovna', ['model'=>$model, 'volume'=>$volume], true), 0);
-        /*$mpdf->AddPage();*/
+        if($model->geodetski or $model->kopijaPlana or $model->kATPlan){$mpdf->AddPage();}
         // insert KT plan, kopiju plana, geodetski snimak.
         if($model->geodetski){
             $mpdf->SetHeader('');
@@ -468,7 +491,7 @@ class SiteController extends Controller
         }
         $mpdf->WriteHTML($this->renderPartial('pdf/_footer', ['model'=>$model, 'volume'=>$volume], true), 0);
         
-        $mpdf->Output($volume->code . ': '.$volume->number.' - '.($volume->name ?: $volume->volume->name).'.pdf', 'I');
+        $mpdf->Output($volume->code . ': '.$volume->number.'.'.($volume->name ?: $volume->volume->name).'.pdf', 'I');
         exit;
     }
 
@@ -488,7 +511,7 @@ class SiteController extends Controller
         
         $mpdf->SetWatermarkText('PRIMERAK');
 
-        $mpdf->showWatermarkText = true;
+        $mpdf->showWatermarkText = false;
 
         $mpdf->WriteHTML($this->renderPartial('insets/izv_naslovna', ['model'=>$model, 'volume'=>$volume], true), 0);        
         $mpdf->AddPage();
@@ -628,7 +651,7 @@ class SiteController extends Controller
         $mpdf->WriteHTML($this->renderPartial('insets/tablice_crtezi', ['model'=>$model, 'volume'=>$volume], true), 0);
         $mpdf->WriteHTML($this->renderPartial('pdf/_footer', ['model'=>$model, 'volume'=>$volume], true), 0);
       
-        $mpdf->Output($model->code . ' - Tablice površina.pdf', 'I');
+        $mpdf->Output($model->code . ' - Tablice crteža.pdf', 'I');
         exit;
     }
 
@@ -674,18 +697,23 @@ class SiteController extends Controller
         $model = \common\models\Projects::findOne($id);
         $positions = $model->projectQs;
         $mpdf = new mpdf('utf-8', $format.'-'.$orientation);          
-        //$mpdf->tMargin = 35;           
+        $mpdf->tMargin = $model->practice->memorandum ? 35 : 15;
         $mpdf->backupSubsFont = array('arial', 'serif'); 
-        //$mpdf->defaultheaderline = 0; 
+        $mpdf->defaultheaderline = 0; 
         $mpdf->title = $model->code . ': Predmer i predračun radova';  
+
+        
+        if($model->practice->memorandum){
+            $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$model->practice->memorandum->name, ['style'=>'margin-bottom:20px;']));
+        }
 
        // $mpdf->SetHeader(Html::img('@web/images/legal_files/visual/'.$model->practice->memo, ['style'=>'margin-bottom:20px;']));
 
-        $mpdf->WriteHTML($this->renderPartial('pdf/_header', ['model'=>$model, 'volume'=>$volume], true), 0);
-        $mpdf->WriteHTML($this->renderPartial('qs/quantities', ['model'=>$model, 'volume'=>$volume], true), 0);
-        $mpdf->WriteHTML($this->renderPartial('pdf/_footer', ['model'=>$model, 'volume'=>$volume], true), 0);
+        $mpdf->WriteHTML($this->renderPartial('pdf/_header', ['model'=>$model], true), 0);
+        $mpdf->WriteHTML($this->renderPartial('qs/quantities', ['model'=>$model], true), 0);
+        $mpdf->WriteHTML($this->renderPartial('pdf/_footer', ['model'=>$model], true), 0);
       
-        $mpdf->Output($model->code . ' - Tablice površina.pdf', 'I');
+        $mpdf->Output($model->code . ' - Predmer i predračun radova.pdf', 'I');
         exit;
     }
 }

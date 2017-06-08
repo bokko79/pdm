@@ -16,6 +16,7 @@ use dektrium\user\Mailer;
 use dektrium\user\Module;
 use dektrium\user\traits\ModuleTrait;
 use Yii;
+use yii\imagine\Image;
 use dektrium\user\models\SettingsForm as BaseSettingForm;
 
 /**
@@ -31,6 +32,9 @@ class SettingsForm extends BaseSettingForm
 
     /** @var User */
     private $_user;
+    public $theme;
+    public $avatar;
+    public $avatarFile;
 
     /** @return User */
     public function getUser()
@@ -48,6 +52,8 @@ class SettingsForm extends BaseSettingForm
         $this->mailer = $mailer;
         $this->setAttributes([
             'username' => $this->user->username,
+            'theme' => $this->user->theme,
+            'avatar' => $this->user->avatar,
             'email'    => $this->user->unconfirmed_email ?: $this->user->email,
         ], false);
         parent::__construct($mailer, $config);
@@ -61,7 +67,10 @@ class SettingsForm extends BaseSettingForm
     /** @inheritdoc */
     public function rules()
     {
-        $rules = parent::rules();   
+        $rules = parent::rules();  
+        $rules['theme'] = [['theme',], 'integer']; 
+        $rules['avatar'] = [['avatar'], 'integer'];
+        $rules['avatarFile'] = [['avatarFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'];
         return $rules;
     }
 
@@ -73,7 +82,38 @@ class SettingsForm extends BaseSettingForm
             'username'         => Yii::t('user', 'Korisničko ime'),
             'new_password'     => Yii::t('user', 'Nova lozinka'),
             'current_password' => Yii::t('user', 'Trenutna lozinka'),
+            'theme'            => Yii::t('user', 'Tema'),
+            'avatarFile'            => Yii::t('user', 'Profilna slika'),
         ];
+    }
+
+    public function uploadAvatar()
+    {
+        if ($this->validate()) {
+           
+            $fileName = $this->user->id . '_' . time(); 
+            $thumb = 'images/profiles/'.$fileName.'1.'.$this->avatarFile->extension;
+
+            $this->avatarFile->saveAs($thumb); 
+            
+            $image = new \common\models\Files();
+            $image->name = $fileName . '.' . $this->avatarFile->extension;
+            $image->type = 'jpg';
+            $image->time = time();
+            
+                
+            Image::thumbnail($thumb, 262,262)->save(\Yii::getAlias('images/profiles/'.$fileName.'.'.$this->avatarFile->extension), ['quality' => 80]); 
+            unlink(\Yii::getAlias($thumb));
+            $image->save();
+
+            if($image->save()){
+                $this->avatarFile = null;
+                return $image->id;
+            }
+            
+            return false;
+        }
+        return false;        
     }
 
     /**
@@ -87,6 +127,9 @@ class SettingsForm extends BaseSettingForm
             $this->user->scenario = 'settings';
             $this->user->username = $this->username;
             $this->user->password = $this->new_password;
+            $this->user->theme = $this->theme;
+            $this->user->avatarFile = $this->avatarFile;
+            $this->user->avatar = $this->avatar;
             if ($this->email == $this->user->email && $this->user->unconfirmed_email != null) {
                 $this->user->unconfirmed_email = null;
             } elseif ($this->email != $this->user->email) {

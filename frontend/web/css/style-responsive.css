@@ -1,0 +1,212 @@
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
+Version: 2.1.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin-v2.1/frontend/e-commerce/
+*/
+@media (max-width:1199px) and (min-width:992px) {
+.header-nav .nav>li>a {
+    /*padding: 10px;*/
+}
+.main-container .index {width:350px;}
+.main-container .index.w300 {width:240px;}
+}
+@media (max-width:991px) {
+.wrap {
+    min-height: auto;
+}
+.breadcrumb {display: none;}
+.wrap > .container {
+    padding: 60px 0px 0px;
+}
+
+.project-container {margin-top: 0px;}
+
+.main-container .main-content {width: calc(100% - 180px);}
+.main-container .index {width:350px;}
+.main-container .index.w300 {width:200px;}
+
+.form-horizontal .control-label {text-align: left;}
+.header-nav .nav>li>a {
+    font-size: 12px;
+}
+.header-nav .nav.pull-right {
+    margin-right: -15px;;
+}
+.header-logo {
+    width: auto;
+}
+.header-logo .brand {
+    border-width: 13px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 10px;
+}
+.header-logo a {
+    font-size: 18px;
+}
+.header-logo a small {
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.header .user-img {
+    margin-right: 0;
+}
+
+}
+
+@media (max-width:768px) {
+.header.dashboard {box-shadow: 0 0 7px rgb(0, 0, 0);
+    z-index: 10; height: 60px;}   
+.dashboard .header-nav .nav>li>a {}
+.header-nav .nav.pull-right {
+    margin-right: 0px;
+    padding: 0;
+    width: 100%;
+}
+
+.dropdown-menu {
+    left: -180px;
+}
+
+.navbar-toggle-sidebar-inside  {padding: 0; width: 100%; margin: 20px auto;}
+.navbar-toggle-sidebar-inside .icon-bar {margin: 0 auto; background: black !important;}
+
+.row {margin-right: 0px; margin-left: 0px;}
+.project-container,.dashboard-container {margin: 0; padding: 0; z-index: 1;}
+.title-row {display:none;}
+.main-switch {width: 54px; padding: 4px 0;}
+.title-row .main-title {margin-left: 54px; padding:15px; font-size:14px; text-transform: uppercase; font-weight:bold; border-bottom:2px solid #EF6C00;}
+
+.main-card-container {margin-bottom: 0 !important;}
+
+.sidebar {display: none; background: aliceblue; border-right: 2px solid orange;}
+.sidebar.navbar-toggle-sidebar-menu {width: 320px; display:table-cell;position: absolute;top: 0px;left: 0;z-index: 10000; overflow: auto;}
+.sidebar .main-switch-menu {display: none;}
+.sidebar .side-menu {border-bottom: 1px solid #ddd !important;}
+.hidden-md {display: none;}
+
+.content-row {width:100%; display: block;}
+
+.main-switch-menu {width: 100%; background: #EF6C00; color: white; text-align: center; vertical-align: top; display: block;}
+
+.main-container {display: block; box-shadow: none;}
+.main-container .main-content { box-shadow: none; position: relative; width: 100%;}
+.main-container .head.colos {font-size: 24px !important;}
+.main-container .index, .main-container .index.w300 {width:100%; padding: 0px; float: none; display: block; max-height: 240px; overflow: auto; border-bottom: 2px solid orange;}
+.main-container .content.view, .main-container .content.view.w300 {margin-left: 0px; margin-top: 0px; width: 100%; border:none; padding: 15px; float: none; display: block;}
+
+.main-container .main-content .container-fluid.listed > .row {display: block;}
+.main-container .main-content .container-fluid {padding:0; border: none;}
+}
+
+
+
+@media (max-width:767px) {
+.header-logo .brand {
+    border-width: 10px;
+    margin-left: 10px;
+    margin-right: 7px;
+}
+.navbar-collapse, .navbar-collapse .nav>li+li {
+    border-top: 1px solid #eee;
+}
+.header-logo {
+    height: 60px;
+    padding-left: 10px;
+}
+.header-nav .nav>li>a {
+    line-height: 40px;
+    padding: 10px;
+}
+.header-logo a {
+    font-size: 16px;
+}
+.header-nav .nav>li.divider {
+    margin: 18px 0;
+}
+.navbar-toggle {
+    float: left;
+}
+.header .user-img {
+    margin: 0;
+    float: none;
+}
+.header .dropdown.dropdown-hover:focus .arrow, .header .dropdown.dropdown-hover:focus .dropdown-menu, .header .dropdown.dropdown-hover:hover .arrow, .header .dropdown.dropdown-hover:hover .dropdown-menu {
+    display: none;
+}
+.dropdown-menu-content, .dropdown-menu-sidebar, .header .dropdown.dropdown-hover.open .arrow, .header .dropdown.dropdown-hover.open .dropdown-menu, .product-detail, .search-toolbar .sort-list .text {
+    display: block;
+}
+.navbar-collapse {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 60px;
+    background: #fff;
+    padding: 0;
+    -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, .15);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, .15);
+}
+.navbar-collapse .nav>li {
+    float: none;
+}
+.navbar-collapse .nav>li>a {
+    line-height: 30px;
+    padding: 10px 15px;
+}
+.navbar-collapse .dropdown-menu {
+    max-width: inherit;
+    width: 100%;
+    background: #f9f9f9;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    margin-bottom: 10px;
+}
+.dropdown-menu-sidebar {
+    width: auto;
+    max-width: inherit;
+}
+.dropdown-menu-container {
+    min-width: inherit;
+    display: block;
+}
+.dropdown-menu-sidebar+.dropdown-menu-content {
+    border-top: 1px solid #CCD0D4;
+    border-left: none;
+    padding-left: 20px;
+}
+.dropdown-menu-content {
+    padding: 20px;
+}
+.dropdown-brand-list {
+    white-space: initial;
+}
+.section-container.has-bg .cover-bg img {
+    max-width: inherit;
+    max-height: 100%;
+}
+
+
+}
+@media (max-width:600px) {
+
+
+}
+@media (max-width:480px) {
+.main-container .index, .main-container .index.w300 {width:100%; padding: 0px; float: none; display: block; max-height: 240px; overflow: auto;}
+.main-container .index ul.index-menu li {padding:16px;}
+.main-container .index ul.index-menu li a {font-size:13px;}
+.main-container .index ul.index-menu li a .subtext {font-size:11px;}
+.main-container .index ul.index-menu li.active:after{
+    content:"";
+    border:none;
+}
+.main-container .content.view, .main-container .content.view.w300 {margin-left: 0px; margin-top: 0px; width: 100%; border:none; padding: 15px; float: none; display: block;}
+}
+
+}

@@ -16,6 +16,8 @@ use yii\data\ActiveDataProvider;
  */
 class ClientsController extends Controller
 {
+    public $layout = 'dashboard';
+
     /**
      * @inheritdoc
      */
@@ -32,14 +34,9 @@ class ClientsController extends Controller
                         'roles' => ['?'],
                     ],*/
                     [
-                        'actions' => ['index', 'view'],
+                        'actions' => ['index', 'view', 'update', 'delete'],
                         'allow' => true,
                         'roles' => ['engineer', 'client'],
-                    ],
-                    [
-                        'actions' => ['update'],
-                        'allow' => true,
-                        'roles' => ['client'],
                     ],
                 ],
             ],
@@ -58,14 +55,29 @@ class ClientsController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ClientsSearch();
+        /*$searchModel = new ClientsSearch();
         //$searchModel->user_id = Yii::$app->user->id;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-        ]);
+        ]);*/
+        if($id = Yii::$app->request->get('id')){
+            $practice = $id ? $this->findPracticeById($id) : null;
+        }
+
+        if($practice){
+            if($practice->clients){
+                return $this->redirect(['update', 'id' => $practice->clients[0]->id]);
+            } else {
+                return $this->render('index', [
+                    'practice'=>$practice,
+                ]);
+            } 
+        } else {
+            return $this->redirect(['/home']);
+        }
     }
 
     /**
@@ -76,13 +88,18 @@ class ClientsController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        $query = \common\models\Projects::find()->where(['client_id' => $id]);
-        return $this->render('view', [
-            'model' => $model,
-            'projects' => new ActiveDataProvider([
-                'query' => $query,
-            ]),
-        ]);
+        if(\Yii::$app->user->can('updateOwnPractice', ['practice_engineer'=>$model->practice])){
+            $query = \common\models\Projects::find()->where(['client_id' => $id]);
+            return $this->render('view', [
+                'model' => $model,
+                'projects' => new ActiveDataProvider([
+                    'query' => $query,
+                ]),
+            ]);
+        } else {
+            return $this->redirect(['/home']);
+        }
+            
     }
 
     /**
@@ -99,14 +116,14 @@ class ClientsController extends Controller
             $model->practice_id = Yii::$app->user->id;
             $model->location_id = $location->id;
             if($model->save()){
-                return $this->redirect(['/user/settings/practice-setup', '#' => 'w5-tab2']);
+                return $this->redirect(['/user/settings/practice-setup', '#' => 'w9-tab2']);
             }
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-                'location' => $location,
-            ]);
         }
+
+        return $this->render('create', [
+            'model' => $model,
+            'location' => $location,
+        ]);
     }
 
     /**
@@ -119,14 +136,18 @@ class ClientsController extends Controller
     {
         $model = $this->findModel($id);
         $location = $model->location;
+        if(\Yii::$app->user->can('updateOwnPractice', ['practice_engineer'=>$model->practice])){
 
-        if ($model->load(Yii::$app->request->post()) && $model->save() and $location->load(Yii::$app->request->post()) and $location->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
+            if ($model->load(Yii::$app->request->post()) && $model->save() and $location->load(Yii::$app->request->post()) and $location->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
             return $this->render('update', [
                 'model' => $model,
                 'location' => $location,
             ]);
+        } else {
+            return $this->redirect(['/home']);
         }
     }
 
@@ -153,6 +174,22 @@ class ClientsController extends Controller
     protected function findModel($id)
     {
         if (($model = Clients::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the PracticeEngineers model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return PracticeEngineers the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findPracticeById($id)
+    {
+        if (($model = \common\models\Practices::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

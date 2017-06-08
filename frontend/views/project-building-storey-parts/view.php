@@ -16,15 +16,60 @@ use common\widgets\Alert;
 /* @var $this yii\web\View */
 /* @var $model common\models\ProjectBuildingStoreyParts */
 
-$this->title = c($model->name) . '  '. $model->mark. '@'.c($model->projectBuildingStorey->name);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Etaža objekta'), 'url' => ['/project-building-storeys/view', 'id'=>$model->project_building_storey_id]];
+$this->title = c($model->name) . '  '. $model->mark;
+
+$this->params['page_title'] = 'Objekat';
+$this->params['page_title_2'] = 'Površine';
+$this->params['page_title_3'] = c($model->projectBuildingStorey->name);
+$this->params['page_title_4'] = c($model->name). ' ' . $model->mark ?: null;
+
+$this->params['building'] = $model->projectBuildingStorey->projectBuilding;
+$this->params['storey'] = $model->projectBuildingStorey;
+$this->params['part'] = $model;
+
+$this->params['breadcrumbs'][] = ['label' => '<i class="fa fa-home"></i> '.$model->projectBuildingStorey->projectBuilding->name, 'url' => ['/project-building/view', 'id'=>$model->projectBuildingStorey->projectBuilding->id]];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Površine objekta'), 'url' => ['/project-building-storeys/index', 'id'=>$model->projectBuildingStorey->project_building_id]];
+$this->params['breadcrumbs'][] = ['label' => c($model->projectBuildingStorey->name), 'url' => ['/project-building-storeys/view', 'id'=>$model->projectBuildingStorey->project_building_id]];
 $this->params['breadcrumbs'][] = $this->title;
+
 $this->params['project'] = $model->projectBuildingStorey->projectBuilding->project;
 ?>
 
-<div class="container-fluid">
+<div class="card_container record-full grid-item fadeInUp no-shadow no-margin animated-not no-float" id="">
+    <div class="primary-context normal aliceblue bottom-bordered">
+        <div class="head colos">
+            <div class="subaction">
+                
+                <?= ($model->projectBuildingStorey->projectBuilding->project->work=='adaptacija') ? Html::a('<i class="fa fa-cog"></i>', Url::to(['update', 'id'=>$model->id]), ['class'=>'btn btn-link ']) : null ?> <?= Html::a('<i class="fa fa-cubes fa-2x"></i>', Url::to(['']), ['class'=>'btn btn-link', 'data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#init-rooms-modal'.$model->id]) ?> <?= Html::a('<i class="fa fa-plus fa-2x"></i>', Url::to(['/project-building-storey-part-rooms/create', 'ProjectBuildingStoreyPartRooms[project_building_storey_part_id]'=>$model->id]), ['class' => 'btn btn-link']) ?>
+                <?= Html::a('<i class="fa fa-life-saver fa-2x"></i>', null, ['class' => 'btn btn-link button_to_show_secondary']) ?>
+            </div>
+            <i class="fa fa-superscript"></i> Površine prostorija <span class="fs_12">(<?= $model->projectBuildingStorey->projectBuilding->state ?>)</span>
+         </div>
+        <div class="subhead">Upravljanje spratovima, jedinicama i prostorijama objekta objekta.</div>
+    </div>  
+    <div class="primary-context aliceblue bottom-bordered" style="display: none;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-5 text">
+                    <h5>Upravljanje dokumentima projekta</h5>
+                    <h6>Dodavanje dokumenta projekta.</h6>
+                    <p>Novi dokument projekta.</p>
+                    <h6>Podešavanje dokumenta projekta.</h6>
+                    <p>Podešavanje dokumenta projekta.</p>
+                    <h6>Uklanjanje dokumenta projekta.</h6>
+                    <p>Uklanjanje dokumenta projekta.</p>
+                </div>
+                <div class="col-sm-7">
+                    <p><iframe src="//www.youtube.com/embed/sDYVYgiGW3c" width="100%" height="314" allowfullscreen="allowfullscreen"></iframe></p>
+                </div>
+            </div>
+        </div>          
+    </div>
+</div>
+
+<div class="container-fluid listed">
     <div class="row">
-         <div class="col-sm-3">
+        <div class="index w200">
          <?php if($model->projectBuildingStorey->projectBuilding->project->work!='adaptacija'): ?>
             <?= $this->render('/project-building-storeys/_menu', [
                     'model' => $model->projectBuildingStorey->projectBuilding,  
@@ -32,20 +77,18 @@ $this->params['project'] = $model->projectBuildingStorey->projectBuilding->proje
                 ]) ?>        
         <?php endif; ?>
         </div>
-        <div class="col-sm-9">
-        <?= Alert::widget() ?>
+        <div class="content view">
             <div class="card_container record-full grid-item fadeInUp animated" id="">
                 <div class="primary-context gray normal">
                     <div class="head"><?= Html::a(c($model->projectBuildingStorey->name), Url::to(['/project-building-storeys/view', 'id'=>$model->project_building_storey_id])) ?> <i class="fa fa-arrow-circle-right hint small"></i> <?= c($model->name) ?> <?= $model->mark ?>: <?= $model->mode=='new' ? 'Predviđeno stanje' : 'Postojeće stanje'; ?>
-                        <div class="action-area normal-case"><?= ($model->projectBuildingStorey->projectBuilding->project->work=='adaptacija') ? Html::a('<i class="fa fa-cog"></i> Podesi jedinicu', Url::to(['update', 'id'=>$model->id]), ['class'=>'btn btn-success ', 'style'=>'margin-right:10px;']) : null ?> <?= Html::a('<i class="fa fa-cubes"></i>', Url::to(['']), ['class'=>'btn btn-primary btn-sm', 'style'=>'margin-right:10px;', 'data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#init-rooms-modal'.$model->id]) ?> <?= Html::a('<i class="glyphicon glyphicon-plus"></i> Dodaj prostoriju', Url::to(['/project-building-storey-part-rooms/create', 'ProjectBuildingStoreyPartRooms[project_building_storey_part_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?></div>
                     </div>
                 </div>
                 <div class="secondary-context">               
 
                 <?php
                     $gridColumns = [
-                        ['class' => 'kartik\grid\SerialColumn'],
-                        [
+                        //['class' => 'kartik\grid\SerialColumn'],
+                        /*[
                             'attribute'=>'project_building_storey_part_id',
                             'format' => 'raw',
                             'value'=>function ($data) {
@@ -79,11 +122,12 @@ $this->params['project'] = $model->projectBuildingStorey->projectBuilding->proje
                                     'options'=>['class'=>'danger','style'=>'font-weight:bold;']
                                 ];
                             }
-                        ],
+                        ],*/
                         [
                             'class'=>'kartik\grid\EditableColumn',
                             'attribute'=>'mark',
-                            'width'=>'50px',
+                            'label'=>'br.',
+                            'width'=>'40px',
                             'pageSummary'=>true,
                             'editableOptions'=> function ($model, $key, $index) {
                                 return [
@@ -100,6 +144,7 @@ $this->params['project'] = $model->projectBuildingStorey->projectBuilding->proje
                         [
                             'class'=>'kartik\grid\EditableColumn',
                             'attribute'=>'name',
+                            'width'=>'150px',
                             'pageSummary'=>true,
                             'editableOptions'=> function ($model, $key, $index) {
                                 return [
@@ -111,6 +156,8 @@ $this->params['project'] = $model->projectBuildingStorey->projectBuilding->proje
                         [
                             'class'=>'kartik\grid\EditableColumn',
                             'attribute'=>'flooring',
+                            'label'=>'Pod',
+                            'width'=>'110px',
                             'pageSummary'=>true,
                             'editableOptions'=> function ($model, $key, $index) {
                                 return [
@@ -124,6 +171,7 @@ $this->params['project'] = $model->projectBuildingStorey->projectBuilding->proje
                         [
                             'class'=>'kartik\grid\EditableColumn',
                             'attribute'=>'sub_net_area',
+                            'label'=>'reduk P[2]',
                             'width'=>'50px',
                             'hAlign'=>'right',
                             'pageSummary'=>true,
@@ -137,6 +185,7 @@ $this->params['project'] = $model->projectBuildingStorey->projectBuilding->proje
                         [
                             'class'=>'kartik\grid\EditableColumn',
                             'attribute'=>'net_area',
+                            'label'=>'P[m2]',
                             'width'=>'50px',
                             'hAlign'=>'right',
                             'pageSummary'=>true,
@@ -157,7 +206,7 @@ $this->params['project'] = $model->projectBuildingStorey->projectBuilding->proje
                                     return Html::a('<i class="fa fa-wrench"></i>', $url, ['class'=>'btn btn-default btn-sm', 'style'=>'margin-right:10px;']);
                                 },
                                 'delete' => function ($url, $model, $key) {
-                                    return Html::a('<i class="fa fa-power-off"></i>', $url, ['class'=>'btn btn-danger btn-sm', 'data'=>['method'=>'post', 'confirm'=>'Da li ste sigurni da želite da obrišete prostoriju?']]);
+                                    return Html::a('<i class="fa fa-times"></i>', $url, ['class'=>'btn btn-danger btn-sm', 'data'=>['method'=>'post', 'confirm'=>'Da li ste sigurni da želite da obrišete prostoriju?']]);
                                 },                
                             ],
                             'urlCreator' => function ($action, $model, $key, $index) {
@@ -186,7 +235,8 @@ $this->params['project'] = $model->projectBuildingStorey->projectBuilding->proje
                         'condensed'=>true,
                         'responsive'=>true,
                         'hover'=>true,                        
-                        'persistResize'=>true,                        
+                        'persistResize'=>true,
+                        'showPageSummary' => true,
                     ]);
                     ?>
                 </div>
@@ -232,12 +282,4 @@ $this->params['project'] = $model->projectBuildingStorey->projectBuilding->proje
 <?php endif; ?>
 </div>
 
-<?php
-    Modal::begin([
-        'id'=>'init-rooms-modal'.$model->id,
-        'size'=>Modal::SIZE_LARGE,
-        'class'=>'overlay_modal',
-        'header'=> '<h3>Prostorije</h3>',
-    ]); ?>
-        <div id="loading"><i class="fa fa-cog fa-spin fa-3x gray-color"></i></div>
-    <?php Modal::end(); ?>
+

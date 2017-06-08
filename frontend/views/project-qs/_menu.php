@@ -6,7 +6,8 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Nav;
 
 $items = [];
-$items[] = ['label' => 'Predmer: Početna strana', 'url' =>['/project-qs/index', 'ProjectQs[project_id]'=>$model->id]];
+$items[] = ['label' => 'Sve pozicije', 'url' =>['/project-qs/index', 'ProjectQs[project_id]'=>$model->id]];
+$items[] = '<li class="divider"></li>';
 if($works = \common\models\QsWorks::find()->all()){
     foreach($works as $work){
         $subitems = [];

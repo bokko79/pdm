@@ -10,9 +10,14 @@ use yii\bootstrap\Modal;
 /* @var $searchModel common\models\ProjectQsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Predmer i predračun radova projekta');
+$this->title = 'Predmer i predračun radova projekta';
+
+$this->params['page_title'] = 'Predmer';
+
 $this->params['breadcrumbs'][] = $this->title;
+
 $this->params['project'] = $model;
+/*
 ?>
 
 <div class="container-fluid">
@@ -22,12 +27,12 @@ $this->params['project'] = $model;
                     'model' => $model,  
                 ]) ?>        
         </div>
-        <div class="col-sm-9">
+        <div class="col-sm-9"> */ ?>
 
-          <div class="card_container record-full grid-item fadeInUp animated" id="">
+          <div class="card_container record-full grid-item fadeInUp animated-not no-margin" id="">
             <div class="primary-context gray normal">
                 <div class="head"><i class="fa fa-file"></i> <?= Html::encode($this->title) ?> <i class="fa this-one fa-arrow-circle-right"></i>
-                  <div class="action-area normal-case">
+                  <div class="subaction">
                    <?= Html::a('<i class="fa fa-print"></i> PDF Predmer', Url::to(['/site/predmer', 'id'=>$model->id]), ['class' => 'btn btn-primary shadow btn-lg', 'target'=>'_blank']) ?>
                   </div>
                 </div>
@@ -116,7 +121,7 @@ $this->params['project'] = $model;
                           'template' => '{delete}',
                           'buttons' => [                              
                               'delete' => function ($url, $model, $key) {
-                                  return Html::a('<i class="fa fa-power-off"></i>', $url, ['class'=>'btn btn-danger btn-sm', 'data'=>['method'=>'post', 'confirm'=>'Da li ste sigurni da želite da obrišete poziciju? Proces ne može biti vraćen.']]);
+                                  return Html::a('<i class="fa fa-times"></i>', $url, ['class'=>'btn btn-danger btn-sm', 'data'=>['method'=>'post', 'confirm'=>'Da li ste sigurni da želite da obrišete poziciju? Proces ne može biti vraćen.']]);
                               },                
                           ],
                           'urlCreator' => function ($action, $model, $key, $index) {
@@ -159,7 +164,3 @@ $this->params['project'] = $model;
                   ?>
             </div>
           </div>
-        </div>
-    </div>
-</div>
-

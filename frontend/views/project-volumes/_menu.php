@@ -6,11 +6,11 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Nav;
 
 $items = [];
-$items[] = ['label' => 'Index svezaka', 'url' =>['/project-volumes/index', 'ProjectVolumes[project_id]'=>$model->id], 'linkOptions'=>['style'=>'font-size:15px;']];
+$items[] = ['label' => 'Sve sveske', 'url' =>['/project-volumes/index', 'ProjectVolumes[project_id]'=>$model->id], 'linkOptions'=>['style'=>'font-size:15px;']];
 $items[] = '<li class="divider"></li>';
 if($volumes = $model->projectVolumes){
     foreach($volumes as $volume){
-        if($volume->volume_id==1) { 
+        /*if($volume->volume_id==1) { 
             $sveska = 'glavna-sveska'; 
         } elseif($volume->volume_id==17) { 
             $sveska = 'izvod'; 
@@ -18,15 +18,15 @@ if($volumes = $model->projectVolumes){
             $sveska =  'ozakonjenje'; 
         } else { 
             $sveska = 'projekat'; 
-        }
+        }*/
 
         $subitems = [];
-        $subitems[] = ['label' => ($volume->number ? $volume->number. '. ' : ''). c($volume->name), 'url' =>['/project-volumes/view', 'id'=>$volume->id]];
+        /*$subitems[] = ['label' => ($volume->number ? $volume->number. '. ' : ''). c($volume->name), 'url' =>['/project-volumes/view', 'id'=>$volume->id]];
         $subitems[] = ['label' => '<i class="fa fa-cog"></i> Podešavanje', 'url' =>['/project-volumes/update', 'id'=>$volume->id]];
         /*$subitems[] = '<li class="divider"></li>';
         $subitems[] = ['label' => '<i class="fa fa-image"></i> Crteži', 'url' =>['/project-volumes/view', 'id'=>$volume->id, '#'=>'w2-tab1']];*/
-        $subitems[] = '<li class="divider"></li>';
-        $subitems[] = $volume->volume_id!=18 ? ['label' => '<i class="fa fa-print"></i> PDF sveske', 'url' =>['/site/'.$sveska, 'id'=>$model->id, 'volume'=>$volume->id], 'linkOptions'=>['target'=>'_blank']] : '';
+        /*$subitems[] = '<li class="divider"></li>';
+        $subitems[] = $volume->volume_id!=18 ? ['label' => '<i class="fa fa-print"></i> PDF sveske', 'url' =>['/site/'.$sveska, 'id'=>$model->id, 'volume'=>$volume->id], 'linkOptions'=>['target'=>'_blank']] : '';*/
 
         $items[] = ['label' => (!$volume->dataRequirement($volume->dataReqs()) ? '<i class="fa fa-warning red"></i> ' : '').($volume->number ? $volume->number. '. ' : '').c($volume->name), 'items'=>$subitems, 'url' =>['/project-volumes/view', 'id'=>$volume->id]];                            
     }

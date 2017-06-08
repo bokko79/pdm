@@ -8,6 +8,7 @@ use common\models\ProjectVolumesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 
 /**
@@ -15,12 +16,24 @@ use yii\data\ActiveDataProvider;
  */
 class ProjectVolumesController extends Controller
 {
+    public $layout = 'project';
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['view', 'update', 'delete', 'create', 'index',],
+                'rules' => [
+                    [
+                        'actions' => ['view', 'update', 'create', 'index', 'delete'],
+                        'allow' => true,
+                        'roles' => ['engineer'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -36,19 +49,28 @@ class ProjectVolumesController extends Controller
      */
     public function actionIndex()
     {
-        $this->layout = 'project';
         $searchModel = new ProjectVolumesSearch();
-        if($p = Yii::$app->request->get('ProjectVolumes')){
+
+        if($p = Yii::$app->request->get('ProjectVolumesSearch')){
             $searchModel->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
             $model = $this->findProjectById($searchModel->project_id);
         }
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'model' => $model,
-        ]);
+        // access control
+        if(\Yii::$app->user->can('updateOwnProject', ['project'=>$model])){
+            if(\Yii::$app->request->post('step_form')){
+                $model->setup_status = 'address';
+                $model->save();
+                return $this->redirect($model->setupRedirect);
+            } else {
+                return $this->render('index', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $searchModel->search(Yii::$app->request->queryParams),
+                    'model' => $model,
+                ]);
+            }
+        } else {
+            return $this->redirect([\Yii::$app->user->isGuest ? '/' : '/home']);
+        }
     }
 
     /**
@@ -57,44 +79,22 @@ class ProjectVolumesController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {
-        $this->layout = 'project';
-        
+    {     
+    	$searchModel = new ProjectVolumesSearch(); 
         $model = $this->findModel($id);
-        $query_cla = \common\models\ProjectVolumeDrawings::find()->where('project_volume_id='.$id)/*->orderBy('CAST("number" AS INTEGER)')*/;
-        $model->dataReqFlash($model->dataReqs());
-        // validate if there is a editable input saved via AJAX
-        if (Yii::$app->request->post('hasEditable')) {
-            // instantiate your book model for saving
-            $drawId = Yii::$app->request->post('editableKey');
-            $edit = Yii::$app->request->post('editableIndex');
-            $drawing = \common\models\ProjectVolumeDrawings::findOne($drawId);
-            $out = \yii\helpers\Json::encode(['output'=>'', 'message'=>'']);
-            $ps = Yii::$app->request->post('ProjectVolumeDrawings');
-            if(isset($ps[$edit]['number'])){
-                $drawing->number = $ps[$edit]['number'];                    
-            }
-            if(isset($ps[$edit]['scale'])){
-                $drawing->scale = $ps[$edit]['scale'];
-            }            
-            if(isset($ps[$edit]['name'])){
-                $drawing->name = $ps[$edit]['name'];
-            }
-            if(isset($ps[$edit]['title'])){
-                $drawing->title = $ps[$edit]['title'];
-            }
-            
-            $drawing->save();
-            echo \yii\helpers\Json::encode(['output'=>'', 'message'=>'']);
-            return;
-        }
+        $searchModel->project_id = $model->project_id; 
+        // access control
+        if(\Yii::$app->user->can('updateOwnProject', ['project'=>$model])):
+            $model->dataReqFlash($model->dataReqs());        
 
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-            'projectVolumeDrawings' => new ActiveDataProvider([
-                'query' => $query_cla,
-            ]),
-        ]);
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+                'searchModel' => $searchModel,
+                'dataProvider' => $searchModel->search(Yii::$app->request->queryParams),
+            ]);
+        else:
+            return $this->redirect([\Yii::$app->user->isGuest ? '/' : '/home']);
+        endif;
     }
 
     /**
@@ -104,33 +104,45 @@ class ProjectVolumesController extends Controller
      */
     public function actionCreate()
     {
+        $searchModel = new ProjectVolumesSearch();
         $model = new ProjectVolumes();
-        if($p = Yii::$app->request->get('ProjectVolumes')){
+        if($p = Yii::$app->request->get('ProjectVolumesSearch')){
             $model->project_id = isset($p['project_id']) ? $p['project_id'] : null;
             $model->volume_id = isset($p['volume_id']) ? $p['volume_id'] : null;
+            $project = $this->findProjectById($model->project_id);
+            $searchModel->project_id = isset($p['project_id']) ? $p['project_id'] : null;
         }
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->time = time();
-            $engLic = $this->findEngineerLicence($model->engineer_licence_id);
-            $model->engineer_id = $engLic->engineer_id;
-            if($model->name==null){
-                $volume = $this->findVolumeById($model->volume_id);
-                $model->name = $volume->name;
+        // access control
+        if(\Yii::$app->user->can('updateOwnProject', ['project'=>$project])):
+            if ($model->load(Yii::$app->request->post())) {
+                $model->time = time();
+                $engLic = $this->findEngineerLicence($model->engineer_licence_id);
+                $model->engineer_id = $engLic->engineer_id;
+                if($model->name==null){
+                    $volume = $this->findVolumeById($model->volume_id);
+                    $model->name = $volume->name;
+                }
+                if($model->control_engineer_licence_id){
+                    $engLicC = $this->findEngineerLicence($model->control_engineer_licence_id);
+                    $model->control_engineer_id = $engLic->engineer_id;
+                }
+                if($model->save()){
+                    $this->generateDrawings($model);
+                    $this->sendMail($model);                        
+                    return $this->redirect(['index', 'ProjectVolumesSearch[project_id]' => $model->project_id]);
+                }
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $searchModel->search(Yii::$app->request->queryParams),
+                ]);
             }
-            if($model->control_engineer_licence_id){
-                $engLicC = $this->findEngineerLicence($model->control_engineer_licence_id);
-                $model->control_engineer_id = $engLic->engineer_id;
-            }
-            if($model->save()){
-                $this->generateDrawings($model);
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+                
+        else:
+            return $this->redirect([\Yii::$app->user->isGuest ? '/' : '/home']);
+        endif;
     }
 
     /**
@@ -141,23 +153,33 @@ class ProjectVolumesController extends Controller
      */
     public function actionUpdate($id)
     {
+    	$searchModel = new ProjectVolumesSearch(); 
+    	 
         $model = $this->findModel($id);
+        $searchModel->project_id = $model->project_id; 
 
-        if ($model->load(Yii::$app->request->post())) {
-            $engLic = $this->findEngineerLicence($model->engineer_licence_id);
-            $model->engineer_id = $engLic->engineer_id;
-            if($model->control_engineer_licence_id){
-                $engLicC = $this->findEngineerLicence($model->control_engineer_licence_id);
-                $model->control_engineer_id = $engLic->engineer_id;
+        // access control
+        if(\Yii::$app->user->can('updateOwnProject', ['project'=>$model])):
+            if ($model->load(Yii::$app->request->post())) {
+                $engLic = $this->findEngineerLicence($model->engineer_licence_id);
+                $model->engineer_id = $engLic->engineer_id;
+                if($model->control_engineer_licence_id){
+                    $engLicC = $this->findEngineerLicence($model->control_engineer_licence_id);
+                    $model->control_engineer_id = $engLic->engineer_id;
+                }
+                if($model->save()){
+                    return $this->redirect(['index', 'ProjectVolumesSearch[project_id]' => $model->project_id]);
+                }
             }
-            if($model->save()){
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
+
             return $this->render('update', [
                 'model' => $model,
+                'searchModel' => $searchModel,
+                'dataProvider' => $searchModel->search(Yii::$app->request->queryParams),
             ]);
-        }
+        else:
+            return $this->redirect([\Yii::$app->user->isGuest ? '/' : '/home']);
+        endif;
     }
 
     /**
@@ -169,15 +191,57 @@ class ProjectVolumesController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        // delete all the drawings
+        
+        // access control
+        if(\Yii::$app->user->can('updateOwnProject', ['project'=>$model->project])):
 
-        if($drawings = $model->projectVolumeDrawings){
-            foreach($drawings as $drawing){
-                $drawing->delete();
+            // delete all the drawings   
+            if($drawings = $model->projectVolumeDrawings){
+                foreach($drawings as $drawing){
+                    $drawing->delete();
+                }
+            }
+            $model->delete();
+        return $this->redirect(['/project-volumes/index', 'ProjectVolumesSearch[project_id]' => $model->project_id]);
+        else:
+            return $this->redirect([\Yii::$app->user->isGuest ? '/' : '/home']);
+        endif;
+    }
+
+    public function actionEngineers() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $cat_id = $parents[0];
+                $res = \common\models\EngineerLicences::find()->where('engineer_id='.$cat_id)->all();
+                foreach($res as $key=>$r){
+                    $out[$key]['id'] = $r->id;
+                    $out[$key]['name'] = $r->engineer->name.' - '.$r->no;
+                }
+                echo \yii\helpers\Json::encode(['output'=>$out, 'selected'=>$out[0]['id']]);
+                return;
             }
         }
-        $model->delete();
-        return $this->redirect(['/projects/view', 'id' => $model->project_id]);
+        echo \yii\helpers\Json::encode(['output'=>'', 'selected'=>'']);
+    }
+
+    public function actionControlEngineers() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $cat_id = $parents[0];
+                $res = \common\models\EngineerLicences::find()->where('engineer_id='.$cat_id)->all();
+                foreach($res as $key=>$r){
+                    $out[$key]['id'] = $r->id;
+                    $out[$key]['name'] = $r->engineer->name.' - '.$r->no;
+                }
+                echo \yii\helpers\Json::encode(['output'=>$out, 'selected'=>$out[0]['id']]);
+                return;
+            }
+        }
+        echo \yii\helpers\Json::encode(['output'=>'', 'selected'=>'']);
     }
 
     /**
@@ -241,6 +305,45 @@ class ProjectVolumesController extends Controller
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectVolumes model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectVolumes the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function sendMail($model)
+    {
+        if($model->engineer_id!=Yii::$app->user->id){
+            \Yii::$app->mailer->compose(['html' => '/user/mail/new_volume'], ['model'=>$model, 'email'=>$model->engineer->email])
+                ->setFrom([\Yii::$app->params['supportEmail'] => 'Masterplan ARC d.o.o.'])
+                ->setTo($model->engineer->email)
+                ->setSubject('Nova sveska projekta '. $model->project->code)
+                ->send();
+        }
+        if($model->practice_id!=Yii::$app->user->id){
+            \Yii::$app->mailer->compose(['html' => '/user/mail/new_volume'], ['model'=>$model, 'email'=>$model->practice->email])
+                ->setFrom([\Yii::$app->params['supportEmail'] => 'Masterplan ARC d.o.o.'])
+                ->setTo($model->practice->email)
+                ->setSubject('Nova sveska projekta '. $model->project->code)
+                ->send();
+        }
+        if($model->control_engineer_id and $model->control_engineer_id!=Yii::$app->user->id){
+            \Yii::$app->mailer->compose(['html' => '/user/mail/new_volume'], ['model'=>$model, 'email'=>$model->controlEngineer->email])
+                ->setFrom([\Yii::$app->params['supportEmail'] => 'Masterplan ARC d.o.o.'])
+                ->setTo($model->controlEngineer->email)
+                ->setSubject('Nova sveska projekta '. $model->project->code)
+                ->send();
+        }
+        if($model->control_practice_id and $model->control_practice_id!=Yii::$app->user->id){
+            \Yii::$app->mailer->compose(['html' => '/user/mail/new_volume'], ['model'=>$model, 'email'=>$model->controlPractice->email])
+                ->setFrom([\Yii::$app->params['supportEmail'] => 'Masterplan ARC d.o.o.'])
+                ->setTo($model->controlPractice->email)
+                ->setSubject('Nova sveska projekta '. $model->project->code)
+                ->send();
         }
     }
 

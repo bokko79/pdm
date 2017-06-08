@@ -24,30 +24,35 @@ use yii\bootstrap\Nav;
                     'label'=>'Zasposleni',
                     'format' => 'raw',
                     'value'=>function ($data) {
-                        return Html::a($data->engineer->name, ['engineers/view', 'id' => $data->engineer_id]);
+                        return Html::a($data->engineer->name, ['/engineers/view', 'id' => $data->engineer_id]);
                     },
                 ],
                 'position',
+                'status',
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'header' => '',
-                      'template' => '{view}{update}{delete}',
+                      'template' => '{update}{confirm}{delete}',
                       'buttons' => [
                         'view' => function ($url, $model) {
-                            return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['/practice-engineers/view','id'=>$model->id], ['class' => 'btn btn-default btn-xs']);
+                            return $model->position!='direktor' ? Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['/practice-engineers/view','id'=>$model->id], ['class' => 'btn btn-default btn-xs']) : null;
                         },
 
                         'update' => function ($url, $model) {
-                            return Html::a('<i class="fa fa-wrench"></i>', ['/practice-engineers/update','id'=>$model->id], ['class' => 'btn btn-success btn-xs',]);
+                            return $model->position!='direktor' ? Html::a('<i class="fa fa-wrench"></i>', ['/practice-engineers/update','id'=>$model->id], ['class' => 'btn btn-success btn-xs','style' => 'margin-left:10px;',]) : null;
+                        },
+                        'confirm' => function ($url, $model) {
+                            return $model->position!='direktor' and $model->status!='joined' ? Html::a('<i class="fa fa-check-circle"></i>', ['/practice-engineers/confirm','id'=>$model->id], ['class' => 'btn btn-info btn-xs','style' => 'margin-left:10px;',]) : null;
                         },
                         'delete' => function ($url, $model) {
-                            return Html::a('<i class="fa fa-power-off"></i>', ['/practice-engineers/delete','id'=>$model->id], [
+                            return $model->position!='direktor' ? Html::a('<i class="fa fa-times"></i>', ['/practice-engineers/delete','id'=>$model->id], [
                             'class' => 'btn btn-danger btn-xs',
+                            'style' => 'margin-left:10px;',
                             'data' => [
-                                'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete firmu?'),
+                                'confirm' => Yii::t('app', 'Da li ste sigurni da želite da izbacite inženjera?'),
                                 'method' => 'post',
                             ],
-                        ]);
+                        ]) : null;
                         },
                       ],
                       

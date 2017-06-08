@@ -57,9 +57,11 @@ class ProjectBuilding extends \yii\db\ActiveRecord
     {
         return [
             [['project_id', 'building_id', 'mode', 'name'], 'required'],
-            [['project_id', 'building_id', 'building_type_id', 'units_total', 'file_id'], 'integer'],
+            [['building_type_id', 'ground_floor_level', 'name', 'storey'], 'required', 'on' => 'building_update'],
+            [['storey'],'match', 'pattern' => '/(^(Po\\+){0,1})((Su\\+){0,1})((P|Pr|Priz){1})((\\+G){0,1})((\\+[1-9]){0,1})([0-9]{0,1})((\\+Ps){0,1})((\\+Pk){0,1})((\\+M){0,1})((\\+T){0,1}$)/', 'message' => 'Navedena spratnost nije u odgovarajućem formatu.',],
+            [['project_id', 'building_id', 'building_type_id', 'units_total', 'file_id', 'storey_init'], 'integer'],
             [['type', 'characteristics'], 'string'],
-            [['ground_floor_level', 'building_line_dist', 'gross_area_part', 'gross_area', 'gross_area_above', 'gross_area_below', 'gross_built_area', 'net_area', 'ground_floor_area', 'occupancy_area', 'storey_height', 'roof_pitch', 'cost', 'width', 'length'], 'number'],
+            [['ground_floor_level', 'building_line_dist', 'gross_area_average', 'gross_area_part', 'gross_area', 'gross_area_above', 'gross_area_below', 'gross_built_area', 'net_area', 'ground_floor_area', 'occupancy_area', 'storey_height', 'roof_pitch', 'cost', 'width', 'length'], 'number'],
             [['name'], 'string', 'max' => 128],
             [['storey', 'ridge_orientation'], 'string', 'max' => 64],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
@@ -70,6 +72,12 @@ class ProjectBuilding extends \yii\db\ActiveRecord
             [['buildFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
             [['sameStorey', 'copiedStorey'], 'safe'],
         ];
+    }
+
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        return $scenarios;
     }
 
     /**
@@ -88,6 +96,7 @@ class ProjectBuilding extends \yii\db\ActiveRecord
             'building_line_dist' => Yii::t('app', 'Rastojanje građ. od reg. linije'),
             'width' => Yii::t('app', 'Širina'),
             'length' => Yii::t('app', 'Dužina'),
+            'gross_area_average' => Yii::t('app', 'Karakteristična bruto površina sprata'),
             'gross_area_part' => Yii::t('app', 'BRGP dela objekta'),
             'gross_area' => Yii::t('app', 'BRGP'),
             'gross_area_above' => Yii::t('app', 'BRGP nadzemno'),
@@ -97,13 +106,14 @@ class ProjectBuilding extends \yii\db\ActiveRecord
             'ground_floor_area' => Yii::t('app', 'Površina prizemlja'),
             'occupancy_area' => Yii::t('app', 'Zauzeta površina'),            
             'storey' => Yii::t('app', 'Spratnost'),
-            'storey_height' => Yii::t('app', 'Spratna visina'),
+            'storey_height' => Yii::t('app', 'Karakteristična spratna visina'),
             'units_total' => Yii::t('app', 'Broj funkcionalnih jedinica'),            
             'ridge_orientation' => Yii::t('app', 'Orjentacija slemena'),
             'roof_pitch' => Yii::t('app', 'Nagib krova'),
             'characteristics' => Yii::t('app', 'Ostale karakteristike objekta'),
             'cost' => Yii::t('app', 'Predračunska vrednost'),
             'buildFile' => Yii::t('app', 'Slika objekta'),
+            'state' => Yii::t('app', 'Stanje objekta'),
         ];
     }
 
@@ -151,7 +161,7 @@ class ProjectBuilding extends \yii\db\ActiveRecord
      */
     public function getBuilding()
     {
-        return $this->hasOne(Buildings::className(), ['id' => 'building_id']);
+        return $this->hasOne(Buildings::className(), ['id' => 'building_id']); // klasa
     }
 
     /**
@@ -159,7 +169,7 @@ class ProjectBuilding extends \yii\db\ActiveRecord
      */
     public function getBuildingType()
     {
-        return $this->hasOne(BuildingTypes::className(), ['id' => 'building_type_id']);
+        return $this->hasOne(BuildingTypes::className(), ['id' => 'building_type_id']); // namena
     }
 
     /**
@@ -261,6 +271,14 @@ class ProjectBuilding extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getPod($order_no)
+    {
+        return \common\models\ProjectBuildingStoreys::find()->where('project_building_id='.$this->id. ' and storey="podrum" and order_no='.$order_no)->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getS()
     {
         return \common\models\ProjectBuildingStoreys::find()->where('project_building_id='.$this->id. ' and storey="suteren"')->one();
@@ -309,9 +327,25 @@ class ProjectBuilding extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getSpr($order_no)
+    {
+        return \common\models\ProjectBuildingStoreys::find()->where('project_building_id='.$this->id. ' and storey="sprat" and order_no='.$order_no)->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getPs()
     {
         return \common\models\ProjectBuildingStoreys::find()->where('project_building_id='.$this->id. ' and storey="povucenisprat"')->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPsp($order_no)
+    {
+        return \common\models\ProjectBuildingStoreys::find()->where('project_building_id='.$this->id. ' and storey="povucenisprat" and order_no='.$order_no)->one();
     }
 
     /**
@@ -325,9 +359,17 @@ class ProjectBuilding extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getPotk($order_no)
+    {
+        return \common\models\ProjectBuildingStoreys::find()->where('project_building_id='.$this->id. ' and storey="potkrovlje" and order_no='.$order_no)->one();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getM()
     {
-        return \common\models\ProjectBuildingStoreys::find()->where('project_building_id='.$this->id. ' and storey="mansarda"')->all();
+        return \common\models\ProjectBuildingStoreys::find()->where('project_building_id='.$this->id. ' and storey="mansarda"')->one();
     }
 
     /**
@@ -762,6 +804,46 @@ class ProjectBuilding extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getStanovi()
+    {
+        $cont = [];
+        if($storeys = $this->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type=='stan'){
+                            $cont[] = $part;
+                        }
+                    }
+                }
+            }
+        }        
+        return $cont;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPoslProstori()
+    {
+        $cont = [];
+        if($storeys = $this->projectBuildingStoreys){
+            foreach($storeys as $storey){
+                if($parts = $storey->projectBuildingStoreyParts){
+                    foreach($parts as $part){
+                        if($part->type=='biz'){
+                            $cont[] = $part;
+                        }
+                    }
+                }
+            }
+        }        
+        return $cont;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getBuiltAreaReg()
     {                
         return ($this->project->projectLot->area) ? $this->project->projectLot->built_index_reg*$this->project->projectLot->area : null;
@@ -889,7 +971,7 @@ class ProjectBuilding extends \yii\db\ActiveRecord
         }
         
         return new \yii\data\ActiveDataProvider([
-                'query' => $query_cla->orderBy('project_building_storey_part_id ASC, CAST(mark AS INTEGER)')->groupBy(''),
+                'query' => $query_cla->orderBy('project_building_storey_part_id ASC, CAST(mark AS UNSIGNED)')->groupBy(''),
             ]);
     }
 
@@ -903,6 +985,14 @@ class ProjectBuilding extends \yii\db\ActiveRecord
         return new \yii\data\ActiveDataProvider([
                 'query' => $query_cla->orderBy('level')->groupBy(''),
             ]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrderedStoreys()
+    {
+        return \common\models\ProjectBuildingStoreys::find()->where('project_building_id='.$this->id)->orderBy('level')->groupBy('')->all();
     }
 
     /**
@@ -1191,4 +1281,34 @@ class ProjectBuilding extends \yii\db\ActiveRecord
     {
         return '';
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function canHaveUnits()
+    {
+        $building_type = $this->building_type_id;
+        if($building_type==3 or $building_type==4 or $building_type==5){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function ready()
+    {
+        // ako su uneti svi podaci, spremni su za prostorije
+        if($this->projectBuildingStoreys){
+            foreach ($this->projectBuildingStoreys as $storey){
+                if(!$storey->readyCompletely()){
+                    return false;
+                }
+            } 
+            return true;
+        }
+        return false;
+        
+    } 
 }

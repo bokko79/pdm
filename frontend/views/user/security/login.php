@@ -100,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php endif ?>
         <?php if ($module->enableRegistration): ?>
             <p class="text-center">
-                <?= Html::a('Nemate nalog? Prijavite se!', Url::to(), ['data-toggle'=>'modal', 'data-backdrop'=>false,  'data-target'=>'#reg-type']) ?>
+                <?= Html::a('Nemate nalog? Prijavite se!', Url::to(['/user/registration/register']), [/*'data-toggle'=>'modal', 'data-backdrop'=>false,  'data-target'=>'#reg-type'*/]) ?>
             </p>
         <?php endif ?>
         <?= Connect::widget([

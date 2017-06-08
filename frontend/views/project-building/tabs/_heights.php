@@ -25,7 +25,7 @@ use yii\bootstrap\Nav;
                     <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj visinu dela objekta', Url::to(['/project-building-heights/create', 'ProjectBuildingHeights[project_building_id]'=>$model->id]), ['class' => 'btn btn-primary btn-sm']) ?></div>
                     Postojeće stanje
                 </div>
-                <?= GridView::widget([
+                    <?= GridView::widget([
                     'dataProvider' => $projectBuildingHeights,
                     'columns' => [
                         'part',
@@ -39,7 +39,9 @@ use yii\bootstrap\Nav;
                         'name',
                     ],
                     'summary' => false,
+                    'options' => ['class'=>'responsive'],
                 ]); ?>
+                
             </div>
             <div class="col-sm-6">
                 <div class="head lower thin">                     
@@ -60,6 +62,7 @@ use yii\bootstrap\Nav;
                         'name',
                     ],
                     'summary' => false,
+                    'options' => ['class'=>'responsive'],
                 ]); ?>
             </div>
         </div>

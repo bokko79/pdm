@@ -48,7 +48,7 @@ class ProjectBuildingServices extends \yii\db\ActiveRecord
         return [
             [['project_building_id'], 'required'],
             [['project_building_id'], 'integer'],
-            [['general', 'heating', 'ac', 'ventilation', 'gas', 'sprinkler', 'water', 'sewage', 'phone', 'tv', 'electricity', 'catv', 'internet', 'lift', 'pool', 'geotech', 'traffic', 'construction', 'fire', 'special'], 'string'],
+            [['general_service', 'heating', 'ac', 'ventilation', 'gas', 'sprinkler', 'water', 'sewage', 'phone', 'tv', 'electricity', 'catv', 'internet', 'lift', 'pool', 'geotech', 'traffic', 'construction', 'fire', 'special'], 'string'],
             [['project_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuilding::className(), 'targetAttribute' => ['project_building_id' => 'id']],
         ];
     }
@@ -60,7 +60,7 @@ class ProjectBuildingServices extends \yii\db\ActiveRecord
     {
         return [
             'project_building_id' => Yii::t('app', 'Objekat projekta'),
-            'general' => Yii::t('app', 'Opis instalacija objekta'),
+            'general_service' => Yii::t('app', 'Opis instalacija objekta'),
             'heating' => Yii::t('app', 'Grejanje objekta'),
             'ac' => Yii::t('app', 'Klimatizacija objekta'),
             'ventilation' => Yii::t('app', 'Ventilacija objekta'),

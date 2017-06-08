@@ -10,18 +10,18 @@ use yii\bootstrap\Nav;
 
 ?>
 <?php if($modelCheck->project->work=='dogradnja' or $modelCheck->project->work=='sanacija' or $modelCheck->project->work=='rekonstrukcija'): ?>
-<div class="card_container record-full grid-item fadeInUp animated" id="">
+<div class="card_container record-full grid-item fadeInUp animated-not no-shadow" id="">
     <div class="primary-context gray normal">
-        <div class="head"><i class="fa fa-info-circle"></i> <?= c($model->name).' - Osnovni podaci'; ?>
-        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog fa-lg"></i>', Url::to(['/project-building/update', 'id'=>$model->id]), ['class' => 'btn btn-success btn-lg']) ?>
+        <div class="head"><i class="fa fa-home"></i> Objekat projekta
+        <div class="subaction"><?= Html::a('<i class="fa fa-cogs fa-3x"></i>', Url::to(['/project-building/update', 'id'=>$model->id]), ['class' => 'btn btn-link']) ?>
             </div>
         </div>
         <div class="subhead">Predmetni objekat projekta. Ukupna bruto površina: <?= $model->grossArea ?> m<sup>2</sup></div>
     </div>
     <div class="secondary-context "> 
         <div class="row">
-            <div class="col-sm-6">
-                <h4>Postojeće stanje</h4>
+            <div class="col-sm-12">
+                <h5 style="margin-bottom: 20px;">Postojeće stanje</h5>
                 <?= DetailView::widget([
                     'model' => $model,
                     'attributes' => [
@@ -64,13 +64,13 @@ use yii\bootstrap\Nav;
                                 return $data->netArea;
                             },
                         ],
-                        [
+                        /*[
                             'attribute'=>'net_area',
                             'format' => 'raw',
                             'value'=>function ($data) {
                                 return $data->subNetArea;
                             },
-                        ],
+                        ],*/
                         [
                             'attribute'=>'ground_floor_area',
                             'format' => 'raw',
@@ -112,16 +112,17 @@ use yii\bootstrap\Nav;
                         'characteristics:ntext',
                         'cost',
                     ],
+                    'options' => ['class'=>'table table-hover'],
                 ]) ?>
             </div>
-            <div class="col-sm-6">
-                <h4>Predviđeno stanje</h4>
+            <div class="col-sm-12">
+                <h5 style="margin-bottom: 20px;">Predviđeno stanje</h5>
                 <?= DetailView::widget([
                     'model' => $model_new,
                     'attributes' => [
-                        'project.name',
+                        //'project.name',
                         'building.class',
-                        'state',
+                        //'state',
                         'name',
                         'type',
                         'buildingType.name',
@@ -158,13 +159,13 @@ use yii\bootstrap\Nav;
                                 return $data->netArea;
                             },
                         ],
-                        [
+                        /*[
                             'attribute'=>'net_area',
                             'format' => 'raw',
                             'value'=>function ($data) {
                                 return $data->subNetArea;
                             },
-                        ],
+                        ],*/
                         [
                             'attribute'=>'ground_floor_area',
                             'format' => 'raw',
@@ -206,6 +207,7 @@ use yii\bootstrap\Nav;
                         'characteristics:ntext',
                         'cost',
                     ],
+                    'options' => ['class'=>'table table-hover'],
                 ]) ?>
             </div>
         </div> 
@@ -215,12 +217,12 @@ use yii\bootstrap\Nav;
 
 
 <?php else: ?>
-<div class="card_container record-full grid-item fadeInUp animated" id="">
+<div class="card_container record-full grid-item fadeInUp no-shadow" id="">
     <div class="primary-context gray normal">
         <div class="head">
-        <div class="action-area normal-case"><?= Html::a('<i class="fa fa-cog fa-lg"></i>', Url::to(['/project-building/update', 'id'=>$model->id]), ['class' => 'btn btn-success btn-lg']) ?>
+        <div class="subaction"><?= Html::a('<i class="fa fa-cogs fa-3x"></i>', Url::to(['/project-building/update', 'id'=>$model->id]), ['class' => 'btn btn-link']) ?>
             </div>
-            <i class="fa fa-info-circle"></i> <?= ($model->project->work!='nova_gradnja' and $model->project->work!='promena_namene' and $model->project->work!='ozakonjenje') ? c($model->name) . ': ' . $model->state.' - Osnovni podaci' : 'Osnovni podaci objekta'; ?>
+            <i class="fa fa-home"></i> <?= ($model->project->work!='nova_gradnja' and $model->project->work!='promena_namene' and $model->project->work!='ozakonjenje') ? c($model->name) . ': ' . $model->state.' - Osnovni podaci' : 'Osnovni podaci objekta'; ?>
         </div>
         <div class="subhead">Predmetni objekat projekta. Ukupna bruto površina: <?= $model->grossArea ?> m<sup>2</sup></div>
     </div>
@@ -315,6 +317,7 @@ use yii\bootstrap\Nav;
                 'characteristics:ntext',
                 'cost',
             ],
+            'options' => ['class'=>'table table-hover'],
         ]) ?> 
     </div>
 </div>

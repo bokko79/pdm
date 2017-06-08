@@ -139,21 +139,13 @@ class RegistrationController extends RegController
      */
     public function actionRegister()
     {
-        $this->layout= '../../../../../frontend/views/layouts/blank';
+        $this->layout= '//blank';
 
-        if (!$this->module->enableRegistration) {
-            throw new NotFoundHttpException();
-        }
 
         /** @var RegistrationForm $model */
         $model = \Yii::createObject(RegistrationForm::className());
         $location = new \common\models\Locations();
         $engineer = new \common\models\Engineers();
-        //$engineer_licence = new \common\models\EngineerLicences();
-        //$engineer_signature = new \common\models\LegalFiles();
-        //$practice_signature = new \common\models\LegalFiles();
-        //$practice_stamp = new \common\models\LegalFiles();
-        //$practice = new \common\models\Practices();
         $practice_engineer = new \common\models\PracticeEngineers();
         $event = $this->getFormEvent($model);
 
@@ -161,7 +153,7 @@ class RegistrationController extends RegController
 
         $this->performAjaxValidation($model);
 
-        if ($model->load(\Yii::$app->request->post())/* && $location->load(\Yii::$app->request->post())*/ && $model->register() /*&& $location->save() */and $engineer->load(\Yii::$app->request->post())) {
+        if ($model->load(\Yii::$app->request->post()) && $model->register() and $engineer->load(\Yii::$app->request->post())) {
 
             $user = \dektrium\user\models\User::findOne(['username'=>$event->form->username, 'email'=>$event->form->email]);
 
@@ -175,72 +167,7 @@ class RegistrationController extends RegController
                         $engineer->signature = $imagecoverFile;
                         $engineer->save();
                     } 
-                    //if($engineer->expertees_id!=31){ // ako nije tehničar, onda ima licencu i potpis
-                        /*if($engineer_licence->load(\Yii::$app->request->post())){
-                            $engineer_licence->engineer_id = $engineer->user_id;
-                            $engineer_licence->stampFile = UploadedFile::getInstance($engineer_licence, 'stampFile');
-                            if($engineer_licence->save()){            
-                                if ($engineer_licence->stampFile) {
-                                    $imagestampFile = $engineer_licence->uploadStampFile();
-                                    $engineer_licence->stamp_id = $imagestampFile;
-                                }                
-                                $engineer_licence->save();
-                            }
-                        }
-                        if($engineer_signature->load(\Yii::$app->request->post())){
-                            $engineer_signature->entity_id = $engineer->user_id;
-                            $engineer_signature->entity = 'engineer';
-                            $engineer_signature->type = 'signature'; 
-                            $engineer_signature->docFile = UploadedFile::getInstance($engineer_signature, 'docFile');
-                            if($engineer_signature->save()){
-                                if ($engineer_signature->docFile) {
-                                    $image = $engineer_signature->uploadFiles();
-                                    $engineer_signature->file_id = $image;
-                                    $engineer_signature->save();
-                                }
-                            } 
-                        }*/
-                        /*if($model->practice_join==0 and $practice->load(\Yii::$app->request->post()) and $practice_engineer->load(\Yii::$app->request->post())){
-                            $practice->engineer_id = $engineer->user_id;
-                            $practice->email = $engineer->email;
-                            $practice->phone = $engineer->phone;
-                            $practice->location_id = $location->id;
-                            if($practice->save()){
-                                /*if($practice_signature->load(\Yii::$app->request->post())){
-                                    $practice_signature->entity_id = $practice->engineer_id;
-                                    $practice_signature->entity = 'practice';
-                                    $practice_signature->type = 'signature'; 
-                                    $practice_signature->docFile = UploadedFile::getInstance($practice_signature, 'docFile');
-                                    if($practice_signature->save()){
-                                        if ($practice_signature->docFile) {
-                                            $image = $practice_signature->uploadFiles();
-                                            $practice_signature->file_id = $image;
-                                            $practice_signature->save();
-                                        }
-                                    } 
-                                }
-                                if($practice_stamp->load(\Yii::$app->request->post())){
-                                    $practice_stamp->entity_id = $engineer->user_id;
-                                    $practice_stamp->entity = 'practice';
-                                    $practice_stamp->type = 'stamp'; 
-                                    $practice_stamp->docFile = UploadedFile::getInstance($practice_stamp, 'docFile');
-                                    if($practice_stamp->save()){
-                                        if ($practice_stamp->docFile) {
-                                            $image = $practice_stamp->uploadFiles();
-                                            $practice_stamp->file_id = $image;
-                                            $practice_stamp->save();
-                                        }
-                                    } 
-                                }*/
-                                /*$practice_engineer->practice_id = $practice->engineer_id;
-                                $practice_engineer->engineer_id = $engineer->user_id;
-                                $practice_engineer->position = 'direktor';
-                                $practice_engineer->status = 'joined';
-                                $practice_engineer->time = time();
-                                $practice_engineer->save();
-                            }                                
-                        }*/
-                    //}
+              
                     if($model->practice_join==1 /*and $practice_engineer->load(\Yii::$app->request->post())*/){
                         $practice_engineer->engineer_id = $engineer->user_id;
                         $practice_engineer->practice_id = $model->practice_id;
@@ -259,11 +186,16 @@ class RegistrationController extends RegController
                 $auth->assign($authorRole, $user->getId());
 
                 \Yii::$app->user->switchIdentity($user);
+
+                \Yii::$app->mailer->compose(['html' => '//user/mail/welcome'], ['email'=>$user->email])
+                    ->setFrom([\Yii::$app->params['supportEmail'] => 'Masterplan ARC d.o.o.'])
+                    ->setTo($user->email)
+                    ->setSubject('Dobrodošli na masterplan.rs')
+                    ->send();
             }            
             $this->trigger(self::EVENT_AFTER_REGISTER, $event);
             $this->trigger(self::EVENT_AFTER_LOGIN, $event);
 
-            //return $this->redirect(['/user/security/home', 'username' => \Yii::$app->user->identity->username]);
             return $this->redirect(['/user/registration/register-licence', 'EngineerLicences[engineer_id]' => $engineer->user_id, 'practice'=>$model->practice_join==0 ? 1 : 0]);
         }
 
@@ -272,12 +204,6 @@ class RegistrationController extends RegController
             'module' => $this->module,
             'location' => $location,
             'engineer' => $engineer,
-            //'engineer_licence' => $engineer_licence,
-            //'practice' => $practice,
-            //'practice_engineer' => $practice_engineer,
-            //'engineer_signature' => $engineer_signature,
-            //'practice_signature' => $practice_signature,
-            //'practice_stamp' => $practice_stamp,
         ]);
     }
 
@@ -291,7 +217,7 @@ class RegistrationController extends RegController
      */
     public function actionRegisterLicence()
     {
-        $this->layout= '../../../../../frontend/views/layouts/blank';
+        $this->layout= '//blank';
 
         $model = new \common\models\EngineerLicences();
         if($el = \Yii::$app->request->get('EngineerLicences')){
@@ -311,7 +237,6 @@ class RegistrationController extends RegController
                 } else {
                     return $this->redirect(['/user/security/home', 'username' => \Yii::$app->user->identity->username]);
                 }
-                //return $this->redirect(['/user/registration/register-signature', 'LegalFiles[entity_id]' => $model->engineer_id, 'LegalFiles[entity]' => 'engineer', 'LegalFiles[type]' => 'signature', 'practice' => $p]);
             } 
         } else {
             return $this->render('register-licence', [
@@ -330,7 +255,7 @@ class RegistrationController extends RegController
      */
     public function actionRegisterSignature()
     {
-        $this->layout= '../../../../../frontend/views/layouts/blank';
+        $this->layout= '//blank';
 
         $model = new \common\models\LegalFiles();
         if($lf = \Yii::$app->request->get('LegalFiles')){
@@ -372,7 +297,7 @@ class RegistrationController extends RegController
      */
     public function actionRegisterPractice()
     {
-        $this->layout= '../../../../../frontend/views/layouts/blank';
+        $this->layout= '//blank';
 
         $model = new \common\models\Practices();
         $location = new \common\models\Locations();
@@ -423,57 +348,45 @@ class RegistrationController extends RegController
      */
     public function actionRegisterClient()
     {
-        $this->layout= '../../../../../frontend/views/layouts/blank';
-        //if(!\Yii::$app->user->can('client')){
-            if (!$this->module->enableRegistration) {
-                throw new NotFoundHttpException();
-            }
+        $this->layout= '//blank';        
 
-            /** @var RegistrationForm $model */
-            $model = \Yii::createObject(RegistrationForm::className());
-            $location = new \common\models\Locations();
-            //$client = new \common\models\Clients();
-            $event = $this->getFormEvent($model);
+        /** @var RegistrationForm $model */
+        $model = \Yii::createObject(RegistrationForm::className());
+        $location = new \common\models\Locations();
+        $event = $this->getFormEvent($model);
 
-            $this->trigger(self::EVENT_BEFORE_REGISTER, $event);
+        $this->trigger(self::EVENT_BEFORE_REGISTER, $event);
 
-            $this->performAjaxValidation($model);
+        $this->performAjaxValidation($model);
 
-            if ($model->load(\Yii::$app->request->post()) && $model->register() and $location->load(\Yii::$app->request->post()) && $location->save()/* and $client->load(\Yii::$app->request->post())*/) {
-                                
-                if ($user = \dektrium\user\models\User::findOne(['username'=>$event->form->username, 'email'=>$event->form->email])) {
-                   /*$client->user_id = $user->id;
-                    $client->location_id = $location->id;
-                    $client->email = $user->email;
-                    $client->save();*/
+        if ($model->load(\Yii::$app->request->post()) && $model->register() and $location->load(\Yii::$app->request->post()) && $location->save()/* and $client->load(\Yii::$app->request->post())*/) {
+                            
+            if ($user = \dektrium\user\models\User::findOne(['username'=>$event->form->username, 'email'=>$event->form->email])) {
 
-                    $user->role = 'user';
-                    $user->save();
-                    // the following three lines were added:
-                    $auth = \Yii::$app->authManager;
-                    $authorRole = $auth->getRole('user');
-                    $auth->assign($authorRole, $user->getId());
+                $user->role = 'user';
+                $user->save();
+                // the following three lines were added:
+                $auth = \Yii::$app->authManager;
+                $authorRole = $auth->getRole('user');
+                $auth->assign($authorRole, $user->getId());
 
-                    \Yii::$app->user->switchIdentity($user);
+                \Yii::$app->user->switchIdentity($user);
 
-                    $this->trigger(self::EVENT_AFTER_REGISTER, $event);
-                    $this->trigger(self::EVENT_AFTER_LOGIN, $event);
+                $this->trigger(self::EVENT_AFTER_REGISTER, $event);
+                $this->trigger(self::EVENT_AFTER_LOGIN, $event);
 
-                   //\Yii::$app->response->redirect(\Yii::$app->user->returnUrl);
-                    return $this->redirect(['/user/security/home', 'username' => \Yii::$app->user->identity->username]);
-                }                   
+               //\Yii::$app->response->redirect(\Yii::$app->user->returnUrl);
+                return $this->redirect(['/user/security/home', 'username' => \Yii::$app->user->identity->username]);
+            }                   
 
-            } else {
-                return $this->render('register-client', [
-                    'model'  => $model,
-                    'module' => $this->module,
-                    'location' => $location,
-                   // 'client' => $client,
-                ]);
-            }            
-        /*} else {
-            return $this->redirect(['/requests/create']);
-        }*/
+        } else {
+            return $this->render('register-client', [
+                'model'  => $model,
+                'module' => $this->module,
+                'location' => $location,
+            ]);
+        }            
+       
     }
 
     /**

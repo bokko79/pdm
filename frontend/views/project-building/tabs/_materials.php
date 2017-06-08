@@ -12,17 +12,17 @@ use yii\bootstrap\Nav;
 
 <?php if($modelCheck->project->work=='dogradnja' or $modelCheck->project->work=='sanacija' or $modelCheck->project->work=='rekonstrukcija'): ?>
 
-<div class="card_container record-full grid-item fadeInUp animated" id="">
+<div class="card_container record-full grid-item fadeInUp no-shadow" id="">
     <div class="primary-context gray normal">
         <div class="head">Materijalizacija objekta
-            <div class="action-area normal-case"><?= Html::a('<i class="fa fa-pencil"></i> Uredi materijale objekta', Url::to(['/project-building/update', 'id'=>$model->id, '#'=>'w1-tab10']), ['class' => 'btn btn-success btn-sm']) ?></div>
+            <div class="subaction"><?= Html::a('<i class="fa fa-pencil fa-2x"></i>', Url::to(['/project-building/update', 'id'=>$model->id, '#'=>'w1-tab10']), ['class' => 'btn btn-link']) ?></div>
         </div>
         <div class="subhead">Lista predviđenih materijala predmetnog objekta.</div>
     </div>
     <div class="secondary-context">
         <div class="row">
-            <div class="col-sm-6">
-                <h4>Postojeće stanje</h4>
+            <div class="col-sm-12">
+                <h5 style="margin-bottom: 20px;">Postojeće stanje</h5>
                 <?= DetailView::widget([
                     'model' => $model->projectBuildingMaterials,
                     'attributes' => [
@@ -41,10 +41,11 @@ use yii\bootstrap\Nav;
                         'kitchen:ntext',
                         'sanitary:ntext',                            
                     ],
+                    'options' => ['class'=>'table table-hover'],
                 ]) ?>
             </div>
-            <div class="col-sm-6">
-                <h4>Predviđeno stanje</h4>
+            <div class="col-sm-12">
+                <h5 style="margin-bottom: 20px;">Predviđeno stanje</h5>
                 <?= DetailView::widget([
                     'model' => $model_new->projectBuildingMaterials,
                     'attributes' => [
@@ -63,6 +64,7 @@ use yii\bootstrap\Nav;
                         'kitchen:ntext',
                         'sanitary:ntext',                            
                     ],
+                    'options' => ['class'=>'table table-hover'],
                 ]) ?>
             </div>
         </div>
@@ -72,10 +74,10 @@ use yii\bootstrap\Nav;
 
 <?php else: ?>
 
-<div class="card_container record-full grid-item fadeInUp animated" id="">
+<div class="card_container record-full grid-item fadeInUp no-shadow" id="">
     <div class="primary-context gray normal">
         <div class="head">Materijalizacija objekta
-            <div class="action-area normal-case"><?= Html::a('<i class="fa fa-pencil"></i> Uredi materijale objekta', Url::to(['/project-building/update', 'id'=>$model->id, '#'=>'w1-tab10']), ['class' => 'btn btn-success btn-sm']) ?></div>
+            <div class="subaction"><?= Html::a('<i class="fa fa-pencil fa-2x"></i>', Url::to(['/project-building/update', 'id'=>$model->id, '#'=>'w1-tab10']), ['class' => 'btn btn-link']) ?></div>
         </div>
         <div class="subhead">Lista predviđenih materijala predmetnog objekta.</div>
     </div>
@@ -98,6 +100,7 @@ use yii\bootstrap\Nav;
                 'kitchen:ntext',
                 'sanitary:ntext',                            
             ],
+            'options' => ['class'=>'table table-hover'],
         ]) ?>
     </div>
 </div>

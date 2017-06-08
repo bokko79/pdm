@@ -4,53 +4,35 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\HtmlPurifier;
 
-
+$formatter = \Yii::$app->formatter;
 ?>
 
 
 
-	<div class="card_container record-full fadeInUp animated" id="card_container" style="float:none; border-left-color: green !important; margin: 15px 0 !important; box-shadow: 0px 0px 7px 0px #bbb;">
+	<div class="card_container record-25 grid-item fadeInUp animated" id="card_container" style="float:; box-shadow: 0px 0px 7px 0px #bbb;">
         <a href="<?= Url::to('/posts/view?id='.$model->id) ?>">
-            
-            <table class="main-context"> 
-                <tr>
-                    <td class="body-area">
-                        <div class="primary-context">
-                            <div class="head"><i class="fa fa-newspaper-o"></i> <?= Html::encode(c($model->title)) ?></div>
-                            <div class="subhead"><i class="fa fa-newspaper-o"></i> <?= Html::encode(c($model->subtitle)) ?></div>
-                        </div>
-                        <div class="secondary-context cont">
-                            <?= HtmlPurifier::process($model->excerpt) ?>
-                        </div>
-                    </td>
-                    <td class="media-area">
-                        <div >                
-                            <div class="image">
-                                <?= $model->file ? Html::img('@web/images/posts/'.$model->file->name) : null ?>
-                            </div>
-                        </div> 
-                    </td>
-                </tr>                        
-            </table>
-        </a>
-    </div>  <?php /* 
-
-    <div class="card_container record-md grid-item fadeInUp animated" style="">
-        <a href="<?= Url::to('/posts/view?id='.$model->id) ?>">
-            <div class="media-area">                
+            <?php if($model->file): ?>
+            <div class="media-area dark">                
                 <div class="image">
-                    <?= $model->file ? Html::img('@web/images/posts/'.$model->file->name) : null ?>                
+                    <?= Html::img('@web/images/posts/'.$model->file->name) ?>                   
                 </div>
                 <div class="primary-context in-media dark">
-                    <div class="head"><i class="fa fa-newspaper-o"></i> <?= Html::encode(c($model->title)) ?></div>
+                    <div class="head lower"><?= Html::encode(c($model->title)) ?></div>
+                    <div class="subhead"><i class="fa fa-newspaper-o"></i> <?= Html::encode(c($model->subtitle)) ?></div>
                 </div>
             </div>
+        <?php else: ?>
+
             <div class="primary-context">
-                <div class="subhead"><?= \yii\helpers\StringHelper::truncate(Html::encode(c($model->subtitle)),40) ?></div>
+                <div class="subhead"><?= $model->user->username ?></div>
+                <div class="head third"><?= Html::encode(c($model->title)) ?></div>
+                <div class="subhead"><i class="fa fa-newspaper-o"></i> <?= Html::encode(c($model->subtitle)) ?></div>
             </div>
             <div class="secondary-context">
-                <?= \yii\helpers\StringHelper::truncate(HtmlPurifier::process($model->excerpt),100) ?>
+                <div><?= HtmlPurifier::process($model->excerpt) ?></div>
+                <?= $formatter->asDate($model->time, 'php: F Y.') ?>
             </div>
+        <?php endif; ?>
         </a>
-    </div> */ ?>
+    </div>
         

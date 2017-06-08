@@ -18,7 +18,7 @@ class PostsSearch extends Posts
     public function rules()
     {
         return [
-            [['id', 'profile_id', 'file_id', 'category_id', 'comment_status', 'next_post', 'time', 'update_time'], 'integer'],
+            [['id', 'user_id', 'file_id', 'category_id', 'comment_status', 'next_post', 'time', 'update_time'], 'integer'],
             [['lang_code', 'title', 'subtitle', 'content', 'excerpt', 'type', 'status'], 'safe'],
         ];
     }
@@ -60,7 +60,7 @@ class PostsSearch extends Posts
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'profile_id' => $this->profile_id,
+            'user_id' => $this->user_id,
             'file_id' => $this->file_id,
             'category_id' => $this->category_id,
             'comment_status' => $this->comment_status,

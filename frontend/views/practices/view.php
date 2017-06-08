@@ -38,36 +38,68 @@ $marker = new Marker([
 
 // Add marker to the map
 $map->addOverlay($marker);
+
+$check_engineers = [];
+$check_partners = [];
+if(!Yii::$app->user->isGuest and Yii::$app->user->engineer){
+  if(Yii::$app->user->engineer->practiceEngineers){
+    foreach (Yii::$app->user->engineer->practiceEngineers as $key => $value) {
+      $check_engineers[] = $value->practice_id;
+    }
+  }
+
+  if(Yii::$app->user->engineer->practice and Yii::$app->user->engineer->practice->practicePartners){
+    foreach (Yii::$app->user->engineer->practice->practicePartners as $key => $value) {
+      $check_partners[] = Yii::$app->user->id==$value->practice_id ? $value->partner_id : $value->practice_id;
+    }
+  }
+}
+  
 ?>
-<div class="container-fluid">
-  <div class="row">
+
+  <div class="row" style="margin-bottom:30px;">
     <div class="col-sm-3">
     
 
     <?php // sveske ?>
-    <div class="card_container record-full grid-item fadeInUp no-shadow animated" id="">
-      <div class="secondary-context">
-        <div class="head thin lower">
-          <div class="action-area normal-case">
-            <?= Html::a('<i class="fa fa-plus-circle"></i> Join', Url::to(['/practice-engineers/create', 'PracticeEngineersSearch[practice_id]'=>$model->engineer_id, 'PracticeEngineersSearch[engineer_id]'=>\Yii::$app->user->id, 'PracticeEngineersSearch[status]'=>'to_join']), ['class' => 'btn btn-default shadow btn-sm shadow']) ?>                   
-          </div>
-          <?= $model->name ?>
-        </div>              
-      </div>
+    <div class="card_container record-full grid-item" id="">
+      <?php if(!Yii::$app->user->isGuest and (!in_array($model->engineer_id, $check_engineers) or !in_array($model->engineer_id, $check_partners))): ?>
+         
+      <?php if(Yii::$app->user->engineer and !Yii::$app->user->engineer->practice and !in_array($model->engineer_id, $check_engineers)): ?>    
+        <div class="secondary-context"> 
+            <?= Html::a('<i class="fa fa-plus-circle"></i> Postani inženjer firme', Yii::$app->user->isGuest ? Url::to(['/user/register']) : Url::to(['/practice-engineers/create', 'PracticeEngineersSearch[practice_id]'=>$model->engineer_id, 'PracticeEngineersSearch[engineer_id]'=>\Yii::$app->user->id, 'PracticeEngineersSearch[status]'=>'to_join']), ['class' => 'btn btn-default btn-sm btn-block']) ?>
+        </div>
+      <?php endif; ?>
+      <?php if(Yii::$app->user->engineer and Yii::$app->user->engineer->practice and !in_array($model->engineer_id, $check_partners) and Yii::$app->user->id!=$model->engineer_id): ?> 
+        <div class="secondary-context"> 
+            <?= Html::a('<i class="fa fa-plus-circle"></i> Postani partner firme', Yii::$app->user->isGuest ? Url::to(['/user/register']) : Url::to(['/practice-partners/create', 'PracticePartners[practice_id]'=>\Yii::$app->user->id, 'PracticePartners[partner_id]'=>$model->engineer_id, 'PracticePartners[status]'=>'invited']), ['class' => 'btn btn-default btn-sm btn-block']) ?>  
+        </div> 
+      <?php endif; ?>              
+      
+      
       <hr style="margin:0">
-      <div class="secondary-context">
+    <?php endif; ?>
+      <div class="secondary-context gray">
         <div class="head thin second">
           <div class="subhead uppercase hint" style="margin-bottom: 5px;">Kontakt
           </div>              
           
         </div>
-        <div class="">
-        
-            <i class="fa fa-map-marker"></i> <?= $model->location->getFullAddress(true) ?><br>
-            
-            <i class="fa fa-at"></i> <?= $model->email ?><br>
-            <i class="fa fa-phone"></i> <?= $model->phone ?><br>
-            <i class="fa fa-fax"></i> <?= $model->fax ?>
+        <div class="muted">
+            <table>
+              <tr>
+                <td style="padding:3px"><i class="fa fa-map-marker"></i></td><td style="padding:3px"><?= $model->location->getFullAddress(true) ?></td>
+              </tr>
+              <tr>
+                <td style="padding:3px"><i class="fa fa-at"></i></td><td style="padding:3px"><?= $model->email ?></td>
+              </tr>
+              <tr>
+                <td style="padding:3px"><i class="fa fa-phone"></i></td><td style="padding:3px"><?= $model->phone ?></td>
+              </tr>
+              <tr>
+                <td style="padding:3px"><i class="fa fa-fax"></i></td><td style="padding:3px"><?= $model->fax ?></td>
+              </tr>
+            </table>
         </div>
       </div>
       <hr style="margin:0">
@@ -86,58 +118,125 @@ $map->addOverlay($marker);
         <div class="head thin second">
           <div class="subhead uppercase hint">Poslovni podaci</div> 
         </div>
-        <div class="">
-        
-            PIB: <?= $model->tax_no ?><br>            
-            MB: <?= $model->company_no ?><br>
-            Br. računa: <?= $model->account_no ?><br>
-            <i class="fa fa-at"></i>  <?= $model->bank ?>
+        <div class="muted">
+            <table>
+              <tr>
+                <td style="padding:3px;font-weight:700;">PIB:</td><td style="padding:3px"><?= $model->tax_no ?></td>
+              </tr>
+              <tr>
+                <td style="padding:3px;font-weight:700;">MB:</td><td style="padding:3px"><?= $model->company_no ?></td>
+              </tr>
+              <tr>
+                <td style="padding:3px;font-weight:700;">Br.rčn:</td><td style="padding:3px"><?= $model->account_no ?></td>
+              </tr>
+              <tr>
+                <td style="padding:3px;font-weight:700;">Banka:</td><td style="padding:3px"><?= $model->bank ?></td>
+              </tr>
+            </table>              
         </div>
       </div>
     </div>
   </div>
 
-  <div class="col-sm-9">
-    <?php // objekat ?>
+    <div class="col-sm-6">
+      <?php // opis ?>
 
-    <div class="card_container record-full grid-item fadeInUp no-shadow animated " id="">
-      <div class="secondary-context">
-        <div class="head major">
-          <div class="subhead uppercase hint" style="margin-bottom: 5px;">Opis
-          <div class="action-area normal-case">
-            <?= Html::a('<i class="fa fa-bars"></i>', Url::to(['/practice/update', 'id'=>$model->engineer_id]), ['class' => 'btn btn-default shadow btn-sm']) ?>                   
-          </div>  
-          </div>                  
-            <?= $model->about ?>
-            
-        </div>              
-      </div>
-      <hr style="margin:0">      
-      
-      
-     
-    </div>
-
-    <div class="card_container record-full grid-item fadeInUp transparent no-shadow animated " id="">
-      <div class="secondary-context">
-        <div class="head major thin">
-                            
-            Projekti firme
+      <div class="card_container record-full grid-item fadeInUp no-shadow animated-not " id="">
+        <div class="secondary-context">
+          <div class="muted">
+            <div class="subhead uppercase hint" style="margin-bottom: 5px;">Opis
             <div class="action-area normal-case">
-                <?= Html::a('<i class="fa fa-cog"></i> Svi projekti firme', Url::to(['/projects/index', 'Projects[practice_id]'=>$model->engineer_id]), ['class' => 'btn btn-link']) ?>                   
-            </div>
-            
-        </div>              
-      </div>  
-    </div>
-        <?php echo ListView::widget([
-                'dataProvider' => $projects,
-                'itemView' => '../projects/_project',
-            ]); ?>
-     
+              <?= (\Yii::$app->user->can('updateOwnPractice', ['practice_engineer'=>$model])) ? Html::a('<i class="fa fa-pencil"></i>', Url::to(['/practices/update', 'id'=>$model->engineer_id]), ['class' => 'btn btn-default btn-sm']) : null ?>                   
+            </div>  
+            </div>                  
+              <?= ($model->about) ?: 'Nije unet opis firme.' ?>
+              
+          </div>              
+        </div>
+        <hr style="margin:0">      
+       
+        
+       
       </div>
+      <div class="card_container record-full transparent top-bordered grid-item fadeInUp no-shadow animated-not " id="">
+        <div class="primary-context">
+          <div class="head">            
+              <div class="subaction">
+                  <?= Html::a('<i class="fa fa-bars"></i> Svi projekti firme', Url::to(['/projects/index', 'ProjectsSearch[practice_id]'=>$model->engineer_id]), ['class' => 'btn btn-default btn-sm']) ?>                   
+              </div>
+              Najnoviji projekti
+          </div>              
+        </div>  
+      </div>
+      <?php echo ListView::widget([
+              'dataProvider' => $projects,
+              'itemView' => '_project',
+              'layout' => '{items}',
+          ]); ?>
+
+        <hr> 
+      <div class="card_container record-full transparent  grid-item fadeInUp no-shadow no-margin animated-not" id="">
+        <div class="primary-context">
+          <div class="head">
+
+            <?php if(!Yii::$app->user->isGuest and Yii::$app->user->engineer and !Yii::$app->user->engineer->practice and !in_array($model->engineer_id, $check_engineers) and Yii::$app->user->id!=$model->engineer_id): ?>
+              <div class="subaction">
+                <?= Html::a('<i class="fa fa-plus-circle"></i> Postani inženjer firme', Yii::$app->user->isGuest ? Url::to(['/user/register']) : Url::to(['/practice-engineers/create', 'PracticeEngineersSearch[practice_id]'=>$model->engineer_id, 'PracticeEngineersSearch[engineer_id]'=>\Yii::$app->user->id, 'PracticeEngineersSearch[status]'=>'to_join']), ['class' => 'btn btn-default btn-sm ']) ?>
+              </div>
+            <?php endif; ?>
+              Inženjeri
+          </div>              
+        </div> 
+
+      </div>
+      <?php echo ListView::widget([
+              'dataProvider' => $practiceEngineers,
+              'itemView' => '_engineer',
+              'layout' => '{items}',
+          ]); ?>
+
+      <div class="card_container record-full transparent grid-item fadeInUp no-shadow no-margin animated-not" id="">
+        <div class="primary-context">
+          <div class="head">
+            <?php if(!Yii::$app->user->isGuest and Yii::$app->user->engineer and Yii::$app->user->engineer->practice and !in_array($model->engineer_id, $check_partners) and Yii::$app->user->id!=$model->engineer_id): ?> 
+                <div class="subaction">                    
+                  <?= Html::a('<i class="fa fa-plus-circle"></i> Postani partner firme', Yii::$app->user->isGuest ? Url::to(['/user/register']) : Url::to(['/practice-partners/create', 'PracticePartners[practice_id]'=>\Yii::$app->user->id, 'PracticePartners[partner_id]'=>$model->engineer_id, 'PracticePartners[status]'=>'invited']), ['class' => 'btn btn-danger btn-sm ']) ?>  
+                </div>
+            <?php endif; ?>
+    
+              Partneri
+          </div>              
+        </div> 
+
+      </div>
+      <?php echo ListView::widget([
+              'dataProvider' => $practicePartners,
+              'itemView' => '_partner',
+              'layout' => '{items}',
+              'viewParams' => ['practice' => $model],
+          ]); ?>
+     
+    </div>
+    <div class="col-sm-3">
+      <?php if(Yii::$app->user->isGuest or !Yii::$app->user->engineer): ?>
+            <?= $this->render('../engineers/_registerAs'); ?>
+            <hr>
+        <?php endif; ?>
+        <div class="card_container record-full grid-item transparent fadeInUp no-shadow animated-not no-margin" id="" style="float:none;">
+            <div class="primary-context   no-padding">
+                <div class="head lower regular">
+                    Slične firme                   
+                </div>              
+            </div> 
+        </div>
+        <?php echo ListView::widget([
+                      'dataProvider' => $practices,
+                      'itemView' => '_practice_short',
+                      'layout' => '{items}',
+                  ]); ?>
+    </div>
   </div>
-</div>
+
 <?php
 /*
 $items = [

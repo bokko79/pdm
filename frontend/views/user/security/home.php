@@ -21,18 +21,16 @@ use common\widgets\Alert;
 
 $this->title = 'Home: '.$model->username;
 $formatter = \Yii::$app->formatter;
+$this->params['page_title'] = 'Profil';
 $this->params['profile'] = $model;
 
 ?>
+<div class="container-fluid">
+	<div class="row">
 
-<div class="row">
-    <div class="col-md-3" style="z-index:1">
-        <?= $this->render('../settings/_menu') ?>
-    </div>
-    <div class="col-md-9">
-        <?php // $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
-        <?= Alert::widget() ?>
-        <?= $this->render('tabs/_projects', ['model'=>$model->engineer, 'projects'=>$projects]) ?>
-        <?php /* (Yii::$app->user->client!=null) ? $this->render('tabs/_requests', ['model'=>$model->client, 'requests'=>$requests]) : null */ ?>
-    </div>
+	        <?= Alert::widget() ?>        
+	        <?= $this->render('tabs/_projects', ['model'=>$model->engineer, 'projects'=>$projects, 'searchModel'=>$searchModel]) ?>
+	    
+
+	</div>
 </div>

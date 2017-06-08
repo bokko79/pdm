@@ -17,7 +17,8 @@ use yii\widgets\ActiveForm;
 
     <?php /* $form->field($model, 'user_id') */ ?>
 
-    <?= $form->field($model, 'name') ?>
+    <?= $form->field($model, 'phone') ?>
+    <?= $form->field($model, 'email') ?>
 
     <?php /* $form->field($model, 'title') ?>
 
@@ -26,8 +27,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'email')*/ ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Traži'), ['class' => 'btn btn-primary btn-sm']) ?>
+        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default btn-sm']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

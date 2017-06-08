@@ -218,9 +218,143 @@ class Buildings extends \yii\db\ActiveRecord
                 $name = 'Kasarna';
                 break;
             default:
-                $name = 'Stambeni objekat';
+                $name = 'Višeporodični stambeni objekat';
                 break;
         }
         return $name;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBuildingType()
+    {
+        $type;
+        switch ($this->id) {
+            case 1:
+            case 2:
+            case 3:
+                $type = 2;
+                break;
+            case 17:
+            case 18:
+            case 21:
+            case 22:
+                $type = 7;
+                break;
+            case 19:
+            case 20:
+                $type = 13;
+                break;
+            case 23:
+            case 24:
+            case 25:
+            case 26:
+            case 27:
+            case 28:
+                $type = 5;
+                break;
+            case 29:
+            case 30:
+            case 31:
+            case 32:
+            case 33:
+            case 34:
+            case 35:
+            case 36:
+            case 37:
+            case 38:
+            case 39:
+            case 40:
+                $type = 14;
+                break;
+            case 41:
+            case 42:
+                $type = 12;
+                break;
+            case 43:
+            case 44:
+            case 45:
+            case 46:
+            case 47:
+            case 48:
+                $type = 6;
+                break;
+            case 49:
+            case 50:
+            case 51:
+            case 52:
+            case 53:            
+                $type = 15;
+                break;
+            case 54:
+            case 55:
+            case 56:
+            case 57:
+                $type = 16;
+                break;
+            case 58:
+            case 59:
+                $type = 17;
+                break;
+            case 60:
+            case 61:
+            case 62:
+            case 63:
+            case 64:
+            case 65:
+            case 66:
+            case 67:
+            case 68:
+                $type = 9;
+                break;
+            case 69:
+            case 70:
+            case 71:
+            case 72:
+            case 73:
+            case 74:
+            case 75:
+            case 76:
+            case 77:
+            case 78:
+                $type = 18;
+                break;
+            case 79:
+                $type = 19;
+                break;
+            case 80:
+            case 81:
+            case 82:
+            case 83:
+            case 84:
+            case 85:
+            case 86:
+            case 87:
+            case 88:
+            case 89:
+            case 90:
+                $type = 23;
+                break;
+            case 91:
+            case 92:
+            case 93:
+            case 94:
+            case 95:
+                $type = 22;
+                break;
+            case 96:
+            case 97:
+            case 98:
+                $type = 21;
+                break;
+            case 99:
+                $type = 20;
+                break;
+            default:
+                $type = 3;
+                break;
+        }
+        return $type;
     }
 }

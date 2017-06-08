@@ -6,14 +6,14 @@ use yii\helpers\Url;
 $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
 $formatter->nullDisplay = '--';
-$building = $model->projectBuilding;
+$building = $model->projectBuilding ? $model->projectBuilding : $model->projectExBuilding;
 ?>
 	<table class="other nopadd">
 		<tr>
 			<td colspan="18" class="center"><h1>Obračun redukovanih neto površina objekta</h1></td>
 		</tr>
 		<tr>
-			<td colspan="18" class="center"><h2>Objekat: <?= $building->name. ' ('.$building->spratnost.') ul. '.$model->location->street. ' br. '.$model->location->number.', ' .$model->location->city->town ?></h2></td>
+			<td colspan="18" class="center"><h2>Objekat: <?= $building->name. ' ('.$building->spratnost.') '.$model->location->fullAddress ?></h2></td>
 		</tr>
 		<tr><td colspan="18" style="height:1px; border-bottom: 3px solid #000; padding:0;"></td></tr>
 		<tr>
@@ -51,7 +51,7 @@ $building = $model->projectBuilding;
 		<tr><td colspan="18" style="height:1px; border-bottom: 2px solid #000; padding:0;"></td></tr>
 		<?php // izlistaj sve storey
 			// izlistaj sve parts ?>
-		<?php foreach($model->projectBuildingStoreys as $storey): ?>				
+		<?php foreach($building->projectBuildingStoreys as $storey): ?>				
 			
 					
 				<?php foreach($storey->projectBuildingStoreyParts as $part): ?>	
@@ -216,7 +216,7 @@ $building = $model->projectBuilding;
 				<div style="width:300px; height: 0px; border-bottom: 1px solid #777;"></div>
 				<br>
 				<?= Html::img('@web/images/legal_files/licences/'.$volume->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
-				<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px; margin-top:10px;']) ?>
+				<?= $volume->engineer->EngSignature ?>
 			</td>
 		</tr>
 	</table>

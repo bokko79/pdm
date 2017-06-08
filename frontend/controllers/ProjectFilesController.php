@@ -8,6 +8,7 @@ use common\models\ProjectFilesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 use yii\web\UploadedFile;
 
 /**
@@ -15,6 +16,8 @@ use yii\web\UploadedFile;
  */
 class ProjectFilesController extends Controller
 {
+    public $layout = 'project';
+    
     /**
      * @inheritdoc
      */
@@ -27,34 +30,18 @@ class ProjectFilesController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['update', 'create'],
+                'rules' => [
+                    [
+                        'actions' => ['update', 'create'],
+                        'allow' => true,
+                        'roles' => ['engineer'],
+                    ],
+                ],
+            ],
         ];
-    }
-
-    /**
-     * Lists all ProjectFiles models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new ProjectFilesSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single ProjectFiles model.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
     }
 
     /**
@@ -68,22 +55,33 @@ class ProjectFilesController extends Controller
         if($p = Yii::$app->request->get('ProjectFiles')){
             $model->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
             $model->type = !empty($p['type']) ? $p['type'] : null;
+            $searchModel = new ProjectFilesSearch();
+            $searchModel->project_id = $model->project_id;
         }
-        
-        if ($model->load(Yii::$app->request->post())) {
-             $model->docFile = UploadedFile::getInstance($model, 'docFile');
-            if($model->save()){
-                if ($model->docFile) {
-                    $image = $model->uploadFiles();
-                    $model->file_id = $image;
-                    $model->save();
-                }                    
-                return $this->redirect(['/projects/view', 'id' => $model->project_id, '#'=>'w1-tab2']);
-            }             
+
+        if(\Yii::$app->user->can('viewProject', ['project'=>$model->project])){        
+            if ($model->load(Yii::$app->request->post())) {
+                $model->docFile = UploadedFile::getInstance($model, 'docFile');
+                if($model->save()){
+                    if ($model->docFile) {
+                        $image = $model->uploadFiles();
+                        $model->file_id = $image;
+                        $model->save();
+                    }                    
+                    return $this->refresh();
+                }             
+            } elseif(\Yii::$app->request->post('step_form')){
+                $model->project->setup_status = 'pics';
+                $model->project->save();
+                return $this->redirect($model->project->setupRedirect);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                    'dataProvider' => $searchModel->search(Yii::$app->request->queryParams),
+                ]);
+            }
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            throw new \yii\web\ForbiddenHttpException('Nemate prava da pristupite ovoj stranici.');
         }
     }
 
@@ -96,22 +94,33 @@ class ProjectFilesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $searchModel = new ProjectFilesSearch();
+        $searchModel->project_id = $model->project_id;
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->docFile = UploadedFile::getInstance($model, 'docFile');
-            if($model->save()){
-                if ($model->docFile) {
-                    $model->file ? unlink(\Yii::getAlias('images/projects/'.$model->project->year.'/'.$model->project_id.'/'.$model->file->name)) : null;
-                    $image = $model->uploadFiles();
-                    $model->file_id = $image;
-                    $model->save();
-                } 
-                return $this->redirect(['/projects/view', 'id' => $model->project_id, '#'=>'w1-tab2']);
-            }                    
+        if(\Yii::$app->user->can('viewProject', ['project'=>$model->project])){
+            if ($model->load(Yii::$app->request->post())) {
+                $model->docFile = UploadedFile::getInstance($model, 'docFile');
+                if($model->save()){
+                    if ($model->docFile) {
+                        $model->file ? unlink(\Yii::getAlias('images/projects/'.$model->project->year.'/'.$model->project_id.'/'.$model->file->name)) : null;
+                        $image = $model->uploadFiles();
+                        $model->file_id = $image;
+                        $model->save();
+                    } 
+                    return $this->refresh();
+                }                    
+            } elseif(\Yii::$app->request->post('step_form')){
+                $model->project->setup_status = 'pics';
+                $model->project->save();
+                return $this->redirect($model->project->setupRedirect);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                    'dataProvider' => $searchModel->search(Yii::$app->request->queryParams),
+                ]);
+            }
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            throw new \yii\web\ForbiddenHttpException('Nemate prava da pristupite ovoj stranici.');
         }
     }
 
@@ -124,10 +133,11 @@ class ProjectFilesController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        $model->file ? unlink(\Yii::getAlias('images/projects/'.$model->project->year.'/'.$model->project_id.'/'.$model->file->name)) : null;
-        $this->findModel($id)->delete();
+        $model->file ? unlink(\Yii::getAlias('images/projects/'.$model->project->year.'/'.$model->project_id.'/'.$model->file->name)) : null;        
+        $model->delete();
+        $model->file->delete();
 
-        return $this->redirect(['/projects/view', 'id' => $model->project_id, '#'=>'w1-tab2']);
+        return $this->redirect(['create', 'ProjectFiles[project_id]' => $model->project_id]);
     }
 
     /**

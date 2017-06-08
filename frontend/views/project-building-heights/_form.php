@@ -15,21 +15,18 @@ use dosamigos\tinymce\TinyMce;
 <?php $form = kartik\widgets\ActiveForm::begin([
     'id' => 'form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
-    'fullSpan' => 7,      
+    'fullSpan' => 10,      
     'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
     'options' => ['enctype' => 'multipart/form-data'],
 ]); ?>
 
-<hr>
-<h3>Osnovni podaci</h3>
-
-    <?= $form->field($model, 'project_building_id')->widget(Select2::classname(), [
+    <?php /* $form->field($model, 'project_building_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\ProjectBuilding::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false, 
             'disabled' => true,         
-        ]) ?>
+        ]) */ ?>
 
     <?= $form->field($model, 'part')->dropDownList([ 'venac' => 'Venac', 'sleme' => 'Sleme', 'psprat' => 'Psprat', 'drugo' => 'Drugo', ], ['prompt' => '']) ?>
 
@@ -38,13 +35,13 @@ use dosamigos\tinymce\TinyMce;
     <?= $form->field($model, 'level', [
                 'addon' => ['prepend' => ['content'=>'m']]])->input('number', ['step'=>0.01, 'style'=>'width:40%']) ?>
 
-    <div class="row" style="margin:20px;">
-        <div class="col-md-offset-3">
-            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    <div class="row" style="margin:20px 0;">
+        <div class="col-md-offset-3 col-md-7">
+            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Sačuvaj izmene', ['class' => !$model->isNewRecord ? 'btn btn-success shadow' : 'btn btn-primary shadow btn-block']) ?>
             <?= (!$model->isNewRecord) ? Html::a(Yii::t('app', 'Ukloni'), ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
-                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                    'confirm' => Yii::t('app', 'Da li želite da uklonite visinu dela objekta?'),
                     'method' => 'post',
                 ],
             ]) : null ?>

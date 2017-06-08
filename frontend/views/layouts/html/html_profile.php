@@ -22,19 +22,30 @@ AppAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <script src="https://use.fontawesome.com/f6ceb1ff95.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
     <?php $this->head() ?>
 </head>
-<body>
+<body class="<?= (!\Yii::$app->user->isGuest and \Yii::$app->user->theme) ? '' : 'dark-theme' ?>">
 <?php $this->beginBody() ?>
 
+	<?= $this->render('../header/_subheader') ?>  
 
-  <?= $this->render('../header/_transpsubheader') ?>  
-
-  <?= $content ?>
+	<?= $content ?>
 
 	<?= $this->render('../partial/footer.php') ?>
 
 <?php $this->endBody() ?>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-49522735-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>

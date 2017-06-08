@@ -15,21 +15,18 @@ use dosamigos\tinymce\TinyMce;
 <?php $form = kartik\widgets\ActiveForm::begin([
     'id' => 'form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
-    'fullSpan' => 7,      
-    'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
+    'fullSpan' => 10,      
+    'formConfig' => ['labelSpan' => 4, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
     'options' => ['enctype' => 'multipart/form-data'],
 ]); ?>
 
-<hr>
-<h3>Osnovni podaci</h3>
-
-    <?= $form->field($model, 'project_id')->widget(Select2::classname(), [
+    <?php /* $form->field($model, 'project_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Projects::find()->all(), 'id', 'name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false, 
             'disabled' => true,         
-        ]) ?>
+        ]) */ ?>
 
     <?= $form->field($model, 'building_type_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\BuildingTypes::find()->all(), 'id', 'name'),
@@ -42,13 +39,13 @@ use dosamigos\tinymce\TinyMce;
 
     <?= $form->field($model, 'description')->textArea(['rows' => 6]) ?>
 
-    <div class="row" style="margin:20px;">
+    <div class="row" style="margin:20px 0;">
         <div class="col-md-offset-3">
-            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Sačuvaj izmene', ['class' => !$model->isNewRecord ? 'btn btn-success shadow' : 'btn btn-block btn-primary shadow']) ?>
             <?= (!$model->isNewRecord) ? Html::a(Yii::t('app', 'Ukloni'), ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
-                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                    'confirm' => Yii::t('app', 'Da li želite da ukonite predviđeni objekat na parceli?'),
                     'method' => 'post',
                 ],
             ]) : null ?>
@@ -56,3 +53,24 @@ use dosamigos\tinymce\TinyMce;
     </div>
 
 <?php ActiveForm::end(); ?>
+
+
+<?php if($project->setup_status=='future_devs'): ?>
+
+    <?php $form = kartik\widgets\ActiveForm::begin([
+        'id' => 'step-form',
+        'type' => ActiveForm::TYPE_HORIZONTAL,
+        'fullSpan' => 10,      
+        'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
+        'options' => ['enctype' => 'multipart/form-data'],
+    ]); ?>
+
+        <div class="row" style="margin:50px 0 0;">
+            
+            <div class="col-md-offset-6 col-md-6">
+                <p>Kada završite unos predviđenih objekata na parceli, pređite na sledeći korak. Ukoliko ih nema, odmah pređite na sledeći korak.</p>
+                <?= Html::submitButton('Sledeći korak <i class="fa fa-arrow-right fa-lg"></i>', ['class' => 'btn btn-success shadow btn-block btn-lg', 'name' => 'step_form', 'value' => 'next_step']) ?>
+            </div>            
+        </div>
+    <?php ActiveForm::end(); ?>
+<?php endif; ?>

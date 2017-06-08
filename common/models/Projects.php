@@ -81,10 +81,10 @@ class Projects extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'code', 'user_id', 'client_id', 'building_id', 'practice_id', 'engineer_id', 'phase', 'work'], 'required'],
+            [['name', 'user_id', 'client_id', 'building_id', 'practice_id', 'engineer_id', 'work'], 'required'],
             [['client_id', 'building_id', 'location_id', 'practice_id', 'engineer_id', 'control_practice_id', 'control_engineer_id', 'builder_practice_id', 'builder_engineer_id', 'supervision_practice_id', 'supervision_engineer_id', 'time', 'year', 'visible'], 'integer'],
             [['code'], 'unique', 'targetAttribute' => 'code'],
-            [['phase', 'work', 'status', 'type'], 'string'],
+            [['phase', 'work', 'status', 'type', 'setup_status'], 'string'],
             [['address'], 'safe'],
             [['start_date', 'end_date'], 'safe'],
             [['name'], 'string', 'max' => 128],
@@ -119,7 +119,7 @@ class Projects extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Naziv projekta'),
             'code' => Yii::t('app', 'Broj tehničke dokumentacije'),
-            'client_id' => Yii::t('app', 'Investitor'),
+            'client_id' => Yii::t('app', 'Glavni investitor'),
             'building_id' => Yii::t('app', 'Klasa objekta'),
             'location_id' => Yii::t('app', 'Adresa'),
             'work' => Yii::t('app', 'Vrsta radova'),
@@ -136,10 +136,10 @@ class Projects extends \yii\db\ActiveRecord
             'supervision_engineer_id' => Yii::t('app', 'Odgovorno lice stručnog nadzora'),
             'time' => Yii::t('app', 'Datum'),
             'type' => Yii::t('app', 'Tip'),
-            'visible' => Yii::t('app', 'Visible'),
+            'visible' => Yii::t('app', 'Vidljivost'),
             'secret' => Yii::t('app', 'Secret'),
-            'start_date' => Yii::t('app', 'Start Date'),
-            'end_date' => Yii::t('app', 'End Date'),
+            'start_date' => Yii::t('app', 'Datum početka projekta'),
+            'end_date' => Yii::t('app', 'Datum završetka projekta'),
             'year' => Yii::t('app', 'Godina'),
 
             'storey' => Yii::t('app', 'Etaža jedinice'),
@@ -227,6 +227,14 @@ class Projects extends \yii\db\ActiveRecord
     public function getProjectFiles()
     {
         return $this->hasMany(ProjectFiles::className(), ['project_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectImages()
+    {
+        return $this->hasMany(ProjectImages::className(), ['project_id' => 'id']);
     }
 
     /**
@@ -370,7 +378,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getAvatar($w=160, $h=120)
     {
-        return $this->projectFiles ? \yii\helpers\Html::img('@web/images/projects/'.$this->year.'/'.$this->id.'/'.$this->projectFiles[0]->file->name, ['style'=>'width:'.$w.'px; max-height:'.$h.'px;']) : \yii\helpers\Html::img('@web/images/no_pic_image.png');
+        return $this->projectImages ? \yii\helpers\Html::img('@web/images/projects/'.$this->year.'/'.$this->id.'/'.$this->projectImages[0]->file->name, ['style'=>'width:'.$w.'px; max-height:'.$h.'px;']) : \yii\helpers\Html::img('@web/images/no_pic_image.png');
     }    
 
     /**
@@ -889,6 +897,14 @@ class Projects extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getSlike()
+    {
+        return \common\models\ProjectImages::find()->where('project_id='.$this->id)->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getTehnickaKontrola()
     {
         return \common\models\ProjectVolumes::find()->where('project_id='.$this->id.' and volume_id=18')->one();
@@ -1007,7 +1023,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getProjectDistinctWorks()
     {
-        return \common\models\ProjectQs::find()->select('work_id')->where('project_id='.$this->id)->distinct()->all();
+        return \common\models\ProjectQs::find()->select('work_id')->where('project_id='.$this->id)->distinct()->orderBy('work_id')->all();
     }
 
     /**
@@ -1015,7 +1031,7 @@ class Projects extends \yii\db\ActiveRecord
      */
     public function getProjectDistinctSubworks($work)
     {
-        return \common\models\ProjectQs::find()->select('subwork_id')->where('project_id='.$this->id. ' and work_id='.$work)->distinct()->all();
+        return \common\models\ProjectQs::find()->select('subwork_id')->where('project_id='.$this->id. ' and work_id='.$work)->distinct()->orderBy('work_id, subwork_id')->all();
     }
 
     /**
@@ -1051,7 +1067,7 @@ class Projects extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProjectTotalPrice($work)
+    public function getProjectTotalPrice()
     {
         $total = 0;
         if($t = $this->getProjectDistinctWorks()){
@@ -1060,5 +1076,204 @@ class Projects extends \yii\db\ActiveRecord
             }
         }
         return $total;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSetupRedirect()
+    {
+        $setup = [];
+        $type = $this->type;
+        $presentation = $type=='presentation' ? true : false;
+        $building = $this->projectBuilding ?: $this->projectExBuilding;
+        switch($this->setup_status){
+            case 'clients':
+                $setup = '/project-clients/create?ProjectClients[project_id]='.$this->id; // project-clients
+                break;
+            case 'docs':
+                $setup = '/project-files/create?ProjectFiles[project_id]='.$this->id; // project-files
+                break;
+            case 'pics':
+                $setup = '/project-images/create?ProjectImages[project_id]='.$this->id; // project-images
+                break;
+            case 'volumes':
+                $setup = '/project-volumes/index?ProjectVolumesSearch[project_id]='.$this->id; // project-volumes
+                break;
+            case 'address':
+                $setup = '/project-lot/location?id='.$this->id; // project-lot/location
+                break;
+            case 'project_lot':
+                $setup = '/project-lot/update?id='.$this->id; // project-lot
+                break;
+            case 'lots':
+                $setup = '/location-lots/index?LocationLots[project_id]='.$this->id; // location-lots
+                break;
+            case 'existing_buildings':
+                $setup = '/project-lot-existing-buildings/index?id='.$this->id; // project-lot-existing-buildings
+                break;
+            case 'future_devs':
+                $setup = '/project-lot-future-developments/index?id='.$this->id; // project-lot-future-developments
+                break;
+            case 'building':
+                $setup = '/project-building/update?id='.$building->id; // project-building
+                break;
+            case 'storeys_ex':
+                $setup = '/project-building/storeys?id='.$this->projectExBuilding->id; // project-building-storeys/index
+                break;
+            /*case 'units_ex_init':
+                $setup = ''; // project-building-storey-parts/init
+                break;*/
+            case 'units_ex':
+                $setup = ''; // project-building-storey-parts/index
+                break;
+            /*case 'rooms_ex_init':
+                $setup = ''; // project-building-storey-part-rooms/init
+                break;*/
+            case 'rooms_ex':
+                $setup = ''; // project-building-storey-part-rooms/index
+                break;
+            case 'storeys_new':
+                $setup = '/project-building/storeys?id='.$this->projectBuilding->id; // project-building-storeys/index
+                break;
+            /*case 'units_new_init':
+                $setup = ''; // project-building-storey-parts/init
+                break;*/
+            case 'units_new':
+                $setup = ''; // project-building-storey-parts/index
+                break;
+            /*case 'rooms_new_init':
+                $setup = ''; // project-building-storey-part-rooms/init
+                break;*/
+            case 'rooms_new':
+                $setup = ''; // project-building-storey-part-rooms/index
+                break;
+            case 'classes':
+                $setup = '/project-building-classes/index?ProjectBuildingClasses[project_building_id]='.$building->id; // project-building-classes
+                break;
+            case 'heights':
+                $setup = '/project-building-heights/index?ProjectBuildingHeights[project_building_id]='.$building->id; // project-building-heights
+                break;
+            default:
+                $setup = '';
+                break;
+        }
+        return $setup;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSetupStep()
+    {
+        $setup = null;
+        $type = $this->type;
+        $presentation = $type=='presentation' ? true : false;
+        switch($this->setup_status){
+            case 'clients':
+                $setup = 2; // project-clients
+                break;
+            case 'docs':
+                $setup = 3; // project-files
+                break;
+            case 'pics':
+                $setup = 4; // project-images
+                break;
+            case 'volumes':
+                $setup = 5; // project-volumes
+                break;
+            case 'address':
+                $setup = 6; // project-lot/location
+                break;
+            case 'project_lot':
+                $setup = 7; // project-lot
+                break;
+            case 'lots':
+                $setup = 8; // location-lots
+                break;
+            case 'existing_buildings':
+                $setup = 9; // project-lot-existing-buildings
+                break;
+            case 'future_devs':
+                $setup = 10; // project-lot-future-developments
+                break;
+            case 'building':
+                $setup = 11; // project-building
+                break;            
+            /*case 'storeys_ex_init':
+                $setup = 12; // project-building-storeys/init
+                break;*/
+            case 'storeys_ex':
+                $setup = 13; // project-building-storeys/index
+                break;
+            /*case 'units_ex_init':
+                $setup = 14; // project-building-storey-parts/init
+                break;*/
+            case 'units_ex':
+                $setup = 15; // project-building-storey-parts/index
+                break;
+            /*case 'rooms_ex_init':
+                $setup = 16; // project-building-storey-part-rooms/init
+                break;*/
+            case 'rooms_ex':
+                $setup = 17; // project-building-storey-part-rooms/index
+                break;
+            /*case 'storeys_new_init':
+                $setup = 18; // project-building-storeys/init
+                break;*/
+            case 'storeys_new':
+                $setup = 19; // project-building-storeys/index
+                break;
+           /* case 'units_new_init':
+                $setup = 20; // project-building-storey-parts/init
+                break;*/
+            case 'units_new':
+                $setup = 21; // project-building-storey-parts/index
+                break;
+            /*case 'rooms_new_init':
+                $setup = 22; // project-building-storey-part-rooms/init
+                break;*/
+            case 'rooms_new':
+                $setup = 23; // project-building-storey-part-rooms/index
+                break;
+            case 'classes':
+                $setup = 24; // project-building-classes
+                break;
+            case 'heights':
+                $setup = 25; // project-building-heights
+                break;
+            default:
+                $setup = 1;
+                break;
+        }
+        return $setup;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSetupIcon($step)
+    {
+        if($this->setupStep>$step){
+            return '<i class="fa fa-check fa-lg green"></i>';
+        } elseif($this->setupStep==$step) {
+
+            return '<i class="fa fa-play fa-lg white"></i>';
+        } else {
+            return '<i class="fa fa-step-forward fa-lg hint"></i>';
+        }
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSetupCheck($step)
+    {
+        if($this->setupStep>$step){
+            return 'is-done';
+        } elseif($this->setupStep==$step) {
+            return 'current';
+        }
+        return null;        
     }
 }

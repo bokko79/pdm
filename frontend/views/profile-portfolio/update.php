@@ -10,13 +10,15 @@ $this->title = Yii::t('app', 'Izmeni {modelClass}: ', [
 ]) . $model->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Portfolio profila'), 'url' => ['/user/settings/portfolio-setup']];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Izmeni');
+
+$this->params['page_title'] = 'Inženjer';
 ?>
-<div class="profile-portfolio-update">
+<div class="container-fluid full">
+	<div class="row">
+	    <h4><?= Html::encode($this->title) ?></h4>
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
+	    <?= $this->render('_form', [
+	        'model' => $model,
+	    ]) ?>
+    </div>
 </div>

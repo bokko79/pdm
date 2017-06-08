@@ -76,8 +76,10 @@ class Practices extends \yii\db\ActiveRecord
             'bank' => Yii::t('app', 'Banka'),
             'avatar' => Yii::t('app', 'Dokument'),
             'cover_photo' => Yii::t('app', 'Dokument'),
-            'avatarFile' => Yii::t('app', 'Profilna slika'),
+            'avatarFile' => Yii::t('app', 'Logo firme'),
             'coverFile' => Yii::t('app', 'Baner slika'),
+            'stampFile' => Yii::t('app', 'Pečat firme'),
+            'memoFile' => Yii::t('app', 'Memorandum zaglavlje'),
             'about' => Yii::t('app', 'O firmi'),
         ];
     }
@@ -184,7 +186,7 @@ class Practices extends \yii\db\ActiveRecord
             $image->time = time();
             
                 
-            Image::thumbnail($thumb, 1200, 480)->save(\Yii::getAlias('images/legal_files/visual/'.$fileName.'.'.$this->memoFile->extension), ['quality' => 80]); 
+            Image::thumbnail($thumb, 1200, null)->save(\Yii::getAlias('images/legal_files/visual/'.$fileName.'.'.$this->memoFile->extension), ['quality' => 80]); 
             unlink(\Yii::getAlias($thumb));
             $image->save();
 
@@ -203,7 +205,79 @@ class Practices extends \yii\db\ActiveRecord
      */
     public function getPracticeEngineers()
     {
-        return $this->hasMany(PracticeEngineers::className(), ['practice_id' => 'engineer_id']);
+        return $this->hasMany(PracticeEngineers::className(), ['practice_id' => 'engineer_id'])->where('status="joined"');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPracticePartners()
+    {
+        return \common\models\PracticePartners::find()->where('practice_id='.$this->engineer_id. ' or partner_id='.$this->engineer_id)->all();
+        //return $this->hasMany(PracticePartners::className(), ['practice_id' => 'engineer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFullPracticePartners()
+    {
+        $partners = [];
+        $practicePartners = \common\models\PracticePartners::find()->where('(practice_id='.$this->engineer_id. ' or partner_id='.$this->engineer_id.') and status="partner"')->all();
+        if($practicePartners){
+            foreach($practicePartners as $practicePartner){
+                if($practicePartner->practice->engineer_id!=$this->engineer_id){
+                    $partners[] = $practicePartner->practice;
+                } else {
+                    $partners[] = $practicePartner->partner;
+                }
+            }
+        }
+        return $partners;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAvailablePractices()
+    {
+        $practices = [];
+        $practices[] = (!Yii::$app->user->isGuest and Yii::$app->user->engineer) ? Yii::$app->user->engineer->practice : null;
+        if($pps = $this->fullPracticePartners){
+            foreach($pps as $pp){
+                $practices[] = $pp;
+            }
+        }
+        return $practices;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAvailableEngineers()
+    {
+        $engineers = [];
+        $check = [];
+        if($practiceEngineers = $this->practiceEngineers){
+            foreach($practiceEngineers as $practiceEngineer){
+                if(!in_array($practiceEngineer->engineer_id, $check)){
+                    $engineers[] = $practiceEngineer->engineer;
+                    $check[] = $practiceEngineer->engineer_id;
+                }                
+            }
+        }
+        if($partners = $this->fullPracticePartners){
+            foreach($partners as $partner){
+                if($partnerEngineers = $partner->practiceEngineers)
+                    foreach($partnerEngineers as $partnerEngineer){
+                        if(!in_array($partnerEngineer->engineer_id, $check)){
+                            $engineers[] = $partnerEngineer->engineer;
+                            $check[] = $partnerEngineer->engineer_id;
+                        }                
+                    }
+            }                
+        }
+        return $engineers;
     }
 
     /**
@@ -257,7 +331,7 @@ class Practices extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getMemoFile()
+    public function getMemorandum()
     {
         return $this->hasOne(Files::className(), ['id' => 'memo']);
     }

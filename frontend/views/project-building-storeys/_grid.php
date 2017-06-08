@@ -5,13 +5,26 @@ use yii\helpers\Url;
 use yii\widgets\DetailView;
 use kartik\grid\GridView;
 use kartik\editable\Editable;
+use kartik\grid\ExpandRowColumn;
 
 ?>
 <?php
     $gridColumns = [
-        ['class' => 'kartik\grid\SerialColumn'],
+        //['class' => 'kartik\grid\SerialColumn'],
         [
-            'attribute'=>'id',
+            'class'=>'kartik\grid\ExpandRowColumn',
+            'width'=>'50px',
+            'value'=>function ($model, $key, $index, $column) {
+                return GridView::ROW_COLLAPSED;
+            },
+            'detail'=>function ($model, $key, $index, $column) {
+                return Yii::$app->controller->renderPartial('_part_list', ['model'=>$model]);
+            },
+            'headerOptions'=>['class'=>'kartik-sheet-style'],
+            'expandOneOnly'=>true,
+        ],
+        [
+            'label'=>'Sprat',
             'format' => 'raw',
             'value'=>function ($data) {
 
@@ -21,6 +34,7 @@ use kartik\editable\Editable;
         ],
         [
             'class'=>'kartik\grid\EditableColumn',
+            'label'=>'Naziv sprata',
             'attribute'=>'name',
             'editableOptions'=> function ($model, $key, $index) {
                 return [
@@ -33,11 +47,12 @@ use kartik\editable\Editable;
         [
             'class'=>'kartik\grid\EditableColumn',
             'attribute'=>'height',
+            'label'=>'h [m]',
             'width'=>'50px',
             'hAlign'=>'right',
             'editableOptions'=> function ($model, $key, $index) {
                 return [
-                    'header'=>'Neto redukovana površina',
+                    'header'=>'Spratna visina',
                     'size'=>'',
                     'placement' => 'top',              
                 ];
@@ -46,13 +61,14 @@ use kartik\editable\Editable;
         [
             'class'=>'kartik\grid\EditableColumn',
             'attribute'=>'level',
+            'label'=>'Rel. kota [m]',
             'width'=>'50px',
             'hAlign'=>'right',
             //'format'=>['decimal', 2],
             
             'editableOptions'=> function ($model, $key, $index) {
                 return [
-                    'header'=>'Neto površina',
+                    'header'=>'Relativna visinska kota',
                     'size'=>'',
                     'placement' => 'top',
                                   
@@ -60,7 +76,7 @@ use kartik\editable\Editable;
             }
         ],         
         [
-            'label'=>'reduk. neto',
+            'label'=>'Reduk. P [m2]',
             'format' => 'raw',
             'hAlign'=>'right',
             'pageSummary'=>true,
@@ -69,7 +85,7 @@ use kartik\editable\Editable;
             },
         ],
         [
-            'label'=>'neto',
+            'label'=>'P netto [m2]',
             'format' => 'raw',
             'hAlign'=>'right',
             'pageSummary'=>true,
@@ -80,20 +96,21 @@ use kartik\editable\Editable;
         [
             'class'=>'kartik\grid\EditableColumn',
             'attribute'=>'gross_area',
+            'label'=>'P bruto [m2]',
             'hAlign'=>'right',
             'pageSummary'=>true,
             'editableOptions'=> function ($model, $key, $index) {
                 return [
-                    'header'=>'Naziv',
+                    'header'=>'Bruto površina',
                     'size'=>'',
                     'placement' => 'top',              
                 ];
             }
         ],
         
-        [
+        /*[
             'class' => 'kartik\grid\ActionColumn',
-            'header' => 'Opcije',
+            'header' => 'Jedinice/celine',
             'headerOptions' => ['style' => 'color:#337ab7'],
             //'template' => '{generateParts}{view}{update}{delete}',
             'template' => '{generateParts}',
@@ -133,7 +150,7 @@ use kartik\editable\Editable;
                  }
             ]
 
-        ],
+        ],*/
     ];
     echo GridView::widget([
         'id' => 'grid',
@@ -160,7 +177,7 @@ use kartik\editable\Editable;
         'bordered'=>true,
         'striped'=>true,
         'condensed'=>true,
-        'responsive'=>true,
+        'responsive'=>false,
         'hover'=>true,
         'showPageSummary'=>true,
         /*'panel'=>[

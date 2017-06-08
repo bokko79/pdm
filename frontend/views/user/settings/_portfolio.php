@@ -16,7 +16,7 @@ use yii\helpers\Url;
 ?>
 
 
-    <div class="card_container record-full grid-item fadeInUp top-bordered transparent no-shadow animated" id="card_container" style="float:none;">
+    <div class="card_container record-full grid-item fadeInUp top-bordered transparent no-shadow animated-not" id="card_container" style="">
         <div class="primary-context">
             <div class="head major regular">
                  

@@ -18,30 +18,57 @@ use yii\helpers\Html;
  * @var bool $showPassword
  */
 ?>
-<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-    <?= Yii::t('user', 'Hello') ?>,
-</p>
+<?php $this->beginContent('@frontend/views/user/mail/layouts/html.php', ['email'=>$email]); ?>
+ 
+<tr> 
+    <td style="padding:24px 24px 16px"> 
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
+            Poštovani,
+        </p>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
+            Dobrodošli na <?= Yii::$app->name ?> i hvala na registraciji.
+        </p>
 
-<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-    <?= Yii::t('user', 'Your account on {0} has been created', Yii::$app->name) ?>.
-    <?php if ($showPassword || $module->enableGeneratingPassword): ?>
-        <?= Yii::t('user', 'We have generated a password for you') ?>: <strong><?= $user->password ?></strong>
-    <?php endif ?>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
+            Registracijom na <a href="http://masterplan.rs/">masterplan.rs</a> priključujete se širućoj poslovnoj i stručnoj mreži projektanata i imate odličnu šansu da unapredite svoje poslovanje i poslovnu mrežu.
+        </p>
+    </td> 
+</tr> 
+        
+<tr> 
+    <td> 
+        <hr style="background-color:#d9d9d9;margin:0;color:#d9d9d9;border-color:#d9d9d9;border-width:0;border-style:solid;height:1px">
+    </td> 
+</tr>
+<tr> 
+    <td style="padding:24px 24px 16px">
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
+            Masterplan je web stranica za upravljanje arhitektonsko-građevinskim projektima i projektnom dokumentacijom, arhitektonski konsalting i baza podataka arhitektonsko-građevinskih projekata, inženjera, građevinskih preduzeća i nekretnina.
+        </p>
 
-</p>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
+            Za više informacija o masterplan mreži, posetite <a href="http://masterplan.rs/">zvaničnu stranicu</a>.
+        </p>
 
-<?php if ($token !== null): ?>
-    <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-        <?= Yii::t('user', 'In order to complete your registration, please click the link below') ?>.
-    </p>
-    <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-        <?= Html::a(Html::encode($token->url), $token->url); ?>
-    </p>
-    <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-        <?= Yii::t('user', 'If you cannot click the link, please try pasting the text into your browser') ?>.
-    </p>
-<?php endif ?>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
+            U nadi da ćemo ostvariti zajedničke poslovne i stručne uspehe, s poštovanjem<br>
+            Bojan Grozdanić, dipl. ing. arh.<br>
+            Masterplan ARC d.o.o.
+        </p>
+    </td> 
+</tr>                                               
+<tr> 
+    <td> 
+        <hr style="background-color:#d9d9d9;margin:0;color:#d9d9d9;border-color:#d9d9d9;border-width:0;border-style:solid;height:1px">
+    </td> 
+</tr>
+<tr> 
+    <td style="padding:24px 24px 16px">
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
+            Ukoliko se niste Vi (ili neko u Vaše ime) registrovali na masterplan, dobili ste ovaj mail greškom i možete ga ignorisati.
+        </p>
+    </td> 
+</tr>                                         
+<?php $this->endContent(); // HTML ?>
 
-<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-    <?= Yii::t('user', 'If you did not make this request you can ignore this email') ?>.
-</p>
+

@@ -7,26 +7,38 @@ use yii\widgets\DetailView;
 use yii\grid\GridView;
 use common\widgets\Alert;
 use yii\bootstrap\Nav;
+use yii\widgets\ListView;
 
 ?>
 
 
-<div class="card_container record-full grid-item fadeInUp animated" id="">
-    <div class="primary-context gray normal">
-        <div class="head colos thin">
-        <div class="action-area normal-case"><?= (\Yii::$app->user->can('engineer')) ? Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Započni novi projekat'), ['/projects/create'], ['class' => 'btn btn-primary btn-lg shadow']) : null ?>
+<div class="card_container record-full grid-item fadeInUp no-shadow transparent no-margin animated-not" id="">
+    <div class="primary-context normal">
+        <div class="head colos">
+        <div class="subaction"><?= (\Yii::$app->user->can('engineer')) ? Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Novi projekat'), ['/projects/create', 'type'=>'project'], ['class' => 'btn btn-primary shadow']) : null ?> 
+            <?= (\Yii::$app->user->can('engineer')) ? Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Nova prezentacija'), ['/projects/create', 'type'=>'presentation'], ['class' => 'btn btn-primary shadow']) : null ?> 
+            <?= Html::a(Yii::t('app', '<i class="fa fa-search"></i>'), null, ['class' => 'btn btn-success shadow show-search']) ?>
                   </div>
                   Moji projekti
         </div>
-        <div class="subhead">Projekti na kojima učestvujem kao glavni projektant, <br>odgovorni projektant, vršilac tehničke kontrole, saradnik projektanta, <br>vršilac stručnog nadzora, odgovorni izvođač.</div>
+        <div class="subhead">Projekti na kojima učestvujem kao glavni projektant, odgovorni projektant, vršilac tehničke kontrole, saradnik projektanta, vršilac stručnog nadzora, odgovorni izvođač.</div>
         
     </div>
-    
+    <div class="secondary-context searchContainer" style="display:none">
+        <?= $this->render('_projectSearch', ['model' => $searchModel]); ?>
+    </div>
     <div class="secondary-context">
+        <?php if($projects->getTotalCount()>0): ?>
         <div class="table-responsive">            
-        
+            <?php echo ListView::widget([
+                'dataProvider' => $projects,
+                'itemView' => '_project',
+          //'itemOptions' => ['style'=>'float:left;'],
+
+            ]); /*?>
             <?= GridView::widget([
                 'dataProvider' => $projects,
+                //'filterModel' => $searchModel,
                 'columns' => [
                     [
                         'label'=>'Avatar projekta',
@@ -59,13 +71,13 @@ use yii\bootstrap\Nav;
                         },
                         'contentOptions' => ['style'=>'max-width:250px; min-height:100px; overflow: auto; word-wrap: break-word;'],
                     ],
-                    /*[
+                    [
                         'label'=>'Projektant',
                         'format' => 'raw',
                         'value'=>function ($data) {
                             return Html::a($data->practice->name, ['practices/view', 'id' => $data->practice_id]);
                         },
-                    ],*/
+                    ],
                     [
                         'label'=>'Investitor',
                         'format' => 'raw',
@@ -74,7 +86,21 @@ use yii\bootstrap\Nav;
                         },
                     ],
                 ],
-            ]); ?>    
+            ]); */?>    
         </div>
+        <?php else: ?>
+            <a href="/projects/create">
+            <table style="height:220px; border: 5px dashed #7a9ebb;  color: #999;">           
+                <tr>
+                    <td style="text-align:center; width:100%; vertical-align:middle;">
+                            <p class="small">Trenutno nemate nijedan aktivan projekat.</p>
+                            <p style="font-size:24px;"><i class="fa fa-plus-circle" ></i></p>
+                            <div style="font-size:18px;">Kreirajte novi projekat</div>
+                        
+                    </td>
+                </tr>            
+            </table>
+            </a>
+    <?php endif; ?>
     </div>
 </div>

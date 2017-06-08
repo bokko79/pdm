@@ -40,6 +40,36 @@ class User extends \yii\web\User
      * @return string|integer the unique identifier for the user. If null, it means the user is a guest.
      * @see getIdentity()
      */
+    public function getTheme()
+    {
+        $identity = $this->getIdentity();
+        if($identity !== null) {
+            $user = $identity->findOne($identity->getId());
+        }
+
+        return ($user->theme) ? $user->theme : null;
+    }
+
+    /**
+     * Returns a value that uniquely represents the user.
+     * @return string|integer the unique identifier for the user. If null, it means the user is a guest.
+     * @see getIdentity()
+     */
+    public function getAvatar($w=null, $h=null, $class='user-img')
+    {
+        $identity = $this->getIdentity();
+        if($identity !== null) {
+            $user = $identity->findOne($identity->getId());
+        }
+
+        return ($user->avatar) ? \yii\helpers\Html::img('@web/images/profiles/'.$user->aFile->name, ['style'=>'width:'.$w.'px; max-height:'.$h.'px;', 'class'=>$class]) : \yii\helpers\Html::img('@web/images/no_pic_image.png', ['style'=>'width:'.$w.'px; max-height:'.$h.'px;', 'class'=>$class]);
+    }
+
+    /**
+     * Returns a value that uniquely represents the user.
+     * @return string|integer the unique identifier for the user. If null, it means the user is a guest.
+     * @see getIdentity()
+     */
     public function getEngineer()
     {
         $identity = $this->getIdentity();
@@ -48,6 +78,29 @@ class User extends \yii\web\User
         }
 
         return ($user->engineer) ? $user->engineer : null;
+    }
+
+    /**
+     * Returns a value that uniquely represents the user.
+     * @return string|integer the unique identifier for the user. If null, it means the user is a guest.
+     * @see getIdentity()
+     */
+    public function getPractice()
+    {
+        $identity = $this->getIdentity();
+        if($identity !== null) {
+            $user = $identity->findOne($identity->getId());
+        }
+        if($engineer = $user->engineer)
+        {
+            if($engineer->practice){
+                return $engineer->practice;
+            }
+            elseif($engineer->practiceEngineers){
+                return $engineer->practiceEngineers[0]->practice;
+            }
+        }
+        return false;
     }
 
     /**
@@ -117,7 +170,7 @@ class User extends \yii\web\User
      * @return string|integer the unique identifier for the user. If null, it means the user is a guest.
      * @see getIdentity()
      */
-    public function getAvatar()
+    /*public function getAvatar()
     {
         $identity = $this->getIdentity();        
         $avatar = '@frontend-images/users/default_avatar.jpg';
@@ -130,7 +183,7 @@ class User extends \yii\web\User
         }
 
         return \yii\helpers\Html::img($avatar, ['class' => 'img-responsive img-rounded']);
-    }
+    }*/
 
     /** @inheritdoc */
     /*public function afterLogin($identity, $cookieBased, $duration)

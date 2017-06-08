@@ -5,7 +5,9 @@ use yii\helpers\Url;
 
 $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
-$building = $model->projectBuilding;
+$practice = $volume->practice;
+$engineer = $volume->engineer;
+$building = $model->projectBuilding ? $model->projectBuilding : $model->projectExBuilding;
 ?>
 <?php // $this->render('../pdf/_header', ['model'=>$model, 'volume'=>$volume]) ?>
 <p class="times uppercase"><small><?= $volume->number ?>.1. Naslovna strana <?= $volume->volume->nameGen ?></small></p>	
@@ -25,16 +27,12 @@ $building = $model->projectBuilding;
 		<tr>
 			<td class="right">Objekat</td>
 			<td class="content">
-				<h3><b><?= $building->name ?></b></h3>
-				<p>ul. <?= $model->location->street. ' br. ' . $model->location->number . ' ' .$model->location->city->town ?></p>
-				<p>kat.parc.br. 
-				<?php if($lots = $model->location->locationLots){
-					foreach($lots as $lot){
-						
-						echo $lot->lot.', ';
-					}
-				}?>
-					<?= 'K.O. '.$model->location->county0->name; ?></p>
+				<?php if($model->work!='adaptacija'): ?>
+					<h3><b><?= c($building->name) ?></b> (<?= $building->spratnost ?>)</h3>
+				<?php else: ?>
+					<h3><b><?= c($building->name) ?></b> (<?= $building->storey ?>)</h3>
+				<?php endif; ?>
+					<p><?= $model->location->getLotAddress(true) ?></p>
 			</td>
 		</tr>
 		<tr>
@@ -51,32 +49,33 @@ $building = $model->projectBuilding;
 		</tr>
 		<tr>
 			<td class="right" style="padding-bottom: 5px; border-top:1px dotted #777">Projektant</td>
-			<td class="content" style="padding-bottom: 5px; border-top:1px dotted #777"><p><?= $volume->practice->name ?></p>
-				<p>ul. <?= $volume->practice->location->street. ' br. ' . $volume->practice->location->number . ' ' .$volume->practice->location->city->town; ?></p>
+			<td class="content" style="padding-bottom: 5px; border-top:1px dotted #777">
+				<p><?= $practice->name ?></p>
+				<p><?= $practice->location->fullAddress; ?></p>
 			</td>			
 		</tr>
 		<tr>
 			<td class="right" style="padding:5px 20px;">Odgovorno lice projektanta</td>
-			<td class="content" style="padding:5px 20px;"><?= $volume->practice->director->name . ($volume->practice->practiceEngineers[0] ? ', '. $volume->practice->director->title : null) ?></td>			
+			<td class="content" style="padding:5px 20px;"><?= $practice->director->name . ($practice->director ? ', '. $practice->director->expertees->short : null) ?></td>			
 		</tr>
 		<tr>
 			<td class="right" style="padding:5px 20px;">
 				<small>Pečat projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/stamps/'.$volume->practice->stamp, ['style'=>'width:120px; max-height:120px; margin-top:10px;']) ?>
+					<?= $practice->seal ?>
 				</div>
 			</td>
 			<td class="content" style="padding:5px 20px;">
 				<small>Potpis odgovornog lica projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/signatures/'.$volume->practice->signature, ['style'=>'width:160px; max-height:120px;']) ?>
+					<?= $practice->director->engSignature ?>
 				</div>
 			</td>			
 		</tr>
 		<tr>
 			<td class="right" style="padding-bottom: 5px;">Odgovorni projektant</td>
 			<td class="content" style="padding-bottom: 5px;">
-				<p><?= $volume->engineer->name .', '. $volume->engineer->title ?></p>
+				<p><?= $engineer->name .', '. $engineer->title ?></p>
 				<p>Broj licence: <?= $volume->engineerLicence->no ?></p>
 			</td>			
 		</tr>
@@ -84,13 +83,13 @@ $building = $model->projectBuilding;
 			<td class="right" style="padding:5px 20px 20px;">
 				<small>Lični pečat odgovornog projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
+					<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; max-height:120px; margin-top:10px;']) ?>
 				</div>
 			</td>
 			<td class="content" style="padding:5px 20px 20px;">
 				<small>Potpis odgovornog projektanta</small> 
 				<div>
-					<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px;']) ?>
+					<?= $engineer->EngSignature ?>
 				</div>
 			</td>				
 		</tr>
@@ -100,6 +99,6 @@ $building = $model->projectBuilding;
 		</tr>
 		<tr>
 			<td class="right">Mesto i datum</td>
-			<td class="content"><p><?= $volume->practice->location->city->town ?>, <?= $formatter->asDate(time(), 'php:mm Y') ?></p></td>
+			<td class="content"><p><?= $practice->location->city->town ?>, <?= $formatter->asDate(time(), 'php:F Y.') ?></p></td>
 		</tr>
 	</table>

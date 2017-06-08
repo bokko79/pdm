@@ -52,12 +52,21 @@ class ProjectLot extends \yii\db\ActiveRecord
     {
         return [
             [['project_id'], 'required'],
+            [['area','ground_level'], 'required', 'on' => 'lot_setup'],
             [['project_id', 'conditions', 'parking_spaces', 'parking_disabled', 'climate', 'seismic'], 'integer'],
             [['width', 'length', 'area', 'ground_level', 'road_level', 'underwater_level', 'underwater_level_min', 'green_area_reg', 'green_area', 'occupancy_reg', 'built_index_reg'], 'number'],
-            [['disposition', 'type', 'ground', 'access', 'ownership', 'adjacent_border', 'services', 'description', 'note', 'legal', 'parking'], 'string'],
+            [['disposition', 'type', 'ground', 'access', 'ownership', 'adjacent_border', 'services', 'description', 'note', 'legal', 'parking', 'conn_water', 'conn_electric', 'conn_telecom', 'conn_heating', 'conn_gas'], 'string'],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Projects::className(), 'targetAttribute' => ['project_id' => 'id']],
         ];
     }
+
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        //$scenarios['lot_setup'] = ['area','ground_level'];//Scenario Values Only Accepted
+        return $scenarios;
+    }
+
 
     /**
      * @inheritdoc
@@ -93,6 +102,11 @@ class ProjectLot extends \yii\db\ActiveRecord
             'parking' => Yii::t('app', 'Parking'),
             'parking_spaces' => Yii::t('app', 'Broj parking mesta'),
             'parking_disabled' => Yii::t('app', 'Br. parking m. za osobe sa inv.'),
+            'conn_water' => Yii::t('app', 'Priključak na vodovod i kanalizaciju'),
+            'conn_electric' => Yii::t('app', 'Priključak na elektroenergetsku mrežu'),
+            'conn_telecom' => Yii::t('app', 'Priključak na telekom. mrežu'),
+            'conn_heating' => Yii::t('app', 'Priključak na toplovod'),
+            'conn_gas' => Yii::t('app', 'Priključak na gasovod'),
         ];
     }
 

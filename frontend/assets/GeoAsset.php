@@ -16,10 +16,13 @@ class GeoAsset extends AssetBundle
         'css/site.css',
         'css/style.css',
         'css/style_box1.css',
+        'css/header.css',
+        'css/style-responsive.css',
     ];
     public $js = [
         'js/bootstrap-tabcollapse.js',
         'js/app.js',
+        //'js/header.js',
         'js/jquery.geocomplete.js',
         'js/geocomplete.js',
     ];

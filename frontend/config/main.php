@@ -51,10 +51,15 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                /*'<controller:\w+>/<id:\d+>' => '<controller>/view',
+                // DEKTRIUM USER
+                //'<module:user>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
+                //'<module:user>/<action:\w+>' => '<module>/<controller>/<action>',
+
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-                'contact-us' => 'site/contact',*/
+                'contact-us' => 'site/contact',
+                'home' => 'user/security/home',
             ],
         ],   
         'formatter' => [

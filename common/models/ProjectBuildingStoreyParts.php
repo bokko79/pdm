@@ -78,7 +78,7 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
      */
     public function getProjectBuildingStoreyPartRooms()
     {
-        return $this->hasMany(ProjectBuildingStoreyPartRooms::className(), ['project_building_storey_part_id' => 'id'])->orderBy('mark');
+        return $this->hasMany(ProjectBuildingStoreyPartRooms::className(), ['project_building_storey_part_id' => 'id'])->orderBy('CAST(mark AS UNSIGNED)');
     }
 
     /**
@@ -203,6 +203,9 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
             case 'tech':
                 $type = 'tehničke prostorije';
                 break;
+            case 'whole':
+                $type = 'prostorije';
+                break;
             
             default:
                 $type = 'drugo';
@@ -217,7 +220,7 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
     public function getStambene()
     {
         $rooms = [];
-        foreach($this->projectBuildingStoreyParts as $room){
+        foreach($this->projectBuildingStoreyPartRooms as $room){
             if ($room->group=='Stambene prostorije'){
                 $rooms[] = $room;
             }
@@ -231,7 +234,7 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
     public function getPoslovne()
     {
         $rooms = [];
-        foreach($this->projectBuildingStoreyParts as $room){
+        foreach($this->projectBuildingStoreyPartRooms as $room){
             if ($room->group=='Poslovne prostorije'){
                 $rooms[] = $room;
             }
@@ -245,7 +248,7 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
     public function getZajednicke()
     {
         $rooms = [];
-        foreach($this->projectBuildingStoreyParts as $room){
+        foreach($this->projectBuildingStoreyPartRooms as $room){
             if ($room->group=='Zajedničke prostorije'){
                 $rooms[] = $room;
             }
@@ -259,7 +262,7 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
     public function getTehnicke()
     {
         $rooms = [];
-        foreach($this->projectBuildingStoreyParts as $room){
+        foreach($this->projectBuildingStoreyPartRooms as $room){
             if ($room->group=='Tehničke prostorije'){
                 $rooms[] = $room;
             }
@@ -273,7 +276,7 @@ class ProjectBuildingStoreyParts extends \yii\db\ActiveRecord
     public function getOstale()
     {
         $rooms = [];
-        foreach($this->projectBuildingStoreyParts as $room){
+        foreach($this->projectBuildingStoreyPartRooms as $room){
             if ($room->group=='Ostale prostorije'){
                 $rooms[] = $room;
             }

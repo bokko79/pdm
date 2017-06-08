@@ -6,15 +6,7 @@ use yii\helpers\Url;
 $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
 $formatter->nullDisplay = '--';
-$building = $model->projectBuilding;
-$architecture = $model->projectBuildingCharacteristics;
-$materials = $model->projectBuildingMaterials;
-$insulations = $model->projectBuildingInsulations;
-$services = $model->projectBuildingServices;
-$structure = $model->projectBuildingStructure;
-$projectLot = $model->projectLot;
-$existingBuildings = $model->projectLotExistingBuildings;
-$futureDevs = $model->projectLotFutureDevelopments;
+$building = $model->projectBuilding ? $model->projectBuilding : $model->projectExBuilding;
 ?>
 <p class="times uppercase"><small>1.<?= ($model->phase=='idp' or $model->phase=='pgd' or $model->phase=='pzi' or $model->phase=='pio') ? 6 : 4; ?>.2 Predviđena investiciona vrednost objekta</small></p>
 

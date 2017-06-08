@@ -47,7 +47,7 @@ class Engineers extends \yii\db\ActiveRecord
             [['about'], 'string'],
             [['name', 'email'], 'string', 'max' => 64],
             [['phone'], 'string', 'max' => 25],
-            [['avatarFile', 'coverFile', 'signatureFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
+            [['avatarFile', 'coverFile', 'signatureFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
         ];
     }
 
@@ -59,7 +59,7 @@ class Engineers extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Ime inženjera'),
-            'expertees_id' => Yii::t('app', 'Titula'),
+            'expertees_id' => Yii::t('app', 'Stručno zvanje'),
             'phone' => Yii::t('app', 'Telefon'),
             'email' => Yii::t('app', 'Email'),
             'about' => Yii::t('app', 'O meni'),
@@ -67,7 +67,7 @@ class Engineers extends \yii\db\ActiveRecord
             'cover_photo' => Yii::t('app', 'Dokument'),
             'avatarFile' => Yii::t('app', 'Profilna slika'),
             'coverFile' => Yii::t('app', 'Baner slika'),
-            'signatureFile' => Yii::t('app', 'Skinarni potpis'),
+            'signatureFile' => Yii::t('app', 'Skenirani potpis'),
         ];
     }
 
@@ -144,7 +144,7 @@ class Engineers extends \yii\db\ActiveRecord
             $image->time = time();
             
                 
-            Image::thumbnail($thumb, 1200, 480)->save(\Yii::getAlias('images/legal_files/signatures/'.$fileName.'.'.$this->signatureFile->extension), ['quality' => 80]); 
+            Image::thumbnail($thumb, 600, 480)->save(\Yii::getAlias('images/legal_files/signatures/'.$fileName.'.'.$this->signatureFile->extension), ['quality' => 80]); 
             unlink(\Yii::getAlias($thumb));
             $image->save();
 

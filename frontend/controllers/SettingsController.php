@@ -24,6 +24,7 @@ use dektrium\user\controllers\SettingsController as BaseSettingsController;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\data\ActiveDataProvider;
+use yii\web\UploadedFile;
 
 
 /**
@@ -35,6 +36,7 @@ use yii\data\ActiveDataProvider;
  */
 class SettingsController extends BaseSettingsController
 {
+    public $layout = '//dashboard';
     // event init
     public function init()
     {
@@ -64,6 +66,44 @@ class SettingsController extends BaseSettingsController
     }
 
     /**
+     * Displays page where user can update account settings (username, email or password).
+     *
+     * @return string|\yii\web\Response
+     */
+    public function actionAccount()
+    {
+        /** @var SettingsForm $model */
+        $model = \Yii::createObject(SettingsForm::className());
+        $event = $this->getFormEvent($model);
+
+        $this->performAjaxValidation($model);
+
+        $this->trigger(self::EVENT_BEFORE_ACCOUNT_UPDATE, $event);
+        if ($model->load(\Yii::$app->request->post())) {
+            $model->avatarFile = UploadedFile::getInstance($model, 'avatarFile');
+
+            if($model->save()){
+                if ($model->avatarFile) {
+                    $model->user->aFile ? unlink(\Yii::getAlias('images/profiles/'.$model->user->aFile->name)) : null;
+                    $filea = $model->user->aFile ?: null;
+                    $imageavatarFile = $model->uploadAvatar();
+                    $model->avatar = $imageavatarFile;
+                    $model->save();
+                    $filea ? $filea->delete() : null;
+                }                   
+                \Yii::$app->session->setFlash('success', \Yii::t('user', 'Vaši podaci su uspešno ažurirani.'));
+                $this->trigger(self::EVENT_AFTER_ACCOUNT_UPDATE, $event);
+                return $this->refresh();
+            }                
+        }
+
+        return $this->render('account', [
+            'model' => $model,
+            'user' => $model->user,
+        ]);
+    }
+
+    /**
      * C114
      * @return mixed
      */
@@ -90,6 +130,8 @@ class SettingsController extends BaseSettingsController
      */
     public function actionLicenceSetup()
     {
+        $this->layout = '//dashboard';
+
         /** @var SettingsForm $model */
         $settings = \Yii::createObject(SettingsForm::className());
         $event = $this->getFormEvent($settings);
@@ -111,6 +153,8 @@ class SettingsController extends BaseSettingsController
      */
     public function actionPracticeSetup()
     {
+        $this->layout = '//dashboard';
+
         /** @var SettingsForm $model */
         $settings = \Yii::createObject(SettingsForm::className());
         $event = $this->getFormEvent($settings);
@@ -121,12 +165,16 @@ class SettingsController extends BaseSettingsController
         $clients->practice_id = $practice->engineer_id;
         $dataProvider = $clients->search(Yii::$app->request->queryParams);
         $query_pe = $practice ? \common\models\PracticeEngineers::find()->where(['practice_id' => $practice->engineer_id]) : null;
+        $query_pp = $practice ? \common\models\PracticePartners::find()->where(['practice_id' => $practice->engineer_id])->orWhere(['partner_id' => $practice->engineer_id]) : null;
 
         return $this->render('practice-setup', [
             'model' => $model,
             'practice' => $practice,
             'practiceEngineers' => new ActiveDataProvider([
                 'query' => $query_pe,
+            ]),
+            'practicePartners' => new ActiveDataProvider([
+                'query' => $query_pp,
             ]),
             'clients' => $clients,
             'dataProvider' => $dataProvider,
@@ -139,6 +187,8 @@ class SettingsController extends BaseSettingsController
      */
     public function actionPortfolioSetup()
     {
+        $this->layout = '//dashboard';
+
         /** @var SettingsForm $model */
         $settings = \Yii::createObject(SettingsForm::className());
         $event = $this->getFormEvent($settings);
@@ -158,6 +208,8 @@ class SettingsController extends BaseSettingsController
      */
     public function actionDocumentClient()
     {
+        $this->layout = '//dashboard';
+        
         /** @var SettingsForm $model */
         $settings = \Yii::createObject(SettingsForm::className());
         $event = $this->getFormEvent($settings);

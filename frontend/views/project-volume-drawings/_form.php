@@ -25,8 +25,6 @@ $model->print_title = ($model->print_title) ?: 1;
     'options' => ['enctype' => 'multipart/form-data'],
 ]); ?>
 
-<hr>
-<h3>Osnovni podaci</h3>
 
     <?= $form->field($model, 'project_volume_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\ProjectVolumes::find()->all(), 'id', 'name'),

@@ -9,12 +9,18 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
+use common\models\DynamicModel;
 
 /**
  * ProjectBuildingStoreysController implements the CRUD actions for ProjectBuildingStoreys model.
  */
 class ProjectBuildingStoreysController extends Controller
 {
+    public $layout = 'project';
+
     /**
      * @inheritdoc
      */
@@ -104,7 +110,7 @@ class ProjectBuildingStoreysController extends Controller
         if($parts_of_storey = Yii::$app->request->post('ProjectBuildingStoreys')){
             $model = $this->findModel($id);
             $this->generateParts($model, $parts_of_storey);
-            return $this->redirect(['/project-building-storeys/view', 'id' => $id]);
+            return $this->redirect(['/project-building/storeys', 'id' => $model->projectBuilding->id]);
         }
     }
 
@@ -151,7 +157,7 @@ class ProjectBuildingStoreysController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),            
             'projectBuildingStoreyPartRooms' => new ActiveDataProvider([
-                'query' => $query_cla->orderBy('project_building_storey_part_id ASC, CAST(mark AS INTEGER)')->groupBy(''),
+                'query' => $query_cla->orderBy('project_building_storey_part_id ASC, CAST(mark AS UNSIGNED)')->groupBy(''),
             ]),
         ]);
     }
@@ -186,16 +192,108 @@ class ProjectBuildingStoreysController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $modelsParts = [new \common\models\ProjectBuildingStoreyParts];
+        //$modelsRooms = [[new \common\models\ProjectBuildingStoreyPartRooms]];
+        //$modelsParts = $model->projectBuildingStoreyParts;
+        //$modelsRooms = [];
+        /*$oldRooms = [];
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if (!empty($modelsParts)) {
+            foreach ($modelsParts as $indexPart => $modelPart) {
+                $rooms = $modelPart->projectBuildingStoreyPartRooms;
+                $modelsRooms[$indexPart] = $rooms;
+                $oldRooms = ArrayHelper::merge(ArrayHelper::index($rooms, 'id'), $oldRooms);
+            }
+        }*/
+
+
+        if ($model->load(Yii::$app->request->post())) {
             if($model->projectBuilding->project->work=='adaptacija'){
+                $model->save();
                 return $this->redirect(['/project-building-storey-parts/view', 'id' => $model->projectBuildingStoreyParts[0]->id]);
             } else {
+
+
+
+                // reset
+                //$modelsRooms = [];
+
+                //$oldPartIDs = ArrayHelper::map($modelsParts, 'id', 'id');
+                //$modelsParts = DynamicModel::createMultiple(\common\models\ProjectBuildingStoreyParts::classname(), $modelsParts);
+                $modelsParts = DynamicModel::createMultiple(\common\models\ProjectBuildingStoreyParts::classname());
+                DynamicModel::loadMultiple($modelsParts, Yii::$app->request->post());
+                //$deletedPartsIDs = array_diff($oldPartIDs, array_filter(ArrayHelper::map($modelsParts, 'id', 'id')));
+
+                // validate person and houses models
+               // $valid = $model->validate();
+               // $valid = DynamicModel::validateMultiple($modelsParts) && $valid;
+
+               // $roomsIDs = [];
+                /*if (isset($_POST['ProjectBuildingStoreyPartRooms'][0][0])) {
+                    foreach ($_POST['ProjectBuildingStoreyPartRooms'] as $indexHouse => $rooms) {
+                        //$roomsIDs = ArrayHelper::merge($roomsIDs, array_filter(ArrayHelper::getColumn($rooms, 'id')));
+                        foreach ($rooms as $indexRoom => $room) {
+                            $data['ProjectBuildingStoreyPartRooms'] = $room;
+                            //$modelRoom = (isset($room['id']) && isset($oldRooms[$room['id']])) ? $oldRooms[$room['id']] : new \common\models\ProjectBuildingStoreyPartRooms;
+                            $modelRoom = new \common\models\ProjectBuildingStoreyPartRooms;
+                            $modelRoom->load($data);
+                            $modelsRooms[$indexHouse][$indexRoom] = $modelRoom;
+                            //$valid = $modelRoom->validate();
+                        }
+                    }
+                }
+*/
+                // $oldRoomsIDs = ArrayHelper::getColumn($oldRooms, 'id');
+                // $deletedRoomsIDs = array_diff($oldRoomsIDs, $roomsIDs);
+
+                /*if ($valid) {
+                    $transaction = Yii::$app->db->beginTransaction();
+                    try {
+                        if ($flag = $model->save(false)) {
+
+                            /*if (! empty($deletedRoomsIDs)) {
+                                \common\models\ProjectBuildingStoreyPartRooms::deleteAll(['id' => $deletedRoomsIDs]);
+                            }
+
+                            if (! empty($deletedPartsIDs)) {
+                                \common\models\ProjectBuildingStoreyParts::deleteAll(['id' => $deletedPartsIDs]);
+                            }*/
+                if ($model->save()){
+                    foreach ($modelsParts as $indexPart => $modelPart) {
+
+                        /*if ($flag === false) {
+                            break;
+                        }*/
+
+                        $modelPart->project_building_storey_id = $model->id;
+                        $modelPart->name = $modelPart->fullType;
+                        $modelPart->mode = $model->projectBuilding->mode;
+                        $modelPart->save();
+                        
+                    }
+                }
+                            
+                        /*}
+
+                        if ($flag) {
+                            $transaction->commit();
+                            return $this->redirect(['view', 'id' => $model->id]);
+                        } else {
+                            $transaction->rollBack();
+                        }
+                    } catch (Exception $e) {
+                        $transaction->rollBack();
+                    }
+                }*/
+
+
                 return $this->redirect(['/project-building-storeys/index', 'id' => $model->project_building_id]);
             }            
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'modelsParts' => (empty($modelsParts)) ? [new \common\models\ProjectBuildingStoreyParts] : $modelsParts,
+                'modelsRooms' => (empty($modelsRooms)) ? [[new \common\models\ProjectBuildingStoreyPartRooms]] : $modelsRooms
             ]);
         }
     }
@@ -373,7 +471,7 @@ class ProjectBuildingStoreysController extends Controller
             $new->name = strval(count($parts)+1);
             $new->save();
             $new->saveNewRoom();
-            return $this->redirect(['index', 'id' => $model->project_id]);
+            return $this->redirect(['index', 'id' => $model->projectBuilding->id]);
         }
 
         if($remove_part){
@@ -420,7 +518,7 @@ class ProjectBuildingStoreysController extends Controller
         }
         $model->delete();
 
-        return $this->redirect(['/project-building-storeys/index', 'id' => $model->project_building_id]);
+        return $this->redirect(['/project-building/storeys', 'id' => $model->project_building_id]);
     }
 
     /**
@@ -449,6 +547,22 @@ class ProjectBuildingStoreysController extends Controller
     protected function findPartById($id)
     {
         if (($model = \common\models\ProjectBuildingStoreyParts::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectBuildingStoreys model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectBuildingStoreys the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findRoomTypeById($id)
+    {
+        if (($model = \common\models\RoomTypes::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

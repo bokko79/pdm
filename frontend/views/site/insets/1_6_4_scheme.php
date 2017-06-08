@@ -6,9 +6,9 @@ use yii\helpers\Url;
 $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
 $formatter->nullDisplay = '--';
-$building = $model->projectBuilding;
+$building = $model->projectBuilding ? $model->projectBuilding : $model->projectExBuilding;
 ?>
-<?php foreach($model->projectBuildingDoorwin as $doorwin): ?>
+<?php foreach($building->projectBuildingDoorwin as $doorwin): ?>
 	
 	<table class="smallpadd" style="border:2px solid black !important;">
 		<tr>

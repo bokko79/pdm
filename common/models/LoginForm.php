@@ -18,7 +18,7 @@ class LoginForm extends DektriumLoginForm
         return [
             'username' => Yii::t('app', 'Korisničko ime'),
             'password' => Yii::t('app', 'Lozinka'),
-            'rememberMe' => Yii::t('app', 'Zapamti me na ovom računaru'),
+            'rememberMe' => Yii::t('app', 'Zapamti me na ovom uređaju'),
         ];
     }
     

@@ -35,11 +35,11 @@ use kartik\widgets\FileInput;
         ]) ?>
 
 
-    <?= $form->field($model, 'position')->dropDownList([ /*'direktor' => 'direktor',*/ 'zaposleni' => 'zaposleni', 'partner' => 'partner', /*'drugo' => 'drugo',*/ ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'position')->radioList([ /*'direktor' => 'direktor',*/ 'zaposleni' => 'Zaposleni', /*'partner' => 'Saradnik', 'drugo' => 'drugo',*/ ], ['prompt' => '']) ?>
 
-    <div class="row" style="margin:20px;">
-        <div class="col-md-offset-3">
-            <?= Html::submitButton($model->isNewRecord ? 'Dodaj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    <div class="row" style="margin:20px 0;">
+        <div class="col-md-offset-3 col-md-4">
+            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Sačuvaj izmene', ['class' => !$model->isNewRecord ? 'btn btn-success btn-block shadow' : 'btn btn-primary btn-block shadow']) ?>
         </div>        
     </div>
 

@@ -8,12 +8,15 @@ use common\models\ProjectLotSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * ProjectLotController implements the CRUD actions for ProjectLot model.
  */
 class ProjectLotController extends Controller
 {
+    public $layout = 'project';
+    
     /**
      * @inheritdoc
      */
@@ -26,6 +29,17 @@ class ProjectLotController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['update', 'location', 'view'],
+                'rules' => [
+                    [
+                        'actions' => ['update', 'location', 'view'],
+                        'allow' => true,
+                        'roles' => ['engineer'],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -35,32 +49,10 @@ class ProjectLotController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {
-        $this->layout = 'project';
-        
+    {        
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
-    }
-
-    /**
-     * Creates a new ProjectLot model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new ProjectLot();
-        if($p = Yii::$app->request->get('ProjectLot')){
-            $model->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
-        }
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->project_id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
     }
 
     /**
@@ -70,17 +62,25 @@ class ProjectLotController extends Controller
      * @return mixed
      */
     public function actionUpdate($id)
-    {
-        $this->layout = 'project';
-        
+    {        
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->project_id]);
+        $model->scenario = 'lot_setup';
+        // access control
+        if(\Yii::$app->user->can('updateOwnProject', ['project'=>$model->project])){
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                if(\Yii::$app->request->post('step_form')){
+                    $model->project->setup_status = 'lots';
+                    $model->project->save();
+                    return $this->redirect($model->project->setupRedirect);
+                }
+                return $this->refresh();
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            return $this->redirect([\Yii::$app->user->isGuest ? '/' : '/home']);
         }
     }
 
@@ -92,18 +92,37 @@ class ProjectLotController extends Controller
      */
     public function actionLocation($id)
     {
-        $this->layout = 'project';
+        $this->layout = 'maps';
 
         $lot = $this->findModel($id);
         $model = $lot->project;
         $location = $model->location;
-        if ($location->load(Yii::$app->request->post()) && $location->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+
+        // access control
+        if(\Yii::$app->user->can('updateOwnProject', ['project'=>$model])){
+            if ($location->load(Yii::$app->request->post())) {
+                if($location->locationLots){
+                    $ll = $location->locationLots[0];
+                    $ll->lot = $location->lot;
+                    $ll->save();
+                } 
+                if($location->save()) {
+                    if(\Yii::$app->request->post('step_form')){
+                        $model->setup_status = ($model->type=='presentation' ? 'building' : 'project_lot');;
+                        $model->save();
+                        return $this->redirect($model->setupRedirect);
+                    }
+                    //return $this->redirect(['view', 'id' => $model->id]);
+                    return $this->refresh();
+                }
+            } else {
+                return $this->render('location', [
+                    'model' => $model,
+                    'location' => $location,
+                ]);
+            }
         } else {
-            return $this->render('location', [
-                'model' => $model,
-                'location' => $location,
-            ]);
+            return $this->redirect([\Yii::$app->user->isGuest ? '/' : '/home']);
         }
     }
 

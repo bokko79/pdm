@@ -9,6 +9,10 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
+use common\models\DynamicModel;
 
 /**
  * ProjectBuildingStoreyPartsController implements the CRUD actions for ProjectBuildingStoreyParts model.
@@ -119,7 +123,7 @@ class ProjectBuildingStoreyPartsController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
             'projectBuildingStoreyPartRooms' => new ActiveDataProvider([
-                'query' => $query_cl->orderBy('mark'),
+                'query' => $query_cl->orderBy('CAST(mark AS UNSIGNED)'),
             ]),
             'roomTypes' => $roomTypes,
         ]);

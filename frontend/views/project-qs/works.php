@@ -10,24 +10,23 @@ use yii\bootstrap\Modal;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = c($work->name);
+
+$this->params['page_title'] = 'Predmer';
+$this->params['page_title_2'] = $this->title;
+
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Predmer i predračun radova projekta'), 'url' => ['index', 'ProjectQs[project_id]'=>$model->id]];
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['project'] = $model;
-?>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-3">
-            <?= $this->render('_menu', [
-                    'model' => $model,  
-                ]) ?>        
-        </div>
-        <div class="col-sm-9">
 
-          <div class="card_container record-full grid-item fadeInUp animated" id="">
+$this->params['project'] = $model;
+$projectQs->pagination->pageSize=200;
+?>
+
+
+          <div class="card_container record-full grid-item fadeInUp animated-not no-margin" id="">
             <div class="primary-context gray normal">
                 <div class="head"><i class="fa fa-file"></i> <?= Html::encode($this->title) ?> <i class="fa this-one fa-arrow-circle-right"></i>
-                <div class="action-area normal-case">
-                <?= Html::a('<i class="glyphicon glyphicon-plus"></i> Dodaj/izbaci poziciju', Url::to(), ['data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#work-modal'.$work->id.'_'.$model->id, 'class'=>'btn btn-success shadow']) ?>
+                <div class="subaction">
+                <?= Html::a('<i class="glyphicon glyphicon-plus"></i> Dodaj/izbaci poziciju', Url::to(['/project-qs/positions', 'id'=>$work->id, 'project'=>$model->id]), [/*'data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#work-modal'.$work->id.'_'.$model->id,*/ 'class'=>'btn btn-success shadow']) ?>
                     </div>
                 </div>
                 <div class="subhead">Delovi projektne tehničke dokumentacije.</div>
@@ -71,7 +70,7 @@ $this->params['project'] = $model;
                           }
                       ],
                       [
-                          'label'=>'Pojed. cena (€)',
+                          'label'=>'Cena (€)',
                           'format' => 'raw',
                           'hAlign'=>'right',
                           //'pageSummary'=>true,
@@ -113,9 +112,11 @@ $this->params['project'] = $model;
                       [
                           'class' => 'kartik\grid\ActionColumn',
                           'template' => '{delete}',
+                          'header' => '',
+                          'width'=>'30px',
                           'buttons' => [                              
                               'delete' => function ($url, $model, $key) {
-                                  return Html::a('<i class="fa fa-power-off"></i>', $url, ['class'=>'btn btn-danger btn-sm', 'data'=>['method'=>'post', 'confirm'=>'Da li ste sigurni da želite da obrišete poziciju? Proces ne može biti vraćen.']]);
+                                  return Html::a('<i class="fa fa-times"></i>', $url, ['class'=>'btn btn-danger btn-xs', 'data'=>['method'=>'post', 'confirm'=>'Da li ste sigurni da želite da obrišete poziciju? Proces ne može biti vraćen.']]);
                               },                
                           ],
                           'urlCreator' => function ($action, $model, $key, $index) {
@@ -158,9 +159,7 @@ $this->params['project'] = $model;
                   ?>
             </div>
           </div>
-        </div>
-    </div>
-</div>
+
 
 <?php
 Modal::begin([

@@ -70,7 +70,9 @@ class PracticesController extends Controller
         
         $model = $this->findModel($id);
         $query_pe = \common\models\PracticeEngineers::find()->where(['practice_id' => $id]);
+        $query_pp = \common\models\PracticePartners::find()->where(['practice_id' => $id])->orWhere(['partner_id' => $id]);
         $query = \common\models\Projects::find()->where('practice_id='. $id.' or control_practice_id='.$id);
+        $query_pr = \common\models\Practices::find();
 
         /* \Yii::$app->mailer->compose(['html' => '/user/mail/new_password', 'text' => '/user/mail/text/new_password'], ['user' => $model->engineer->user])
                 ->setFrom([\Yii::$app->params['supportEmail'] => 'Masterplan ARC d.o.o.'])
@@ -84,8 +86,16 @@ class PracticesController extends Controller
             'practiceEngineers' => new ActiveDataProvider([
                 'query' => $query_pe,
             ]),
+            'practicePartners' => new ActiveDataProvider([
+                'query' => $query_pp,
+            ]),
             'projects' => new ActiveDataProvider([
-                'query' => $query,
+                'query' => $query->limit(3),
+                'pagination' => false,
+            ]),
+            'practices' => new ActiveDataProvider([
+                'query' => $query_pr->orderBy(new \yii\db\Expression('rand()'))->limit(3),
+                'pagination' => false,
             ]),
         ]);
     }
@@ -107,6 +117,8 @@ class PracticesController extends Controller
             $model->location_id = $location->id;
             $model->avatarFile = UploadedFile::getInstance($model, 'avatarFile');
             $model->coverFile = UploadedFile::getInstance($model, 'coverFile');
+            $model->stampFile = UploadedFile::getInstance($model, 'stampFile');
+            $model->memoFile = UploadedFile::getInstance($model, 'memoFile');
             if($model->save()){
                 if ($model->avatarFile) {
                     $imageavatarFile = $model->uploadAvatar();
@@ -116,6 +128,16 @@ class PracticesController extends Controller
                 if ($model->coverFile) {
                     $imagecoverFile = $model->uploadÇover();
                     $model->cover_photo = $imagecoverFile;
+                    $model->save();
+                }
+                if ($model->stampFile) {
+                    $imagestampFile = $model->uploadStamp();
+                    $model->stamp = $imagestampFile;
+                    $model->save();
+                }
+                if ($model->memoFile) {
+                    $imagememoFile = $model->uploadMemo();
+                    $model->memo = $imagememoFile;
                     $model->save();
                 }
                 $practice_engineer = new \common\models\PracticeEngineers();
@@ -142,12 +164,16 @@ class PracticesController extends Controller
      */
     public function actionUpdate($id)
     {
+        $this->layout = '//dashboard';
+
         $model = $this->findModel($id);
         $location = $model->location;
         if(\Yii::$app->user->can('updateOwnPractice', ['practice_engineer'=>$model])){
             if ($model->load(Yii::$app->request->post()) and $location->load(Yii::$app->request->post()) and $location->save()) {
                 $model->avatarFile = UploadedFile::getInstance($model, 'avatarFile');
                 $model->coverFile = UploadedFile::getInstance($model, 'coverFile');
+                $model->stampFile = UploadedFile::getInstance($model, 'stampFile');
+                $model->memoFile = UploadedFile::getInstance($model, 'memoFile');
                 if($model->save()){
                     if ($model->avatarFile) {
                         $model->aFile ? unlink(\Yii::getAlias('images/profiles/'.$model->aFile->name)) : null;
@@ -160,7 +186,17 @@ class PracticesController extends Controller
                         $imagecoverFile = $model->uploadÇover();
                         $model->cover_photo = $imagecoverFile;
                         $model->save();
-                    }                    
+                    }
+                    if ($model->stampFile) {
+                        $imagestampFile = $model->uploadStamp();
+                        $model->stamp = $imagestampFile;
+                        $model->save();
+                    }
+                    if ($model->memoFile) {
+                        $imagememoFile = $model->uploadMemo();
+                        $model->memo = $imagememoFile;
+                        $model->save();
+                    }                   
                     return $this->redirect(['/user/settings/practice-setup']);
                 } 
             } else {

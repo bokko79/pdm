@@ -8,7 +8,7 @@ use common\widgets\Alert;
 use yii\bootstrap\Nav;
 
 ?>
-<div class="card_container record-full grid-item fadeInUp animated" id="">
+<div class="card_container record-full grid-item fadeInUp animated" id="location-lots">
     <div class="primary-context gray normal">
         <div class="head">Katastarske parcele
         </div>      

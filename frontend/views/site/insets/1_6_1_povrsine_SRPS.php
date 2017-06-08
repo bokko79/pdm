@@ -6,14 +6,9 @@ use yii\helpers\Url;
 $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
 $formatter->nullDisplay = '--';
-$building = $model->projectBuilding;
+$building = $model->projectBuilding ? $model->projectBuilding : $model->projectExBuilding;
 ?>
-<p>Tabelarno iskazivanje površina uz <?= $model->projectPhase ?> za <?= $building->name ?> <?= $building->spratnost ?>, ulica <?= $model->location->street ?> br. <?= $model->location->number ?>, <?= $model->location->city->town ?>, kat.parc.br.
-	<?php if($lots = $model->location->locationLots){
-		foreach($lots as $lot){
-			echo $lot->lot. ', ';
-		}
-	} ?> K.O <?= $model->location->county0->name ?></p>
+<p>Tabelarno iskazivanje površina uz <?= $model->projectPhase ?> za <?= $building->name ?> <?= $building->spratnost ?>, <?= $model->location->lotAddress ?></p>
 
 <h4>Tabela 1 – prikaz površina po GUP-u</h4>
 
@@ -29,7 +24,7 @@ $building = $model->projectBuilding;
 		<td>Zelenilo</td>
 		<td>Odnos stan/posl</td>
 	</tr>
-	<?php foreach($model->projectBuildingStoreys as $storey): ?>
+	<?php foreach($building->projectBuildingStoreys as $storey): ?>
 	<tr>
 		<td><?= $storey->name ?></td>
 		<td><?= $formatter->format($storey->gross_area, ['decimal',2]) ?></td>
@@ -81,7 +76,7 @@ $building = $model->projectBuilding;
 		<td>Bruto [m<sup>2</sup>]</td>
 		<td>Netto [m<sup>2</sup>]</td>
 	</tr>
-	<?php foreach($model->projectBuildingStoreys as $storey): ?>
+	<?php foreach($building->projectBuildingStoreys as $storey): ?>
 	<tr>
 		<td><?= $storey->name ?></td>
 		<td class="right"><?= $formatter->format($storey->gross_area, ['decimal',2]) ?></td>
@@ -203,7 +198,7 @@ $building = $model->projectBuilding;
 			<div style="width:300px; height: 0px; border-bottom: 1px solid #777;"></div>
 			<br>
 			<?= Html::img('@web/images/legal_files/licences/'.$volume->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
-			<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px; margin-top:10px;']) ?>
+			<?= $volume->engineer->EngSignature ?>
 		</td>
 	</tr>
 </table>

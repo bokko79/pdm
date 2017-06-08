@@ -6,16 +6,11 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Nav;
 
 $items = [];
-$items[] = ['label' => '<i class="fa fa-bars"></i> Index etaža ('.$model->state.')' , 'url' =>['/project-building-storeys/index', 'id'=>$model->id], 'linkOptions'=>['style'=>'font-weight:bold; font-size:13px;']];
-$items[] = '<li class="divider"></li>';
-$items[] = '<li class="dropdown-header">Etaže</li>';
+$items[] = ['label' => '<i class="fa fa-bars"></i> Index spratova ('.$model->state.')' , 'url' =>['/project-building-storeys/index', 'id'=>$model->id], 'linkOptions'=>['style'=>'font-weight:bold; font-size:13px;']];
 if($storeys = $model->projectBuildingStoreys){
     foreach($storeys as $storey){
         $subitems = [];
         if($parts = $storey->projectBuildingStoreyParts){
-            $subitems[] = ['label' => c($storey->name).'@'.$storey->level, 'url' =>['/project-building-storeys/view', 'id'=>$storey->id]];
-            $subitems[] = '<li class="divider"></li>';
-            $subitems[] = '<li class="dropdown-header">Jedinice/Celine</li>';
             $netCheck = false;
             foreach($parts as $part){
                 $subitems[] = ['label' => (($part->netArea==0) ? '<i class="fa fa-warning red"></i> ' : null).c($part->name). ' '.$part->mark.' ('. $part->netArea.' m<sup>2</sup>)', 'url' =>['/project-building-storey-parts/view', 'id'=>$part->id]];
@@ -32,10 +27,14 @@ if($storeys = $model->projectBuildingStoreys){
     }
 }
 ?>
+<div class="card_container record-full grid-item no-margin no-padding no-shadow" id="existing">
+    <div class="secondary-context no-padding">
 <?php
     echo Nav::widget([
-        'options'=>['class'=>'nav nav-pills nav-stacked', 'style'=>'z-index:10000; width:100%; text-align: right; text-transform: uppercase'],
+        'options'=>['class'=>'index-menu', 'style'=>''],
         'encodeLabels' => false,
         'items' => $items,
     ]);
 ?>
+    </div>
+</div>

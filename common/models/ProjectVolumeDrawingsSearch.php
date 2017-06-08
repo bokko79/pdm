@@ -71,6 +71,8 @@ class ProjectVolumeDrawingsSearch extends ProjectVolumeDrawings
             ->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'note', $this->note]);
 
+        $query->orderBy('number');
+
         return $dataProvider;
     }
 }

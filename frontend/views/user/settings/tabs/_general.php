@@ -10,9 +10,9 @@ use yii\bootstrap\Nav;
 
 ?>
 
-<div class="card_container record-full grid-item fadeInUp animated" id="">
-    <div class="primary-context gray normal">
-        <div class="head">Osnovni podaci</div>
+<div class="card_container record-full grid-item fadeInUp animatedno" id="">
+    <div class="primary-context normal">
+        <div class="head third">Osnovni podaci</div>
         
     </div>
     
@@ -39,6 +39,7 @@ use yii\bootstrap\Nav;
                     'account_no',
                     'bank',
                 ],
+                'options' => ['class'=>'table table-hover'],
             ]) ?>      
 
     </div>

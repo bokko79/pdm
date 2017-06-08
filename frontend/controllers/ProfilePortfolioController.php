@@ -14,6 +14,8 @@ use yii\filters\VerbFilter;
  */
 class ProfilePortfolioController extends Controller
 {
+    public $layout = 'dashboard';
+    
     /**
      * @inheritdoc
      */

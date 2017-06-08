@@ -10,31 +10,31 @@ use yii\helpers\ArrayHelper;
 <?php $form = kartik\widgets\ActiveForm::begin([
     'id' => 'form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
-    'fullSpan' => 7,      
-    'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
-    'options' => ['enctype' => 'multipart/form-data'],
+    'fullSpan' => 10,      
+    'formConfig' => ['labelSpan' => 4, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
+    'options' => ['enctype' => 'multipart/form-data', 'style'=>'margin-top:0px !important;'],
 ]); ?>
 
-    <?= $form->field($model, 'location_id')->widget(Select2::classname(), [
+    <?php /* $form->field($model, 'location_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Locations::find()->all(), 'id', 'county0.name'),
             'options' => ['placeholder' => 'Izaberite...'],
             'language' => 'sr-Latn',
             'changeOnReset' => false,   
             'disabled'=>true        
-        ]) ?>
+        ]) */ ?>
 
-    <?= $form->field($model, 'type')->dropDownList([ 'object' => 'Objekat', 'service' => 'Infrastruktura', 'access' => 'Pristup'], ['prompt' => '', 'disabled'=>true]) ?>
+    <?= $form->field($model, 'type')->dropDownList([ 'object' => 'Građevinska parcela', 'service' => 'Parcela instalacija', 'access' => 'Parcela pristupa'], ['prompt' => '', 'disabled'=>true]) ?>
 
     <?= $form->field($model, 'lot')->textInput(['maxlength' => true]) ?>
 
-    <div class="row" style="margin:20px;">
-        <div class="col-md-offset-3">
-            <?= Html::submitButton($model->isNewRecord ? 'Dodaj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-            <?php if(!$model->isNewRecord){
+    <div class="row" style="margin:20px 0;">
+        <div class="col-md-offset-4">
+            <?= Html::submitButton($model->isNewRecord ? 'Dodaj' : 'Sačuvaj izmene', ['class' => !$model->isNewRecord ? 'btn btn-success shadow' : 'btn btn-primary shadow']) ?>
+            <?php if(!$model->isNewRecord and (($model->type=='object' and count($model->location->locationLots)>1) or $model->type=='service' or $model->type=='access')){
                 echo Html::a(Yii::t('app', 'Obriši'), ['delete', 'id' => $model->id], [
-                    'class' => 'btn btn-danger',
+                    'class' => 'btn btn-danger shadow',
                     'data' => [
-                        'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                        'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete parcelu? Proces ne može biti vraćen.'),
                         'method' => 'post',
                     ],
                 ]);

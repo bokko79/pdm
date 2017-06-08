@@ -76,7 +76,8 @@ class EngineersController extends Controller
         $model = $this->findModel($id);
         $query_files = \common\models\LegalFiles::find()->where(['entity_id' => $id, 'entity' => 'engineer']);
         $query_lic = \common\models\EngineerLicences::find()->where(['engineer_id' => $id]);
-        $query = \common\models\Projects::find()->where(['engineer_id' => $id]);
+        $query = \common\models\Projects::find()->where(['engineer_id' => $id])->andWhere('visible=1 and status="active"');
+        $query_eng = \common\models\Engineers::find()->where([]);
 
         return $this->render('view', [
             'model' => $model,
@@ -88,6 +89,9 @@ class EngineersController extends Controller
             ]),
             'projects' => new ActiveDataProvider([
                 'query' => $query,
+            ]),
+            'engineers' => new ActiveDataProvider([
+                'query' => $query_eng->orderBy(new \yii\db\Expression('rand()'))->limit(7),
             ]),
         ]);
     }
@@ -121,26 +125,41 @@ class EngineersController extends Controller
      */
     public function actionUpdate($id)
     {
+        $this->layout = '//dashboard';
+        
         $model = $this->findModel($id);
         if(\Yii::$app->user->can('updateOwnEngineerProfile', ['engineer'=>$model])){
             if ($model->load(Yii::$app->request->post())) {
                 $model->avatarFile = UploadedFile::getInstance($model, 'avatarFile');
                 $model->coverFile = UploadedFile::getInstance($model, 'coverFile');
+                $model->signatureFile = UploadedFile::getInstance($model, 'signatureFile');
                 
                 if($model->save()){
+                    if ($model->signatureFile) {
+                        $model->signFile ? unlink(\Yii::getAlias('images/legal_files/signatures/'.$model->signFile->name)) : null;
+                        $filesgn = $model->signFile ?: null;
+                        $imagesignFile = $model->uploadSign();
+                        $model->signature = $imagesignFile;
+                        $model->save();
+                        $filesgn ? $filesgn->delete() : null;
+                    } 
                     if ($model->avatarFile) {
                         $model->aFile ? unlink(\Yii::getAlias('images/profiles/'.$model->aFile->name)) : null;
+                        $filea = $model->aFile ?: null;
                         $imageavatarFile = $model->uploadAvatar();
                         $model->avatar = $imageavatarFile;
                         $model->save();
+                        $filea ? $filea->delete() : null;
                     } 
                     if ($model->coverFile) {
                         $model->cFile ? unlink(\Yii::getAlias('images/profiles/'.$model->cFile->name)) : null;
+                        $filec = $model->cFile ?: null;
                         $imagecoverFile = $model->uploadÇover();
                         $model->cover_photo = $imagecoverFile;
                         $model->save();
+                        $filec ? $filec->delete() : null;
                     }                    
-                    return $this->redirect(['view', 'id' => $model->user_id]);
+                    return $this->redirect(['/home']);
                 }                    
             } else {
                 return $this->render('update', [

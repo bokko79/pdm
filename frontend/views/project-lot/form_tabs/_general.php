@@ -9,7 +9,7 @@ use yii\helpers\ArrayHelper;
 use kartik\checkbox\CheckboxX;
 ?>
 
-<h4>Osnovni podaci</h4>
+<h4>Opšti podaci parcele</h4>
 <hr>
     <?= $form->field($model, 'project_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(\common\models\Projects::find()->all(), 'id', 'name'),

@@ -2,10 +2,14 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\GridView;
 use yii\widgets\Pjax;
 use kartik\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
+use yii\widgets\DetailView;
+use kartik\grid\GridView;
+use kartik\editable\Editable;
+use yii\bootstrap\Modal;
+
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ProjectBuildingStoreysSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -15,167 +19,249 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Objekat'), 'url' => 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Površine jedinica objekta'), 'url' => ['/project-building-storey-parts/index', 'id'=>$model->project_id]];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Površine prostorija objekta'), 'url' => ['/project-building-storey-part-rooms/index', 'id'=>$model->project_id]];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['page_title'] = 'Objekat';
 $this->params['project'] = $model->project;
+$this->params['building'] = $model;
+
+$formatter = \Yii::$app->formatter;
+$formatter->locale = 'sr-Latn';
+$formatter->nullDisplay = '--';
 ?>
 
-<div class="table-responsive container">
-	<div class="row">		
+<div class="card_container record-full grid-item fadeInUp no-shadow no-margin animated-not no-float" id="">
+    <div class="primary-context normal aliceblue bottom-bordered">
+        <div class="head colos">
+            <div class="subaction">
+            	<?= Html::a('<i class="fa fa-plus fa-2x"></i>', null, ['class' => 'btn btn-link button_to_show_table']) ?>
+            	<?= Html::a('<i class="fa fa-bars fa-2x"></i>', Url::to(['/project-building-storey-parts/view', 'id'=>$model->projectBuildingStoreys[0]->projectBuildingStoreyParts[0]->id]), ['class' => 'btn btn-link']) ?>
+                <?= Html::a('<i class="fa fa-life-saver fa-2x"></i>', null, ['class' => 'btn btn-link button_to_show_secondary']) ?>
+            </div>
+            <i class="fa fa-cube"></i> Spratovi objekta <span class="fs_12">(<?= $model->state ?>)</span>
+         </div>
+        <div class="subhead">Upravljanje spratovima, jedinicama i prostorijama objekta objekta.</div>
+    </div>  
+    <div class="primary-context aliceblue bottom-bordered" style="display: none;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-5 text">
+                    <h5>Upravljanje dokumentima projekta</h5>
+                    <h6>Dodavanje dokumenta projekta.</h6>
+                    <p>Novi dokument projekta.</p>
+                    <h6>Podešavanje dokumenta projekta.</h6>
+                    <p>Podešavanje dokumenta projekta.</p>
+                    <h6>Uklanjanje dokumenta projekta.</h6>
+                    <p>Uklanjanje dokumenta projekta.</p>
+                </div>
+                <div class="col-sm-7">
+                    <p><iframe src="//www.youtube.com/embed/sDYVYgiGW3c" width="100%" height="314" allowfullscreen="allowfullscreen"></iframe></p>
+                </div>
+            </div>
+        </div>          
+    </div>
+</div>
+
+<div class="container-fluid full">
+	<div class="row hidden-table" style="display:none;">
 		<div class="col-sm-7">
-			<table class="table table-striped table-hover table-bordered">
-				<tr>
-					<td class="center">						
-						<?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Dodaj podrum'), ['/project-building/storeys', 'id' => $model->project_id, 'add_storey'=>'podrum'], [ 'class' => 'btn btn-primary', 'data' => ['method' => 'post',], 'style'=>'width:100%;']) ?>
-					</td>
-					<td>
-						<?php 
-							if($model->po){
-								foreach($model->po as $po){
-									echo Html::a($po->name ? c($po->name) : c($po->storey), Url::to(['/project-building-storeys/view', 'id'=>$po->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storeys/update', 'id'=>$po->id]), ['class' => 'btn btn-success btn-sm']). ' ' . ((!$po->projectBuildingStoreyParts) ? Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'remove_storey'=>$po->id]), ['class' => 'btn btn-danger btn-sm', 'data' => [
-						                'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu. Brisanjem etaže, obrisaćete i njene jedinice i prostorije, a proces ne može biti povraćen.'),
-						            ],]) : '<span class="hint">Podrum ne može biti obrisan jer sadrži jedinice/prostorije.</span>'). '<br><br>';
-								}								 
-							} else {
-									echo '<span class="hint">Objekat nema podrum.</span>';
-							}  ?>
-					</td>
-				</tr>
-				<tr>
-					<td class="center">
-						<?= (!$model->s) ? Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Dodaj suteren'), ['/project-building/storeys', 'id' => $model->project_id, 'add_storey'=>'suteren'], [ 'class' => 'btn btn-primary', 'data' => ['method' => 'post',], 'style'=>'width:100%;']) : Html::button(Yii::t('app', 'Suteren'), [ 'class' => 'btn btn-default', 'disabled' => 'disabled', 'style'=>'width:100%;']); ?>
-					</td>
-					<td>
-						<?= ($model->s) ? Html::a($model->s->name ? c($model->s->name) : c($model->s->storey), Url::to(['/project-building-storeys/view', 'id'=>$model->s->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storeys/update', 'id'=>$model->s->id]), ['class' => 'btn btn-success btn-sm']). ' ' .((!$model->s->projectBuildingStoreyParts) ? Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'remove_storey'=>$model->s->id]), ['class' => 'btn btn-danger btn-sm', 'data' => [
-                'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu. Brisanjem etaže, obrisaćete i njene jedinice i prostorije, a proces ne može biti povraćen.'),
-            ],]) : '<span class="hint">Suteren ne može biti obrisan jer sadrži jedinice/prostorije.</span>') : '<span class="hint">Objekat nema suteren.</span>' ?>
-					</td>
-				</tr>
-
-				<tr>
-					<td class="center">
-						<?= Html::button(Yii::t('app', 'Prizemlje'), [ 'class' => 'btn btn-default', 'disabled' => 'disabled', 'style'=>'width:100%;']); ?>
-					</td>
-					<td>
-						<?= Html::a('Prizemlje', Url::to(['/project-building-storeys/view', 'id'=>$model->pr->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storeys/update', 'id'=>$model->pr->id]), ['class' => 'btn btn-success btn-sm']) ?>
-					</td>
-				</tr>
-				<tr>
-					<td class="center">
-						<?= (!$model->g) ? Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Dodaj galeriju'), ['/project-building/storeys', 'id' => $model->project_id, 'add_storey'=>'galerija'], [ 'class' => 'btn btn-primary', 'data' => ['method' => 'post',], 'style'=>'width:100%;']) : Html::button(Yii::t('app', 'Tavan'), [ 'class' => 'btn btn-default', 'disabled' => 'disabled', 'style'=>'width:100%;']); ?>
-					</td>
-					<td>
-						<?= ($model->g) ? Html::a($model->g->name ? c($model->g->name) : c($model->g->storey), Url::to(['/project-building-storeys/view', 'id'=>$model->g->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storeys/update', 'id'=>$model->g->id]), ['class' => 'btn btn-success btn-sm']). ' ' .((!$model->g->projectBuildingStoreyParts) ? Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'remove_storey'=>$model->g->id]), ['class' => 'btn btn-danger btn-sm', 'data' => [
-                'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu. Brisanjem etaže, obrisaćete i njene jedinice i prostorije, a proces ne može biti povraćen.'),
-            ],]) : '<span class="hint">Galerija ne može biti obrisana jer sadrži jedinice/prostorije.</span>') : '<span class="hint">Objekat nema galeriju.</span>' ?>
-					</td>
-				</tr>
-				<tr>
-					<td class="center">						
-						<?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Dodaj sprat'), ['/project-building/storeys', 'id' => $model->project_id, 'add_storey'=>'sprat'], [ 'class' => 'btn btn-primary', 'data' => ['method' => 'post',], 'style'=>'width:100%;']) ?>
-					</td>
-					<td>
-						<?php 
-							if($model->sp){
-								foreach($model->sp as $sp){
-									$model->sameStorey = $sp->same_as_id;
-									if(!$sp->same_as_id){									
-										echo Html::a($sp->name ? c($sp->name) : c($sp->storey), Url::to(['/project-building-storeys/view', 'id'=>$sp->id]), ['class' => 'btn btn-default']). ' '.Html::a('<i class="fa fa-copy"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'copy_storey'=>$sp->id]), ['class' => 'btn btn-info btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storeys/update', 'id'=>$sp->id]), ['class' => 'btn btn-success btn-sm']). ' ' ./*((!$sp->projectBuildingStoreyParts) ? */Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'remove_storey'=>$sp->id]), ['class' => 'btn btn-danger btn-sm', 'style'=>'float:right', 'data' => ['confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu. Brisanjem etaže, obrisaćete i njene jedinice i prostorije, a proces ne može biti povraćen.'),],])/* : '<span class="hint">Sprat ne može biti obrisan jer sadrži jedinice/prostorije.</span>')*/ . '<br><br>'; 
-									} else {
-										echo Html::a($sp->name ? c($sp->name) : c($sp->storey), Url::to(['/project-building-storeys/view', 'id'=>$sp->id]), ['class' => 'btn btn-default']);
-									}
-									
-									if(!$sp->copies){ // ne moze da se bira ako je već kopija neke etaže
-										echo '<small>...isti kao...</small>';
-										$form = kartik\widgets\ActiveForm::begin([
-										    'id' => 'form-horizontal',
-										    'type' => ActiveForm::TYPE_INLINE,
-										    'options' => ['style' => 'display:inline'],
-										]);
-
-										    echo $form->field($model, 'sameStorey', ['options'=>['style'=>'width:40%; display:inline']])->dropDownList(					            ArrayHelper::map($sp->otherUniqueStoreysOfBuilding, 'id', 'name'),
-										            ['prompt'=>'', 'style'=>'width:40%']    // options
-										        );
-										    echo $form->field($model, 'copiedStorey')->hiddenInput(['value'=> $sp->id])->label(false);
-										    echo Html::submitButton('<i class="fa fa-save"></i>', ['class' => 'btn btn-default']);
-									    ActiveForm::end();
-									}									
-
-								    echo '<hr>';
-								}								 
-							} else {
-									echo '<span class="hint">Objekat nema sprat.</span>';
-							}  ?>
-					</td>
-				</tr>
-				<tr>
-					<td class="center">
-						
-						<?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Dodaj povučeni sprat'), ['/project-building/storeys', 'id' => $model->project_id, 'add_storey'=>'povucenisprat'], [ 'class' => 'btn btn-primary', 'data' => ['method' => 'post',], 'style'=>'width:100%;']) ?>
-					</td>
-					<td>
-						<?php 
-							if($model->ps){
-								foreach($model->ps as $ps){
-									echo Html::a($ps->name ? c($ps->name) : c($ps->storey), Url::to(['/project-building-storeys/view', 'id'=>$ps->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storeys/update', 'id'=>$ps->id]), ['class' => 'btn btn-success btn-sm']). ' ' .((!$ps->projectBuildingStoreyParts) ? Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'remove_storey'=>$ps->id]), ['class' => 'btn btn-danger btn-sm', 'data' => [
-                'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu. Brisanjem etaže, obrisaćete i njene jedinice i prostorije, a proces ne može biti povraćen.'),
-            ],]) : '<span class="hint">Povučeni sprat ne može biti obrisan jer sadrži jedinice/prostorije.</span>') . '<br><br>';
-								}								 
-							} else {
-									echo '<span class="hint">Objekat nema povučeni sprat.</span>';
-							}  ?>
-					</td>
-				</tr>
-				<tr>
-					<td class="center">
-						
-						<?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Dodaj mansardu'), ['/project-building/storeys', 'id' => $model->project_id, 'add_storey'=>'mansarda'], [ 'class' => 'btn btn-primary', 'data' => ['method' => 'post',], 'style'=>'width:100%;']) ?>
-					</td>
-					<td>
-						<?php 
-							if($model->m){
-								foreach($model->m as $m){
-									echo Html::a($m->name ? c($m->name) : c($m->storey), Url::to(['/project-building-storeys/view', 'id'=>$m->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storeys/update', 'id'=>$m->id]), ['class' => 'btn btn-success btn-sm']). ' ' .((!$m->projectBuildingStoreyParts) ? Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'remove_storey'=>$m->id]), ['class' => 'btn btn-danger btn-sm', 'data' => [
-                'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu. Brisanjem etaže, obrisaćete i njene jedinice i prostorije, a proces ne može biti povraćen.'),
-            ],]) : '<span class="hint">Mansarda ne može biti obrisana jer sadrži jedinice/prostorije.</span>') . '<br><br>';
-								}								 
-							} else {
-									echo '<span class="hint">Objekat nema mansardu.</span>';
-							}  ?>
-					</td>
-				</tr>
-				<tr>
-					<td class="center">
-						
-						<?= Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Dodaj potkrovlje'), ['/project-building/storeys', 'id' => $model->project_id, 'add_storey'=>'potkrovlje'], [ 'class' => 'btn btn-primary', 'data' => ['method' => 'post',], 'style'=>'width:100%;']) ?>
-					</td>
-					<td>
-						<?php 
-							if($model->pk){
-								foreach($model->pk as $pk){
-									echo Html::a($pk->name ? c($pk->name) : c($pk->storey), Url::to(['/project-building-storeys/view', 'id'=>$pk->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storeys/update', 'id'=>$pk->id]), ['class' => 'btn btn-success btn-sm']). ' ' .((!$pk->projectBuildingStoreyParts) ? Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'remove_storey'=>$pk->id]), ['class' => 'btn btn-danger btn-sm', 'data' => [
-                'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu. Brisanjem etaže, obrisaćete i njene jedinice i prostorije, a proces ne može biti povraćen.'),
-            ],]) : '<span class="hint">Potkrovlje ne može biti obrisano jer sadrži jedinice/prostorije.</span>'). '<br><br>';
-								}								 
-							} else {
-									echo '<span class="hint">Objekat nema potkrovlje.</span>';
-							}  ?>
-					</td>
-				</tr>
-				<tr>
-					<td class="center" style="width: 30%;">
-						<?= (!$model->t) ? Html::a(Yii::t('app', '<i class="fa fa-plus-circle"></i> Dodaj tavan'), ['/project-building/storeys', 'id' => $model->project_id, 'add_storey'=>'tavan'], [ 'class' => 'btn btn-primary', 'data' => ['method' => 'post',], 'style'=>'width:100%;']) : Html::button(Yii::t('app', 'Tavan'), [ 'class' => 'btn btn-default', 'disabled' => 'disabled', 'style'=>'width:100%;']); ?>
-					</td>
-					<td>
-						<?= ($model->t) ? Html::a($model->t->name ? c($model->t->name) : c($model->t->storey), Url::to(['/project-building-storeys/view', 'id'=>$model->t->id]), ['class' => 'btn btn-default btn-sm']). ' '.Html::a('<i class="fa fa-wrench"></i>', Url::to(['/project-building-storeys/update', 'id'=>$model->t->id]), ['class' => 'btn btn-success btn-sm']). ' ' .((!$model->t->projectBuildingStoreyParts) ? Html::a('<i class="fa fa-power-off"></i>', Url::to(['/project-building/storeys', 'id' => $model->project_id, 'remove_storey'=>$model->t->id]), ['class' => 'btn btn-danger btn-sm', 'data' => [
-                'confirm' => Yii::t('app', 'Da li ste sigurni da želite da obrišete celu etažu. Brisanjem etaže, obrisaćete i njene jedinice i prostorije, a proces ne može biti povraćen.'),
-            ],]) : '<span class="hint">Tavan ne može biti obrisan jer sadrži jedinice/prostorije.</span>') : '<span class="hint">Objekat nema tavan.</span>' ?>
-					</td>
-				</tr>
-			</table>
+			<h3 class="right">Dodaj novi sprat</h3>
 		</div>
 		<div class="col-sm-5">
-			<h3 class="hint">Uputstvo</h3>
-			<p class="hint">Kreator etaža.</p>
+			<table class="table table hover">
+					<tr><td class="center"><?= Html::a(Yii::t('app', '<i class="fa fa-plus fa-lg"></i> Podrum'), ['/project-building/storeys', 'id' => $model->id, 'add_storey'=>'podrum'], [ 'class' => 'btn btn-default btn-block', 'data' => ['method' => 'post',]]) ?></td></tr>
+					<?php if(!$model->s): ?><tr><td class="center"><?= Html::a(Yii::t('app', '<i class="fa fa-plus fa-lg"></i> Suteren'), ['/project-building/storeys', 'id' => $model->id, 'add_storey'=>'suteren'], [ 'class' => 'btn btn-default btn-block', 'data' => ['method' => 'post',]]); ?></td></tr><?php endif; ?>
+					<?php if(!$model->g): ?><tr><td class="center"><?= Html::a(Yii::t('app', '<i class="fa fa-plus fa-lg"></i> Galerija'), ['/project-building/storeys', 'id' => $model->id, 'add_storey'=>'galerija'], [ 'class' => 'btn btn-default btn-block', 'data' => ['method' => 'post',]]); ?></td></tr><?php endif; ?>
+					<tr><td class="center"><?= Html::a(Yii::t('app', '<i class="fa fa-plus fa-lg"></i> Sprat'), ['/project-building/storeys', 'id' => $model->id, 'add_storey'=>'sprat'], [ 'class' => 'btn btn-default btn-block', 'data' => ['method' => 'post',]]) ?></td></tr>
+					<tr><td class="center"><?= Html::a(Yii::t('app', '<i class="fa fa-plus fa-lg"></i> Povučeni sprat'), ['/project-building/storeys', 'id' => $model->id, 'add_storey'=>'povucenisprat'], [ 'class' => 'btn btn-default btn-block', 'data' => ['method' => 'post',]]) ?></td></tr>
+					<tr><td class="center"><?= Html::a(Yii::t('app', '<i class="fa fa-plus fa-lg"></i> Mansarda'), ['/project-building/storeys', 'id' => $model->id, 'add_storey'=>'mansarda'], [ 'class' => 'btn btn-default btn-block', 'data' => ['method' => 'post',]]) ?></td></tr>
+					<tr><td class="center"><?= Html::a(Yii::t('app', '<i class="fa fa-plus fa-lg"></i> Potkrovlje'), ['/project-building/storeys', 'id' => $model->id, 'add_storey'=>'potkrovlje'], [ 'class' => 'btn btn-default btn-block', 'data' => ['method' => 'post',]]) ?></td></tr>
+					<?php if(!$model->t): ?><tr><td class="center" style="width: 30%;"><?= Html::a(Yii::t('app', '<i class="fa fa-plus fa-lg"></i> Tavan'), ['/project-building/storeys', 'id' => $model->id, 'add_storey'=>'tavan'], [ 'class' => 'btn btn-default btn-block', 'data' => ['method' => 'post',]]); ?></td></tr><?php endif; ?>
+			</table>
 		</div>
+		
 	</div>
-			
+	<div class="row">
+
+			<?php
+				$gridColumns = [
+                      //['class' => 'kartik\grid\SerialColumn'],
+					
+					[
+					    'class'=>'kartik\grid\ExpandRowColumn',
+					    'label'=> false,
+					    'width'=>'50px',
+					    'value'=>function ($model, $key, $index, $column) {
+					        return GridView::ROW_COLLAPSED;
+					    },
+					    'detail'=>function ($model, $key, $index, $column) {
+					        return Yii::$app->controller->renderPartial('../project-building-storeys/_part_list', ['model'=>$model]);
+					    },
+					    'expandOneOnly'=>true,
+					],
+					[
+						'label'=> false,
+						'format' => 'raw',
+						'hAlign'=>'center',
+						'width'=>'40px',
+						'value'=>function ($data) {
+							return '<span class="fs_20 bold">'.$data->mark.' '.($data->readyCompletely() ? '<i class="fa fa-check green fs_11"></i>' : '<i class="fa fa-warning fs_11 red"></i>').'</span>';
+						},
+					],
+					[
+						'label'=> false,
+						'format' => 'raw',
+						'hAlign'=>'center',
+						'width'=>'15%',
+						'value'=>function ($data) {
+							return '<span class="fs_20 bold">'.($data->level>0 ? '+' : ($data->level==0 ? '&plusmn;' : '')) . \Yii::$app->formatter->format($data->level, ['decimal',2]) . '</span><br><span class="fs_11">aps.' . ($data->absoluteLevel>0 ? '+' : ($data->absoluteLevel==0 ? '&plusmn;' : '')) . \Yii::$app->formatter->format($data->absoluteLevel, ['decimal',2]).'</span>';
+						},
+					],
+					[
+						'label'=> false,
+						'format' => 'raw',
+						//'width'=>'15%',
+						'value'=>function ($data) {
+							return '<span class="fs_20 bold '.($data->sameAs ? 'gray-color' : '').'">'.c($data->name) . '</span>'.($data->sameAs ? '<br><span class="fs_11 hint"> isti kao ' . $data->sameAs->name.'</span>' : null);
+						},
+					],
+					/*[
+						'class'=>'kartik\grid\EditableColumn',
+						'label'=> false,
+						'attribute'=>'name',
+						'noWrap' => false,
+						'contentOptions' => [
+							'style'=>'max-width:250px; overflow: hidden; word-wrap: break-word;',
+							'class' => 'fs_20 bold',
+						],
+						'readonly'=>function($model, $key, $index, $widget) {
+					        return ($model->storey!='sprat'); 
+					    },
+					    'value'=>function ($data) {
+							return c($data->name);
+						},
+						'editableOptions'=> function ($model, $key, $index) {
+							return [
+								'header'=>'Naziv',
+								//'inputType'=>\kartik\editable\Editable::INPUT_TEXTAREA,
+								//'size'=>'lg',
+								'placement' => 'top',
+						        'displayValue' => '<span class="fs_20 bold">' . c($model->name) . '</span>',
+							];
+						}
+					],*/
+					[
+						'class'=>'kartik\grid\EditableColumn',
+						'attribute'=>'height',
+						'label'=> 'Spratna h [m]',
+						'hAlign'=>'right',
+						'width'=>'15%',
+						'contentOptions' => ['class' => 'fs_16 bold gray-color'],
+						'readonly'=>function($model, $key, $index, $widget) {
+					        return ($model->same_as_id!=null); 
+					    },
+					    'value'=>function ($data) {
+							return \Yii::$app->formatter->format($data->height, ['decimal',2]);
+						},
+						'editableOptions'=> function ($model, $key, $index) {
+							return [
+								'header'=>'Spratna visina [m]',
+								'size'=>'',
+								'placement' => 'top',
+								'displayValue' => '<span class="fs_16 bold">' . \Yii::$app->formatter->format($model->height, ['decimal',2]) . '</span>',              
+							];
+						}
+					],
+					[
+						'class'=>'kartik\grid\EditableColumn',
+						'attribute'=>'gross_area',
+						'label'=> 'Bruto P',
+						'hAlign'=>'right',
+						'width'=>'15%',
+						'contentOptions' => ['class' => 'fs_16 bold gray-color'],
+						'readonly'=>function($model, $key, $index, $widget) {
+					        return ($model->same_as_id!=null); 
+					    },
+					    'value'=>function ($data) {
+							return \Yii::$app->formatter->format($data->gross_area, ['decimal',2]);
+						},
+						'editableOptions'=> function ($model, $key, $index) {
+							return [
+								'header'=>'Bruto površina [m<sup>2</sup>]',
+								'size'=>'',
+								'placement' => 'top', 
+								'displayValue' => '<span class="fs_16 bold">' . \Yii::$app->formatter->format($model->gross_area, ['decimal',2]) . '</span>',              
+							];
+						}
+					],  
+					[
+						'class' => 'kartik\grid\ActionColumn',
+						'template' => '{generateUnits}{delete}',
+						'header' => '',
+						//'width'=>'30px',
+						'buttons' => [ 
+							'generateUnits' => function ($url, $model, $key) {
+								return $model->readyForUnits() ? Html::a('<i class="fa fa-cubes fa-lg"></i>', $url, ['class'=>'btn btn-link btn-xs', 'data-toggle'=>'modal', 'data-backdrop'=>false, 'data-target'=>'#init-storey-parts-modal'.$model->id,]) : null;
+							},                             
+							'copy' => function ($url, $model, $key) {
+								return $model->storey!='sprat' ? '' : Html::a('<i class="fa fa-copy fa-lg"></i>', $url, ['class'=>'btn btn-link btn-xs', 'data'=>['method'=>'post', 'confirm'=>'Kopirajte sprat.']]);
+							},
+							'delete' => function ($url, $model, $key) {
+								return $model->deletable() ? '' : Html::a('<i class="fa fa-times fa-lg"></i>', $url, ['class'=>'btn btn-link btn-xs', 'data'=>['method'=>'post', 'confirm'=>'Da li ste sigurni da želite da obrišete sprat? Proces ne može biti vraćen.']]);
+							},                
+						],
+						'urlCreator' => function ($action, $model, $key, $index) {
+
+							if ($action === 'delete') {
+								return ['/project-building-storeys/delete', 'id'=>$model->id];
+							}
+							if ($action === 'copy') {
+								return ['/project-building/storeys', 'id' => $model->project_building_id, 'copy_storey'=>$model->id];
+							}
+
+						},
+					],
+				];
+				echo GridView::widget([
+					'id' => 'grid-storeys',
+					'dataProvider'=>$spratovi,
+					'columns'=>$gridColumns,
+					'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
+
+					'pjax'=>true, // pjax is set to always true for this demo
+					// set your toolbar
+
+					'striped'=>false,
+					'bordered'=>false,
+					// 'condensed'=>true,
+					'responsive'=>true,
+					'hover'=>true,
+					'showPageSummary'=>false,
+					'rowOptions' => function ($model, $index, $widget, $grid){
+						return ($model->storey=='prizemlje') ? ['class' => GridView::TYPE_SUCCESS] : null;
+				    },			
+				]);
+			?>
+			<?php if(($model->project->setup_status=='storeys_ex' or $model->project->setup_status=='storeys_new') and $model->ready()): ?>
+              <div class="card_container record-full grid-item no-margin no-padding no-shadow">
+                <div class="primary-context bordered text aliceblue">
+                  <p>Kada završite podešavanje spratova objekta, pređite na sledeći korak.</p>
+                  <?php $form = kartik\widgets\ActiveForm::begin([
+                      'id' => 'step-form-volumes',
+                      'type' => ActiveForm::TYPE_HORIZONTAL,
+                      'fullSpan' => 10,      
+                      'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
+                      'options' => ['enctype' => 'multipart/form-data'],
+                  ]); ?>
+                    <div class="row" style="margin:50px 0 0;">                
+                      <div class="col-md-12">                            
+                        <?= Html::submitButton('Sledeći korak <i class="fa fa-arrow-circle-right"></i>', ['class' => 'btn btn-success shadow btn-block btn-lg', 'name' => 'step_form', 'value' => 'next_step']) ?>
+                      </div>            
+                    </div>
+                  <?php ActiveForm::end(); ?>
+                </div>
+              </div>
+
+            <?php endif; ?>
+
+	</div>			
 </div>
+

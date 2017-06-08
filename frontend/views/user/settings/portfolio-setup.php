@@ -23,7 +23,9 @@ use kartik\tabs\TabsX;
  */
 
 $this->title = Yii::t('user', 'Moj portfolio');
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = $this->title;
+
+$this->params['page_title'] = 'Inženjer';
 
 $items = [
         [
@@ -66,16 +68,12 @@ $items = [
     ];
 ?>
 
-<?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
 
-<div class="row">
-    <div class="col-md-3" style="z-index: 1">
-        <?= $this->render('_menu') ?>
-    </div>
-    <div class="col-md-9">
-        <div class="card_container record-full grid-item fadeInUp no-shadow transparent no-margin animated" id="">
-            <div class="primary-context gray normal">
-                <div class="head colos thin"><?= Html::encode($this->title) ?>
+<div class="container-fluid full">
+    <div class="row">
+        <div class="card_container record-full grid-item fadeInUp no-shadow transparent no-margin animated-not" id="">
+            <div class="primary-context  normal">
+                <div class="head colos"><?= Html::encode($this->title) ?>
                 
                 </div>
                 

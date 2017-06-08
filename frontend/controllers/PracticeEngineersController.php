@@ -14,6 +14,8 @@ use yii\filters\VerbFilter;
  */
 class PracticeEngineersController extends Controller
 {
+    public $layout = 'dashboard';
+
     /**
      * @inheritdoc
      */
@@ -35,13 +37,21 @@ class PracticeEngineersController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new PracticeEngineersSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if($id = Yii::$app->request->get('id')){
+            $practice = $id ? $this->findPracticeById($id) : null;
+        }
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        if($practice){
+            if($practice->practiceEngineers){
+                return $this->redirect(['update', 'id' => $practice->practiceEngineers[0]->id]);
+            } else {
+                return $this->render('index', [
+                    'practice'=>$practice,
+                ]);
+            } 
+        } else {
+            return $this->redirect(['/home']);
+        }
     }
 
     /**
@@ -67,12 +77,31 @@ class PracticeEngineersController extends Controller
         if($pe = Yii::$app->request->get('PracticeEngineersSearch')){
             $model->practice_id = !empty($pe['practice_id']) ? $pe['practice_id'] : null;
             $model->engineer_id = !empty($pe['engineer_id']) ? $pe['engineer_id'] : null;
-            $model->position = !empty($pe['position']) ? $pe['position'] : null;
+            $model->position = !empty($pe['position']) ? $pe['position'] : 'zaposleni';
             $model->status = !empty($pe['status']) ? $pe['status'] : null;
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            if(Yii::$app->user->id == $model->practice_id){
+                // status i email inženjeru
+                $model->status = 'invited';
+                $model->position = 'zaposleni';
+                $model->save();
+                \Yii::$app->mailer->compose(['html' => '/user/mail/to_join'], ['model'=>$model, 'email'=>$model->engineer->email])
+                    ->setFrom([\Yii::$app->params['supportEmail'] => 'Masterplan ARC d.o.o.'])
+                    ->setTo($model->engineer->email)
+                    ->setSubject($model->practice->name. ': Poziv na učlanjenje na Masterplan.rs')
+                    ->send();
+            } elseif(Yii::$app->user->id == $model->engineer_id) {
+                $model->status = 'to_join';
+                $model->save();
+                \Yii::$app->mailer->compose(['html' => '/user/mail/invited'], ['model'=>$model, 'email'=>$model->practice->email])
+                    ->setFrom([\Yii::$app->params['supportEmail'] => 'Masterplan ARC d.o.o.'])
+                    ->setTo($model->practice->email)
+                    ->setSubject($model->engineer->name. ': Poziv na učlanjenje u Vaše preduzeće na Masterplan.rs')
+                    ->send();
+            }            
+            return $this->redirect(['/user/settings/practice-setup', '#'=>'w8-tab1']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -91,12 +120,33 @@ class PracticeEngineersController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/user/settings/practice-setup', '#'=>'w8-tab1']);
         } else {
             return $this->render('update', [
                 'model' => $model,
             ]);
         }
+    }
+
+    /**
+     * Updates an existing PracticeEngineers model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionConfirm($id)
+    {
+        if ($model = $this->findModel($id)) {
+            $model->status = 'joined';
+            $model->save();
+            /*\Yii::$app->mailer->compose(['html' => '/user/mail/membership_confirm'], ['model'=>$model, 'email'=>$model->engineer->email])
+                ->setFrom([\Yii::$app->params['supportEmail'] => 'Masterplan ARC d.o.o.'])
+                ->setTo([$model->engineer->email, $model->practice->email])
+                ->setSubject('Potvrda članstva na Masterplan.rs')
+                ->send();*/
+            return $this->redirect(['/home']);
+        }
+        return $this->redirect(['/']);
     }
 
     /**
@@ -109,7 +159,7 @@ class PracticeEngineersController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/user/settings/practice-setup', '#'=>'w8-tab1']);
     }
 
     /**
@@ -122,6 +172,22 @@ class PracticeEngineersController extends Controller
     protected function findModel($id)
     {
         if (($model = PracticeEngineers::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the PracticeEngineers model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return PracticeEngineers the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findPracticeById($id)
+    {
+        if (($model = \common\models\Practices::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

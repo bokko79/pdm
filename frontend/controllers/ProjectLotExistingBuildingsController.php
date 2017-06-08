@@ -8,12 +8,15 @@ use common\models\ProjectLotExistingBuildingsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * ProjectLotExistingBuildingsController implements the CRUD actions for ProjectLotExistingBuildings model.
  */
 class ProjectLotExistingBuildingsController extends Controller
 {
+    public $layout = 'project';
+    
     /**
      * @inheritdoc
      */
@@ -26,8 +29,42 @@ class ProjectLotExistingBuildingsController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['update', 'create'],
+                'rules' => [
+                    [
+                        'actions' => ['update', 'create'],
+                        'allow' => true,
+                        'roles' => ['engineer'],
+                    ],
+                ],
+            ],
         ];
     }
+
+    /**
+     * Creates a new ProjectLotExistingBuildings model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        if($p = Yii::$app->request->get('id')){
+            $project = $p ? $this->findProjectById($p) : null;
+        }
+
+        if($project){
+            if($project->projectLotExistingBuildings){
+                return $this->redirect(['update', 'id' => $project->projectLotExistingBuildings[0]->id]);
+            } else {
+                return $this->redirect(['create', 'ProjectLotExistingBuildings[project_id]' => $project->id]);
+            } 
+        } else {
+            return $this->redirect(['/home']);
+        }
+    }
+
 
     /**
      * Creates a new ProjectLotExistingBuildings model.
@@ -41,12 +78,21 @@ class ProjectLotExistingBuildingsController extends Controller
             $model->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/project-lot/view', 'id' => $model->project_id]);
+        // access control
+        if(\Yii::$app->user->can('viewProject', ['project'=>$model->project])){
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->refresh();
+            } elseif(\Yii::$app->request->post('step_form')){
+                $model->project->setup_status = 'future_devs';
+                $model->project->save();
+                return $this->redirect($model->project->setupRedirect);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            throw new \yii\web\ForbiddenHttpException('Nemate prava da pristupite ovoj stranici.');
         }
     }
 
@@ -60,12 +106,21 @@ class ProjectLotExistingBuildingsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/project-lot/view', 'id' => $model->project_id]);
+        // access control
+        if(\Yii::$app->user->can('viewProject', ['project'=>$model->project])){
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->refresh();
+            } elseif(\Yii::$app->request->post('step_form')){
+                $model->project->setup_status = 'future_devs';
+                $model->project->save();
+                return $this->redirect($model->project->setupRedirect);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            throw new \yii\web\ForbiddenHttpException('Nemate prava da pristupite ovoj stranici.');
         }
     }
 
@@ -93,6 +148,22 @@ class ProjectLotExistingBuildingsController extends Controller
     protected function findModel($id)
     {
         if (($model = ProjectLotExistingBuildings::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the ProjectLotExistingBuildings model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectLotExistingBuildings the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findProjectById($id)
+    {
+        if (($model = \common\models\Projects::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

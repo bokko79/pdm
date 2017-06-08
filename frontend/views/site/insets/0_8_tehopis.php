@@ -442,7 +442,7 @@ $futureDevs = $model->projectLotFutureDevelopments;
 				<div style="width:300px; height: 0px; border-bottom: 1px solid #777;"></div>
 				<br>
 				<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; margin-top:10px;']) ?>
-				<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px; margin-top:10px;']) ?>
+				<?= $volume->engineer->EngSignature ?>
 			</td>
 		</tr>
 	</table>

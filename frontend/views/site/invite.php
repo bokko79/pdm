@@ -21,11 +21,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h3 class="panel-title"><i class="fa fa-bullhorn"></i> <?= Html::encode($this->title) ?></h3>
             </div>
             <div class="panel-body">
+                <p>Unesite e-mail adresu koleginice/kolege i na taj način je/ga pozovite da se pridruži masterplan.rs mreži.</p>
                 <?php $form = kartik\widgets\ActiveForm::begin([
                     'id' => 'form-invite',
                     'type' => ActiveForm::TYPE_VERTICAL,
-                    'enableAjaxValidation' => true,
-                    'enableClientValidation' => true,
+                    //'enableAjaxValidation' => true,
+                    //'enableClientValidation' => true,
                     //'fullSpan' => 7,      
                     //'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
                     //'options' => ['enctype' => 'multipart/form-data'],
@@ -33,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'email') ?>   
 
-                <?= Html::submitButton('Pozovi!', ['class' => 'btn btn-success btn-block shadow']) ?>
+                <?= Html::submitButton('Pošalji poziv!', ['class' => 'btn btn-success btn-block shadow']) ?>
 
                 <?php ActiveForm::end(); ?>
             </div>

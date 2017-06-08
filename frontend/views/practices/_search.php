@@ -22,7 +22,9 @@ use yii\helpers\ArrayHelper;
 ]); ?>
 
 
-    <?= $form->field($model, 'name') ?>
+    <?= $form->field($model, 'phone') ?>
+    <?= $form->field($model, 'email') ?>
+    <?= $form->field($model, 'fax') ?>
 
     <?php /* $form->field($model, 'location_id') ?>
 

@@ -5,6 +5,8 @@ use yii\helpers\Url;
 
 $formatter = \Yii::$app->formatter;
 $formatter->locale = 'sr-Latn';
+$practice = $volume->practice;
+$engineer = $volume->engineer;
 $building = $model->projectBuilding;
 ?>
 <p class="times uppercase"><small><?= $volume->number ?>.4. Izjava odgovornog projektanta <?= $volume->volume->nameGen ?></small></p>
@@ -18,7 +20,7 @@ $building = $model->projectBuilding;
 	} ?> K.O <?= $model->location->county0->name ?>
 </p>
 
-<p class="center" style="padding:30px 0 0;"><?= $volume->engineer->name .', '. $volume->engineer->title ?></p>
+<p class="center" style="padding:30px 0 0;"><?= $engineer->name .', '. $engineer->title ?></p>
 
 <h2 class="center" style="padding:30px 0; letter-spacing: 4px;">IZJAVLJUJEM</h2>
 
@@ -38,7 +40,7 @@ $building = $model->projectBuilding;
 	<tr>
 		<td class="right titler">Odgovorni projektant <?= $volume->volume->nameGen ?></td>
 		<td class="content">
-			<p><?= $volume->engineer->name .', '. $volume->engineer->title ?></p>
+			<p><?= $engineer->name .', '. $engineer->title ?></p>
 		</td>
 	</tr>
 	<tr>
@@ -50,12 +52,12 @@ $building = $model->projectBuilding;
 	<tr>
 		<td class="right">Lični pečat
 			<div style="padding:10px;">
-				<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'max-width:180px; margin-top:20px;']) ?>
+				<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; max-height:120px; margin-top:10px;']) ?>
 			</div>
 		</td>
 		<td class="content">Potpis
 			<div>
-				<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'max-width:180px; margin-top:20px;']) ?>
+				<?= $engineer->EngSignature ?>
 			</div>
 		</td>
 	</tr>
@@ -65,6 +67,6 @@ $building = $model->projectBuilding;
 	</tr>
 	<tr>
 		<td class="right">Mesto i datum</td>
-		<td class="content"><p><?= $model->location->city->town ?>, <?= $formatter->asDate(time(), 'php:mm Y') ?></p></td>
+		<td class="content"><p><?= $practice->location->city->town ?>, <?= $formatter->asDate(time(), 'php:F Y.') ?></p></td>
 	</tr>
 </table>

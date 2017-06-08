@@ -60,7 +60,7 @@ class SecurityController extends SecController
                 'class' => AccessControl::className(),
                 'rules' => [
                     ['allow' => true, 'actions' => ['login', 'auth'], 'roles' => ['?']],
-                    ['allow' => true, 'actions' => ['logout', 'home', 'account'], 'roles' => ['@']],
+                    ['allow' => true, 'actions' => ['logout', 'home', 'account', 'projects', 'posts', 'estates', 'requests'], 'roles' => ['@']],
                 ],
             ],
             'verbs' => [
@@ -80,7 +80,7 @@ class SecurityController extends SecController
      */
     public function actionLogin()
     {
-        $this->layout= '../../../../../frontend/views/layouts/blank';
+        $this->layout= '//blank';
         
         if (!\Yii::$app->user->isGuest) {
             $this->goHome();
@@ -113,19 +113,30 @@ class SecurityController extends SecController
      * @param string $id
      * @return mixed
      */
-    public function actionHome($username=null)
+    public function actionHome(/*$username=null*/)
     {
         $this->layout = '//dashboard';
 
-        if(isset($username)) {
+        if(Yii::$app->user->id and $model = \common\models\UserAccount::findOne(\Yii::$app->user->id)) {
 
-            $model = $this->findModelByUsername($username);
-            $query = \common\models\Projects::find()->where(['engineer_id' => $model->id]);
+            
+            /*$query = \common\models\Projects::find()->where(['engineer_id' => $model->id]);
             $query->orWhere(['user_id' => $model->id]);
-            $query->orWhere(['client_id' => $model->id]);
+            //$query->orWhere(['client_id' => $model->id]);
             $query->orWhere(['control_engineer_id' => $model->id]);
             $query->orWhere(['builder_engineer_id' => $model->id]);
-            $query->orWhere(['supervision_engineer_id' => $model->id]);
+            $query->orWhere(['supervision_engineer_id' => $model->id]);*/
+
+            $searchModel = new \common\models\ProjectsSearch();
+            $searchModel->engineer_id = $model->id;
+            $searchModel->user_id = $model->id;
+            $searchModel->control_engineer_id = $model->id;
+            $searchModel->builder_engineer_id = $model->id;
+            $searchModel->supervision_engineer_id = $model->id;
+            //$model = $this->findModelByUsername($username);
+            if($p = Yii::$app->request->get('Projects')){
+                $searchModel->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
+            }
 
             $query_req = \common\models\Requests::find()->where(['client_id' => $model->id]);
             // check if model made setup
@@ -137,12 +148,14 @@ class SecurityController extends SecController
 
                 return $this->render('home', [
                     'model' => $model,
-                    'projects' => new ActiveDataProvider([
+                    /*'projects' => new ActiveDataProvider([
                         'query' => $query->orderBy('time DESC'),
-                    ]),
+                    ]),*/
+                    'projects' => $searchModel->search(Yii::$app->request->queryParams),
                     'requests' => new ActiveDataProvider([
                         'query' => $query_req,
                     ]),
+                    'searchModel' => $searchModel,
                 ]);
             } else {
                 return $this->redirect('/');
@@ -160,7 +173,7 @@ class SecurityController extends SecController
      */
     public function actionAccount($username=null)
     {
-      $this->layout = '/settings';
+      $this->layout = '//dashboard';
 
         if(isset($username)) {
 
@@ -197,6 +210,58 @@ class SecurityController extends SecController
     }
 
     /**
+     * C01 - Dashboard Home Page.
+     *
+     * Displays a single User model and its Dashboard.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionProjects($id=null)
+    {
+        $this->layout = '//dashboard_index';
+
+        if(Yii::$app->user->id and $model = \common\models\UserAccount::findOne(\Yii::$app->user->id)) {
+
+            // izlistati sve projekte korisnika, na kojima učestvuje kao:
+            // projektant, odgovorni projektant, kontrola, nadzor, izvođač, 
+            $searchModel = new \common\models\ProjectsSearch();
+            $searchModel->engineer_id = $model->id;
+            $searchModel->practice_id = $model->id;
+            $searchModel->user_id = $model->id;
+            $searchModel->control_engineer_id = $model->id;
+            $searchModel->builder_engineer_id = $model->id;
+            $searchModel->supervision_engineer_id = $model->id;
+            //$model = $this->findModelByUsername($username);
+            if($p = Yii::$app->request->get('Projects')){
+                $searchModel->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
+            }
+
+            if($prj = Yii::$app->request->get('id')){
+                $displayed_project = !empty($prj) ? $this->findProjectById($prj) : null;
+            }
+
+            // check if model made setup
+            // licence
+            // join practice/create practice
+            $model->dataReqFlash($model->dataReqs());
+
+            if($model and !Yii::$app->user->isGuest and $model->id==Yii::$app->user->id) {
+
+                return $this->render('projects', [
+                    'model' => $model,
+                    'projects' => $searchModel->search(Yii::$app->request->queryParams),
+                    'searchModel' => $searchModel,
+                    'displayed_project' => isset($displayed_project) ? $displayed_project : ($searchModel->search(Yii::$app->request->queryParams)->getModels() ? $searchModel->search(Yii::$app->request->queryParams)->getModels()[0] : null),
+                ]);
+            } else {
+                return $this->redirect('/');
+            } 
+        } else {
+            throw new \yii\web\NotFoundHttpException('The requested page does not exist.');
+        }           
+    }
+
+    /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
@@ -212,6 +277,22 @@ class SecurityController extends SecController
         }
     }
 
+    /**
+     * Finds the ProjectLotExistingBuildings model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return ProjectLotExistingBuildings the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findProjectById($id)
+    {
+        if (($model = \common\models\Projects::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
     public function updateLoginData($event){
         $user = User::findOne(\Yii::$app->user->id);
         //$user->login_ip = \Yii::$app->request->userIP;
@@ -223,6 +304,4 @@ class SecurityController extends SecController
     public function afterLogin($event){
         return;
     }
-
-
 }

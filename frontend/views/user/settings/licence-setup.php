@@ -38,10 +38,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $this->render('_menu') ?>
     </div>
     <div class="col-md-9">
-        <div class="card_container record-full grid-item fadeInUp animated" id="">
-            <div class="primary-context gray normal">
-                <div class="head colos thin"><?= Html::encode($this->title) ?>
-                <div class="action-area normal-case"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj licencni paket', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->user_id]), ['class' => 'btn btn-primary btn-sm']) ?></div></div>
+        <div class="card_container record-full transparent grid-item fadeInUp no-shadow animated-not" id="">
+            <div class="primary-context normal">
+                <div class="head colos"><?= Html::encode($this->title) ?>
+                <div class="subaction"><?= Html::a('<i class="fa fa-plus-circle"></i> Dodaj licencni paket', Url::to(['/engineer-licences/create', 'EngineerLicences[engineer_id]'=>$model->user_id]), ['class' => 'btn btn-primary shadow']) ?></div></div>
                 
                 <div class="subhead">Licencni paketi inžerenja. Paket podrazumeva broj licence, kao i kopiju, potvrdu i lični pečat.</div>
             </div>    
@@ -82,6 +82,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     'summary' => false,
                 ]); ?>
             </div>                   
-</div>
+        </div>
     </div>
 </div>

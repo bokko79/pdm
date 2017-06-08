@@ -8,12 +8,15 @@ use common\models\ProjectClientsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * ProjectClientsController implements the CRUD actions for ProjectClients model.
  */
 class ProjectClientsController extends Controller
 {
+    public $layout = 'project';
+    
     /**
      * @inheritdoc
      */
@@ -26,34 +29,18 @@ class ProjectClientsController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['update', 'create'],
+                'rules' => [
+                    [
+                        'actions' => ['update', 'create'],
+                        'allow' => true,
+                        'roles' => ['engineer'],
+                    ],
+                ],
+            ],
         ];
-    }
-
-    /**
-     * Lists all ProjectClients models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new ProjectClientsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single ProjectClients model.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
     }
 
     /**
@@ -66,14 +53,25 @@ class ProjectClientsController extends Controller
         $model = new ProjectClients();
         if($p = Yii::$app->request->get('ProjectClients')){
             $model->project_id = !empty($p['project_id']) ? $p['project_id'] : null;
+            $searchModel = new ProjectClientsSearch();
+            $searchModel->project_id = $model->project_id;
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {            
-            return $this->redirect(['/projects/view', 'id' => $model->project_id]);
+        if(\Yii::$app->user->can('viewProject', ['project'=>$model->project])){
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->refresh();        
+            } elseif(\Yii::$app->request->post('step_form')){
+                $model->project->setup_status = ($model->project->type=='presentation' ? 'pics' : 'docs');
+                $model->project->save();
+                return $this->redirect($model->project->setupRedirect);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                    'dataProvider' => $searchModel->search(Yii::$app->request->queryParams),
+                ]);
+            }
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            throw new \yii\web\ForbiddenHttpException('Nemate prava da pristupite ovoj stranici.');
         }
     }
 
@@ -84,15 +82,25 @@ class ProjectClientsController extends Controller
      * @return mixed
      */
     public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/projects/view', 'id' => $model->project_id, '#'=>'w1-tab1']);
+    {     
+        $model = $this->findModel($id); 
+        $searchModel = new ProjectClientsSearch();
+        $searchModel->project_id = $model->project_id;       
+        if(\Yii::$app->user->can('viewProject', ['project'=>$model->project])){
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->refresh();            
+            } elseif(\Yii::$app->request->post('step_form')){
+                $model->project->setup_status = ($model->project->type=='presentation' ? 'pics' : 'docs');
+                $model->project->save();
+                return $this->redirect($model->project->setupRedirect);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                    'dataProvider' => $searchModel->search(Yii::$app->request->queryParams),
+                ]);
+            }
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            throw new \yii\web\ForbiddenHttpException('Nemate prava da pristupite ovoj stranici.');
         }
     }
 
@@ -107,7 +115,7 @@ class ProjectClientsController extends Controller
         $model = $this->findModel($id);
         $this->findModel($id)->delete();
 
-        return $this->redirect(['/projects/view', 'id' => $model->project_id]);
+        return $this->redirect(['create', 'ProjectClients[project_id]' => $model->project_id]);
     }
 
     /**

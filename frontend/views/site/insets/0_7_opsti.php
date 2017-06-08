@@ -89,18 +89,46 @@ if($model->work=='rekonstrukcija' or $model->work=='sanacija' or $model->work=='
 	<?php if($model->work!='adaptacija'): ?>
 	<h4 class="uppercase bold">Priključci na infrastrukturu</h4>
 	<table class="other smallpadd" style="border: 1px solid #777;">
+		<?php if($model->projectLot->conn_water): ?>
 		<tr>
-			<td class="shorttitler"><small>priključak na toplovodnu instalaciju</small></td>
+			<td class="shorttitler"><small>priključak na vodovodnu i kanalizacionu mrežu</small></td>
 			<td class="content">
-				
+				<?= $model->projectLot->conn_water ?>
 			</td>
 		</tr>
+		<?php endif; ?>
+		<?php if($model->projectLot->conn_electric): ?>
 		<tr>
 			<td class=""><small>priključak na elektro-energetsku mrežu</small></td>
 			<td class="content">
-
+				<?= $model->projectLot->conn_electric ?>
 			</td>
 		</tr>	
+		<?php endif; ?>
+		<?php if($model->projectLot->conn_telecom): ?>
+		<tr>
+			<td class=""><small>priključak na telekomunikacionu mrežu</small></td>
+			<td class="content">
+				<?= $model->projectLot->conn_telecom ?>
+			</td>
+		</tr>	
+		<?php endif; ?>
+		<?php if($model->projectLot->conn_heating): ?>
+		<tr>
+			<td class="shorttitler"><small>priključak na toplovodnu instalaciju</small></td>
+			<td class="content">
+				<?= $model->projectLot->conn_heating ?>
+			</td>
+		</tr>
+		<?php endif; ?>
+		<?php if($model->projectLot->conn_gas): ?>
+		<tr>
+			<td class=""><small>priključak na gasovod</small></td>
+			<td class="content">
+				<?= $model->projectLot->conn_gas ?>
+			</td>
+		</tr>	
+		<?php endif; ?>
 	</table>
 	<?php endif; ?>
 	<?php if($model->phase!='idr'): ?>
@@ -390,6 +418,6 @@ uslovima:</small></td>
 	</table>
 	<div class="right">
 		<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; max-height:140px; margin-top:10px;']) ?>
-		<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px; max-height:140px; margin-top:10px;']) ?>
+		<?= $volume->engineer->engSignature ?>
 	</div>
 	

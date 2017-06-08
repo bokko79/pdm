@@ -8,12 +8,13 @@ use kartik\widgets\DatePicker;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\FileInput;
+use dosamigos\tinymce\TinyMce;
 ?>
 <hr>
 <?php $form = kartik\widgets\ActiveForm::begin([
     'id' => 'form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
-    'fullSpan' => 7,      
+    'fullSpan' => 9,      
     'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
     'options' => ['enctype' => 'multipart/form-data'],
 ]); ?>
@@ -57,7 +58,19 @@ use kartik\widgets\FileInput;
 
     <?= $form->field($model, 'bank')->textInput(['maxlength' => true]) ?>
 <hr>
-<?= $form->field($model, 'about')->textarea(['rows' => 6]) ?>
+<?= $form->field($model, 'about')->widget(TinyMce::className(), [
+        'options' => ['rows' => 12],
+        'language' => 'sr',
+        'clientOptions' => [
+            'plugins' => [
+            ],
+            'convert_fonts_to_spans' => true,
+            'paste_as_text' => true,
+            //'menubar' => true,
+            'statusbar' => true,
+            //'toolbar' => "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent"
+        ]
+    ]) ?>
 <hr>
 <?= $model->aFile ? '<div class="col-md-offset-3"> Trenutni avatar:<br>'.Html::img('/images/profiles/'.$model->aFile->name, ['style'=>'width:150px; margin:0 0 20px;']).'</div>' : null ?>
 <?= $form->field($model, 'avatarFile')->widget(FileInput::classname(), [
@@ -66,9 +79,9 @@ use kartik\widgets\FileInput;
                 'previewFileType' => 'any',
                 'showCaption' => false,
                 'showUpload' => false,
-                'browseClass' => 'btn btn-info shadow',
+                'browseClass' => 'btn btn-info shadow btn-block',
                 'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
-                'browseLabel' =>  Yii::t('app', 'Izaberite profilnu sliku'),
+                'browseLabel' =>  Yii::t('app', 'Prikačite logo firme'),
                 'removeLabel' =>  Yii::t('app', 'Izbaci sve'),
                 'resizeImage'=> true,
                 'maxImageWidth'=> 60,
@@ -76,17 +89,36 @@ use kartik\widgets\FileInput;
                 'resizePreference'=> 'width',
             ],
         ]) ?>
+<?php /*
 <hr>
         <?= $model->cFile ? '<div class="col-md-offset-3"> Trenutni baner:<br>'.Html::img('/images/profiles/'.$model->cFile->name, ['style'=>'width:150px; margin:0 0 20px;']).'</div>' : null ?>
     <?= $form->field($model, 'coverFile')->widget(FileInput::classname(), [
+            'options' => ['multiple' => true, 'accept' => 'image/*'],
+            'pluginOptions' => [
+                'previewFileType' => 'any',
+                'showCaption' => false,
+                'showUpload' => false,
+                'browseClass' => 'btn btn-info shadow btn-block',
+                'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
+                'browseLabel' =>  Yii::t('app', 'Prikačite baner firme'),
+                'removeLabel' =>  Yii::t('app', 'Izbaci sve'),
+                'resizeImage'=> true,
+                'maxImageWidth'=> 60,
+                'maxImageHeight'=> 60,
+                'resizePreference'=> 'width',
+            ],
+        ]) */ ?>
+<hr>
+            <?= $model->sFile ? '<div class="col-md-offset-3"> Trenutni pečat:<br>'.Html::img('/images/legal_files/stamps/'.$model->sFile->name, ['style'=>'width:150px; margin:0 0 20px;']).'</div>' : null ?>
+    <?= $form->field($model, 'stampFile')->widget(FileInput::classname(), [
             'options' => [/*'multiple' => true,*/ 'accept' => 'image/*'],
             'pluginOptions' => [
                 'previewFileType' => 'any',
                 'showCaption' => false,
                 'showUpload' => false,
-                'browseClass' => 'btn btn-info shadow',
+                'browseClass' => 'btn btn-info shadow btn-block',
                 'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
-                'browseLabel' =>  Yii::t('app', 'Izaberite svoj baner'),
+                'browseLabel' =>  Yii::t('app', 'Prikačite pečat firme'),
                 'removeLabel' =>  Yii::t('app', 'Izbaci sve'),
                 'resizeImage'=> true,
                 'maxImageWidth'=> 60,
@@ -95,10 +127,30 @@ use kartik\widgets\FileInput;
             ],
         ]) ?>
 <hr>
-    <div class="row" style="margin:20px;">
-        <div class="col-md-offset-3">
-            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        </div>        
+
+        <?= $model->memorandum ? '<div class="col-md-offset-3"> Trenutni memorandum:<br>'.Html::img('/images/legal_files/visual/'.$model->memorandum->name, ['style'=>'width:300px; margin:0 0 20px;']).'</div>' : null ?>
+    <?= $form->field($model, 'memoFile')->widget(FileInput::classname(), [
+            'options' => [/*'multiple' => true,*/ 'accept' => 'image/*'],
+            'pluginOptions' => [
+                'previewFileType' => 'any',
+                'showCaption' => false,
+                'showUpload' => false,
+                'browseClass' => 'btn btn-info shadow btn-block',
+                'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
+                'browseLabel' =>  Yii::t('app', 'Prikačite memorandum firme'),
+                'removeLabel' =>  Yii::t('app', 'Izbaci sve'),
+                'resizeImage'=> true,
+                'maxImageWidth'=> 60,
+                'maxImageHeight'=> 60,
+                'resizePreference'=> 'width',
+            ],
+        ]) ?>
+<hr>
+
+    <div class="form-group">
+        <div class="col-lg-offset-3 col-lg-6">
+            <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Sačuvaj izmene', ['class' => $model->isNewRecord ? 'btn btn-success btn-block' : 'btn btn-primary btn-block']) ?><br>
+        </div>
     </div>
 
 <?php ActiveForm::end(); ?>

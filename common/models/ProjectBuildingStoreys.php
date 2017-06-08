@@ -37,6 +37,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     public $common;
     public $tech;
     public $external;
+    public $whole;
 
     /**
      * @inheritdoc
@@ -53,8 +54,8 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     {
         return [
             [['project_building_id', 'storey'], 'required'],
-            [['project_building_id', 'units_total', 'same_as_id', 'stan', 'biz', 'stamb', 'posl', 'garage', 'common', 'tech', 'external'], 'integer'],
-            [['storey', 'description', 'order_no'], 'string'],
+            [['project_building_id', 'units_total', 'same_as_id', 'stan', 'biz', 'stamb', 'posl', 'garage', 'common', 'tech', 'external', 'whole', 'order_no'], 'integer'],
+            [['storey', 'description', ], 'string'],
             [['sub_net_area', 'net_area', 'gross_area', 'level', 'height'], 'number'],
             [['name'], 'string', 'max' => 64],
             [['project_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProjectBuilding::className(), 'targetAttribute' => ['project_building_id' => 'id']],            
@@ -87,6 +88,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
             'tech' => Yii::t('app', 'Tehničke prostorije'),
             'garage' => Yii::t('app', 'Garažne i parking prostorije'),
             'external' => Yii::t('app', 'Spoljašnje prostorije'),
+            'whole' => Yii::t('app', 'Ostale prostorije'),
         ];
     }
 
@@ -591,7 +593,7 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
             }
         }
         return new \yii\data\ActiveDataProvider([
-                'query' => $query_cla->orderBy('project_building_storey_part_id ASC, CAST(mark AS INTEGER)')->groupBy(''),
+                'query' => $query_cla->orderBy('project_building_storey_part_id ASC, CAST(mark AS UNSIGNED)')->groupBy(''),
             ]);
     }
 
@@ -602,7 +604,253 @@ class ProjectBuildingStoreys extends \yii\db\ActiveRecord
     {
         $query_cla = \common\models\ProjectBuildingStoreyParts::find()->where('project_building_storey_id='.$this->id);
         return new \yii\data\ActiveDataProvider([
-                'query' => $query_cla->orderBy('')->groupBy(''),
+                'query' => $query_cla->orderBy('CAST(mark AS UNSIGNED)')->groupBy(''),
             ]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMark()
+    {
+        $mark;
+        switch ($this->storey) {
+            case 'podrum':
+                $mark = 'Po'.($this->order_no==1 ? null : $this->order_no);
+                break;            
+            case 'suteren':
+                $mark = 'Su';
+                break;
+            case 'prizemlje':
+                $mark = 'P';
+                break;            
+            case 'galerija':
+                $mark = 'G';
+                break;
+            case 'sprat':
+                $mark = $this->order_no;
+                break;            
+            case 'povucenisprat':
+                $mark = 'Ps';
+                break;
+            case 'potkrovlje':
+                $mark = 'Pk'.($this->order_no==1 ? null : $this->order_no);
+                break;            
+            case 'mansarda':
+                $mark = 'M';
+                break;
+            case 'tavan':
+                $mark = 'T';
+                break;
+        }
+        return $mark;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function generateLevel()
+    {
+        $level = 0;
+        $building = $this->projectBuilding;
+
+        // podrum
+        if ($this->storey == 'podrum'){ 
+            if($building->s){
+                $level = 0-($building->s->height);
+            } else {
+                $level = 0;
+            }           
+            for ($x = 1; $x <= $this->order_no; $x++) {
+                $level -= $building->getPod($x)->height;
+            }           
+        }
+
+        //suteren
+        if ($this->storey == 'suteren'){
+            $level = 0-$this->height;           
+        }            
+
+        // galerija
+        if ($this->storey == 'galerija'){
+            $level = $building->pr->height;           
+        }
+
+        // spratovi
+        if($this->storey == 'sprat'){  
+            $level += $building->pr->height;
+            if($building->g){
+                $level += $building->g->height;
+            } 
+            for ($x = 1; $x < $this->order_no; $x++) {
+                $level += $building->getSpr($x)->height;
+            }
+        }
+
+        // povuceni sprat
+        if($this->storey == 'povucenisprat'){
+            $level = $building->pr->height;
+            if($building->g){
+                $level += $building->g->height;
+            }
+            if($building->sp){
+                foreach($building->sp as $spr){
+                    $level += $spr->height;
+                }                    
+            }
+            for ($x = 1; $x < $this->order_no; $x++) {
+                $level += $building->getPsp($x)->height;
+            }
+        }
+
+        // potkrovlje
+        if($this->storey == 'potkrovlje'){
+            $level = $building->pr->height;
+            if($building->g){
+                $level += $building->g->height;
+            }
+            if($building->sp){
+                foreach($building->sp as $spr){
+                    $level += $spr->height;
+                }                    
+            }
+            if($building->ps){
+                foreach($building->ps as $psspr){
+                    $level += $psspr->height;
+                }                    
+            }
+            for ($x = 1; $x < $this->order_no; $x++) {
+                $level += $building->getPotk($x)->height;
+            }
+        }
+
+        // mansarda
+        if($this->storey == 'mansarda'){
+            $level = $building->pr->height;
+            if($building->g){
+                $level += $building->g->height;
+            }
+            if($building->sp){
+                foreach($building->sp as $spr){
+                    $level += $spr->height;
+                }                    
+            }
+            if($building->ps){
+                foreach($building->ps as $psspr){
+                    $level += $psspr->height;
+                }                    
+            }
+            if($building->pk){
+                foreach($building->pk as $pkr){
+                    $level += $pkr->height;
+                }                    
+            }
+            //$level += $this->height;
+        }
+
+        // tavan
+        if($this->storey == 'tavan'){
+            $level = $building->pr->height;
+            if($building->g){
+                $level += $building->g->height;
+            }
+            if($building->sp){
+                foreach($building->sp as $spr){
+                    $level += $spr->height;
+                }                    
+            }
+            if($building->ps){
+                foreach($building->ps as $psspr){
+                    $level += $psspr->height;
+                }                    
+            }
+            if($building->pk){
+                foreach($building->pk as $pkr){
+                    $level += $pkr->height;
+                }                    
+            }
+            if($building->m){
+                $level += $building->m->height;
+            }
+            //$level += $this->height;              
+        }
+
+        $this->level = $level;
+        $this->save();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function deletable()
+    {
+        if($this->storey=='prizemlje')
+            return true;
+
+        if($this->storey=='sprat'){
+            if($this->order_no!=count($this->projectBuilding->sp) or $this->copies)
+                return true;
+        }
+
+        if($this->storey=='potkrovlje'){
+            if($this->order_no!=count($this->projectBuilding->pk) or $this->copies)
+                return true;
+        }
+
+        if($this->storey=='podrum'){
+            if($this->order_no!=count($this->projectBuilding->po) or $this->copies)
+                return true;
+        }
+
+        if($this->storey=='povucenisprat'){
+            if($this->order_no!=count($this->projectBuilding->ps) or $this->copies)
+                return true;
+        }
+
+        if($this->storey=='mansarda'){
+            if($this->order_no!=count($this->projectBuilding->m) or $this->copies)
+                return true;
+        }
+
+        return false;
+    } 
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function ready()
+    {
+        // ako su uneti svi podaci, spremni su za prostorije
+        if(isset($this->storey) and isset($this->gross_area) and isset($this->level) and isset($this->height)){
+            return true;
+        }
+
+        return false;
+    } 
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function readyForUnits()
+    {
+        // ako su uneti svi podaci, spremni su za prostorije
+        if($this->ready() and !$this->projectBuildingStoreyParts){
+            return true;
+        }       
+
+        return false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function readyCompletely()
+    {
+        // ako su uneti svi podaci, spremni su za prostorije
+        if($this->ready() and $this->projectBuildingStoreyParts){
+            return true;
+        }       
+
+        return false;
     }
 }   

@@ -10,7 +10,7 @@ use kartik\checkbox\CheckboxX;
 <div class="table-responsive container-fluid">
     <div class="row">       
         <div class="col-sm-12">
-            <p class="bg-info" style="padding:20px;"><?= Html::a(c($model->storey), ['/project-building-storeys/view', 'id' => $model->id]) ?> ne sadrži nijednu celinu/jedinicu. Izaberite koje celine sadrži.</p>
+            <p class="bg-info" style="padding:20px;"><?= Html::a(c($model->storey), ['/project-building/storeys', 'id' => $model->id]) ?> ne sadrži nijednu celinu/jedinicu. Izaberite koje celine sadrži.</p>
             <?php $form = kartik\widgets\ActiveForm::begin([
                 'id' => 'form-horizontal',
                 'type' => ActiveForm::TYPE_HORIZONTAL,
@@ -25,8 +25,9 @@ use kartik\checkbox\CheckboxX;
 
                 <?= $form->field($model, 'biz')->input('number', ['min'=>0, 'max'=>16, 'style'=>'width:40%'])->hint('Unesite broj poslovnih jedinica, npr. lokala, kancelarija, restorana, ordinacija, učionica itd, koje ova etaža ima.') ?>
 
-                <?= $form->field($model, 'stamb')->widget(CheckboxX::classname(), ['pluginOptions'=>['size'=>'md']]) ?>
 
+                <?= $form->field($model, 'whole')->widget(CheckboxX::classname(), ['pluginOptions'=>['size'=>'md']]) ?>
+<?php /*
                 <?= $form->field($model, 'posl')->widget(CheckboxX::classname(), ['pluginOptions'=>['size'=>'md']]) ?>
 
                 <?= $form->field($model, 'common')->widget(CheckboxX::classname(), ['pluginOptions'=>['size'=>'md']]) ?>
@@ -36,7 +37,7 @@ use kartik\checkbox\CheckboxX;
                 <?= $form->field($model, 'tech')->widget(CheckboxX::classname(), ['pluginOptions'=>['size'=>'md']]) ?>
 
                 <?= $form->field($model, 'external')->widget(CheckboxX::classname(), ['pluginOptions'=>['size'=>'md']]) ?> 
-                
+ */ ?>               
                 <div class="row" style="margin:20px;">
                     <div class="col-md-offset-3">
                         <?= Html::submitButton('Generiši', ['class' => 'btn btn-primary']) ?>

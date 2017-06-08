@@ -15,6 +15,8 @@ use yii\data\ActiveDataProvider;
  */
 class ProjectQsController extends Controller
 {
+    public $layout = 'project';
+    
     /**
      * @inheritdoc
      */
@@ -47,7 +49,7 @@ class ProjectQsController extends Controller
         $searchModel->project_id = $project_id;
 
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $dataProvider->pagination->pageSize=200;
         // validate if there is a editable input saved via AJAX
             if (Yii::$app->request->post('hasEditable')) {
                 // instantiate your book model for saving
@@ -92,7 +94,7 @@ class ProjectQsController extends Controller
             $model = $this->findProjectById($p);
             $work = $this->findWorkById($w);    
 
-            $query = ProjectQs::find()->where('project_id='.$model->id.' and work_id='.$work->id); 
+            $query = ProjectQs::find()->where('project_id='.$model->id.' and work_id='.$work->id)->orderBy('work_id, subwork_id'); 
 
             // validate if there is a editable input saved via AJAX
             if (Yii::$app->request->post('hasEditable')) {
@@ -129,6 +131,25 @@ class ProjectQsController extends Controller
         } else {
              throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    /**
+     * Lists all ProviderServices models.
+     * @return mixed
+     */
+    public function actionPositions($id=null, $project=null)
+    {
+        if($id and $project){
+            $model = new ProjectQs();
+            if($work = $this->findWorkById($id) and $project = $this->findProjectById($project)) {
+                return $this->render('positions', [
+                    'model' => $model,
+                    'work' => $work,
+                    'project' => $project,
+                ]);
+            }
+        }
+        return;            
     }
 
 

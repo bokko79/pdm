@@ -25,7 +25,18 @@
         "2amigos/yii2-google-maps-library": "*",
         "yiisoft/yii2-imagine": "^2.1",
         "kartik-v/yii2-mpdf": "*",
-        "2amigos/yii2-tinymce-widget": "~1.1"
+        "2amigos/yii2-tinymce-widget": "~1.1",
+        "yiister/yii2-gentelella": "~1.0",
+        "kartik-v/yii2-datecontrol": "@dev",
+        "dektrium/yii2-user": "^0.9.12",
+        "kartik-v/yii2-grid": "@dev",
+        "kartik-v/yii2-editable": "@dev",
+        "kartik-v/yii2-tabs-x": "*",
+        "softark/yii2-dual-listbox": "dev-master",
+        "philippfrenzel/yii2masonry": "*",
+        "kartik-v/yii2-label-inplace": "*",
+        "wbraganca/yii2-dynamicform": "dev-master",
+        "kartik-v/yii2-widget-affix": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

@@ -40,6 +40,7 @@ use yii\bootstrap\Nav;
                         'area',
                     ],
                     'summary' => false,
+                    'options' => ['class'=>'responsive'],
                 ]); ?>
                 <?= ($model->getClassPercentageTotal()!=100) ? '<p class="red">Zbir procenata svih delova objekta mora biti jednak 100!. Trenutno je '.$model->getClassPercentageTotal().'</p>' : null ?>
             </div>
@@ -62,6 +63,7 @@ use yii\bootstrap\Nav;
                         'area',
                     ],
                     'summary' => false,
+                    'options' => ['class'=>'responsive'],
                 ]); ?>
                 <?= ($model->getClassPercentageTotal()!=100) ? '<p class="red">Zbir procenata svih delova objekta mora biti jednak 100!. Trenutno je '.$model->getClassPercentageTotal().'</p>' : null ?>
             </div>

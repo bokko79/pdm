@@ -16,8 +16,8 @@ $model->current = $model->current ?: 0;
 <?php $form = kartik\widgets\ActiveForm::begin([
     'id' => 'form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
-    'fullSpan' => 7,      
-    'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
+    'fullSpan' => 10,      
+    'formConfig' => ['labelSpan' => 4, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
     'options' => ['enctype' => 'multipart/form-data'],
 ]); ?>
 
@@ -67,7 +67,7 @@ $model->current = $model->current ?: 0;
     <?= $form->field($model, 'summary')->textarea(['rows' => 6]) ?>
 
     <div class="row" style="margin:20px;">
-        <div class="col-md-offset-3">
+        <div class="col-md-offset-4">
             <?= Html::submitButton($model->isNewRecord ? 'Kreiraj' : 'Izmeni', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>        
     </div>

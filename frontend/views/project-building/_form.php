@@ -17,7 +17,7 @@ if(!$model->building_line_dist) $model->building_line_dist = 0;
     'type' => ActiveForm::TYPE_HORIZONTAL,
     'fullSpan' => 12,      
     'formConfig' => ['labelSpan' => 2, 'deviceSize' => ActiveForm::SIZE_MEDIUM],
-    'options' => ['enctype' => 'multipart/form-data'],
+    'options' => ['enctype' => 'multipart/form-data', 'style'=>'margin-top:0 !important;'],
 ]); ?>
 <hr>
 <h3>Opšti podaci</h3>

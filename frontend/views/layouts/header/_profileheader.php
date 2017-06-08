@@ -16,14 +16,6 @@ use common\widgets\Alert;
     
 
     <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <?= Breadcrumbs::widget([
-                    'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-                    'options' => ['class'=>'transparent breadcrumb']
-                ]) ?>
-            </div>
-        </div>
 
         <div class="row">
             <div class="col-sm-12">

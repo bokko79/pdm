@@ -5,6 +5,7 @@ use yii\helpers\Url;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
 use kartik\tabs\TabsX;
+use yii\widgets\ListView;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Engineers */
@@ -38,34 +39,80 @@ $items = [
     ],
 ];
 ?>
-<div class="row">
+<div class="row" style="margin-top:20px;">
     <div class="col-md-3" style="z-index:1">
         <?= $this->render('_menu', ['model'=>$model, 'projects'=>$projects]) ?>
     </div>
-    <div class="col-md-9">
-        <div class="card_container record-full grid-item fadeInUp no-shadow animated-not " id="">
+    <div class="col-md-6">
+        <div class="card_container record-full grid-item fadeInUp no- animated-not " id="">
           <div class="secondary-context">
             <div class="head major">
-              <div class="subhead uppercase hint" style="margin-bottom: 5px;">Opis</div>                               
+              <div class="subhead uppercase hint" style="margin-bottom: 5px;">O meni</div>        
+              <hr>                       
             </div>  
-            <?= $model->about ?>             
+            
+            <div class="card_container record-full grid-item fadeInUp transparent no-shadow animated-not" id="card_container">
+               
+                <div class="secondary-context cont">
+                    <?= $model->about ?>  
+                </div>
+            </div>           
           </div>
+            <?php if($experiences = $model->experiences): ?>
+            <div class="secondary-context">
+                <div class="head major">
+                    <div class="subhead uppercase hint" style="margin-bottom: 5px;">Radno iskustvo</div>                               
+                </div>
+                <?php foreach($experiences as $experience){
+                        echo $this->render('../user/settings/_portfolio', ['model'=>$experience]);
+                    } ?>
+            </div>
+            <?php endif; ?>
+            <?php if($educations = $model->educations): ?>
+            <div class="secondary-context">
+                <div class="head major">
+                    <div class="subhead uppercase hint" style="margin-bottom: 5px;">Obrazovanje</div>                               
+                </div>
+                <?php foreach($educations as $education){
+                        echo $this->render('../user/settings/_portfolio', ['model'=>$education]);
+                    } ?>
+            </div>
+            <?php endif; ?>
         </div> 
-        <?= $this->render('tabs/_projects', ['model'=>$model, 'projects'=>$projects]) ?>
+        
+        <div class="card_container record-full grid-item top-bordered transparent no-shadow animated-not " id="">
+            <div class="primary-context">
+                <div class="head">
+                    <div class="subaction"><?= Html::a('<i class="fa fa-bars"></i> Svi', Url::to(['/projects/index', 'ProjectsSearch[engineer_id]'=>$model->user_id]), ['class' => 'btn btn-default btn-sm']) ?></div>
+                  Projekti     
+                  
+                </div>
+            </div>
+        </div>
+        <?php echo ListView::widget([
+              'dataProvider' => $projects,
+              'itemView' => '_project',
+              'layout' => '{items}',
+          ]); ?>
+        
         <?php /* (Yii::$app->user->client!=null) ? $this->render('tabs/_requests', ['model'=>$model->client, 'requests'=>$requests]) : null */ ?>
     </div>
-</div>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-12" style="min-height:300px;">
-            <?php
-                echo kartik\tabs\TabsX::widget([
-                    'items'=>$items,
-                    'position'=>TabsX::POS_LEFT,
-                    'encodeLabels'=>false,
-                ]);
-            ?>
-        </div>  
+    <div class="col-md-3" style="z-index:1">
+         <?php if(Yii::$app->user->isGuest or !Yii::$app->user->engineer): ?>
+            <?= $this->render('../engineers/_registerAs'); ?>
+            <hr>
+        <?php endif; ?>
+        <div class="card_container record-full grid-item transparent fadeInUp no-shadow animated-not no-margin" id="" style="float:none;">
+            <div class="primary-context  no-padding">
+                <div class="head lower regular">
+                    Slični inžejeri                
+                </div>              
+            </div> 
+        </div>
+        <?php echo ListView::widget([
+                  'dataProvider' => $engineers,
+                  'itemView' => '_engineer_short',
+                  'layout' => '{items}',
+              ]); ?>
     </div>
 </div>

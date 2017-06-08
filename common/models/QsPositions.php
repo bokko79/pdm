@@ -104,6 +104,7 @@ class QsPositions extends \yii\db\ActiveRecord
             case 6: $unit = 'm'; break;
             case 7: $unit = 'kg'; break;
             case 8: $unit = 'dan'; break;
+            case 9: $unit = 'čas'; break;
             default: $unit = 'm'; break;
         }
         return $unit;

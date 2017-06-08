@@ -60,7 +60,7 @@ class ProjectQs extends \yii\db\ActiveRecord
             'subwork_id' => Yii::t('app', 'Podkategorija radova'),
             'position_id' => Yii::t('app', 'Pozicija'),
             'name' => Yii::t('app', 'Naziv pozicije'),
-            'action' => Yii::t('app', 'Opis poziije'),
+            'action' => Yii::t('app', 'Opis pozicije'),
             'qty' => Yii::t('app', 'Količina'),
         ];
     }

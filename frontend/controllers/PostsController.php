@@ -8,6 +8,7 @@ use common\models\PostsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 
 /**
  * PostsController implements the CRUD actions for Posts model.
@@ -58,9 +59,14 @@ class PostsController extends Controller
     public function actionView($id)
     {
         $this->layout = 'post';
+        $query_pr = \common\models\Posts::find();
 
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'posts' => new ActiveDataProvider([
+                'query' => $query_pr->orderBy(new \yii\db\Expression('rand()'))->limit(3),
+                'pagination' => false,
+            ]),
         ]);
     }
 

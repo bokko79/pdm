@@ -74,12 +74,12 @@ $works = \common\models\QsWorks::find()->all();
 				foreach($model->getProjectDistinctSubworks($pdw->work_id) as $sbkey=>$pdsw){ ?>
 				<tr>
 					<td></td>
-					<td colspan="5"><h4 class="uppercase"><?= ConverToRoman($pdw->work->id).'.'.($sbkey+1) ?> <?= c($pdsw->subwork->name) ?></h4></td>				
+					<td colspan="5"><h4 class="uppercase"><?= ConverToRoman($key+1).'.'.($sbkey+1) ?> <?= c($pdsw->subwork->name) ?></h4></td>				
 				</tr>
 				<?php
 					foreach($model->getProjectDistinctPositions($pdsw->subwork_id) as $poskey=>$pdp){ ?>
 					<tr>
-						<td class="center top"><?= ConverToRoman($pdw->work->id).'.'.($sbkey+1).'.'.($poskey+1) ?></td>
+						<td class="center top"><?= ConverToRoman($key+1).'.'.($sbkey+1).'.'.($poskey+1) ?></td>
 						<td><b><?= $pdp->name ?></b> <?= $pdp->action ?></td>
 						<td><?= $pdp->position->units ?></td>
 						<td class="right"><?= $formatter->format($pdp->qty, ['decimal',2]) ?></td>
@@ -125,7 +125,7 @@ $works = \common\models\QsWorks::find()->all();
 			<tr>
 				<td class="total"></td>
 				<td class="total" colspan="4"><h3>UKUPNO:</h3></td>	
-				<td class="right total"><h3><?= $formatter->format($model->getProjectTotalPrice($pdw->work_id), ['decimal',2]) ?></h3></td>			
+				<td class="right total"><h3><?= $formatter->format($model->getProjectTotalPrice(), ['decimal',2]) ?></h3></td>			
 			</tr>
 	</table>
 
@@ -135,15 +135,15 @@ $works = \common\models\QsWorks::find()->all();
 	<table class="clear" style="margin-top:40px;">
 		<tr>
 			<td>
-				<?= $volume->practice->location->city->town. ', '.$formatter->asDate(time(), 'php:mm Y.') ?>
+				<?= ($volume ? $volume->practice->location->city->town : $model->practice->location->city->town). ', '.$formatter->asDate(time(), 'php:mm Y.') ?>
 			</td>
 			<td class="right" style="width:60%;">
 				<small>Sastavio:</small><br>
-				<?= $volume->engineer->name. ', '.$volume->engineer->title ?><br>
+				<?= $volume ? $volume->engineer->name. ', '.$volume->engineer->title : $model->engineer->name. ', '.$model->engineer->title ?><br>
 				<small>br. licence:<?= $volume->engineerLicence->no ?></small>
 				<br>
-				<?= Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; max-height:140px;']) ?>
-				<?= Html::img('@web/images/legal_files/signatures/'.$volume->engineer->signature, ['style'=>'width:160px; max-height:140px;']) ?>
+				<?= $volume ? Html::img('@web/images/legal_files/licences/'.$volume->engineerLicence->stamp->name, ['style'=>'width:160px; max-height:140px;']) : Html::img('@web/images/legal_files/licences/'.$model->engineer->engineerLicences[0]->stamp->name, ['style'=>'width:160px; max-height:140px;']) ?>
+				<?= $volume ? $volume->engineer->engSignature : $model->engineer->engSignature ?>
 			</td>
 		</tr>
 	</table>
